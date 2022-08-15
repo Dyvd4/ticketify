@@ -1,12 +1,7 @@
+import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { signUp } from "../../auth/auth";
-import Button from "../../components/Buttons/Default";
 import Card from "../../components/Card";
-import InputGroup from "../../components/InputGroup";
-import Form from "../../components/Validation/Form";
-import Item from "../../components/Validation/Item";
-import Validation from "../../components/Validation/Validation";
 import { getValidationError } from "../../utils/error";
 
 function SignUp() {
@@ -15,45 +10,50 @@ function SignUp() {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
-    const handleSubmit = async (hasErrors: boolean) => {
-        if (!hasErrors) {
-            const response = await signUp(usernameRef.current!.value, passwordRef.current!.value);
-            if (response.status === 200) return window.location.href = "/";
-            const errorMessage = getValidationError({ response });
-            setErrorMessage(errorMessage);
-        }
+    const handleSubmit = async () => {
+        const response = await signUp(usernameRef.current!.value, passwordRef.current!.value);
+        if (response.status === 200) return window.location.href = "/";
+        const errorMessage = getValidationError({ response });
+        setErrorMessage(errorMessage);
     }
 
     return (
-        <Card centered>
-            <h1>Sign up</h1>
-            <Validation onSubmit={handleSubmit}>
-                <Form id="SignUp">
-                    <Item config={{
-                        isRequired: {},
-                        name: "username"
-                    }}>
-                        <InputGroup>
-                            <label htmlFor="username">Username:</label>
-                            <input ref={usernameRef} type="text" name="username" />
-                        </InputGroup>
-                    </Item>
-                    <Item config={{
-                        isRequired: {},
-                        name: "password"
-                    }}>
-                        <InputGroup>
-                            <label htmlFor="password">Password:</label>
-                            <input ref={passwordRef} type="password" name="password" />
-                        </InputGroup>
-                    </Item>
+        <Card className="w-3/4 sm:w-auto" centered>
+            <Heading as="h1" className="mb-2">
+                Sign up
+            </Heading>
+            <VStack>
+                <FormControl isInvalid={!!errorMessage}>
+                    <FormControl>
+                        <FormLabel>
+                            Username
+                        </FormLabel>
+                        <Input size="sm" ref={usernameRef} name="username" />
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel>
+                            Password
+                        </FormLabel>
+                        <Input type="password" size="sm" ref={passwordRef} name="password" />
+                    </FormControl>
                     {errorMessage && <>
-                        <div className="text-red-500 mb-4">{errorMessage}</div>
+                        <FormErrorMessage>
+                            {errorMessage}
+                        </FormErrorMessage>
                     </>}
-                    <Button className="block mb-2" type="submit">Submit</Button>
-                    <Link to="/Auth/SignIn">Sign in</Link>
-                </Form>
-            </Validation>
+                </FormControl>
+                <Button
+                    size="sm"
+                    className="mt-4"
+                    onClick={handleSubmit}
+                    colorScheme="blue">
+                    Submit
+                </Button>
+                <Link href="/Auth/SignIn">
+                    Sign in
+                </Link>
+            </VStack>
         </Card>
     );
 }

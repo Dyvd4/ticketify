@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,18 +24,22 @@ applyDarkMode();
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/NotAuthorized" element={<NotAuthorized />} />
-          <Route path="/Auth">
-            <Route path="SignIn" element={<SignIn />} />
-            <Route path="SignUp" element={<SignUp />} />
-          </Route>
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+    <ChakraProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<ProtectedArea type="route" />}>
+              <Route index element={<Index />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+            <Route path="/NotAuthorized" element={<NotAuthorized />} />
+            <Route path="/Auth">
+              <Route path="SignIn" element={<SignIn />} />
+              <Route path="SignUp" element={<SignUp />} />
+            </Route>
+          </Routes>
+        </Router>
+      </QueryClientProvider>
+    </ChakraProvider>
   </React.StrictMode>
 );
