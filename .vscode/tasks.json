@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start Client",
+            "type": "shell",
+            "command": "npm run start_client",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+            },
+        },
+        {
+            "label": "start Backend",
+            "type": "shell",
+            "command": "npm run start_backend",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+            },
+        },
+        {
+            "label": "Build",
+            "dependsOn": [
+                "start Client",
+                "start Backend"
+            ],
+            "dependsOrder": "parallel"
+        }
+    ]
+}

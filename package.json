@@ -1,0 +1,25 @@
+{
+  "name": "ticketify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "build_client": "npm i --prefix Client && npm run build --prefix Client",
+    "build_backend": "npm i --prefix Backend",
+    "start_client": "npm start --prefix Client",
+    "start_backend": "npm start --prefix Backend",
+    "start": "npm run build_backend && npm run start_backend",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false && npm run build_client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dyvd4/ticketify/issues"
+  },
+  "homepage": "https://github.com/Dyvd4/ticketify/blob/main/README.md"
+}
