@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
+import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { fetchUser } from "../api/user";
 import NotAuthorized from "./NotAuthorized";
 
@@ -23,7 +24,7 @@ function ProtectedArea(props: ProtectedAreaProps | ProtectedRouteProps) {
     } = props;
     const { isLoading, isError, data } = useQuery(["user"], fetchUser);
     let returnElement;
-    if (isLoading) returnElement = <div>...loading</div>;
+    if (isLoading) returnElement = <LoadingRipple centered />
     else if (isError) returnElement = <div className="text-red-500">An error occurred</div>;
     else if (data?.user) returnElement = type === "area" && "children" in props ? props.children : <Outlet />;
     else {

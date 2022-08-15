@@ -16,8 +16,6 @@ function SignIn() {
         const errorMessage = getValidationError({ response });
         setErrorMessage(errorMessage);
     }
-    // @ts-ignore
-    let x = y.x
     return (
         <Card className="w-3/4 sm:w-auto" centered>
             <Heading as="h1" className="mb-2">

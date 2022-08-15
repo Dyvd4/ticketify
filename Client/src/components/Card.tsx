@@ -16,7 +16,7 @@ function Card(props: CardProps) {
     }
     return <div style={styles}
         className={`shadow-md rounded-lg p-8
-    bg-white dark:bg-gray-700 dark:text-white
+    bg-white dark:bg-gray-600 dark:text-white
        ${props.centered ? `absolute top-1/2 left-1/2 
        transform -translate-x-1/2 -translate-y-1/2` : ""} 
        ${props.className}`}>
