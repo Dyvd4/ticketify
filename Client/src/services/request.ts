@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { REACT_APP_DOMAIN } from "../env.local";
 import Cookies from "js-cookie";
 import { handleError } from "../utils/error";
@@ -24,6 +24,9 @@ export const request = (options?: RequestOptions) => {
     }, (error) => handleError(error, { dontThrowError: true }));
     instance.interceptors.response.use((config) => {
         return config
-    }, (error) => handleError(error, { dontThrowError: true }));
+    }, (error) => {
+        if (error instanceof AxiosError && error.response?.status === 401) return;
+        handleError(error, { dontThrowError: true })
+    });
     return instance;
 };
