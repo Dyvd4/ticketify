@@ -1,7 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import User, { UserSchema } from "../schemas/User";
+import UserSchema from "../schemas/User";
+import { prisma } from "../server";
 import bcrypt from "bcrypt";
 import path from "path";
 dotenv.config({ path: path.join(__dirname, "../../.env") });
@@ -14,7 +15,11 @@ Router.post("/signIn", async (req, res, next) => {
     try {
         const { username, password } = req.body;
         // check if user exist
-        const user = await User.findOne({ username });
+        const user = await prisma.user.findFirst({
+            where: {
+                username
+            }
+        });
 
         if (!user) {
             return res.status(400).json({
@@ -30,7 +35,7 @@ Router.post("/signIn", async (req, res, next) => {
 
         const authToken = jwt.sign({
             data: {
-                userId: user._id
+                userId: user.id
             }
         }, SECRET_KEY);
         res.json({
@@ -47,7 +52,11 @@ Router.post("/signUp", async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
-        const alreadyExistingEntity = await User.findOne({ username });
+        const alreadyExistingEntity = await prisma.user.findFirst({
+            where: {
+                username
+            }
+        });
         if (alreadyExistingEntity) {
             return res.status(400).json({
                 validation: { message: `User with name: ${username} already existing` }
@@ -58,11 +67,16 @@ Router.post("/signUp", async (req, res, next) => {
         if (validation.error) return res.status(400).json({ validation });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, password: hashedPassword });
+        const user = await prisma.user.create({
+            data: {
+                username, 
+                password: hashedPassword
+            }
+        });
 
         const authToken = jwt.sign({
             data: {
-                userId: user._id
+                userId: user.id
             }
         }, SECRET_KEY);
         res.json({

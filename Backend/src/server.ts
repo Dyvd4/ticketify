@@ -1,14 +1,14 @@
+import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import TodoRouter from "./Routes/Todos";
-import ErrorRouter from "./Routes/Error";
-import AuthRouter from "./Routes/Auth";
-import UserRouter from "./Routes/User";
 import { authentication } from "./middlewares/auth";
-import { connect as connectDatabase } from "./utils/database";
-import { customRequest } from "./middlewares/requests";
 import { errorHandler } from "./middlewares/errorHandler";
+import { userSignature } from "./middlewares/prisma";
+import { customRequest } from "./middlewares/requests";
+import AuthRouter from "./Routes/Auth";
+import ErrorRouter from "./Routes/Error";
+import UserRouter from "./Routes/User";
 import logger from "./services/logger";
 dotenv.config();
 
@@ -23,7 +23,6 @@ server.use(authentication({
     excludePaths: ["/api/auth/signIn", "/api/auth/signUp", "/api/error", "/api/todos"]
 }));
 server.use("/api", ErrorRouter);
-server.use("/api", TodoRouter);
 server.use("/api/auth", AuthRouter);
 server.use("/api", UserRouter);
 
@@ -33,4 +32,6 @@ server.listen(PORT, () => {
     logger.info(`Server listening on port: ${PORT}`);
 });
 
-connectDatabase();
+const prisma = new PrismaClient();
+prisma.$use(userSignature);
+export { prisma }

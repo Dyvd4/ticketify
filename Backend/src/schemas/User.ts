@@ -1,24 +1,8 @@
 import Joi from "joi";
-import mongoose from "mongoose";
-import { DocumentWithTimeStamps } from "./base";
+import { User } from "@prisma/client";
 
-interface IUser extends DocumentWithTimeStamps {
-    username: string,
-    password: string
-}
-
-const UserModel = new mongoose.Schema<IUser>({
-    username: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
-}, { timestamps: true, collection: "User" });
-
-export const UserSchema = Joi.object<IUser>({
+export const UserSchema = Joi.object<User>({
+    id: Joi.string(),
     username: Joi
         .string()
         .required(),
@@ -29,7 +13,6 @@ export const UserSchema = Joi.object<IUser>({
         .messages({
             "string.max": "Password should not be longer than 100 characters"
         })
-});
+})
 
-const User = mongoose.model<IUser>("User", UserModel);
-export default User;
+export default UserSchema;
