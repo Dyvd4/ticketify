@@ -1,6 +1,4 @@
 :root {
-  --switch-size: 2vh;
-  --switch-wrapper-length: 2;
   --heart-button-circles-animation-durationMs: 500;
 }
 
@@ -12,47 +10,12 @@ body {
   height: 100vh;
 }
 
-input {
-  border-radius: 10px;
-}
-
 #root {
   height: inherit;
 }
 
 * {
   box-sizing: border-box !important;
-}
-
-/* Switch */
-.wrap-switch {
-  cursor: pointer;
-  position: relative;
-  background: #dbdbdb;
-  border-radius: 80px;
-  height: var(--switch-size);
-  width: calc(var(--switch-size) * var(--switch-wrapper-length));
-}
-
-.switch {
-  position: absolute;
-  width: var(--switch-size);
-  height: var(--switch-size);
-  border-radius: 50%;
-  background: #8c8c8c;
-  transition: left 0.2s ease-in;
-  left: 0;
-}
-
-.switch-active {
-  position: absolute;
-  width: var(--switch-size);
-  height: var(--switch-size);
-  border-radius: 50%;
-  background: #8c8c8c;
-  transition: left 0.2s ease-in;
-  left: 0;
-  left: calc(var(--switch-size) * calc(var(--switch-wrapper-length) - 1));
 }
 
 /* loading */
@@ -103,6 +66,7 @@ input {
   width: 100%;
   display: flex;
   flex-direction: column;
+  white-space: nowrap;
 }
 
 .validation-input-error {
