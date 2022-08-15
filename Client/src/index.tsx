@@ -10,7 +10,6 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Todos from "./pages/Todos";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 
@@ -33,9 +32,6 @@ root.render(
           <Route path="/Auth">
             <Route path="SignIn" element={<SignIn />} />
             <Route path="SignUp" element={<SignUp />} />
-          </Route>
-          <Route path="/Todos" element={<ProtectedArea type="route" />}>
-            <Route path="" element={<Todos />} />
           </Route>
         </Routes>
       </Router>
