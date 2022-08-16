@@ -1,5 +1,6 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
+import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
+import FormControl from "src/components/Wrapper/FormControl";
 import { signIn } from "../../auth/auth";
 import Card from "../../components/Card";
 import { getValidationErrorMap } from "../../utils/error";
@@ -22,29 +23,19 @@ function SignIn() {
                 Sign in
             </Heading>
             <VStack>
-                <FormControl isInvalid={!!errorMap?.Fieldless}>
-                    <FormControl isInvalid={!!errorMap?.username}>
+                <FormControl errorMessage={errorMap?.Fieldless}>
+                    <FormControl errorMessage={errorMap?.username}>
                         <FormLabel>
                             Username
                         </FormLabel>
                         <Input size="sm" ref={usernameRef} name="username" />
-                        <FormErrorMessage>
-                            {errorMap?.username}
-                        </FormErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid={!!errorMap?.password}>
+                    <FormControl errorMessage={errorMap?.password}>
                         <FormLabel>
                             Password
                         </FormLabel>
                         <Input type="password" size="sm" ref={passwordRef} name="password" />
-                        <FormErrorMessage>
-                            {errorMap?.password}
-                        </FormErrorMessage>
-
                     </FormControl>
-                    <FormErrorMessage>
-                        {errorMap?.Fieldless}
-                    </FormErrorMessage>
                 </FormControl>
                 <Button
                     size="sm"
