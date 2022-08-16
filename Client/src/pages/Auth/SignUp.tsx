@@ -1,4 +1,4 @@
-import { Button, FormErrorMessage, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
+import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import FormControl from "src/components/Wrapper/FormControl";
 import { signUp } from "../../auth/auth";

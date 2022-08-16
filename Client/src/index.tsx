@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import Navbar from "./components/Navbar";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -26,6 +27,7 @@ root.render(
   <React.StrictMode>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
+        <Navbar />
         <Router>
           <Routes>
             <Route path="/" element={<ProtectedArea type="route" />}>

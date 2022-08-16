@@ -1,26 +1,20 @@
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-import * as React from 'react';
+import { useState } from 'react';
 import { toggle as ToggleDarkMode } from 'src/utils/darkmode';
-import Icon, { IconType } from '../Icons/Icon';
+import IconButton, { IconButtonProps } from "src/components/Wrapper/IconButton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Cookies from 'js-cookie';
 
-interface DarkModeButtonProps {
-    type: IconType
-    backgroundColor?: Tailwind.Color
-}
+type DarkModeButtonProps = {
+} & Omit<IconButtonProps, "icon">
 
-interface DarkModeButtonState { }
-
-class DarkModeButton extends React.Component<DarkModeButtonProps, DarkModeButtonState> {
-    state = {
-        darkModeEnabled: false
-    }
-    render() {
-        return <Icon
-            backgroundColor={this.props.backgroundColor}
-            type={this.props.type}
-            onClick={() => this.setState({ darkModeEnabled: ToggleDarkMode() })}
-            icon={(this.state.darkModeEnabled ? faMoon : faSun)} />;
-    }
+function DarkModeButton(props: DarkModeButtonProps) {
+    const [darkModeEnabled, setDarkModeEnabled] = useState<boolean>(Boolean(parseInt(Cookies.get("darkmode") || "")));
+    return <IconButton
+        onClick={() => setDarkModeEnabled(ToggleDarkMode())}
+        icon={<FontAwesomeIcon icon={(darkModeEnabled ? faMoon : faSun)} />}
+        {...props}
+    />;
 }
 
 export default DarkModeButton;
