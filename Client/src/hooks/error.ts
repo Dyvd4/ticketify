@@ -17,8 +17,7 @@ export function useErrorHandler() {
             title: "An unkown error occurred",
             description: error.message,
             status: "error",
-            duration: 6000,
-            isClosable: true
+            duration: 6000
         })
     })
 }
