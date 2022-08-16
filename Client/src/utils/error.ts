@@ -27,6 +27,22 @@ export function setupErrorHandler() {
     })
 }
 
+type ValidationErrorMap = {
+    [key: string]: string
+}
+
+export function getValidationErrorMap({ response: { data: { validation } } }): ValidationErrorMap {
+    const validationErrorMap = validation.error?.details?.reduce((map, detail, index) => {
+        if (index === 0) {
+            map = {}
+        }
+        map[detail.context.key] = detail.message
+        return map;
+    }, {}) || {};
+    if (validation.message) validationErrorMap["Fieldless"] = validation.message;
+    return validationErrorMap;
+}
+
 export function getValidationError({ response: { data: { validation } } }) {
     let validationError = validation.message ||
         validation.error?.details?.map(detail => detail.message)

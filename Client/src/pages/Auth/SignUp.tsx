@@ -2,19 +2,19 @@ import { Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link,
 import { useRef, useState } from "react";
 import { signUp } from "../../auth/auth";
 import Card from "../../components/Card";
-import { getValidationError } from "../../utils/error";
+import { getValidationErrorMap } from "../../utils/error";
 
 function SignUp() {
 
-    const [errorMessage, setErrorMessage] = useState<string>();
+    const [errorMap, setErrorMap] = useState<{ [key: string]: string }>();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = async () => {
         const response = await signUp(usernameRef.current!.value, passwordRef.current!.value);
         if (response.status === 200) return window.location.href = "/";
-        const errorMessage = getValidationError({ response });
-        setErrorMessage(errorMessage);
+        const errorMap = getValidationErrorMap({ response });
+        setErrorMap(errorMap);
     }
 
     return (
@@ -23,25 +23,29 @@ function SignUp() {
                 Sign up
             </Heading>
             <VStack>
-                <FormControl isInvalid={!!errorMessage}>
-                    <FormControl>
+                <FormControl isInvalid={!!errorMap?.Fieldless}>
+                    <FormControl isInvalid={!!errorMap?.username}>
                         <FormLabel>
                             Username
                         </FormLabel>
                         <Input size="sm" ref={usernameRef} name="username" />
+                        <FormErrorMessage>
+                            {errorMap?.username}
+                        </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl>
+                    <FormControl isInvalid={!!errorMap?.password}>
                         <FormLabel>
                             Password
                         </FormLabel>
                         <Input type="password" size="sm" ref={passwordRef} name="password" />
-                    </FormControl>
-                    {errorMessage && <>
                         <FormErrorMessage>
-                            {errorMessage}
+                            {errorMap?.password}
                         </FormErrorMessage>
-                    </>}
+                    </FormControl>
+                    <FormErrorMessage>
+                        {errorMap?.Fieldless}
+                    </FormErrorMessage>
                 </FormControl>
                 <Button
                     size="sm"

@@ -14,6 +14,10 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 Router.post("/signIn", async (req, res, next) => {
     try {
         const { username, password } = req.body;
+
+        const validation = UserSchema.validate({ username, password });
+        if (validation.error) return res.status(400).json({ validation });
+
         // check if user exist
         const user = await prisma.user.findFirst({
             where: {
