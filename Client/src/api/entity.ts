@@ -15,8 +15,9 @@ interface AddEntityParams {
     payload: any
 }
 
-export function addEntity({ route, payload }: AddEntityParams) {
-    return myRequest.post(`${route}`, { payload });
+export async function addEntity({ route, payload }: AddEntityParams) {
+    const response = await myRequest.post(`${route}`, { payload });
+    return response.data;
 }
 
 interface UpdateEntityParams {
@@ -25,8 +26,9 @@ interface UpdateEntityParams {
     payload: any
 }
 
-export function updateEntity({ route, entityId, payload }: UpdateEntityParams) {
-    return myRequest.put(`${route}/${entityId}`, { payload });
+export async function updateEntity({ route, entityId, payload }: UpdateEntityParams) {
+    const response = await myRequest.put(`${route}/${entityId}`, { payload });
+    return response.data;
 }
 
 interface RemoveEntityParams {

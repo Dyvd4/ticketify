@@ -12,12 +12,10 @@ Router.get("/user", async (req, res, next) => {
         });
         if (!user) return res.status(404).json(null);
         res.json({
-            user: {
-                id: user.id,
-                username: user.username,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-            }
+            id: user.id,
+            username: user.username,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         });
     }
     catch (e) {

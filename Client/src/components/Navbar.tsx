@@ -1,12 +1,16 @@
-import { faSliders, faUser, faHome } from "@fortawesome/free-solid-svg-icons";
-import DarkModeButton from "./Buttons/DarkMode";
 import { Link } from "@chakra-ui/react";
-import IconButton from "./Wrapper/IconButton";
+import { faHome, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "react-query";
+import { fetchUser } from "src/api/user";
+import DarkModeButton from "./Buttons/DarkMode";
+import IconButton from "./Wrapper/IconButton";
 
 type NavbarProps = {}
 
 function Navbar(props: NavbarProps) {
+    const { data } = useQuery(["user"], fetchUser);
+    if (!data?.user) return null;
     return (
         <nav className="w-full bg-gray-400 dark:bg-gray-700 flex justify-between p-2">
             <div>

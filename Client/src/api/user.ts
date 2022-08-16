@@ -8,7 +8,7 @@ const myRequest = request({
 
 export async function fetchUser() {
     let user = null;
-    const response = await myRequest.get("User");
-    if (response.status === 200) user = response.data.user;
+    const response = await myRequest.get("user");
+    if (response.status === 200) user = response.data;
     return { user };
 }
