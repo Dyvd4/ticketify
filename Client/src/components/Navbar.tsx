@@ -1,18 +1,17 @@
 import { Link } from "@chakra-ui/react";
 import { faHome, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "react-query";
-import { fetchUser } from "src/api/user";
+import { useCurrentUser } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
 
 type NavbarProps = {}
 
 function Navbar(props: NavbarProps) {
-    const { data } = useQuery(["user"], fetchUser);
-    if (!data?.user) return null;
+    const { currentUser } = useCurrentUser();
+    if (!currentUser) return null;
     return (
-        <nav className="w-full bg-gray-400 dark:bg-gray-700 flex justify-between p-2">
+        <nav className="w-full bg-indigo-500 dark:bg-gray-700 flex justify-between p-2">
             <div>
                 <Link href="/">
                     <IconButton circle
