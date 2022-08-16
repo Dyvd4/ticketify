@@ -1,8 +1,8 @@
 import { useApply as useApplyDarkMode } from "./hooks/darkmode";
-import { setupErrorHandler } from "./utils/error";
+import { useErrorHandler } from "./hooks/error";
 
 function Init() {
-    setupErrorHandler();
+    useErrorHandler();
     useApplyDarkMode();
     return (
         <div className="hidden"></div>
