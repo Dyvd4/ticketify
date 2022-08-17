@@ -15,7 +15,9 @@
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
+    "date-fns": "^2.29.1",
     "framer-motion": "^7.1.1",
+    "jotai": "^1.7.8",
     "lodash": "^4.17.21",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -52,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@types/date-fns": "^2.6.0",
     "@types/jest": "^27.4.1",
     "@types/js-cookie": "^3.0.2",
     "@types/lodash": "^4.14.182",
