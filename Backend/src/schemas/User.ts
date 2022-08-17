@@ -12,7 +12,11 @@ export const UserSchema = Joi.object<User>({
         .max(100)
         .messages({
             "string.max": "Password should not be longer than 100 characters"
-        })
+        }),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    createUser: Joi.string(),
+    updateUser: Joi.string()
 }).options({
     abortEarly: false
 });

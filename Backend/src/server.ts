@@ -9,6 +9,10 @@ import { customRequest } from "./middlewares/requests";
 import AuthRouter from "./Routes/Auth";
 import ErrorRouter from "./Routes/Error";
 import UserRouter from "./Routes/User";
+import TicketRouter from "./Routes/Ticket";
+import TicketPriorityRouter from "./Routes/TicketPriority";
+import CommentRouter from "./Routes/Comment";
+import TicketDueDateRouter from "./Routes/TicketDueDate";
 import logger from "./services/logger";
 dotenv.config();
 
@@ -20,11 +24,15 @@ server.use(cors());
 
 server.use(customRequest)
 server.use(authentication({
-    excludePaths: ["/api/auth/signIn", "/api/auth/signUp", "/api/error", "/api/todos"]
+    excludePaths: ["/api/auth/signIn", "/api/auth/signUp", "/api/error"]
 }));
 server.use("/api", ErrorRouter);
 server.use("/api/auth", AuthRouter);
 server.use("/api", UserRouter);
+server.use("/api", TicketRouter);
+server.use("/api", TicketPriorityRouter);
+server.use("/api", CommentRouter);
+server.use("/api", TicketDueDateRouter);
 
 server.use(errorHandler);
 
