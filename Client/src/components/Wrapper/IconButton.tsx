@@ -19,12 +19,15 @@ function IconButton(props: IconButtonProps) {
                 hover: "gray-400"
             }
         },
+        className,
         ...rest
     } = props;
     return (
         <ChakraIconButton
-            className={`${circle ? "rounded-full" : "rounded-lg"} 
-                           ${mapColorProps(undefined, backgroundColor)}`}
+            className={`text-white
+                        ${circle ? "rounded-full" : "rounded-lg"} 
+                        ${mapColorProps(undefined, backgroundColor)}
+                        ${className}`}
             icon={icon}
             {...rest} />
     );
