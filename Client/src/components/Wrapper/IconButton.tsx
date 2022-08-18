@@ -24,7 +24,7 @@ function IconButton(props: IconButtonProps) {
     } = props;
     return (
         <ChakraIconButton
-            className={`text-white
+            className={`text-black dark:text-white
                         ${circle ? "rounded-full" : "rounded-lg"} 
                         ${mapColorProps(undefined, backgroundColor)}
                         ${className}`}

@@ -1,4 +1,4 @@
-import { Box, ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { Provider as AtomProvider } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Index from "src/pages/Index/Index";
 import NotAuthorized from "./auth/NotAuthorized";
 import ProtectedArea from "./auth/ProtectedArea";
-import BgCover from "./components/BgCover";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { themeConfig } from "./config/theme";
@@ -32,23 +31,20 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <AtomProvider>
           <Navbar />
-          <Box className="relative">
-            <Sidebar />
-            <BgCover />
-            <Router>
-              <Routes>
-                <Route path="/" element={<ProtectedArea type="route" />}>
-                  <Route index element={<Index />} />
-                </Route>
-                <Route path="*" element={<NotFound />} />
-                <Route path="/NotAuthorized" element={<NotAuthorized />} />
-                <Route path="/Auth">
-                  <Route path="SignIn" element={<SignIn />} />
-                  <Route path="SignUp" element={<SignUp />} />
-                </Route>
-              </Routes>
-            </Router>
-          </Box>
+          <Sidebar />
+          <Router>
+            <Routes>
+              <Route path="/" element={<ProtectedArea type="route" />}>
+                <Route index element={<Index />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+              <Route path="/NotAuthorized" element={<NotAuthorized />} />
+              <Route path="/Auth">
+                <Route path="SignIn" element={<SignIn />} />
+                <Route path="SignUp" element={<SignUp />} />
+              </Route>
+            </Routes>
+          </Router>
         </AtomProvider>
       </QueryClientProvider>
     </ChakraProvider>

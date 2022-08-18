@@ -74,7 +74,7 @@ function List(props: ListProps) {
                                             aria-label="actions"
                                             as={IconButton}
                                             icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
-                                            className={`rounded-full text-black ${mapColorProps(undefined, defaultBackgroundColor)}`}
+                                            className={`rounded-full text-black dark:text-white ${mapColorProps(undefined, defaultBackgroundColor)}`}
                                         />
                                         <MenuList>
                                             {listItemRender(listItem).actions}
