@@ -1,6 +1,18 @@
+import { FormLabel, Input } from "@chakra-ui/react";
+import FilterOperations from "src/components/List/FilterOperations";
+import FormControl from "src/components/Wrapper/FormControl";
+
 function TicketListItemFilter() {
     return (
-        <div>Filter</div>
+        <>
+            <FormControl>
+                <FormLabel>Title</FormLabel>
+                <div className="flex gap-2">
+                    <Input name="title" type="text" />
+                    <FilterOperations for="title" />
+                </div>
+            </FormControl>
+        </>
     );
 }
 

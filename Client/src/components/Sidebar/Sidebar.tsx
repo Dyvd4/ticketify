@@ -1,4 +1,6 @@
 import { Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Link, UnorderedList } from "@chakra-ui/react";
+import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { sidebarAtom } from "src/context/atoms";
 import ListItem from "./ListItem";
@@ -13,8 +15,9 @@ function Sidebar() {
             <DrawerOverlay />
             <DrawerContent>
                 <DrawerCloseButton />
-                <DrawerHeader>
-                    Sidebar
+                <DrawerHeader className="flex items-center gap-2">
+                    Ticketify
+                    <FontAwesomeIcon icon={faFireFlameCurved} />
                 </DrawerHeader>
                 <DrawerBody>
                     <UnorderedList className="m-0">

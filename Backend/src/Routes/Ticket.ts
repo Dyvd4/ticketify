@@ -1,12 +1,20 @@
 import express from 'express';
 import TicketSchema from "../schemas/Ticket";
 import { prisma } from "../server";
+import { mapFilterQuery } from '../utils/filter';
+import { mapOrderByQuery } from '../utils/orderBy';
 
 const Router = express.Router();
 
 Router.get('/tickets', async (req, res, next) => {
     try {
-        const tickets = await prisma.ticket.findMany();
+        const tickets = await prisma.ticket.findMany({
+            include: {
+                priority: true
+            },
+            orderBy: mapOrderByQuery(req.query),
+            where: mapFilterQuery(req.query)
+        });
         res.json(tickets);
     }
     catch (e) {

@@ -7,8 +7,9 @@ import { fetchEntity } from "src/api/entity";
 import { defaultBackgroundColor } from "src/data/tailwind";
 import { mapColorProps } from "src/utils/component";
 import LoadingRipple from "../Loading/LoadingRipple";
+import FilterDrawer from "./FilterDrawer";
 import Header from "./Header";
-
+import SortDrawer from "./SortDrawer";
 
 type ListProps = {
     fetch: {
@@ -34,10 +35,19 @@ type ListProps = {
 
 function List(props: ListProps) {
     const { listItemRender, fetch: { queryKey, route }, header } = props;
-    const { isLoading, isError, data: listItems = [] } = useQuery([queryKey], () => fetchEntity({ route }))
+
+    const { isLoading, isError, data: listItems = [], refetch } = useQuery([queryKey], () => {
+        if (window.location.search) {
+            return fetchEntity({ route: `${route}${window.location.search}` })
+        }
+        return fetchEntity({ route })
+    })
+
     useEffect(() => {
         if (listItems.length > 0 && props.fetch.onResult) props.fetch.onResult(listItems)
-    }, [listItems, props.fetch])
+        if (window.location.search) refetch();
+    }, [listItems, props.fetch, refetch])
+
     return (
         <Container>
             <>
@@ -46,10 +56,18 @@ function List(props: ListProps) {
                         title={header.title}
                         count={listItems.length}
                         showCount={header?.showCount}
-                        sortInputs={props.sortInputs}
-                        filterInputs={props.filterInputs} />
+                        useSort={!!props.sortInputs}
+                        useFilter={!!props.filterInputs} />
                     <Divider />
                 </>}
+                <SortDrawer
+                    inputs={props.sortInputs}
+                    fetch={{ queryKey, route }}
+                />
+                <FilterDrawer
+                    inputs={props.filterInputs}
+                    fetch={{ queryKey, route }}
+                />
                 <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400">
                     {isLoading && <div className="flex justify-center items-center">
                         <LoadingRipple />

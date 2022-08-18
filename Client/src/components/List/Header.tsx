@@ -1,20 +1,22 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, useDisclosure } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import { faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAtom } from "jotai";
+import { filterDrawerAtom, sortDrawerAtom } from "src/context/atoms";
 import IconButton from "../Wrapper/IconButton";
 
 type HeaderProps = {
     title: string
     count: number
     showCount?: boolean
-    sortInputs?: React.ReactNode
-    filterInputs?: React.ReactNode
+    useSort: boolean
+    useFilter: boolean
 }
 
 function Header(props: HeaderProps) {
-    const { title, count, showCount, sortInputs, filterInputs } = props;
-    const { isOpen: sortDrawerActive, onOpen: setSortDrawerActive, onClose: setSortDrawerInActive } = useDisclosure();
-    const { isOpen: filterDrawerActive, onOpen: setFilterDrawerActive, onClose: setFilterDrawerInActive } = useDisclosure();
+    const { title, count, showCount, useSort, useFilter } = props;
+    const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
+    const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
     return (
         <Heading className="text-center my-8 dark:text-gray-400 mb-2 flex justify-center items-center gap-2">
             <>
@@ -24,71 +26,22 @@ function Header(props: HeaderProps) {
                 {showCount && <>
                     ({count})
                 </>}
-                {!!sortInputs && <>
+                {!!useSort && <>
                     <IconButton
                         size={"sm"}
-                        onClick={setFilterDrawerActive}
+                        onClick={() => setFilterDrawer(true)}
                         aria-label="filter"
                         icon={<FontAwesomeIcon icon={faFilter} />}
                     />
                 </>}
-                {!!filterInputs && <>
+                {!!useFilter && <>
                     <IconButton
                         size={"sm"}
-                        onClick={setSortDrawerActive}
+                        onClick={() => setSortDrawer(true)}
                         aria-label="sort"
                         icon={<FontAwesomeIcon icon={faSort} />}
                     />
                 </>}
-                {/* sort */}
-                <Drawer isOpen={sortDrawerActive}
-                    placement={"right"}
-                    onClose={setSortDrawerInActive}>
-                    <DrawerOverlay />
-                    <DrawerContent>
-                        <DrawerCloseButton />
-                        <DrawerHeader>
-                            Sort
-                        </DrawerHeader>
-                        <DrawerBody>
-                            {sortInputs}
-                        </DrawerBody>
-                        <DrawerFooter>
-                            <Button
-                                onClick={setSortDrawerInActive}
-                                variant="outline"
-                                mr={3}>
-                                Cancel
-                            </Button>
-                            <Button colorScheme="blue" mr={3}>Save</Button>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
-
-                {/* filter */}
-                <Drawer isOpen={filterDrawerActive}
-                    placement={"right"}
-                    onClose={setFilterDrawerInActive}>
-                    <DrawerOverlay />
-                    <DrawerContent>
-                        <DrawerCloseButton />
-                        <DrawerHeader>
-                            Filter
-                        </DrawerHeader>
-                        <DrawerBody>
-                            {filterInputs}
-                        </DrawerBody>
-                        <DrawerFooter>
-                            <Button
-                                onClick={setFilterDrawerInActive}
-                                variant="outline"
-                                mr={3}>
-                                Cancel
-                            </Button>
-                            <Button colorScheme="blue" mr={3}>Save</Button>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
             </>
         </Heading>
     );
