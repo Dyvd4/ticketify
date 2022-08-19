@@ -1,5 +1,6 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { RefObject } from "react";
+import { move } from "src/utils/array";
 import SortItem, { SortItemType } from "./Private/SortItem";
 
 type SortItemsProps = {
@@ -12,14 +13,7 @@ function SortItems({ items, ...props }: SortItemsProps) {
 
     const handleSort = (direction: "up" | "down", name) => {
         const itemToChange = items.find(item => item.property === name)!
-        const oldIndex = items.indexOf(itemToChange);
-
-        const newIndex = direction === "down" ? oldIndex + 1 : oldIndex - 1;
-        const itemToSwap = items[newIndex];
-
-        const newItems = [...items];
-        newItems[newIndex] = itemToChange;
-        newItems[oldIndex] = itemToSwap;
+        const newItems = [...move(items, itemToChange, direction)];
         props.onChange(newItems);
     }
 

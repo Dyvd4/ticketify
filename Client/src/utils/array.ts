@@ -34,3 +34,20 @@ export function getHighestMatchingIndex(arr1, arr2) {
     }
     return highestIndex
 }
+
+export const move = (array: any[], arrayItem, direction: "up" | "down") => {
+    const oldIndex = array.indexOf(arrayItem);
+    const newIndex = direction === "down" ? oldIndex + 1 : oldIndex - 1;
+    const itemToSwap = array[newIndex];
+    array[newIndex] = arrayItem;
+    array[oldIndex] = itemToSwap;
+    return array;
+}
+
+export const moveUp = (array: any[], arrayItem, direction: "up" | "down") => {
+    return move(array, arrayItem, "up");
+}
+
+export const moveDown = (array: any[], arrayItem, direction: "up" | "down") => {
+    return move(array, arrayItem, "down");
+}
