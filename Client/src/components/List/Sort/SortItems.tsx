@@ -35,7 +35,7 @@ function SortItems({ items, ...props }: SortItemsProps) {
                 onSortUp={(self.indexOf(item) === 0)
                     ? undefined
                     : (name) => { handleSort("up", name) }}
-                key={index}
+                key={item.property}
             />
         ))}
     </div>
