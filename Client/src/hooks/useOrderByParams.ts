@@ -11,8 +11,8 @@ export const useOrderByParams = (drawerRef: React.MutableRefObject<HTMLElement |
     const [orderByQueryParams, setOrderByQueryParams] = useState<OrderByQueryParam[] | null>(null);
     const [orderByQueryParamsUrl, setOrderByQueryParamsUrl] = useState<URL | null>(null);
 
-    const getInputs = () => Array.from(drawerRef.current!.querySelectorAll("input"));
-    const getDirections = () => (Array.from(drawerRef.current!.querySelectorAll('[name^="sort-directions"]')) as HTMLSelectElement[]);
+    const getInputs = () => Array.from(drawerRef.current!.querySelectorAll("input"))
+    const getDirections = () => (Array.from(drawerRef.current!.querySelectorAll('[name^="sort-directions"]')) as HTMLSelectElement[])
 
     const getOrderByParams = () => {
         const orderByParams: OrderByQueryParam[] = getInputs()
@@ -22,7 +22,9 @@ export const useOrderByParams = (drawerRef: React.MutableRefObject<HTMLElement |
                 if (!directionsInput) throw new Error(`No direction input found for input with name: ${input.name}`);
                 return {
                     property: input.name,
-                    direction: directionsInput.value as OrderByDirection
+                    label: input.value,
+                    direction: directionsInput.value as OrderByDirection,
+                    disabled: input.disabled
                 }
             });
         return orderByParams;

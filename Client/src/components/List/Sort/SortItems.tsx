@@ -1,0 +1,50 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { RefObject } from "react";
+import SortItem, { SortItemType } from "./Private/SortItem";
+
+type SortItemsProps = {
+    items: SortItemType[]
+    onChange(items)
+}
+
+function SortItems({ items, ...props }: SortItemsProps) {
+    const [listRef] = useAutoAnimate();
+
+    const handleSort = (direction: "up" | "down", name) => {
+        const itemToChange = items.find(item => item.property === name)!
+        const oldIndex = items.indexOf(itemToChange);
+
+        const newIndex = direction === "down" ? oldIndex + 1 : oldIndex - 1;
+        const itemToSwap = items[newIndex];
+
+        const newItems = [...items];
+        newItems[newIndex] = itemToChange;
+        newItems[oldIndex] = itemToSwap;
+        props.onChange(newItems);
+    }
+
+    const handleChange = (name, changedItem) => {
+        const oldItem = items.find(item => item.property === name)!
+        const spliceIndex = items.indexOf(oldItem);
+        const newItems = [...items];
+        newItems.splice(spliceIndex, 1, changedItem);
+        props.onChange(newItems);
+    }
+
+    return <div className="flex flex-col gap-2" ref={listRef as RefObject<HTMLDivElement>}>
+        {items.map((item, index, self) => (
+            <SortItem {...item}
+                onChange={handleChange}
+                onSortDown={(self.indexOf(item) === self.length - 1)
+                    ? undefined
+                    : (name) => { handleSort("down", name) }}
+                onSortUp={(self.indexOf(item) === 0)
+                    ? undefined
+                    : (name) => { handleSort("up", name) }}
+                key={index}
+            />
+        ))}
+    </div>
+}
+
+export default SortItems;

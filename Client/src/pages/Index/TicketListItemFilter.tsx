@@ -1,5 +1,5 @@
 import { FormLabel, Input } from "@chakra-ui/react";
-import FilterOperations from "src/components/List/FilterOperations";
+import FilterOperations from "src/components/List/Filter/FilterOperations";
 import FormControl from "src/components/Wrapper/FormControl";
 
 function TicketListItemFilter() {

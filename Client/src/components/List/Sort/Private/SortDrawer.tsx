@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { sortDrawerAtom } from "src/context/atoms";
 import { useOrderByParams } from "src/hooks/useOrderByParams";
-import { usePrefillOrderByParams } from "src/hooks/usePrefillOrderByParams";
 
 type SortDrawerProps = {
     inputs: React.ReactNode
@@ -19,7 +18,6 @@ function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawer
     const [drawerActive, setDrawer] = useAtom(sortDrawerAtom);
     const drawerRef = useRef<HTMLDivElement | null>(null);
     const { orderByParamsUrl, setOrderByParamsUrl, resetOrderByParamsUrl } = useOrderByParams(drawerRef);
-    const { prefillOrderByParams } = usePrefillOrderByParams(drawerRef);
 
     const { refetch } = useQuery([queryKey], () => {
         if (orderByParamsUrl?.search) {
@@ -41,10 +39,10 @@ function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawer
         setDrawer(false)
     }
 
+    // cleanup
     const setDrawerRef = (element) => {
         if (element) {
             drawerRef.current = element;
-            prefillOrderByParams();
         }
     }
 

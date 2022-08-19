@@ -1,16 +1,18 @@
-import { Input } from "@chakra-ui/react";
-import SortDirections from "src/components/List/SortDirections";
-import FormControl from "src/components/Wrapper/FormControl";
+import { useState } from "react";
+import { SortItemType } from "src/components/List/Sort/Private/SortItem";
+import SortItems from "src/components/List/Sort/SortItems";
+import { useUrlParams } from "src/hooks/useUrlParams";
 
 function TicketListItemSort() {
-    return (
-        <FormControl>
-            <div className="flex gap-2">
-                <Input readOnly name="title" type="text" value="title" />
-                <SortDirections for="title" />
-            </div>
-        </FormControl>
-    );
+    const [sortItems, setSortItems] = useUrlParams("orderBy", true, [
+        {
+            property: "title"
+        },
+        {
+            property: "dueDate"
+        }
+    ]);
+    return <SortItems items={sortItems} onChange={(items) => { setSortItems(items) }} />
 }
 
 export default TicketListItemSort;
