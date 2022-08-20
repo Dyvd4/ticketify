@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { filterDrawerAtom } from "src/context/atoms";
 import { useFilterParams } from "src/hooks/useFilterParams";
-import { usePrefillFilterParams } from "src/hooks/usePrefillFilterParams";
 
 type FilterDrawerProps = {
     inputs: React.ReactNode
@@ -19,7 +18,6 @@ function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDr
     const [drawerActive, setDrawer] = useAtom(filterDrawerAtom);
     const drawerRef = useRef<HTMLDivElement | null>(null);
     const { filterParamsUrl, setFilterParamsUrl, resetFilterParamsUrl } = useFilterParams(drawerRef);
-    const { prefillFilterParams } = usePrefillFilterParams(drawerRef);
 
     const { refetch } = useQuery([queryKey], () => {
         if (filterParamsUrl?.search) {
@@ -41,13 +39,6 @@ function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDr
         setDrawer(false);
     }
 
-    const setDrawerRef = (element) => {
-        if (element) {
-            drawerRef.current = element;
-            prefillFilterParams();
-        }
-    }
-
     return (
         <Drawer isOpen={drawerActive}
             placement={"right"}
@@ -58,7 +49,7 @@ function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDr
                 <DrawerHeader>
                     Filter
                 </DrawerHeader>
-                <DrawerBody ref={setDrawerRef}>
+                <DrawerBody ref={drawerRef}>
                     {inputs}
                 </DrawerBody>
                 <DrawerFooter>

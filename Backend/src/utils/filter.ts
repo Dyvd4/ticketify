@@ -1,49 +1,34 @@
 import Object from "lodash"
-import { prisma } from "../server"
 
-type FilterOperation = "contains" | "equals" | "gt" | "lt"
-
-export type FilterQueryParam = {
-    property: string,
-    operation: FilterOperation
-    value: any
+export type FilterItemProps = {
+    type: FilterOperationsType
+    property: string
+    value?: string
+    operation?: Omit<FilterOperation, "label">
 }
-
-export type FilterQueryParams = Array<FilterQueryParam>
+export type FilterOperationsType = "string" | "number" | "date" | "boolean"
+export type FilterOperation = {
+    label: string
+    value: string
+}
+export type FilterQueryParams = Array<FilterItemProps>
 
 export const mapFilterQuery = (query) => {
     if (!query.filter) return {};
     const filter: FilterQueryParams = JSON.parse((query.filter) as string);
-    let test = filter.reduce((map, filter) => {
-        Object.set(map, `AND.${filter.property}.${filter.operation}`, filter.value);
+    return filter.reduce((map, filter) => {
+        Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, parseFilterValue(filter.value, filter.type));
         return map;
     }, {})
-    return test;
 }
 
-// (async () => {
-//     const tickets = await prisma.ticket.findMany({
-//         include: {
-//             priority: true
-//         },
-//         where: {
-//             AND: {
-//                 title: {
-//                     equals: "value"
-//                 }
-//             }
-//         }
-//     });
-//     const filter = [
-//         {
-//             property: "title",
-//             operation: "equals",
-//             value: "test",
-//         },
-//         {
-//             property: "priority.name",
-//             operation: "equals",
-//             value: "Not very low",
-//         }
-//     ];
-// })
+const parseFilterValue = (value, type: FilterOperationsType) => {
+    switch (type) {
+        case "number":
+            return parseInt(value)
+        case "boolean":
+            return Boolean(parseInt(value))
+        default:
+            return value
+    }
+}

@@ -7,7 +7,7 @@ import { fetchEntity } from "src/api/entity";
 import { defaultBackgroundColor } from "src/data/tailwind";
 import { mapColorProps } from "src/utils/component";
 import LoadingRipple from "../Loading/LoadingRipple";
-import FilterDrawer from "./Filter/FilterDrawer";
+import FilterDrawer from "./Filter/Private/FilterDrawer";
 import Header from "./Header";
 import SortDrawer from "./Sort/Private/SortDrawer";
 

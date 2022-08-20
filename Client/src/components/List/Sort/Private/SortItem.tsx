@@ -2,6 +2,7 @@ import { IconButton, Input, Tooltip } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faCircleCheck, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import SortDirections from "./SortDirections";
+import { useId } from "react";
 
 export type SortItemType = Omit<SortItemProps, "onChange" | "onSortUp" | "onSortDown">
 
@@ -20,14 +21,21 @@ export type SortItemProps = {
 }
 
 function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
-    // todo: make prettier
+    const inputId = useId();
     return (
         <div className="flex items-center gap-2">
-            <Input disabled={item.disabled} readOnly name={item.property} type="text" value={item.label || item.property} />
+            <Input
+                disabled={item.disabled}
+                readOnly
+                name={item.property}
+                type="text"
+                value={item.label || item.property}
+                id={inputId}
+            />
             <SortDirections
                 disabled={item.disabled}
                 onSelect={(direction) => onChange(item.property, { ...item, direction })}
-                for={item.property}
+                for={inputId}
                 direction={item.direction}
             />
             <Tooltip label="move up" placement="top">

@@ -3,6 +3,8 @@ import { RefObject } from "react";
 import { move } from "src/utils/array";
 import SortItem, { SortItemType } from "./Private/SortItem";
 
+export type DefaultSortItemType = Omit<SortItemType, "disabled" | "direction">;
+
 type SortItemsProps = {
     items: SortItemType[]
     onChange(items)

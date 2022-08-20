@@ -1,31 +1,25 @@
-import { useState } from "react"
-
-type OrderByDirection = "desc" | "asc";
-
-export type OrderByQueryParam = {
-    property: string
-    direction: OrderByDirection
-}
+import { useState } from "react";
+import { SortItemType } from "src/components/List/Sort/Private/SortItem";
 
 export const useOrderByParams = (drawerRef: React.MutableRefObject<HTMLElement | null>) => {
-    const [orderByQueryParams, setOrderByQueryParams] = useState<OrderByQueryParam[] | null>(null);
+    const [orderByQueryParams, setOrderByQueryParams] = useState<SortItemType[] | null>(null);
     const [orderByQueryParamsUrl, setOrderByQueryParamsUrl] = useState<URL | null>(null);
 
-    const getInputs = () => Array.from(drawerRef.current!.querySelectorAll("input"))
+    const getInputs = () => (Array.from(drawerRef.current!.querySelectorAll("input[id]")) as HTMLInputElement[])
     const getDirections = () => (Array.from(drawerRef.current!.querySelectorAll('[name^="sort-directions"]')) as HTMLSelectElement[])
 
     const getOrderByParams = () => {
-        const orderByParams: OrderByQueryParam[] = getInputs()
+        const orderByParams: SortItemType[] = getInputs()
             .map(input => {
                 const directionsInput = getDirections()
-                    .find(operation => operation.getAttribute("name")?.includes(input.name))
+                    .find(operation => operation.name.includes(input.id))
                 if (!directionsInput) throw new Error(`No direction input found for input with name: ${input.name}`);
                 return {
                     property: input.name,
                     label: input.value,
-                    direction: directionsInput.value as OrderByDirection,
+                    direction: directionsInput.value,
                     disabled: input.disabled
-                }
+                } as SortItemType
             });
         return orderByParams;
     }

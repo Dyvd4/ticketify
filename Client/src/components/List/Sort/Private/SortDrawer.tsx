@@ -39,13 +39,6 @@ function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawer
         setDrawer(false)
     }
 
-    // cleanup
-    const setDrawerRef = (element) => {
-        if (element) {
-            drawerRef.current = element;
-        }
-    }
-
     return (
         <Drawer isOpen={drawerActive}
             placement={"right"}
@@ -56,7 +49,7 @@ function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawer
                 <DrawerHeader>
                     Sort
                 </DrawerHeader>
-                <DrawerBody ref={(setDrawerRef)}>
+                <DrawerBody ref={drawerRef}>
                     {inputs}
                 </DrawerBody>
                 <DrawerFooter>

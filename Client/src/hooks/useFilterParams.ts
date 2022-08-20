@@ -1,32 +1,37 @@
-import { useState } from "react"
-
-type FilterOperation = "contains" | "equals" | "gt" | "lt"
-
-export type FilterQueryParam = {
-    property: string,
-    operation: FilterOperation
-    value: any
-}
+import { useState } from "react";
+import { FilterItemType } from "src/components/List/Filter/Private/FilterItem";
 
 export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | null>) => {
 
-    const [filterQueryParams, setFilterQueryParams] = useState<FilterQueryParam[] | null>(null);
+    const [filterQueryParams, setFilterQueryParams] = useState<FilterItemType[] | null>(null);
     const [filterQueryParamsUrl, setFilterQueryParamsUrl] = useState<URL | null>(null);
 
-    const getInputs = () => Array.from(drawerRef.current!.querySelectorAll("input"));
+    const getInputs = () => (Array.from(drawerRef.current!.querySelectorAll("input[id]")) as HTMLInputElement[]);
     const getOperations = () => (Array.from(drawerRef.current!.querySelectorAll('[name^="filter-operations"]')) as HTMLSelectElement[]);
+    const getFilterItemProps = () => (Array.from(drawerRef.current!.querySelectorAll("[class^=filter-item-props")) as HTMLElement[])
 
     const getFilterParams = () => {
-        const filterQueryParams: FilterQueryParam[] = getInputs()
+        const filterQueryParams: FilterItemType[] = getInputs()
             .map(input => {
                 const operationsInput = getOperations()
-                    .find(operation => operation.name.includes(input.name))
+                    .find(operation => operation.name.includes(input.id))
                 if (!operationsInput) throw new Error(`No operation input found for input with name: ${input.name}`);
+                const filterItemProps = Array.from(getFilterItemProps()
+                    .find(filterItem => filterItem.className.includes(input.id))
+                    ?.querySelectorAll("input") || [])
+                    .reduce((map, propInput) => {
+                        map[propInput.name] = propInput.value
+                        return map;
+                    }, {} as any);
+                if (!filterItemProps) throw new Error(`No filter item props found for input with name: ${input.name}`);
                 return {
-                    property: input.name,
+                    type: filterItemProps.type,
+                    property: filterItemProps.property,
                     value: input.value,
-                    operation: operationsInput.value as FilterOperation
-                }
+                    operation: {
+                        value: operationsInput.value
+                    }
+                } as FilterItemType
             });
         return filterQueryParams;
     }

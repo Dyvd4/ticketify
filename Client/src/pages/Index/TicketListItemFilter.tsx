@@ -1,19 +1,16 @@
-import { FormLabel, Input } from "@chakra-ui/react";
-import FilterOperations from "src/components/List/Filter/FilterOperations";
-import FormControl from "src/components/Wrapper/FormControl";
+import FilterItems, { DefaultFilterItemType } from "src/components/List/Filter/FilterItems";
+import { useUrlParams } from "src/hooks/useUrlParams";
 
 function TicketListItemFilter() {
-    return (
-        <>
-            <FormControl>
-                <FormLabel>Title</FormLabel>
-                <div className="flex gap-2">
-                    <Input name="title" type="text" />
-                    <FilterOperations for="title" />
-                </div>
-            </FormControl>
-        </>
-    );
+    const [filterItems] = useUrlParams("filter", true, [
+        {
+            property: "title",
+            label: "Title",
+            type: "string"
+        }
+    ] as DefaultFilterItemType[]);
+
+    return <FilterItems items={filterItems} />
 }
 
 export default TicketListItemFilter;
