@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { SortItemType } from "src/components/List/Sort/Private/SortItem";
+import { DefaultSortItemType } from "src/components/List/Sort/SortItems";
 
 export const useOrderByParams = (drawerRef: React.MutableRefObject<HTMLElement | null>) => {
-    const [orderByQueryParams, setOrderByQueryParams] = useState<SortItemType[] | null>(null);
+    const [orderByQueryParams, setOrderByQueryParams] = useState<DefaultSortItemType[] | null>(null);
     const [orderByQueryParamsUrl, setOrderByQueryParamsUrl] = useState<URL | null>(null);
 
     const getInputs = () => (Array.from(drawerRef.current!.querySelectorAll("input[id]")) as HTMLInputElement[])
     const getDirections = () => (Array.from(drawerRef.current!.querySelectorAll('[name^="sort-directions"]')) as HTMLSelectElement[])
 
     const getOrderByParams = () => {
-        const orderByParams: SortItemType[] = getInputs()
+        const orderByParams: DefaultSortItemType[] = getInputs()
             .map(input => {
                 const directionsInput = getDirections()
                     .find(operation => operation.name.includes(input.id))
@@ -19,7 +19,7 @@ export const useOrderByParams = (drawerRef: React.MutableRefObject<HTMLElement |
                     label: input.value,
                     direction: directionsInput.value,
                     disabled: input.disabled
-                } as SortItemType
+                } as DefaultSortItemType
             });
         return orderByParams;
     }

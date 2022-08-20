@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { FilterItemType } from "src/components/List/Filter/Private/FilterItem";
+import { DefaultFilterItemType } from "src/components/List/Filter/FilterItems";
+// note: refac?
+import { FilterOperationsType } from "src/components/List/Filter/Private/FilterOperations";
 
 export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | null>) => {
 
-    const [filterQueryParams, setFilterQueryParams] = useState<FilterItemType[] | null>(null);
+    const [filterQueryParams, setFilterQueryParams] = useState<DefaultFilterItemType[] | null>(null);
     const [filterQueryParamsUrl, setFilterQueryParamsUrl] = useState<URL | null>(null);
 
     const getInputs = () => (Array.from(drawerRef.current!.querySelectorAll("input[id]")) as HTMLInputElement[]);
@@ -11,7 +13,17 @@ export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | 
     const getFilterItemProps = () => (Array.from(drawerRef.current!.querySelectorAll("[class^=filter-item-props")) as HTMLElement[])
 
     const getFilterParams = () => {
-        const filterQueryParams: FilterItemType[] = getInputs()
+        const parseInputValue = (input, type: FilterOperationsType) => {
+            switch (type) {
+                case "number":
+                    return parseInt(input.value)
+                case "boolean":
+                    return input.checked ? 1 : 0
+                default:
+                    return input.value
+            }
+        }
+        const filterQueryParams: DefaultFilterItemType[] = getInputs()
             .map(input => {
                 const operationsInput = getOperations()
                     .find(operation => operation.name.includes(input.id))
@@ -27,11 +39,12 @@ export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | 
                 return {
                     type: filterItemProps.type,
                     property: filterItemProps.property,
-                    value: input.value,
+                    value: parseInputValue(input, filterItemProps.type),
                     operation: {
                         value: operationsInput.value
-                    }
-                } as FilterItemType
+                    },
+                    disabled: input.disabled
+                } as DefaultFilterItemType
             });
         return filterQueryParams;
     }

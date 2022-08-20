@@ -80,11 +80,12 @@ type FilterOperationsProps = {
     for: string
     type: FilterOperationsType
     operation?: FilterOperation
+    disabled?: boolean
 }
 
 function FilterOperations(props: FilterOperationsProps) {
     return (
-        <Select name={`filter-operations-${props.for}`}>
+        <Select name={`filter-operations-${props.for}`} disabled={props.disabled}>
             {typeOperations[props.type].map((operation, index) => (
                 <option selected={operation.value === props.operation?.value} key={index} value={operation.value}>{operation.label}</option>
             ))}

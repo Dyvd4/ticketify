@@ -2,7 +2,7 @@ import FilterItems, { DefaultFilterItemType } from "src/components/List/Filter/F
 import { useUrlParams } from "src/hooks/useUrlParams";
 
 function TicketListItemFilter() {
-    const [filterItems] = useUrlParams("filter", true, [
+    const [filterItems, setFilterItems] = useUrlParams("filter", true, [
         {
             property: "title",
             label: "Title",
@@ -10,7 +10,8 @@ function TicketListItemFilter() {
         }
     ] as DefaultFilterItemType[]);
 
-    return <FilterItems items={filterItems} />
+    return <FilterItems items={filterItems} onChange={items => setFilterItems(items)}
+    />
 }
 
 export default TicketListItemFilter;

@@ -5,6 +5,7 @@ export type FilterItemProps = {
     property: string
     value?: string
     operation?: Omit<FilterOperation, "label">
+    disabled?: boolean
 }
 export type FilterOperationsType = "string" | "number" | "date" | "boolean"
 export type FilterOperation = {
@@ -16,18 +17,23 @@ export type FilterQueryParams = Array<FilterItemProps>
 export const mapFilterQuery = (query) => {
     if (!query.filter) return {};
     const filter: FilterQueryParams = JSON.parse((query.filter) as string);
-    return filter.reduce((map, filter) => {
-        Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, parseFilterValue(filter.value, filter.type));
-        return map;
-    }, {})
+    const mappedFilter = filter
+        .filter(filter => !filter.disabled)
+        .reduce((map, filter) => {
+            if (filter.value !== null && filter.value !== "") {
+                Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, parseFilterValue(filter.value, filter.type));
+            }
+            return map;
+        }, {})
+    return mappedFilter;
 }
 
 const parseFilterValue = (value, type: FilterOperationsType) => {
     switch (type) {
-        case "number":
-            return parseInt(value)
         case "boolean":
-            return Boolean(parseInt(value))
+            return Boolean(value)
+        case "date":
+            return new Date(value)
         default:
             return value
     }
