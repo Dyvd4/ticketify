@@ -80,8 +80,8 @@ function List(props: ListProps) {
                             </Text>
                         </Alert>
                     </>}
-                    {listItems.map((listItem, index) => (
-                        <ListItem className="rounded-lg p-4 grid grid-cols-12 bg-gray-400 dark:bg-gray-700" key={index}>
+                    {listItems.map((listItem) => (
+                        <ListItem className="rounded-lg p-4 grid grid-cols-12 bg-gray-400 dark:bg-gray-700" key={listItem.id}>
                             <div className="col-span-10">
                                 {listItemRender(listItem).content}
                             </div>

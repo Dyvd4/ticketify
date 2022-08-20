@@ -1,5 +1,4 @@
-import { DefaultFilterItemType } from "src/components/List/Filter/FilterItems";
-import SortItems from "src/components/List/Sort/SortItems";
+import SortItems, { DefaultSortItemType } from "src/components/List/Sort/SortItems";
 import { useUrlParams } from "src/hooks/useUrlParams";
 
 function TicketListItemSort() {
@@ -10,7 +9,7 @@ function TicketListItemSort() {
         {
             property: "dueDate"
         }
-    ] as DefaultFilterItemType[]);
+    ] as DefaultSortItemType[]);
     return <SortItems items={sortItems} onChange={(items) => { setSortItems(items) }} />
 }
 

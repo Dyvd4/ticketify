@@ -62,6 +62,7 @@ const typeOperations = {
         operations.lte
     ],
     date: [
+        operations.equals,
         operations.lt,
         operations.gt,
         operations.not,
