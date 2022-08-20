@@ -64,3 +64,10 @@ model TicketDueDate {
   createUser        String?   @db.NVarChar(100)
   updateUser        String?   @db.NVarChar(100)
 }
+
+model Test {
+  id          Int      @id @default(autoincrement())
+  isAmazing   Boolean  @db.Bit
+  description String   @db.NVarChar(100)
+  createdAt   DateTime @default(now())
+}
