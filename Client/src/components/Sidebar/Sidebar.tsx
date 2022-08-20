@@ -28,6 +28,9 @@ function Sidebar() {
                         <Link href="Comments">
                             <ListItem active={path === "/Comments"}>Comments</ListItem>
                         </Link>
+                        <Link href="Test">
+                            <ListItem active={path === "/Test"}>Test</ListItem>
+                        </Link>
                     </UnorderedList>
                 </DrawerBody>
             </DrawerContent>

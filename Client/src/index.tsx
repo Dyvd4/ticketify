@@ -14,6 +14,7 @@ import Init from "./init";
 import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/NotFound";
+import TestIndex from "./pages/Test/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 
@@ -36,6 +37,7 @@ root.render(
             <Routes>
               <Route path="/" element={<ProtectedArea type="route" />}>
                 <Route index element={<Index />} />
+                <Route path="Test" element={<TestIndex />} />
               </Route>
               <Route path="*" element={<NotFound />} />
               <Route path="/NotAuthorized" element={<NotAuthorized />} />
