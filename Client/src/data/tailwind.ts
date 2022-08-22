@@ -7,10 +7,19 @@ export const screens = {
 }
 
 export const defaultBackgroundColor: Tailwind.Color = {
-    value: "gray-300",
-    hover: "gray-200",
+    value: "bg-gray-300",
+    hover: "bg-gray-200",
     darkMode: {
-        value: "gray-500",
-        hover: "gray-400"
+        value: "bg-gray-500",
+        hover: "bg-gray-400"
+    }
+}
+
+export const actionBackgroundColor: Tailwind.Color = {
+    value: "bg-teal-600",
+    hover: "bg-teal-500",
+    darkMode: {
+        value: "bg-teal-600",
+        hover: "bg-teal-500"
     }
 }

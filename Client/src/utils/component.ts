@@ -1,12 +1,11 @@
-export function mapColorProps(color?: Tailwind.Color, bgColor?: Tailwind.Color) {
-    let className = "";
-    if (color) {
-        className += `text-${color.value} hover:text-${color.hover} 
-        dark:text-${color.darkMode?.value} dark:hover:text-${color.darkMode?.hover}`
-    }
-    if (bgColor) {
-        className += ` bg-${bgColor.value} hover:bg-${bgColor.hover} 
-        dark:bg-${bgColor.darkMode?.value} dark:hover:bg-${bgColor.darkMode?.hover}`
-    }
+export function mapColorProps(colors: Array<Tailwind.Color | undefined>) {
+    const className = colors
+        .filter(color => !!color)
+        .reduce((map, color) => {
+            color = color as Tailwind.Color;
+            map += ` ${color.value} hover:${color.hover}
+                dark:${color.darkMode?.value} dark:hover:${color.darkMode?.hover}`
+            return map;
+        }, "");
     return className;
 }

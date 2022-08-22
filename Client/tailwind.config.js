@@ -1,4 +1,6 @@
-module.exports = {
+const colors = require("tailwindcss/colors")
+
+const config = {
   content: [],
   important: true,
   corePlugins: {
@@ -13,7 +15,12 @@ module.exports = {
     },
   },
   theme: {
-    extend: {},
+    colors: Object.keys(colors).reduce((map, color) => {
+      map[color] = colors[color];
+      return map;
+    }, {})
   },
-  plugins: [],
+  plugins: []
 }
+
+module.exports = config;

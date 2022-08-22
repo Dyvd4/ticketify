@@ -8,8 +8,11 @@ type ButtonProps = React.PropsWithChildren<{}>
 const Button: React.FunctionComponent<ButtonProps> = (props) => {
     const { children, className, twColor, twBackgroundColor, ...buttonProps } = props;
     return (
-        <button onClick={props.onClick}
-            className={`rounded-md cursor-pointer ${mapColorProps(twColor, twBackgroundColor)} ${className}`} {...buttonProps}>
+        <button
+            onClick={props.onClick}
+            className={`rounded-md cursor-pointer 
+            ${mapColorProps([twColor, twBackgroundColor])} ${className}`}
+            {...buttonProps}>
             {children}
         </button>
     )

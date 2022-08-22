@@ -1,10 +1,10 @@
-import { Alert, AlertIcon, Container, Divider, IconButton, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Container, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
-import { defaultBackgroundColor } from "src/data/tailwind";
+import { actionBackgroundColor } from "src/data/tailwind";
 import { mapColorProps } from "src/utils/component";
 import LoadingRipple from "../Loading/LoadingRipple";
 import FilterDrawer from "./Filter/Private/FilterDrawer";
@@ -90,10 +90,14 @@ function List(props: ListProps) {
                                     <Menu>
                                         <MenuButton
                                             aria-label="actions"
-                                            as={IconButton}
-                                            icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
-                                            className={`rounded-full text-black dark:text-white ${mapColorProps(undefined, defaultBackgroundColor)}`}
-                                        />
+                                            as="button"
+                                            className={`rounded-full p-2 w-6 h-6
+                                            text-black dark:text-white
+                                            flex justify-center items-center
+                                            ${mapColorProps([actionBackgroundColor])}`}
+                                        >
+                                            <FontAwesomeIcon icon={faEllipsisVertical} size="xs" />
+                                        </MenuButton>
                                         <MenuList>
                                             {listItemRender(listItem).actions}
                                         </MenuList>

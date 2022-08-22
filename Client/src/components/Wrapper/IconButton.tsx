@@ -12,11 +12,11 @@ function IconButton(props: IconButtonProps) {
         icon,
         circle,
         backgroundColor = {
-            value: "gray-300",
-            hover: "gray-200",
+            value: "bg-gray-300",
+            hover: "bg-gray-200",
             darkMode: {
-                value: "gray-500",
-                hover: "gray-400"
+                value: "bg-gray-500",
+                hover: "bg-gray-400"
             }
         },
         className,
@@ -26,7 +26,7 @@ function IconButton(props: IconButtonProps) {
         <ChakraIconButton
             className={`text-black dark:text-white
                         ${circle ? "rounded-full" : "rounded-lg"} 
-                        ${mapColorProps(undefined, backgroundColor)}
+                        ${mapColorProps([backgroundColor])}
                         ${className}`}
             icon={icon}
             {...rest} />
