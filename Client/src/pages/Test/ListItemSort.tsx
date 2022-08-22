@@ -2,7 +2,7 @@ import SortItems, { DefaultSortItemType } from "src/components/List/Sort/SortIte
 import { useUrlParams } from "src/hooks/useUrlParams";
 
 function TicketListItemSort() {
-    const [sortItems, setSortItems] = useUrlParams("orderBy", true, [
+    const [sortItems, setSortItems] = useUrlParams("orderBy", [
         {
             property: "isAmazing",
             label: "Is amazing"
@@ -14,7 +14,8 @@ function TicketListItemSort() {
             property: "createdAt",
             label: "created at"
         }
-    ] as DefaultSortItemType[]);
+    ] as DefaultSortItemType[],
+        { jsonParse: true, dontSetUrl: true });
     return <SortItems items={sortItems} onChange={(items) => { setSortItems(items) }} />
 }
 

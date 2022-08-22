@@ -1,11 +1,28 @@
 import { useEffect, useState } from "react"
 
-export const useUrlParams = (name, parse?: boolean, fallBackValue?) => {
-    const [urlParams, setUrlParams] = useState<any>(null);
+type UseUrlParamsOptions = {
+    /** JSON parse the urlParam */
+    jsonParse?: boolean,
+    dontSetUrl?: boolean
+}
+
+/** @param fallBackValue 
+ * when no url param with the given name could be found, use this value
+*/
+export const useUrlParams = (name, fallBackValue?, options?: UseUrlParamsOptions) => {
+    const [urlParamsState, setUrlParamsState] = useState<any>(null);
     useEffect(() => {
         let urlParam = new URLSearchParams(window.location.search).get(name);
-        if (urlParam && parse) urlParam = JSON.parse(urlParam);
-        setUrlParams(urlParam || fallBackValue);
+        if (urlParam && !!options?.jsonParse) urlParam = JSON.parse(urlParam);
+        setUrlParamsState(urlParam || fallBackValue);
     }, [])
-    return [urlParams, setUrlParams];
+    const setUrlParams = (params) => {
+        if (!options?.dontSetUrl) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set(name, JSON.stringify(params));
+            window.history.pushState(null, "", newUrl);
+        }
+        setUrlParamsState(params);
+    }
+    return [urlParamsState, setUrlParams];
 }
