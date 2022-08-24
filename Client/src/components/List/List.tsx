@@ -6,7 +6,9 @@ import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { actionBackgroundColor } from "src/data/tailwind";
 import { mapColorProps } from "src/utils/component";
+import { setUrlParms } from "src/utils/url";
 import LoadingRipple from "../Loading/LoadingRipple";
+import Pager from "../Pager/Pager";
 import FilterDrawer from "./Filter/Private/FilterDrawer";
 import Header from "./Header";
 import SortDrawer from "./Sort/Private/SortDrawer";
@@ -36,17 +38,35 @@ type ListProps = {
 function List(props: ListProps) {
     const { listItemRender, fetch: { queryKey, route }, header } = props;
 
-    const { isLoading, isError, data: listItems = [], refetch } = useQuery([queryKey], () => {
-        if (window.location.search) {
-            return fetchEntity({ route: `${route}${window.location.search}` })
-        }
-        return fetchEntity({ route })
+    // query
+    const { isLoading, isError, data, refetch } = useQuery([queryKey, window.location.search], () => {
+        return fetchEntity({ route: `${route}${window.location.search}` })
     })
 
+    const listItems = data?.items || [];
+    const pagingInfo = data?.pagesCount && data?.currentPage
+        ? {
+            pagesCount: data.pagesCount,
+            currentPage: data.currentPage
+        }
+        : null;
+
+    // hooks
     useEffect(() => {
-        if (listItems.length > 0 && props.fetch.onResult) props.fetch.onResult(listItems)
-        if (window.location.search) refetch();
-    }, [listItems, props.fetch, refetch])
+        setUrlParms("page", pagingInfo?.currentPage);
+        if (data && data.items && props.fetch.onResult) props.fetch.onResult(data.items)
+    }, [data, props.fetch, refetch])
+
+    useEffect(() => {
+        window.addEventListener("urlParamsChange", () => {
+            refetch();
+        });
+    }, []);
+
+    const handlePageChange = (page) => {
+        setUrlParms("page", page);
+        refetch()
+    }
 
     return (
         <Container>
@@ -107,6 +127,14 @@ function List(props: ListProps) {
                         </ListItem>
                     ))}
                 </ChakraList>
+                {!!pagingInfo && <>
+                    <Divider />
+                    <Pager
+                        onChange={handlePageChange}
+                        pagesCount={pagingInfo.pagesCount}
+                        currentPage={pagingInfo.currentPage}
+                    />
+                </>}
             </>
         </Container>
     );
