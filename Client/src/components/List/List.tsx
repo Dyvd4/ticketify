@@ -1,10 +1,13 @@
 import { Alert, AlertIcon, Container, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { actionBackgroundColor } from "src/data/tailwind";
+import { useFilterParams } from "src/hooks/useFilterParams";
+import { useOrderByParams } from "src/hooks/useOrderByParams";
+import { useUrlParams } from "src/hooks/useUrlParams";
 import { mapColorProps } from "src/utils/component";
 import { setUrlParms } from "src/utils/url";
 import LoadingRipple from "../Loading/LoadingRipple";
@@ -38,8 +41,14 @@ type ListProps = {
 function List(props: ListProps) {
     const { listItemRender, fetch: { queryKey, route }, header } = props;
 
+    // sort, filter, page
+    const drawerRef = useRef<HTMLDivElement | null>(null);
+    const { filterParamsUrl, setFilterParamsUrl, resetFilterParamsUrl } = useFilterParams(drawerRef);
+    const { orderByParamsUrl, setOrderByParamsUrl, resetOrderByParamsUrl } = useOrderByParams(drawerRef);
+    const [page, setPage] = useUrlParams("page");
+
     // query
-    const { isLoading, isError, data, refetch } = useQuery([queryKey, window.location.search], () => {
+    const { isLoading, isError, data } = useQuery([queryKey, page, filterParamsUrl, orderByParamsUrl], () => {
         return fetchEntity({ route: `${route}${window.location.search}` })
     })
 
@@ -51,22 +60,14 @@ function List(props: ListProps) {
         }
         : null;
 
-    // hooks
+    // useEffect
     useEffect(() => {
-        setUrlParms("page", pagingInfo?.currentPage);
         if (data && data.items && props.fetch.onResult) props.fetch.onResult(data.items)
-    }, [data, props.fetch, refetch])
+    }, [data, props])
 
     useEffect(() => {
-        window.addEventListener("urlParamsChange", () => {
-            refetch();
-        });
-    }, []);
-
-    const handlePageChange = (page) => {
-        setUrlParms("page", page);
-        refetch()
-    }
+        if (pagingInfo?.currentPage) setUrlParms("page", pagingInfo?.currentPage);
+    })
 
     return (
         <Container>
@@ -81,12 +82,18 @@ function List(props: ListProps) {
                     <Divider />
                 </>}
                 <SortDrawer
+                    onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                     inputs={props.sortInputs}
                     fetch={{ queryKey, route }}
+                    onApply={setOrderByParamsUrl}
+                    onReset={resetOrderByParamsUrl}
                 />
                 <FilterDrawer
+                    onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                     inputs={props.filterInputs}
                     fetch={{ queryKey, route }}
+                    onApply={setFilterParamsUrl}
+                    onReset={resetFilterParamsUrl}
                 />
                 <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400">
                     {isLoading && <div className="flex justify-center items-center">
@@ -130,7 +137,7 @@ function List(props: ListProps) {
                 {!!pagingInfo && <>
                     <Divider />
                     <Pager
-                        onChange={handlePageChange}
+                        onChange={() => setPage(page)}
                         pagesCount={pagingInfo.pagesCount}
                         currentPage={pagingInfo.currentPage}
                     />

@@ -1,10 +1,6 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { useEffect, useRef } from "react";
-import { useQuery } from "react-query";
-import { fetchEntity } from "src/api/entity";
 import { filterDrawerAtom } from "src/context/atoms";
-import { useFilterParams } from "src/hooks/useFilterParams";
 
 type FilterDrawerProps = {
     inputs: React.ReactNode
@@ -12,30 +8,20 @@ type FilterDrawerProps = {
         queryKey: string
         route: string
     }
+    onReset(...args)
+    onApply(...args)
+    onDrawerBodyRefChange(drawerRef: HTMLDivElement | null)
 }
 
 function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDrawerProps) {
     const [drawerActive, setDrawer] = useAtom(filterDrawerAtom);
-    const drawerRef = useRef<HTMLDivElement | null>(null);
-    const { filterParamsUrl, setFilterParamsUrl, resetFilterParamsUrl } = useFilterParams(drawerRef);
-
-    const { refetch } = useQuery([queryKey], () => {
-        if (filterParamsUrl?.search) {
-            return fetchEntity({ route: `${route}${filterParamsUrl!.search}` })
-        }
-        return fetchEntity({ route })
-    });
-
-    useEffect(() => {
-        refetch();
-    }, [filterParamsUrl, refetch]);
 
     const handleOnClose = () => {
-        resetFilterParamsUrl();
+        props.onReset();
         setDrawer(false);
     }
     const handleOnApply = () => {
-        setFilterParamsUrl();
+        props.onApply();
         setDrawer(false);
     }
 
@@ -49,7 +35,7 @@ function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDr
                 <DrawerHeader>
                     Filter
                 </DrawerHeader>
-                <DrawerBody ref={drawerRef}>
+                <DrawerBody ref={(drawerRef) => { props.onDrawerBodyRefChange(drawerRef) }}>
                     {inputs}
                 </DrawerBody>
                 <DrawerFooter>

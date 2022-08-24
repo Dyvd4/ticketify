@@ -1,10 +1,6 @@
 import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { useEffect, useRef } from "react";
-import { useQuery } from "react-query";
-import { fetchEntity } from "src/api/entity";
 import { sortDrawerAtom } from "src/context/atoms";
-import { useOrderByParams } from "src/hooks/useOrderByParams";
 
 type SortDrawerProps = {
     inputs: React.ReactNode
@@ -12,30 +8,20 @@ type SortDrawerProps = {
         queryKey: string
         route: string
     }
+    onReset(...args)
+    onApply(...args)
+    onDrawerBodyRefChange(drawerRef: HTMLDivElement | null)
 }
 
 function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawerProps) {
     const [drawerActive, setDrawer] = useAtom(sortDrawerAtom);
-    const drawerRef = useRef<HTMLDivElement | null>(null);
-    const { orderByParamsUrl, setOrderByParamsUrl, resetOrderByParamsUrl } = useOrderByParams(drawerRef);
-
-    const { refetch } = useQuery([queryKey], () => {
-        if (orderByParamsUrl?.search) {
-            return fetchEntity({ route: `${route}${orderByParamsUrl!.search}` })
-        }
-        return fetchEntity({ route })
-    });
-
-    useEffect(() => {
-        refetch();
-    }, [orderByParamsUrl, refetch]);
 
     const handleOnClose = () => {
-        resetOrderByParamsUrl();
+        props.onReset();
         setDrawer(false)
     }
     const handleOnApply = () => {
-        setOrderByParamsUrl();
+        props.onApply();
         setDrawer(false)
     }
 
@@ -49,7 +35,7 @@ function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawer
                 <DrawerHeader>
                     Sort
                 </DrawerHeader>
-                <DrawerBody ref={drawerRef}>
+                <DrawerBody ref={(drawerRef) => { props.onDrawerBodyRefChange(drawerRef) }}>
                     {inputs}
                 </DrawerBody>
                 <DrawerFooter>
