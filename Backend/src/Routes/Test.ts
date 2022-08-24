@@ -13,9 +13,7 @@ Router.get("/test", async (req, res, next) => {
             where: mapFilterQuery(req.query),
             orderBy: mapOrderByQuery(req.query)
         });
-        console.log("page",req.query.page);
-        
-        const pagerResult = new PagerResult(testItems, ITEMS_PER_PAGE, parseInt((req.query.page as string | undefined) || "0"))
+        const pagerResult = new PagerResult(testItems, ITEMS_PER_PAGE, parseInt((req.query.page as string | undefined) || "1"))
         res.json(pagerResult);
     }
     catch (e) {

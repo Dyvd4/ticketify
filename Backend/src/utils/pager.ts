@@ -9,7 +9,7 @@ export class PagerResult<T>{
         this.currentPage = !!currentPage && currentPage <= this.pagesCount
             ? currentPage
             : 1;
-        const startIndex = (currentPage! - 1 > - 1 ? currentPage! - 1 : 0) * itemsPerPage;
+        const startIndex = (this.currentPage! - 1 > - 1 ? this.currentPage! - 1 : 0) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         this.items = items.slice(startIndex, endIndex);
     }

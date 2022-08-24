@@ -9,12 +9,13 @@ import { useFilterParams } from "src/hooks/useFilterParams";
 import { useOrderByParams } from "src/hooks/useOrderByParams";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { mapColorProps } from "src/utils/component";
-import { setUrlParms } from "src/utils/url";
+import { setUrlParam } from "src/utils/url";
 import LoadingRipple from "../Loading/LoadingRipple";
 import Pager from "../Pager/Pager";
 import FilterDrawer from "./Filter/Private/FilterDrawer";
 import Header from "./Header";
 import SortDrawer from "./Sort/Private/SortDrawer";
+
 
 type ListProps = {
     fetch: {
@@ -45,10 +46,10 @@ function List(props: ListProps) {
     const drawerRef = useRef<HTMLDivElement | null>(null);
     const { filterParamsUrl, setFilterParamsUrl, resetFilterParamsUrl } = useFilterParams(drawerRef);
     const { orderByParamsUrl, setOrderByParamsUrl, resetOrderByParamsUrl } = useOrderByParams(drawerRef);
-    const [page, setPage] = useUrlParams("page");
+    const [page, setPage] = useUrlParams("page", 1);
 
     // query
-    const { isLoading, isError, data } = useQuery([queryKey, page, filterParamsUrl, orderByParamsUrl], () => {
+    const { isLoading, isError, data, refetch } = useQuery([queryKey, page, filterParamsUrl, orderByParamsUrl], () => {
         return fetchEntity({ route: `${route}${window.location.search}` })
     })
 
@@ -66,9 +67,15 @@ function List(props: ListProps) {
     }, [data, props])
 
     useEffect(() => {
-        if (pagingInfo?.currentPage) setUrlParms("page", pagingInfo?.currentPage);
-    })
+        if (pagingInfo?.currentPage && pagingInfo?.currentPage !== parseInt(page)) {
+            setUrlParam("page", pagingInfo.currentPage);
+        }
+    });
 
+    const handlePageChange = (pageNumber) => {
+        setPage(pageNumber);
+        refetch();
+    }
     return (
         <Container>
             <>
@@ -137,7 +144,7 @@ function List(props: ListProps) {
                 {!!pagingInfo && <>
                     <Divider />
                     <Pager
-                        onChange={() => setPage(page)}
+                        onChange={handlePageChange}
                         pagesCount={pagingInfo.pagesCount}
                         currentPage={pagingInfo.currentPage}
                     />
