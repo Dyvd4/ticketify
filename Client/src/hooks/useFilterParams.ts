@@ -3,6 +3,7 @@ import { DefaultFilterItemType } from "src/components/List/Filter/FilterItems";
 // note: refac?
 import { FilterOperationsType } from "src/components/List/Filter/Private/FilterOperations";
 
+// note: use filterItems / sortItems instead???
 export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | null>) => {
 
     const [filterQueryParams, setFilterQueryParams] = useState<DefaultFilterItemType[] | null>(null);

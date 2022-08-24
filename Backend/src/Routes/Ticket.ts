@@ -15,7 +15,7 @@ Router.get('/tickets', async (req, res, next) => {
             orderBy: mapOrderByQuery(req.query),
             where: mapFilterQuery(req.query)
         });
-        res.json(tickets);
+        res.json({ items: tickets });
     }
     catch (e) {
         next(e)

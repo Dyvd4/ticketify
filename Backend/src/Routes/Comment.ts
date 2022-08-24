@@ -7,7 +7,7 @@ const Router = express.Router();
 Router.get('/comments', async (req, res, next) => {
     try {
         const comments = await prisma.comment.findMany();
-        res.json(comments);
+        res.json({ items: comments });
     }
     catch (e) {
         next(e)

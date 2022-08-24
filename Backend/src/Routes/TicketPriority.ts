@@ -7,7 +7,7 @@ const Router = express.Router();
 Router.get('/ticketPriorities', async (req, res, next) => {
     try {
         const ticketPriorities = await prisma.ticketPriority.findMany();
-        res.json(ticketPriorities);
+        res.json({ items: ticketPriorities });
     }
     catch (e) {
         next(e)

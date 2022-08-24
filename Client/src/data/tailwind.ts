@@ -15,11 +15,12 @@ export const defaultBackgroundColor: Tailwind.Color = {
     }
 }
 
+export const actionBackgroundColorInactive = {
+    value: "bg-teal-800",
+    hover: "bg-teal-700"
+}
+
 export const actionBackgroundColor: Tailwind.Color = {
     value: "bg-teal-600",
-    hover: "bg-teal-500",
-    darkMode: {
-        value: "bg-teal-600",
-        hover: "bg-teal-500"
-    }
+    hover: "bg-teal-500"
 }

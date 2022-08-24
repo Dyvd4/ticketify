@@ -9,6 +9,7 @@ type UseUrlParamsOptions = {
 /** @param fallBackValue 
  * when no url param with the given name could be found, use this value
 */
+// note: rename to singular
 export const useUrlParams = (name, fallBackValue?, options?: UseUrlParamsOptions) => {
     const [urlParamsState, setUrlParamsState] = useState<any>(null);
     useEffect(() => {
