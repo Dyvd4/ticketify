@@ -41,6 +41,7 @@ type ListProps = {
 
 function List(props: ListProps) {
     const { listItemRender, fetch: { queryKey, route }, header } = props;
+    const listRef = useRef<HTMLUListElement | null>(null);
 
     // sort, filter, page
     const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -73,6 +74,14 @@ function List(props: ListProps) {
         }
     });
 
+    // event handler
+    const handleListRefChange = (list) => {
+        if (list && !isLoading) {
+            listRef.current = list;
+            const height = String(list.clientHeight) + "px";
+            listRef.current!.style.height = height;
+        }
+    }
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);
         refetch();
@@ -103,7 +112,7 @@ function List(props: ListProps) {
                     onApply={setFilterParamsUrl}
                     onReset={resetFilterParamsUrl}
                 />
-                <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400">
+                <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400" ref={handleListRefChange}>
                     {isLoading && <div className="flex justify-center items-center">
                         <LoadingRipple />
                     </div>}
