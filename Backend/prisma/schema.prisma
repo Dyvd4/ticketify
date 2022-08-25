@@ -34,8 +34,8 @@ model Ticket {
   updatedAt         DateTime?      @updatedAt
   createUser        String?        @db.NVarChar(100)
   updateUser        String?        @db.NVarChar(100)
-  ticketStatusId    String?        @db.NVarChar(100)
-  ticketStatus      TicketStatus?  @relation(fields: [ticketStatusId], references: [id])
+  statusId          String?        @db.NVarChar(100)
+  status            TicketStatus?  @relation(fields: [statusId], references: [id])
 }
 
 model TicketPriority {
