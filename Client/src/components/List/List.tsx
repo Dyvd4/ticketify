@@ -144,6 +144,7 @@ function List(props: ListProps) {
                 {!!pagingInfo && <>
                     <Divider />
                     <Pager
+                        centered
                         onChange={handlePageChange}
                         pagesCount={pagingInfo.pagesCount}
                         currentPage={pagingInfo.currentPage}
