@@ -7,6 +7,11 @@ function TicketListItemFilter() {
             property: "title",
             label: "Title",
             type: "string"
+        },
+        {
+            property: "priority.name",
+            label: "priority",
+            type: "string"
         }
     ] as DefaultFilterItemType[],
         { jsonParse: true, dontSetUrl: true });

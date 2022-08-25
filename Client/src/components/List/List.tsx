@@ -35,8 +35,8 @@ type ListProps = {
         title: string
         showCount?: boolean
     }
-    sortInputs?: React.ReactNode
-    filterInputs?: React.ReactNode
+    sort?: React.ReactNode
+    filter?: React.ReactNode
 }
 
 function List(props: ListProps) {
@@ -94,20 +94,20 @@ function List(props: ListProps) {
                         title={header.title}
                         count={listItems.length}
                         showCount={header?.showCount}
-                        useSort={!!props.sortInputs}
-                        useFilter={!!props.filterInputs} />
+                        useSort={!!props.sort}
+                        useFilter={!!props.filter} />
                     <Divider />
                 </>}
                 <SortDrawer
                     onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                    inputs={props.sortInputs}
+                    inputs={props.sort}
                     fetch={{ queryKey, route }}
                     onApply={setOrderByParamsUrl}
                     onReset={resetOrderByParamsUrl}
                 />
                 <FilterDrawer
                     onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                    inputs={props.filterInputs}
+                    inputs={props.filter}
                     fetch={{ queryKey, route }}
                     onApply={setFilterParamsUrl}
                     onReset={resetFilterParamsUrl}

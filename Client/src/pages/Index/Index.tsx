@@ -24,8 +24,8 @@ function Index(props: IndexProps) {
         title: "pending tickets",
         showCount: true
       }}
-      sortInputs={<TicketListItemSort />}
-      filterInputs={<TicketListItemFilter />}
+      sort={<TicketListItemSort />}
+      filter={<TicketListItemFilter />}
     />
   )
 }

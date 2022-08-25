@@ -22,8 +22,8 @@ function Index(props: IndexProps) {
                 title: "test",
                 showCount: true
             }}
-            sortInputs={<ListItemSort />}
-            filterInputs={<ListItemFilter />}
+            sort={<ListItemSort />}
+            filter={<ListItemFilter />}
         />
     )
 }
