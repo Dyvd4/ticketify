@@ -1,5 +1,5 @@
-import { Heading } from "@chakra-ui/react";
-import { faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
+import { Heading, Tooltip } from "@chakra-ui/react";
+import { faAdd, faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { filterDrawerAtom, sortDrawerAtom } from "src/context/atoms";
@@ -11,10 +11,13 @@ type HeaderProps = {
     showCount?: boolean
     useSort: boolean
     useFilter: boolean
+    add?: {
+        route: string
+    }
 }
 
 function Header(props: HeaderProps) {
-    const { title, count, showCount, useSort, useFilter } = props;
+    const { title, count, showCount, useSort, useFilter, add } = props;
     const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
     const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
     return (
@@ -27,20 +30,40 @@ function Header(props: HeaderProps) {
                     ({count})
                 </>}
                 {!!useSort && <>
-                    <IconButton
-                        size={"sm"}
-                        onClick={() => setFilterDrawer(true)}
-                        aria-label="filter"
-                        icon={<FontAwesomeIcon icon={faFilter} />}
-                    />
+                    <Tooltip label="filter" placement="top" aria-label="filter">
+                        <span className="flex justify-center items-center">
+                            <IconButton
+                                size={"sm"}
+                                onClick={() => setFilterDrawer(true)}
+                                aria-label="filter"
+                                icon={<FontAwesomeIcon icon={faFilter} />}
+                            />
+                        </span>
+                    </Tooltip>
                 </>}
                 {!!useFilter && <>
-                    <IconButton
-                        size={"sm"}
-                        onClick={() => setSortDrawer(true)}
-                        aria-label="sort"
-                        icon={<FontAwesomeIcon icon={faSort} />}
-                    />
+                    <Tooltip label="sort" placement="top" aria-label="sort">
+                        <span className="flex justify-center items-center">
+                            <IconButton
+                                size={"sm"}
+                                onClick={() => setSortDrawer(true)}
+                                aria-label="sort"
+                                icon={<FontAwesomeIcon icon={faSort} />}
+                            />
+                        </span>
+                    </Tooltip>
+                </>}
+                {!!add && <>
+                    <Tooltip label="add" placement="top" aria-label="add">
+                        <span className="flex justify-center items-center">
+                            <IconButton
+                                size={"sm"}
+                                onClick={() => window.location.href = add.route}
+                                aria-label="add"
+                                icon={<FontAwesomeIcon icon={faAdd} />}
+                            />
+                        </span>
+                    </Tooltip>
                 </>}
             </>
         </Heading>

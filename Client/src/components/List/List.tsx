@@ -37,6 +37,10 @@ type ListProps = {
     }
     sort?: React.ReactNode
     filter?: React.ReactNode
+    add?: {
+        /** the url path to where you can add the entity */
+        route: string
+    }
 }
 
 function List(props: ListProps) {
@@ -95,7 +99,9 @@ function List(props: ListProps) {
                         count={listItems.length}
                         showCount={header?.showCount}
                         useSort={!!props.sort}
-                        useFilter={!!props.filter} />
+                        useFilter={!!props.filter}
+                        add={props.add}
+                    />
                     <Divider />
                 </>}
                 <SortDrawer
