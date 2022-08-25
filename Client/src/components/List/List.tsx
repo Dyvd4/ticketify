@@ -57,7 +57,8 @@ function List(props: ListProps) {
     const pagingInfo = data?.pagesCount && data?.currentPage
         ? {
             pagesCount: data.pagesCount,
-            currentPage: data.currentPage
+            currentPage: data.currentPage,
+            pagesCountShrunk: data?.pagesCountShrunk
         }
         : null;
 
@@ -67,7 +68,7 @@ function List(props: ListProps) {
     }, [data, props])
 
     useEffect(() => {
-        if (pagingInfo?.currentPage && pagingInfo?.currentPage !== parseInt(page)) {
+        if (pagingInfo?.pagesCountShrunk) {
             setUrlParam("page", pagingInfo.currentPage);
         }
     });
