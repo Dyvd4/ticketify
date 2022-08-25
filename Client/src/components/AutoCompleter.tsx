@@ -1,3 +1,5 @@
+import { Input } from '@chakra-ui/react';
+import { faFrown, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Object from 'lodash';
 import React, { Component } from 'react';
@@ -271,8 +273,8 @@ class AutoCompleter extends Component<Props, State> {
                 mappedItem = this.mapDisplayValue(String(displayValue));
 
                 const li = <li
-                    className="autocomplete-list-item"
-                    onClick={(e) => { e.stopPropagation(); this.handleClick(displayValue, item) }}
+                    className="autocomplete-list-item dark:bg-gray-700 dark:text-gray-300"
+                    onClick={(e) => { e.stopPropagation(); this.handleClick(item, displayValue) }}
                     key={i}>
                     {mappedItem}
                 </li>
@@ -311,7 +313,7 @@ class AutoCompleter extends Component<Props, State> {
         let inputValueChars = this.state.inputValue.split("");
         return displayValueChars.map((listItemChar, index) => {
             if (inputValueChars.includes(listItemChar)) {
-                return <span key={index} style={{ color: 'black' }}>{listItemChar}</span>
+                return <span key={index} className="text-black dark:text-white">{listItemChar}</span>
             }
             return <span key={index}>{listItemChar}</span>;
         });
@@ -381,16 +383,19 @@ class AutoCompleter extends Component<Props, State> {
         return (
             <>
                 {this.state.loading &&
-                    <li className="autocomplete-list-item">
+                    <li className="autocomplete-list-item
+                                 dark:text-white">
                         searching...
                     </li>
                 }
                 {this.state.notFound && !this.state.loading &&
-                    <li className="autocomplete-list-item flex justify-center items-center gap-2">
+                    <li className="autocomplete-list-item 
+                                   flex justify-center items-center gap-2
+                                   dark:text-white">
                         <span>
                             Not found
                         </span>
-                        <FontAwesomeIcon icon="frown" size="lg" />
+                        <FontAwesomeIcon icon={faFrown} size="lg" />
                     </li>
                 }
                 {this.state.autoCompleteListItems.map(listItem => listItem)}
@@ -402,7 +407,7 @@ class AutoCompleter extends Component<Props, State> {
             return (
                 <Tooltip title="Discard">
                     <div className={`icon text-gray-500 hover:text-black ${(this.state.selectedItem) ? "visible" : "hidden"}`} onClick={this.handleDiscard}>
-                        <FontAwesomeIcon icon="minus-circle" size="lg" />
+                        <FontAwesomeIcon icon={faMinusCircle} size="lg" />
                     </div>
                 </Tooltip>)
         }
@@ -410,13 +415,13 @@ class AutoCompleter extends Component<Props, State> {
     }
     render() {
         let { autoCompleteListItems } = this.state;
-        let { disabled, name, className } = this.props;
-        className = `autocomplete-list no-select ${className}`;
+        let { name, className } = this.props;
+        className = `autocomplete-list no-select ${className} dark:bg-gray-700`;
         let placeholder = (this.props.placeholder) ? this.props.placeholder : "";
         return (
             <div style={{ position: 'relative' }} className="form-group autocomplete-list-wrapper">
                 <div className="flex-center-inner gap-2">
-                    <input
+                    <Input
                         autoComplete="off"
                         name={name}
                         placeholder={placeholder}
@@ -424,8 +429,8 @@ class AutoCompleter extends Component<Props, State> {
                         style={(autoCompleteListItems.length > 0) ? { borderRadius: '.25rem .25rem 0 0', width: '100%' } : { width: '100%' }}
                         onChange={this.updateInput}
                         type="text"
-                        className={(disabled) ? "form-control disabled" : "form-control"}
-                        disabled={this.props.disabled} />
+                        disabled={this.props.disabled}
+                    />
                     {this.renderDiscardButton()}
                 </div>
                 <ul
