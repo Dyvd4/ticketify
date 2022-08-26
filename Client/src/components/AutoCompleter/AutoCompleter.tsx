@@ -134,23 +134,23 @@ class AutoCompleter extends Component<Props, State> {
         let listItems: JSX.Element[] = [];
         let { listItemRender, filter } = this.props;
 
-        if (this.state.inputValue) {
-            for (let i = 0; i < items.length; i++) {
-                let item = items[i];
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
 
-                let displayValue = listItemRender(item);
-                if (displayValue instanceof Promise) displayValue = await displayValue;
-                let mappedDisplayValue = this.mapDisplayValue(String(displayValue));
+            let displayValue = listItemRender(item);
+            if (displayValue instanceof Promise) displayValue = await displayValue;
+            let mappedDisplayValue = this.mapDisplayValue(String(displayValue));
 
-                const li = {
-                    displayValue,
-                    mappedDisplayValue,
-                    ...item
-                }
+            const li = {
+                displayValue,
+                mappedDisplayValue,
+                ...item
+            }
 
+            if (this.state.inputValue) {
                 let usesFilter = filter && filter.value && typeof filter.value === "function";
                 if (!usesFilter && this.filter(String(displayValue), this.state.inputValue)) {
-                    listItems.push(li)
+                    listItems.push(li);
                 }
                 else if (usesFilter) {
                     let defaultFilterMatches = this.filter(String(displayValue), this.state.inputValue);
@@ -167,6 +167,9 @@ class AutoCompleter extends Component<Props, State> {
                         if (defaultFilterMatches || customFilterMatches) listItems.push(li);
                     }
                 }
+            }
+            else {
+                listItems.push(li);
             }
         }
         this.setState({
@@ -257,10 +260,11 @@ class AutoCompleter extends Component<Props, State> {
             <FormControl className="form-group autocomplete-list-wrapper relative">
                 <div className="flex justify-center items-center gap-2">
                     <Input
+                        onChange={this.handleInputChange}
+                        onFocus={() => this.setListItems()}
                         ref={this.inputRef}
                         autoComplete="off"
                         value={(this.state.inputValue) ? this.state.inputValue : ""}
-                        onChange={this.handleInputChange}
                         type="text"
                         disabled={this.props.disabled}
                         style={inputStyle}
