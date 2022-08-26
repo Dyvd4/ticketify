@@ -36,10 +36,10 @@ Router.post('/ticketPriority', async (req, res, next) => {
         if (validation.error) return res.status(400).json({ validation });
         ticketPriority = validation.value;
 
-        const newticketPriority = await prisma.ticketPriority.create({
+        const newTicketPriority = await prisma.ticketPriority.create({
             data: ticketPriority
         });
-        res.json(newticketPriority);
+        res.json(newTicketPriority);
     }
     catch (e) {
         next(e)
@@ -54,13 +54,13 @@ Router.put('/ticketPriority/:id', async (req, res, next) => {
         if (validation.error) return res.status(400).json({ validation });
         ticketPriority = validation.value;
 
-        const updatedticketPriority = await prisma.ticketPriority.update({
+        const updatedTicketPriority = await prisma.ticketPriority.update({
             where: {
                 id
             },
             data: ticketPriority
         })
-        res.json(updatedticketPriority);
+        res.json(updatedTicketPriority);
     }
     catch (e) {
         next(e)
@@ -70,12 +70,12 @@ Router.put('/ticketPriority/:id', async (req, res, next) => {
 Router.delete('/ticketPriority/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
-        const deletedticketPriority = await prisma.ticketPriority.delete({
+        const deletedTicketPriority = await prisma.ticketPriority.delete({
             where: {
                 id
             }
         });
-        res.json(deletedticketPriority);
+        res.json(deletedTicketPriority);
     }
     catch (e) {
         next(e)

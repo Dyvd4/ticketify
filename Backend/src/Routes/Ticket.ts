@@ -28,6 +28,10 @@ Router.get('/ticket/:id', async (req, res, next) => {
         const ticket = await prisma.ticket.findFirst({
             where: {
                 id
+            },
+            include: {
+                priority: true,
+                status: true
             }
         });
         res.json(ticket);
