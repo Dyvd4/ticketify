@@ -2,6 +2,10 @@
   --heart-button-circles-animation-durationMs: 500;
 }
 
+// autocomplete-list
+$autocompleteListBorderWidth: 1px;
+$autocompleteListBorderColor: hsl(0, 0%, 73%);
+
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
@@ -12,7 +16,6 @@ body {
 
 #root {
   height: inherit;
-  overflow: hidden;
 }
 
 #bg-cover {
@@ -249,5 +252,40 @@ body {
     width: 72px;
     height: 72px;
     opacity: 0;
+  }
+}
+
+// autocomplete list
+.autocomplete-list {
+  z-index: 100;
+  position: absolute;
+  list-style: none;
+  box-sizing: border-box;
+  border-right: $autocompleteListBorderWidth solid $autocompleteListBorderColor;
+  border-bottom: $autocompleteListBorderWidth solid $autocompleteListBorderColor;
+  border-left: $autocompleteListBorderWidth solid $autocompleteListBorderColor;
+  width: 100%;
+  bottom: 0;
+  max-height: 33.2vh;
+  margin: 0;
+  transform: translate(0, 100%);
+  border-radius: 0 0 0.25rem 0.25rem;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  overflow-y: scroll;
+  li {
+    &:first-child {
+      margin-top: 0.4em;
+    }
+    &:last-child {
+      margin-bottom: 0.4em;
+    }
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+  }
+  li:hover {
+    text-decoration: underline;
   }
 }

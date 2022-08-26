@@ -21,14 +21,17 @@ Router.get("/test", async (req, res, next) => {
     }
 });
 
-// (async () => {
-//     const testItems = await prisma.test.findMany({
-//         where: {
-//             createdAt: {
-
-//             }
-//         }
-//     });
-// })()
+Router.get("/test/woPager", async (req, res, next) => {
+    try {
+        const testItems = await prisma.test.findMany({
+            where: mapFilterQuery(req.query),
+            orderBy: mapOrderByQuery(req.query)
+        });
+        res.json(testItems);
+    }
+    catch (e) {
+        next(e)
+    }
+});
 
 export default Router;

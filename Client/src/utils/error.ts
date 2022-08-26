@@ -10,7 +10,7 @@ export function handleError(error, options?: handleErrorOptions) {
     }
 }
 
-type ValidationErrorMap = {
+export type ValidationErrorMap = {
     [key: string]: string
 }
 
