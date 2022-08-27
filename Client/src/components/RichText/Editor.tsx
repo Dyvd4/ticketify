@@ -5,7 +5,7 @@ import InlineStyleButtons from "./Private/InlineStyleButtons";
 
 export type InlineStyle = "BOLD" | "ITALIC" | "UNDERLINE" | "CODE"
 
-export type InlineStyleButton = {
+export type InlineStyleButtonMap = {
     [key in InlineStyle]: any
 }
 
@@ -50,6 +50,8 @@ function MyEditor(props: MyEditorProps) {
                 editorState={editorState}
                 onChange={handleChange}
                 handleKeyCommand={handleKeyCommand}
+                handlePastedFiles={files => { console.log(files); return "handled" }}
+                handleDroppedFiles={files => { console.log(files); return "handled" }}
             />
         </div>
     );

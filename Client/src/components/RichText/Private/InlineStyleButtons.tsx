@@ -1,10 +1,10 @@
 import { faBold, faCode, faItalic, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditorState, RichUtils } from "draft-js";
-import { InlineStyle, InlineStyleButton as InlineStyleButtonType } from "../Editor";
+import { InlineStyle, InlineStyleButtonMap } from "../Editor";
 import InlineStyleButton from "./InlineStyleButton";
 
-const InlineStyleButtonRef: InlineStyleButtonType = {
+const inlineStyleButtonMap: InlineStyleButtonMap = {
     "BOLD": <FontAwesomeIcon icon={faBold} />,
     "CODE": <FontAwesomeIcon icon={faCode} />,
     "ITALIC": <FontAwesomeIcon icon={faItalic} />,
@@ -31,7 +31,7 @@ function InlineStyleButtons({ className, actions, editorState, ...props }: Inlin
                     active={activeActions.has(action)}
                     onClick={() => handleChange(action)}
                     key={action}>
-                    {InlineStyleButtonRef[action]}
+                    {inlineStyleButtonMap[action]}
                 </InlineStyleButton>
             ))}
         </div>
