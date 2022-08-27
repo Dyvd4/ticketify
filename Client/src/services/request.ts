@@ -9,6 +9,10 @@ interface RequestOptions extends AxiosRequestConfig {
     dontThrowError?: boolean
 }
 
+const ignoreErrorCodes = [
+    "ERR_NETWORK"
+]
+
 export const request = (options?: RequestOptions) => {
     options = {
         ...options,
@@ -25,7 +29,10 @@ export const request = (options?: RequestOptions) => {
     instance.interceptors.response.use((config) => {
         return config
     }, (error) => {
-        if (error instanceof AxiosError && error.response?.status === 401) return;
+        if (error instanceof AxiosError &&
+            (error.response?.status === 401 || ignoreErrorCodes.includes(error.code || ""))) {
+            return;
+        }
         handleError(error, { dontThrowError: true })
     });
     return instance;
