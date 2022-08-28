@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import { request } from "../services/request"
 
 const myRequest = request({
@@ -8,19 +9,21 @@ const myRequest = request({
 
 interface FetchEntityParams {
     route: string
+    options?: AxiosRequestConfig
 }
-export async function fetchEntity({ route }: FetchEntityParams) {
-    const response = await myRequest.get(`${route}`);
+export async function fetchEntity({ route, options }: FetchEntityParams) {
+    const response = await myRequest.get(`${route}`, options);
     return response.data;
 }
 
 interface AddEntityParams {
     route: string
-    payload: any
+    payload: any,
+    options?: AxiosRequestConfig
 }
 
-export async function addEntity({ route, payload }: AddEntityParams) {
-    const response = await myRequest.post(`${route}`, { payload });
+export async function addEntity({ route, payload, options }: AddEntityParams) {
+    const response = await myRequest.post(`${route}`, payload, options);
     return response;
 }
 
@@ -28,18 +31,20 @@ interface UpdateEntityParams {
     route: string
     entityId: string
     payload: any
+    options?: AxiosRequestConfig
 }
 
-export async function updateEntity({ route, entityId, payload }: UpdateEntityParams) {
-    const response = await myRequest.put(`${route}/${entityId}`, { payload });
+export async function updateEntity({ route, entityId, payload, options }: UpdateEntityParams) {
+    const response = await myRequest.put(`${route}/${entityId}`, payload, options);
     return response;
 }
 
 interface RemoveEntityParams {
     route: string
     entityId: string
+    options?: AxiosRequestConfig
 }
 
-export function removeEntity({ route, entityId }: RemoveEntityParams) {
-    return myRequest.delete(`${route}/${entityId}`);
+export function removeEntity({ route, entityId, options }: RemoveEntityParams) {
+    return myRequest.delete(`${route}/${entityId}`, options);
 }

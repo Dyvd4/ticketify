@@ -3,11 +3,11 @@ import { useRef, useState } from "react";
 import FormControl from "src/components/Wrapper/FormControl";
 import { signIn } from "../../auth/auth";
 import Card from "../../components/Card";
-import { getValidationErrorMap } from "../../utils/error";
+import { getValidationErrorMap, ValidationErrorMap } from "../../utils/error";
 
 function SignIn() {
     const { prevRoute } = window.history.state.usr ?? {};
-    const [errorMap, setErrorMap] = useState<{ [key: string]: string }>();
+    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 

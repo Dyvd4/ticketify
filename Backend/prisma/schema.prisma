@@ -36,6 +36,7 @@ model Ticket {
   updateUser        String?        @db.NVarChar(100)
   statusId          String?        @db.NVarChar(100)
   status            TicketStatus?  @relation(fields: [statusId], references: [id])
+  attachments       FileOnTicket[]
 }
 
 model TicketPriority {
@@ -86,13 +87,23 @@ model Test {
 }
 
 model File {
-  id               String    @id @default(uuid()) @db.NVarChar(100)
-  fileName         String?   @db.NVarChar(100)
-  originalFileName String?   @db.NVarChar(100)
-  mimeType         String    @db.NVarChar(20)
+  id               String         @id @default(uuid()) @db.NVarChar(100)
+  fileName         String?        @db.NVarChar(100)
+  originalFileName String?        @db.NVarChar(100)
+  mimeType         String         @db.NVarChar(20)
   content          Bytes
-  createdAt        DateTime? @default(now())
-  updatedAt        DateTime? @updatedAt
-  createUser       String?   @db.NVarChar(100)
-  updateUser       String?   @db.NVarChar(100)
+  createdAt        DateTime?      @default(now())
+  updatedAt        DateTime?      @updatedAt
+  createUser       String?        @db.NVarChar(100)
+  updateUser       String?        @db.NVarChar(100)
+  tickets          FileOnTicket[]
+}
+
+model FileOnTicket {
+  fileId   String @default(uuid()) @db.NVarChar(100)
+  file     File   @relation(fields: [fileId], references: [id])
+  ticketId String @default(uuid()) @db.NVarChar(100)
+  ticket   Ticket @relation(fields: [ticketId], references: [id])
+
+  @@id([fileId, ticketId])
 }

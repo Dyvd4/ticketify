@@ -10,6 +10,7 @@ export const TicketSchema = Joi.object<Ticket>({
         .required(),
     dueDate: Joi.date(),
     priorityId: Joi.string().required(),
+    statusId: Joi.string().allow(null),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
     createUser: Joi.string(),
