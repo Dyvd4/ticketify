@@ -35,7 +35,6 @@ function MyEditor(props: MyEditorProps) {
         }
         return "not-handled"
     }
-    console.log(editorState);
 
     return (
         <div className={`flex flex-col gap-2 ${wrapperClassName}`}
