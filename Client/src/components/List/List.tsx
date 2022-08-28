@@ -58,7 +58,6 @@ function List(props: ListProps) {
     })
 
     const listItems = data?.items || [];
-    console.log(data?.currentPage);
     
     const pagingInfo = data?.pagesCount && data?.currentPage
         ? {
