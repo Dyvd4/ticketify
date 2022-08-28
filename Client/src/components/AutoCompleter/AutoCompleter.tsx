@@ -10,22 +10,19 @@ type InputProps = Omit<React.ComponentPropsWithRef<"input">, InputPropsOmitLiter
 
 interface Props {
     items: any
-    onClick(item: any, inputValue: string)
+    onSelect(item: any, inputValue: string): void
+    onChange(inputValue): void
+    listItemRender(item: any): string | Promise<string>
+    inputValue: string
     listProps?: React.ComponentPropsWithRef<"ul">
     inputProps?: InputProps
-    /**
-     * if set to true, discards display value
-     * when item is selected
-     */
-    discardValue?: boolean
     disabled?: boolean
-    listItemRender(item: any): string | Promise<string>
     filter?: {
         value?(item: any, inputValue: string): boolean | Promise<boolean>
         option?: "suppressDefaultFilter" | "decide"
     }
-    onError?(error: any)
-    onDiscard?(selectedItem: any, inputValue: string)
+    onError?(error: any): void
+    onDiscard?(...args): void
 }
 
 interface State { }
@@ -36,7 +33,6 @@ class AutoCompleter extends Component<Props, State> {
     listItemObserver: IntersectionObserver
     maxLength: number
     state = {
-        inputValue: "",
         notFound: false,
         loading: false,
         listItems: [] as any[],
@@ -48,8 +44,7 @@ class AutoCompleter extends Component<Props, State> {
                 bottom: 7
             }
         },
-        itemToIntersect: null as HTMLLIElement | null,
-        selectedItem: null as any
+        itemToIntersect: null as HTMLLIElement | null
     }
     constructor(props) {
         super(props);
@@ -146,15 +141,15 @@ class AutoCompleter extends Component<Props, State> {
                 mappedDisplayValue,
                 ...item
             }
-
-            if (this.state.inputValue) {
+            const inputValue = this.inputRef.current?.value;
+            if (inputValue) {
                 let usesFilter = filter && filter.value && typeof filter.value === "function";
-                if (!usesFilter && this.filter(String(displayValue), this.state.inputValue)) {
+                if (!usesFilter && this.filter(String(displayValue), inputValue)) {
                     listItems.push(li);
                 }
                 else if (usesFilter) {
-                    let defaultFilterMatches = this.filter(String(displayValue), this.state.inputValue);
-                    let customFilterMatches = filter!.value!(item, this.state.inputValue);
+                    let defaultFilterMatches = this.filter(String(displayValue), inputValue);
+                    let customFilterMatches = filter!.value!(item, inputValue);
                     if (customFilterMatches instanceof Promise) customFilterMatches = await customFilterMatches;
 
                     if (!filter?.option && defaultFilterMatches && customFilterMatches) {
@@ -181,7 +176,7 @@ class AutoCompleter extends Component<Props, State> {
     }
     mapDisplayValue = (displayValue: string) => {
         let displayValueChars = displayValue.split("");
-        let inputValueChars = this.state.inputValue.split("");
+        let inputValueChars = this.inputRef.current!.value.split("");
         return displayValueChars.map((listItemChar, index) => {
             if (inputValueChars.includes(listItemChar)) {
                 return <span key={index} className="text-black dark:text-white">{listItemChar}</span>
@@ -204,8 +199,8 @@ class AutoCompleter extends Component<Props, State> {
     // event handler
     // -------------
     handleInputChange = (e) => {
+        this.props.onChange(e.target.value);
         this.setState({
-            inputValue: e.target.value,
             loading: true
         }, () => {
             this.setListItems();
@@ -216,7 +211,6 @@ class AutoCompleter extends Component<Props, State> {
             listItems: [],
             keyPosition: -1,
             notFound: false,
-            selectedItem: null,
             loading: false,
             inputValue: ""
         });
@@ -225,15 +219,13 @@ class AutoCompleter extends Component<Props, State> {
         this.setState({
             inputValue: displayValue,
             listItems: [],
-            keyPosition: -1,
-            selectedItem: item
+            keyPosition: -1
         })
-        if (this.props.discardValue) this.setState({ inputValue: "" });
-        this.props.onClick(item, displayValue);
+        this.props.onSelect(item, displayValue);
     }
     handleDiscard = () => {
-        if (this.props.onDiscard) this.props.onDiscard(this.state.selectedItem, this.state.inputValue);
-        this.setState({ selectedItem: null, inputValue: "" });
+        this.setState({ selected: false })
+        if (this.props.onDiscard) this.props.onDiscard();
     }
     handleScroll = async (e) => {
         let autoCompleteList = e.target;
@@ -264,7 +256,7 @@ class AutoCompleter extends Component<Props, State> {
                         onFocus={() => this.setListItems()}
                         ref={this.inputRef}
                         autoComplete="off"
-                        value={(this.state.inputValue) ? this.state.inputValue : ""}
+                        value={(this.props.inputValue) ? this.props.inputValue : ""}
                         type="text"
                         disabled={this.props.disabled}
                         style={inputStyle}
@@ -273,7 +265,7 @@ class AutoCompleter extends Component<Props, State> {
                     {this.props.onDiscard && <>
                         <DiscardButton
                             onClick={this.handleDiscard}
-                            className={this.state.selectedItem ? "visible" : "hidden"}
+                            className={this.props.inputValue ? "visible" : "hidden"}
                         />
                     </>}
                 </div>
