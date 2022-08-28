@@ -84,3 +84,15 @@ model Test {
   description String   @db.NVarChar(100)
   createdAt   DateTime @default(now())
 }
+
+model File {
+  id               String    @id @default(uuid()) @db.NVarChar(100)
+  fileName         String?   @db.NVarChar(100)
+  originalFileName String?   @db.NVarChar(100)
+  mimeType         String    @db.NVarChar(20)
+  content          Bytes
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  createUser       String?   @db.NVarChar(100)
+  updateUser       String?   @db.NVarChar(100)
+}

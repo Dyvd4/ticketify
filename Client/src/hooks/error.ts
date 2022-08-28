@@ -1,6 +1,10 @@
 import { useToast } from "@chakra-ui/react";
 import { request } from "src/services/request";
-import { handleError } from "src/utils/error";
+import { getMulterErrorMessage, handleError } from "src/utils/error";
+
+const getErrorMessage = (error) => {
+    return getMulterErrorMessage(error) || error.message;;
+}
 
 export function useErrorHandler() {
     const toast = useToast();
@@ -15,7 +19,7 @@ export function useErrorHandler() {
         request().post("Error", { error });
         toast({
             title: "An unkown error occurred",
-            description: error.message,
+            description: getErrorMessage(error),
             status: "error",
             duration: 6000
         })

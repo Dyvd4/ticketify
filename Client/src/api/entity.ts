@@ -1,6 +1,10 @@
 import { request } from "../services/request"
 
-const myRequest = request();
+const myRequest = request({
+    validateStatus: (status) => {
+        return status < 500
+    }
+});
 
 interface FetchEntityParams {
     route: string
@@ -17,7 +21,7 @@ interface AddEntityParams {
 
 export async function addEntity({ route, payload }: AddEntityParams) {
     const response = await myRequest.post(`${route}`, { payload });
-    return response.data;
+    return response;
 }
 
 interface UpdateEntityParams {
@@ -28,7 +32,7 @@ interface UpdateEntityParams {
 
 export async function updateEntity({ route, entityId, payload }: UpdateEntityParams) {
     const response = await myRequest.put(`${route}/${entityId}`, { payload });
-    return response.data;
+    return response;
 }
 
 interface RemoveEntityParams {

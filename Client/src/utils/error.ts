@@ -1,13 +1,38 @@
-interface handleErrorOptions {
+import { AxiosError } from "axios";
+
+interface HandleErrorOptions {
     dontThrowError?: boolean
     dontHandleError?: boolean
 }
 
-export function handleError(error, options?: handleErrorOptions) {
+export function handleError(error, options?: HandleErrorOptions) {
     if (!options?.dontThrowError) console.error(error);
     if (!options?.dontHandleError) {
         window.dispatchEvent(new CustomEvent("CustomError", { detail: { error } }));
     }
+}
+
+type MulterErrorMessage = "File too large" | "Unexpected field"
+
+type MulterErrorMessageMap = {
+    [key in MulterErrorMessage]: string
+}
+
+const multerErrorMessageMap: MulterErrorMessageMap = {
+    "File too large": "File too large",
+    "Unexpected field": "Too many pictures",
+}
+
+export function getMulterErrorMessage(error: AxiosError) {
+    const unmappedErrorMessage = (error.response?.data as any).error as string;
+    if (!unmappedErrorMessage.includes("MulterError")) return "";
+    const multerErrorMessage = Object.keys(multerErrorMessageMap)
+        .find(multerErrorMessage => {
+            return unmappedErrorMessage.includes(multerErrorMessage);
+        })
+    return multerErrorMessage
+        ? multerErrorMessageMap[multerErrorMessage]
+        : unmappedErrorMessage.replace("MulterError:", "") as string || "";
 }
 
 export type ValidationErrorMap = {
@@ -18,7 +43,7 @@ export function getValidationErrorMap({ response: { data: { validation, validati
     let errorDetails: any[] = [];
     const validationsToMap = validation
         ? [validation || {}]
-        : validations;
+        : validations || [];
 
     validationsToMap.forEach(validation => {
         if (validation?.error?.details) {
@@ -41,7 +66,7 @@ export function getValidationErrorMessages({ response: { data: { validation, val
     let errorMessages: any[] = [];
     const validationsToMap = validation
         ? [validation || {}]
-        : validations;
+        : validations || [];
 
     validationsToMap.forEach(validation => {
         if (validation?.message) errorMessages.push(validation.message);

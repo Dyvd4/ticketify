@@ -15,6 +15,7 @@ import CommentRouter from "./Routes/Comment";
 import TicketDueDateRouter from "./Routes/TicketDueDate";
 import TestRouter from "./Routes/Test";
 import TicketStatusRouter from "./Routes/TicketStatus";
+import FileRouter from "./Routes/File";
 import logger from "./services/logger";
 dotenv.config();
 
@@ -37,6 +38,7 @@ server.use("/api", CommentRouter);
 server.use("/api", TicketDueDateRouter);
 server.use("/api", TestRouter);
 server.use("/api", TicketStatusRouter);
+server.use("/api", FileRouter);
 
 server.use(errorHandler);
 
