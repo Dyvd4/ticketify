@@ -3,7 +3,8 @@ import express from 'express';
 import path from "path";
 import FileSchema from "../schemas/File";
 import { prisma } from "../server";
-import { fileUpload, imageUpload, mapFile, validateFiles, validateImageFiles } from "../utils/file";
+import { fileUpload, imageUpload,  validateFiles, validateImageFiles } from "../utils/file";
+import mapFile from "../schemas/maps/File"
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 const Router = express.Router();
 
