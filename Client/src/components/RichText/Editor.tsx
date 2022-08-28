@@ -1,6 +1,4 @@
-import { Editor, EditorProps, EditorState, RichUtils } from "draft-js";
-import { stateToHTML } from "draft-js-export-html";
-import { useState } from "react";
+import { Editor, EditorProps, RichUtils } from "draft-js";
 import InlineStyleButtons from "./Private/InlineStyleButtons";
 
 export type InlineStyle = "BOLD" | "ITALIC" | "UNDERLINE" | "CODE"
@@ -12,8 +10,7 @@ export type InlineStyleButtonMap = {
 type MyEditorProps = {
     actions: Array<InlineStyle>
     wrapperProps?: React.ComponentPropsWithRef<"div">
-    onChange?(htmlOutput: string)
-} & Omit<EditorProps, "editorState" | "onChange">
+} & EditorProps
 
 function MyEditor(props: MyEditorProps) {
     const {
@@ -21,16 +18,10 @@ function MyEditor(props: MyEditorProps) {
         wrapperProps: { className: wrapperClassName, ...restWrapperProps } = {}
     } = props;
 
-    const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
-
-    const handleChange = (newState) => {
-        setEditorState(newState);
-        if (props.onChange) props.onChange(stateToHTML(newState.getCurrentContent()))
-    }
     const handleKeyCommand = (command, editorState) => {
         const newState = RichUtils.handleKeyCommand(editorState, command)
         if (newState) {
-            setEditorState(newState)
+            props.onChange(newState)
             return "handled"
         }
         return "not-handled"
@@ -40,14 +31,12 @@ function MyEditor(props: MyEditorProps) {
         <div className={`flex flex-col gap-2 ${wrapperClassName}`}
             {...restWrapperProps}>
             <InlineStyleButtons
-                editorState={editorState}
-                onChange={(newState) => setEditorState(newState)}
+                editorState={props.editorState}
+                onChange={newState => props.onChange(newState)}
                 actions={actions}
             />
             <Editor
                 {...props}
-                editorState={editorState}
-                onChange={handleChange}
                 handleKeyCommand={handleKeyCommand}
                 handlePastedFiles={files => { console.log(files); return "handled" }}
                 handleDroppedFiles={files => { console.log(files); return "handled" }}
