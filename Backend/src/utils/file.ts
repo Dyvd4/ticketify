@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+import fsSync from "fs";
+import fs, { mkdir } from "fs/promises";
 import multer from "multer";
 import path from "path";
 dotenv.config({ path: path.join(__dirname, "../../.env") });
@@ -7,6 +9,9 @@ const FILE_IMAGE_MAX_SIZE_B = parseInt(process.env.FILE_IMAGE_MAX_SIZE_KB!) * 10
 const FILE_IMAGE_MAX_COUNT = parseInt(process.env.FILE_IMAGE_MAX_COUNT!);
 const FILE_MAX_SIZE_B = parseInt(process.env.FILE_MAX_SIZE_KB!) * 1000;
 const FILE_MAX_COUNT = parseInt(process.env.FILE_MAX_COUNT!);
+
+const imageTypes = /jpeg|jpg|png/;
+const uploadPath = path.join(__dirname, "../../upload");
 
 export const imageUpload = multer({
     limits: {
@@ -20,12 +25,9 @@ export const fileUpload = multer({
     }
 }).array("files", FILE_MAX_COUNT);
 
-const checkImageFileExtension = (file) => {
-    const fileTypes = /jpeg|jpg|png/;
-    const fileExtensionValid = fileTypes.test(path.extname(file.originalname).toLowerCase());
-    if (!fileExtensionValid) {
-        return new Error(`MulterError: FileUpload only supports the following fileType: ${fileTypes}`);
-    }
+export const isImageFile = (file) => {
+    const isImageFile = imageTypes.test(path.extname(file.originalname).toLowerCase());
+    return isImageFile;
 }
 
 export const validateFiles = (req, res, next) => {
@@ -36,7 +38,9 @@ export const validateImageFiles = (req, res, next) => {
     const files = req.files;
     let error: Error | undefined;
     for (const file of files) {
-        error = checkImageFileExtension(file);
+        if (!isImageFile(file)) {
+            error = new Error(`MulterError: FileUpload only supports the following fileType: ${imageTypes}`);
+        }
         if (error) break;
     }
     if (error) {
@@ -45,4 +49,14 @@ export const validateImageFiles = (req, res, next) => {
         });
     }
     next();
+}
+
+const fileName = (file) => `${file.id}_${file.originalFileName || ""}`;
+
+/** @returns filePath */
+export const uploadFile = async (file) => {
+    if (!fsSync.existsSync(uploadPath)) await mkdir(uploadPath)
+    const filePath = path.join(uploadPath, fileName(file));
+    await fs.writeFile(filePath, file.content);
+    return filePath;
 }

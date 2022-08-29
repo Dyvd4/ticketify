@@ -1,10 +1,15 @@
 import express from 'express';
+import mapFile from '../schemas/maps/File';
 import TicketSchema from "../schemas/Ticket";
 import { prisma } from "../server";
+import { fileUpload, validateFiles, isImageFile } from '../utils/file';
 import { mapFilterQuery } from '../utils/filter';
 import { mapOrderByQuery } from '../utils/orderBy';
+import { PagerResult } from '../utils/pager';
 
 const Router = express.Router();
+
+const ITEMS_PER_PAGE = 10;
 
 Router.get('/tickets', async (req, res, next) => {
     try {
@@ -15,7 +20,9 @@ Router.get('/tickets', async (req, res, next) => {
             orderBy: mapOrderByQuery(req.query),
             where: mapFilterQuery(req.query)
         });
-        res.json({ items: tickets });
+        res.json(new PagerResult(tickets,
+            ITEMS_PER_PAGE,
+            parseInt((req.query.page as string | undefined) || "1")));
     }
     catch (e) {
         next(e)
@@ -31,9 +38,25 @@ Router.get('/ticket/:id', async (req, res, next) => {
             },
             include: {
                 priority: true,
-                status: true
+                status: true,
+                attachments: {
+                    include: {
+                        file: true
+                    }
+                }
             }
         });
+        const attachments = ticket?.attachments.map(attachment => attachment.file)
+        const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
+        const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
+            .map(image => {
+                return {
+                    ...image,
+                    content: image.content.toString("base64")
+                }
+            });
+        (ticket as any).files = files;
+        (ticket as any).images = images;
         res.json(ticket);
     }
     catch (e) {
@@ -41,17 +64,30 @@ Router.get('/ticket/:id', async (req, res, next) => {
     }
 });
 
-Router.post('/ticket', async (req, res, next) => {
+Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
     let ticket = req.body;
+    const files: any = req.files || [];
     try {
         const validation = TicketSchema.validate(ticket);
         if (validation.error) return res.status(400).json({ validation });
         ticket = validation.value;
 
-        const newticket = await prisma.ticket.create({
-            data: ticket
+        const filesToCreate = files.map(file => mapFile(file));
+        const newTicket = await prisma.ticket.create({
+            data: {
+                ...ticket,
+                attachments: {
+                    create: filesToCreate.map(file => {
+                        return {
+                            file: {
+                                create: file
+                            }
+                        }
+                    })
+                }
+            }
         });
-        res.json(newticket);
+        res.json(newTicket);
     }
     catch (e) {
         next(e)
