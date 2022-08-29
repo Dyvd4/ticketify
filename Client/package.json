@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "date-fns": "^2.29.1",
+    "dompurify": "^2.4.0",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
     "framer-motion": "^7.1.1",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@types/date-fns": "^2.6.0",
+    "@types/dompurify": "^2.3.4",
     "@types/draft-js": "^0.11.9",
     "@types/jest": "^27.4.1",
     "@types/js-cookie": "^3.0.2",

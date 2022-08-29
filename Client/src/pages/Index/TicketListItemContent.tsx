@@ -8,7 +8,7 @@ function TicketListItemContent({ item }: { item }) {
             <div className="flex justify-center items-center gap-2">
                 <div style={{ backgroundColor: item.priority.color }} className={`rounded-full h-8 w-8`}></div>
                 <Heading as="h1" className="text-lg sm:text-2xl">
-                    <LinkOverlay href="/Ticket/Details">
+                    <LinkOverlay href={`/Ticket/Details/${item.id}`}>
                         {item.title}
                     </LinkOverlay>
                 </Heading>

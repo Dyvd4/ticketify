@@ -15,8 +15,11 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
+import TicketFormIndex from "./pages/Ticket/Form/Index";
+import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
+import "draft-js/dist/Draft.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -38,6 +41,10 @@ root.render(
               <Route path="/" element={<ProtectedArea type="route" />}>
                 <Route index element={<Index />} />
                 <Route path="Test" element={<TestIndex />} />
+                <Route path="Ticket">
+                  <Route path="Details/:id" element={<TicketDetailsIndex />} />
+                  <Route path="Form" element={<TicketFormIndex />} />
+                </Route>
               </Route>
               <Route path="*" element={<NotFound />} />
               <Route path="/NotAuthorized" element={<NotAuthorized />} />
