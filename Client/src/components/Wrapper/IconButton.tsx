@@ -1,5 +1,6 @@
 import { IconButton as ChakraIconButton, IconButtonProps as ChakraIconButtonProps } from "@chakra-ui/react";
 import { mapColorProps } from "src/utils/component";
+import { forwardRef } from "react";
 
 export type IconButtonProps = {
     icon: React.ReactNode
@@ -7,7 +8,7 @@ export type IconButtonProps = {
     backgroundColor?: Tailwind.Color
 } & ChakraIconButtonProps
 
-function IconButton(props: IconButtonProps) {
+const IconButton = forwardRef((props: IconButtonProps, ref: React.LegacyRef<HTMLButtonElement>) => {
     const {
         icon,
         circle,
@@ -24,6 +25,7 @@ function IconButton(props: IconButtonProps) {
     } = props;
     return (
         <ChakraIconButton
+            ref={ref}
             className={`text-black dark:text-white
                         ${circle ? "rounded-full" : "rounded-lg"} 
                         ${mapColorProps([backgroundColor])}
@@ -31,6 +33,6 @@ function IconButton(props: IconButtonProps) {
             icon={icon}
             {...rest} />
     );
-}
+})
 
 export default IconButton;
