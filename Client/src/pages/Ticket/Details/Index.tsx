@@ -6,11 +6,12 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import EditView from "src/components/EditView";
-import TicketFormWrapper from "src/components/Forms/Ticket/FormWrapper";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
-import AttachmentsSection from "./AttachmentsSection";
-import CommentsSection from "./CommentsSection";
-import HeadData from "./HeadDataSection";
+import AttachmentsEditSection from "./sections/AttachmentsEditSection";
+import AttachmentsSection from "./sections/AttachmentsSection";
+import CommentsSection from "./sections/CommentsSection";
+import HeadDataEditSection from "./sections/HeadDataEditSection";
+import HeadDataSection from "./sections/HeadDataSection";
 
 function TicketDetailsIndex() {
     // state
@@ -40,8 +41,9 @@ function TicketDetailsIndex() {
 
     const {
         comments = [],
-        files = [],
-        images = [],
+        files,
+        images,
+        attachments,
         ...ticket
     } = data;
 
@@ -65,20 +67,34 @@ function TicketDetailsIndex() {
                 <EditView
                     edit={edit}
                     editView={
-                        <TicketFormWrapper
+                        <HeadDataEditSection
                             ticket={{ ...ticket, ...editedTicket }}
                             setTicket={setEditedTicket}
                             onSuccess={() => { setEdit(false); refetch() }}
                             onAbort={() => setEdit(false)}
-                            variant="edit"
                         />
                     }>
-                    <HeadData
+                    <HeadDataSection
                         onEdit={() => setEdit(true)}
                         ticket={ticket}
                     />
                 </EditView>
-                <AttachmentsSection images={images} files={files} />
+                <EditView
+                    edit={editAttachments}
+                    editView={
+                        <AttachmentsEditSection
+                            onSuccess={() => { setEditAttachments(false); refetch() }}
+                            onAbort={() => setEditAttachments(false)}
+                            attachments={attachments}
+                        />
+                    }>
+                    <AttachmentsSection
+                        onAdd={() => { }}
+                        onEdit={() => setEditAttachments(true)}
+                        images={images}
+                        files={files}
+                    />
+                </EditView>
             </Box>
             <CommentsSection comments={comments} />
         </Container>

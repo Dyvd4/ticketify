@@ -2,14 +2,16 @@ import { Box, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip } 
 import { faAdd, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconButton from "src/components/Wrapper/IconButton";
-import Attachments from "./Attachments";
+import Attachments from "../components/Attachments";
 
 type AttachmentsProps = {
     images: any[]
     files: any[]
+    onEdit(...args: any[]): void
+    onAdd(...args: any[]): void
 }
 
-function AttachmentsSection({ images, files }: AttachmentsProps) {
+function AttachmentsSection({ images, files, ...props }: AttachmentsProps) {
     return (
         <Flex direction="column" className="my-2">
             <Tabs defaultIndex={images.length > files.length ? 0 : 1}>
@@ -28,7 +30,7 @@ function AttachmentsSection({ images, files }: AttachmentsProps) {
                         <Tooltip label="edit" placement="top">
                             <IconButton
                                 size={"sm"}
-                                onClick={() => console.log("edit")}
+                                onClick={props.onEdit}
                                 aria-label="edit"
                                 icon={<FontAwesomeIcon icon={faEdit} />}
                             />
@@ -36,7 +38,7 @@ function AttachmentsSection({ images, files }: AttachmentsProps) {
                         <Tooltip label="add" placement="top">
                             <IconButton
                                 size={"sm"}
-                                onClick={() => console.log("add")}
+                                onClick={props.onAdd}
                                 aria-label="add"
                                 icon={<FontAwesomeIcon icon={faAdd} />}
                             />

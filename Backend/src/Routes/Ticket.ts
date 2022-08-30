@@ -47,7 +47,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
                 }
             }
         });
-        const attachments = ticket?.attachments.map(attachment => attachment.file)
+        const attachments = ticket?.attachments.map(attachment => attachment.file) || [];
         const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
         const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
             .map(image => {
