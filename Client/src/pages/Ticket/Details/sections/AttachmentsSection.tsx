@@ -14,7 +14,7 @@ type AttachmentsProps = {
 function AttachmentsSection({ images, files, ...props }: AttachmentsProps) {
     return (
         <Flex direction="column" className="my-2">
-            <Tabs defaultIndex={images.length > files.length ? 0 : 1}>
+            <Tabs defaultIndex={images.length === 0 && files.length > 0 ? 1 : 0}>
                 <TabList>
                     <Tab>
                         <Heading as="h3" size="md">
