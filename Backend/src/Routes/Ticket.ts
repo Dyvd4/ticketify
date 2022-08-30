@@ -56,6 +56,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
                     content: image.content.toString("base64")
                 }
             });
+        (ticket as any).attachments = attachments;
         (ticket as any).files = files;
         (ticket as any).images = images;
         res.json(ticket);
@@ -103,13 +104,13 @@ Router.put('/ticket/:id', async (req, res, next) => {
         if (validation.error) return res.status(400).json({ validation });
         ticket = validation.value;
 
-        const updatedticket = await prisma.ticket.update({
+        const updatedTicket = await prisma.ticket.update({
             where: {
                 id
             },
             data: ticket
         })
-        res.json(updatedticket);
+        res.json(updatedTicket);
     }
     catch (e) {
         next(e)
@@ -125,6 +126,57 @@ Router.delete('/ticket/:id', async (req, res, next) => {
             }
         });
         res.json(deletedticket);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.delete('/ticket/fileOnTicket/:ticketId/:fileId', async (req, res, next) => {
+    const { ticketId, fileId } = req.params;
+    try {
+        const deletedFileOnTicket = await prisma.fileOnTicket.delete({
+            where: {
+                fileId_ticketId: {
+                    fileId,
+                    ticketId
+                }
+            }
+        });
+        await prisma.file.delete({
+            where: {
+                id: fileId
+            }
+        })
+        res.json(deletedFileOnTicket);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.post('/ticket/file', fileUpload, async (req, res, next) => {
+    const { id: ticketId } = req.body;
+    const files: any = req.files || []
+    try {
+        const filesToCreate = files.map(file => mapFile(file));
+        const updatedTicket = await prisma.ticket.update({
+            where: {
+                id: ticketId
+            },
+            data: {
+                attachments: {
+                    create: filesToCreate.map(file => {
+                        return {
+                            file: {
+                                create: file
+                            }
+                        }
+                    })
+                }
+            }
+        });
+        res.json(updatedTicket)
     }
     catch (e) {
         next(e)

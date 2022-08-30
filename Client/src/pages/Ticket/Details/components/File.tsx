@@ -24,7 +24,7 @@ function File({ file }: FileProps) {
                 <Flex
                     justifyContent={"center"}
                     alignItems={"center"}
-                    className="w-40 h-40 rounded-md bg-gray-500">
+                    className="w-40 h-40 rounded-md bg-white dark:bg-gray-500">
                     <FontAwesomeIcon icon={faFileArrowDown} size="5x" />
                 </Flex>
             </Tooltip>

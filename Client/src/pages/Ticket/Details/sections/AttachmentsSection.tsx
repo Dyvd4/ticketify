@@ -17,24 +17,26 @@ function AttachmentsSection({ images, files, ...props }: AttachmentsProps) {
             <Tabs defaultIndex={images.length > files.length ? 0 : 1}>
                 <TabList>
                     <Tab>
-                        <Heading as="h3" size="md" className="mb-1">
+                        <Heading as="h3" size="md">
                             images ({images.length})
                         </Heading>
                     </Tab>
                     <Tab>
-                        <Heading as="h3" size="md" className="mb-1">
+                        <Heading as="h3" size="md">
                             files ({files.length})
                         </Heading>
                     </Tab>
                     <Box className="flex flex-1 justify-end items-center gap-2">
-                        <Tooltip label="edit" placement="top">
-                            <IconButton
-                                size={"sm"}
-                                onClick={props.onEdit}
-                                aria-label="edit"
-                                icon={<FontAwesomeIcon icon={faEdit} />}
-                            />
-                        </Tooltip>
+                        {images.concat(files).length > 0 && <>
+                            <Tooltip label="edit" placement="top">
+                                <IconButton
+                                    size={"sm"}
+                                    onClick={props.onEdit}
+                                    aria-label="edit"
+                                    icon={<FontAwesomeIcon icon={faEdit} />}
+                                />
+                            </Tooltip>
+                        </>}
                         <Tooltip label="add" placement="top">
                             <IconButton
                                 size={"sm"}

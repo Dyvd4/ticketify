@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import EditView from "src/components/EditView";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
+import AttachmentsAddSection from "./sections/AttachmentsAddSection";
 import AttachmentsEditSection from "./sections/AttachmentsEditSection";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
@@ -19,6 +20,7 @@ function TicketDetailsIndex() {
     const [editedTicket, setEditedTicket] = useState<any>();
     const [edit, setEdit] = useState(false);
     const [editAttachments, setEditAttachments] = useState(false);
+    const [addAttachments, setAddAttachments] = useState(false);
     // queries
     // -------
     const { id } = useParams();
@@ -79,17 +81,29 @@ function TicketDetailsIndex() {
                         ticket={ticket}
                     />
                 </EditView>
+                {/* 🥵 */}
                 <EditView
-                    edit={editAttachments}
-                    editView={
-                        <AttachmentsEditSection
-                            onSuccess={() => { setEditAttachments(false); refetch() }}
-                            onAbort={() => setEditAttachments(false)}
-                            attachments={attachments}
-                        />
+                    edit={editAttachments || addAttachments}
+                    editView={<>
+                        {editAttachments && <>
+                            <AttachmentsEditSection
+                                onRemoved={() => refetch()}
+                                onDone={() => { setEditAttachments(false); refetch() }}
+                                ticketId={ticket.id}
+                                attachments={attachments}
+                            />
+                        </>}
+                        {addAttachments && <>
+                            <AttachmentsAddSection
+                                onSuccess={() => { setAddAttachments(false); refetch() }}
+                                onAbort={() => setAddAttachments(false)}
+                                ticketId={ticket.id}
+                            />
+                        </>}
+                    </>
                     }>
                     <AttachmentsSection
-                        onAdd={() => { }}
+                        onAdd={() => setAddAttachments(true)}
                         onEdit={() => setEditAttachments(true)}
                         images={images}
                         files={files}
