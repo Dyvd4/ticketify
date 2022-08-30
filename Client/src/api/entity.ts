@@ -41,10 +41,11 @@ export async function updateEntity({ route, entityId, payload, options }: Update
 
 interface RemoveEntityParams {
     route: string
-    entityId: string
+    entityId?: string
     options?: AxiosRequestConfig
 }
 
 export function removeEntity({ route, entityId, options }: RemoveEntityParams) {
-    return myRequest.delete(`${route}/${entityId}`, options);
+    if (entityId) return myRequest.delete(`${route}/${entityId}`, options);
+    return myRequest.delete(`${route}`, options);
 }
