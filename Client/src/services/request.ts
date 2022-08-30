@@ -3,7 +3,6 @@ import { REACT_APP_DOMAIN } from "../env.local";
 import Cookies from "js-cookie";
 import { handleError } from "../utils/error";
 
-
 interface RequestOptions extends AxiosRequestConfig {
     /** determines wheter an error is thrown or not */
     dontThrowError?: boolean
@@ -34,6 +33,7 @@ export const request = (options?: RequestOptions) => {
             return;
         }
         handleError(error, { dontThrowError: true })
+        return Promise.reject(error);
     });
     return instance;
 };
