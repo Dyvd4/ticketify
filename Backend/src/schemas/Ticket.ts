@@ -4,7 +4,7 @@ import { Ticket } from "@prisma/client";
 export const TicketSchema = Joi.object<Ticket>({
     id: Joi.string(),
     title: Joi.string().required(),
-    responsibleUserId: Joi.string(),
+    responsibleUserId: Joi.string().allow(null),
     description: Joi
         .string()
         .required(),

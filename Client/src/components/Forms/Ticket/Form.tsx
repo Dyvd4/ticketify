@@ -9,6 +9,7 @@ import { mapLookup } from "src/utils/autoCompleter"
 import { ValidationErrorMap } from "src/utils/error"
 
 type TicketFormProps = {
+    variant: "add" | "edit"
     loading: boolean
     error: boolean
     success: boolean
@@ -25,7 +26,8 @@ type TicketFormProps = {
     onInputChange(event): void
     onInputValueChange(event): void
     onEditorStateChange(key: string, editorState: EditorState): void
-    onSubmit(...args): void
+    onAbort?(...args: any[]): void
+    onSubmit(...args: any[]): void
 }
 
 function TicketForm({ loading, success, error, errorMap, ticket, input, editorStates, ...props }: TicketFormProps) {
@@ -91,12 +93,11 @@ function TicketForm({ loading, success, error, errorMap, ticket, input, editorSt
                     <FormLabel>
                         due date
                     </FormLabel>
-                    {/* other default value? */}
                     <Input
                         type="datetime-local"
                         onChange={(e) => props.onInputChange(["dueDate", e.target.value])}
                         name="dueDate"
-                        value={ticket?.dueDate || new Date()}
+                        value={ticket?.dueDate?.replace("Z", "") || new Date()}
                     />
                 </FormControl>
                 <FormControl errorMessage={errorMap?.priorityId}>
@@ -120,21 +121,28 @@ function TicketForm({ loading, success, error, errorMap, ticket, input, editorSt
                         }}
                     />
                 </FormControl>
-                <FormControl>
-                    <FormLabel>
-                        attachments
-                    </FormLabel>
-                    <FileInput
-                        multiple
-                        onChange={fileList => props.onInputChange(["files", fileList])}
-                    />
-                </FormControl>
+                {props.variant === "add" && <>
+                    <FormControl>
+                        <FormLabel>
+                            attachments
+                        </FormLabel>
+                        <FileInput
+                            multiple
+                            onChange={fileList => props.onInputChange(["files", fileList])}
+                        />
+                    </FormControl>
+                </>}
             </VStack>
             <HStack gap={2} className="mt-4">
+                {props.variant === "edit" && <>
+                    <Button onClick={(e) => props.onAbort && props.onAbort(e)}>
+                        Abort
+                    </Button>
+                </>}
                 <Button onClick={props.onSubmit}>
                     Submit
                 </Button>
-                {success && <>
+                {success && props.variant !== "edit" && <>
                     <Link href={`/Ticket/Details/${ticket?.id}`}>
                         <Button>
                             Go to details

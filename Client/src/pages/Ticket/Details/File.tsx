@@ -19,7 +19,7 @@ function File({ file }: FileProps) {
         window.URL.revokeObjectURL(downloadUrl)
     }
     return (
-        <Link onClick={downloadFile}>
+        <Link className="m-0" onClick={downloadFile}>
             <Tooltip label={file.originalFileName} placement="top">
                 <Flex
                     justifyContent={"center"}

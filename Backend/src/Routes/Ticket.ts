@@ -38,6 +38,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
             },
             include: {
                 priority: true,
+                responsibleUser: true,
                 status: true,
                 attachments: {
                     include: {
