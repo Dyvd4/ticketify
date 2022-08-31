@@ -50,7 +50,7 @@ function TicketDetailsIndex() {
     } = data;
 
     return (
-        <Container className="mt-4">
+        <Container className="mt-4" maxW="container.lg">
             <Box className="bg-gray-200 dark:bg-gray-700 rounded-md p-6">
                 <Breadcrumb
                     className="text-gray-700 dark:text-gray-300 font-bold"

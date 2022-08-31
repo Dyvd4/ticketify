@@ -45,8 +45,8 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
                     </Button>
                     :
                     <NumberButton
+                        key={pageNumber}
                         active={currentPage === pageNumber}
-                        myKey={pageNumber}
                         onClick={() => handlePageChange(pageNumber)}>
                         {pageNumber}
                     </NumberButton>

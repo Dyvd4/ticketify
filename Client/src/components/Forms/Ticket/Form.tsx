@@ -149,7 +149,7 @@ function TicketForm({ loading, success, error, errorMap, ticket, input, editorSt
                 </Button>
                 {success && props.variant !== "edit" && <>
                     <Link href={`/Ticket/Details/${ticket?.id}`}>
-                        <Button>
+                        <Button size="sm">
                             Go to details
                         </Button>
                     </Link>

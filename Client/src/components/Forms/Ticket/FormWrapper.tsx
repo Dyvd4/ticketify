@@ -145,7 +145,7 @@ function FormWrapper({ variant = "add", ticket, setTicket, ...props }: FormWrapp
     const error = [responsibleUsersError, prioritiesError].some(error => error);
 
     return (
-        <Container>
+        <Container maxW={variant === "add" ? "container.md" : "full"}>
             <Heading as="h1" className="my-4 flex items-center gap-4">
                 {variant} ticket
                 <FontAwesomeIcon icon={faFireFlameCurved} className="text-orange-600" />

@@ -4,14 +4,12 @@ import { mapColorProps } from "src/utils/component";
 
 type NumberButtonProps = React.PropsWithChildren<{
     active?: boolean
-    myKey?: number
 }> & React.ComponentPropsWithRef<"button">
 
-function NumberButton({ children, active, myKey, ...props }: NumberButtonProps) {
+function NumberButton({ children, active, ...props }: NumberButtonProps) {
     return (
         <Button
             {...props}
-            key={myKey}
             className={`${!active
                 ? mapColorProps([actionBackgroundColorInactive])
                 : mapColorProps([actionBackgroundColor])}`}
