@@ -7,8 +7,12 @@ function TicketListItemSort() {
             property: "title"
         },
         {
+            property: "priority.name",
+            label: "priority"
+        },
+        {
             property: "dueDate"
-        }
+        },
     ] as DefaultSortItemType[],
         { jsonParse: true, dontSetUrl: true });
     return <SortItems items={sortItems} onChange={(items) => { setSortItems(items) }} />

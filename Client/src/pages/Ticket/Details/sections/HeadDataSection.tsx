@@ -40,7 +40,7 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
                 <Flex justifyContent="space-between">
                     <div>priority</div>
                     <Tag
-                        className={`bg-${priority?.color || "slate-500"}`}
+                        className={`bg-${priority.color || "slate-500"}`}
                         variant="solid">
                         {priority.name}
                     </Tag>

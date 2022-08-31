@@ -12,7 +12,7 @@ const config = {
       backgroundColor: ['active'],
       textColor: ['active'],
       scale: ['active']
-    },
+    }
   },
   theme: {
     colors: Object.keys(colors).reduce((map, color) => {

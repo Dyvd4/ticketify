@@ -17,13 +17,15 @@ function DiscardButton({ className, ...rest }: DiscardButtonProps) {
     }
     return (
         <Tooltip label="discard" placement="top">
-            <div
-                className={`cursor-pointer 
+            <>
+                <div
+                    className={`cursor-pointer
                             ${mapColorProps([backgroundColor])}  
                             ${className}`}
-                {...rest}>
-                <FontAwesomeIcon icon={faMinusCircle} size="lg" />
-            </div>
+                    {...rest}>
+                    <FontAwesomeIcon icon={faMinusCircle} size="lg" />
+                </div>
+            </>
         </Tooltip>
     );
 }
