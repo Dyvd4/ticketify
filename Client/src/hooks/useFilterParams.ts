@@ -40,11 +40,12 @@ export const useFilterParams = (drawerRef: React.MutableRefObject<HTMLElement | 
                 return {
                     type: filterItemProps.type,
                     property: filterItemProps.property,
+                    label: filterItemProps.label,
+                    disabled: input.disabled,
                     value: parseInputValue(input, filterItemProps.type),
                     operation: {
                         value: operationsInput.value
-                    },
-                    disabled: input.disabled
+                    }
                 } as DefaultFilterItemType
             });
         return filterQueryParams;
