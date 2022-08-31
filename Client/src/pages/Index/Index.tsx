@@ -27,7 +27,8 @@ function Index(props: IndexProps) {
       sort={<TicketListItemSort />}
       filter={<TicketListItemFilter />}
       add={{
-        route: "Ticket/Form"
+        // 🥵
+        route: "Ticket/Form/id="
       }}
     />
   )

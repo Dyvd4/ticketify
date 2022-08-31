@@ -43,7 +43,7 @@ root.render(
                 <Route path="Test" element={<TestIndex />} />
                 <Route path="Ticket">
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />
-                  <Route path="Form" element={<TicketFormIndex />} />
+                  <Route path="Form/:params" element={<TicketFormIndex />} />
                 </Route>
               </Route>
               <Route path="*" element={<NotFound />} />

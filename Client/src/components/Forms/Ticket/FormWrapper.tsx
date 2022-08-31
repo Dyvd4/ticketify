@@ -1,4 +1,4 @@
-import { Container, Heading, useToast } from "@chakra-ui/react";
+import { Container, ContainerProps, Heading, useToast } from "@chakra-ui/react";
 import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
@@ -17,9 +17,10 @@ type FormWrapperProps = {
     variant?: "add" | "edit"
     onAbort?(...args: any[]): void
     onSuccess?(...args: any[]): void
-}
+} & ContainerProps
 
-function FormWrapper({ variant = "add", ticket, setTicket, ...props }: FormWrapperProps) {
+function FormWrapper(props: FormWrapperProps) {
+    const { variant = "add", ticket, setTicket, onAbort, onSuccess } = props
     // state
     // -----
     const [input, setInput] = useState<any>(() => ({
@@ -72,6 +73,8 @@ function FormWrapper({ variant = "add", ticket, setTicket, ...props }: FormWrapp
         delete ticket.priority;
         delete ticket.status;
         delete ticket.attachments;
+        delete ticket.files;
+        delete ticket.images;
         return updateEntity({
             route: "ticket",
             entityId: ticket.id,
@@ -90,7 +93,7 @@ function FormWrapper({ variant = "add", ticket, setTicket, ...props }: FormWrapp
                     status: "success"
                 });
                 // 🥵
-                if (props.onSuccess) props.onSuccess();
+                if (onSuccess) onSuccess();
                 if (variant === "edit") return;
                 setTicket({
                     ...{},
@@ -145,14 +148,14 @@ function FormWrapper({ variant = "add", ticket, setTicket, ...props }: FormWrapp
     const error = [responsibleUsersError, prioritiesError].some(error => error);
 
     return (
-        <Container maxW={variant === "add" ? "container.md" : "full"}>
+        <Container {...props}>
             <Heading as="h1" className="my-4 flex items-center gap-4">
                 {variant} ticket
                 <FontAwesomeIcon icon={faFireFlameCurved} className="text-orange-600" />
             </Heading>
             <Form
                 variant={variant}
-                onAbort={(e) => props.onAbort && props.onAbort(e)}
+                onAbort={(e) => onAbort && onAbort(e)}
                 onSubmit={() => mutation.mutate()}
                 onInputChange={handleInputChange}
                 onInputValueChange={handleInputValueChange}

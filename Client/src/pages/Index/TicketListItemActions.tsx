@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function TicketListItemActions({ item }: { item }) {
     return (
         <>
-            <Link href="Ticket/Edit">
+            <Link href={`Ticket/Form/${new URLSearchParams({ id: item.id }).toString()}`}>
                 <MenuItem icon={<FontAwesomeIcon icon={faEdit} />}>
                     Edit
                 </MenuItem>

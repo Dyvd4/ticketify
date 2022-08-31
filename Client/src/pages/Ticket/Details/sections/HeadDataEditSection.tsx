@@ -14,6 +14,7 @@ function HeadDataEditSection({ ticket, ...props }: HeadDataEditSectionProps) {
         onSuccess={props.onSuccess}
         onAbort={props.onAbort}
         variant="edit"
+        maxW={"full"}
     />
 }
 
