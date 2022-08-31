@@ -2,7 +2,7 @@ import Joi from "joi";
 import { Ticket } from "@prisma/client";
 
 export const TicketSchema = Joi.object<Ticket>({
-    id: Joi.string(),
+    id: Joi.number(),
     title: Joi
         .string()
         .required()
@@ -11,7 +11,7 @@ export const TicketSchema = Joi.object<Ticket>({
     description: Joi
         .string()
         .required(),
-    dueDate: Joi.date(),
+    dueDate: Joi.date().allow(null),
     priorityId: Joi.string().required(),
     statusId: Joi.string().allow(null),
     createdAt: Joi.date(),

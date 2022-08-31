@@ -69,15 +69,17 @@ function FormWrapper(props: FormWrapperProps) {
                 }
             })
         }
+        const ticketId = ticket.id;
         delete ticket.responsibleUser;
         delete ticket.priority;
         delete ticket.status;
         delete ticket.attachments;
         delete ticket.files;
         delete ticket.images;
+        delete ticket.id;
         return updateEntity({
             route: "ticket",
-            entityId: ticket.id,
+            entityId: ticketId,
             payload: ticket
         });
     }
