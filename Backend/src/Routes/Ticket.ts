@@ -34,7 +34,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
     try {
         const ticket = await prisma.ticket.findFirst({
             where: {
-                id
+                id: parseInt(id)
             },
             include: {
                 priority: true,
@@ -106,7 +106,7 @@ Router.put('/ticket/:id', async (req, res, next) => {
 
         const updatedTicket = await prisma.ticket.update({
             where: {
-                id
+                id: parseInt(id)
             },
             data: ticket
         })
@@ -122,7 +122,7 @@ Router.delete('/ticket/:id', async (req, res, next) => {
     try {
         const deletedticket = await prisma.ticket.delete({
             where: {
-                id
+                id: parseInt(id)
             }
         });
         res.json(deletedticket);
@@ -139,7 +139,7 @@ Router.delete('/ticket/fileOnTicket/:ticketId/:fileId', async (req, res, next) =
             where: {
                 fileId_ticketId: {
                     fileId,
-                    ticketId
+                    ticketId: parseInt(ticketId)
                 }
             }
         });
@@ -162,7 +162,7 @@ Router.post('/ticket/file', fileUpload, async (req, res, next) => {
         const filesToCreate = files.map(file => mapFile(file));
         const updatedTicket = await prisma.ticket.update({
             where: {
-                id: ticketId
+                id: parseInt(ticketId)
             },
             data: {
                 attachments: {

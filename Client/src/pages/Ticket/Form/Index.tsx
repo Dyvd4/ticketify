@@ -10,7 +10,7 @@ function TicketFormIndex() {
     // ------
     let { params: paramsRaw } = useParams();
     const params = new URLSearchParams(paramsRaw);
-    const id = params.get("id");
+    const id = parseInt(params.get("id") || "");
     const type = id ? "edit" : "add";
     // state
     // -----
@@ -19,7 +19,7 @@ function TicketFormIndex() {
     // queries
     // -------
     const { data: fetchedTicket, status, fetchStatus } = useQuery(["ticket", id], () => {
-        return fetchEntity({ route: "ticket", entityId: id! })
+        return fetchEntity({ route: "ticket", entityId: id!.toString() })
     }, { enabled: !!id });
 
     // shout out
@@ -37,7 +37,7 @@ function TicketFormIndex() {
                     ...ticket
                 }}
             setTicket={setTicket}
-            onSuccess={() => window.location.href = `/Ticket/Details/${id}`}
+            onSuccess={type === "edit" ? () => window.location.href = `/Ticket/Details/${id}` : undefined}
             onAbort={() => window.location.href = "/"}
         />
 }
