@@ -1,6 +1,5 @@
 import { CircularProgress } from "@chakra-ui/react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { RefObject } from "react";
+import autoAnimate from "@formkit/auto-animate";
 import { move } from "src/utils/array";
 import SortItem, { SortItemType } from "./Private/SortItem";
 
@@ -12,8 +11,6 @@ type SortItemsProps = {
 }
 
 function SortItems({ items, ...props }: SortItemsProps) {
-    const [listRef] = useAutoAnimate();
-
     const handleSort = (direction: "up" | "down", name) => {
         const itemToChange = items.find(item => item.property === name)!
         const newItems = [...move(items, itemToChange, direction)];
@@ -29,7 +26,7 @@ function SortItems({ items, ...props }: SortItemsProps) {
     }
 
     return items
-        ? <div className="flex flex-col gap-2" ref={listRef as RefObject<HTMLDivElement>}>
+        ? <div className="flex flex-col gap-2" ref={(listRef) => listRef && autoAnimate(listRef)}>
             {items.map((item, index, self) => (
                 <SortItem {...item}
                     onChange={handleChange}
