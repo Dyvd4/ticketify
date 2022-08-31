@@ -34,36 +34,35 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
                 </Tooltip>
             </Flex>
             <Flex
+                gap={2}
                 direction="column"
                 className="my-2 font-bold text-gray-700 dark:text-gray-300">
                 <Flex justifyContent="space-between">
                     <div>priority</div>
                     <Tag
-                        style={{ backgroundColor: priority.color }}
+                        className={`bg-${priority?.color || "slate-500"}`}
                         variant="solid">
                         {priority.name}
                     </Tag>
                 </Flex>
-                {status && <>
-                    <Flex justifyContent="space-between">
-                        <div>status</div>
-                        <Tag
-                            style={{ backgroundColor: status.color }}
-                            variant="solid">
-                            {status.name}
-                        </Tag>
-                    </Flex>
-                </>}
+                <Flex justifyContent="space-between">
+                    <div>status</div>
+                    <Tag
+                        className={`bg-${status?.color || "slate-500"}`}
+                        variant="solid">
+                        {status?.name || "none"}
+                    </Tag>
+                </Flex>
                 <Flex justifyContent="space-between">
                     <div>due date</div>
-                    <div>{format(new Date(dueDate), "dd.mm.yyyy hh:mm:ss")}</div>
+                    <div>{dueDate
+                        ? format(new Date(dueDate), "dd.mm.yyyy hh:mm:ss")
+                        : "-"}</div>
                 </Flex>
-                {responsibleUser && <>
-                    <Flex justifyContent="space-between">
-                        <div>responsible user</div>
-                        <div>{responsibleUser.username}</div>
-                    </Flex>
-                </>}
+                <Flex justifyContent="space-between">
+                    <div>responsible user</div>
+                    <div>{responsibleUser?.username || "-"}</div>
+                </Flex>
             </Flex>
             <Flex direction="column" className="my-2">
                 <Text
