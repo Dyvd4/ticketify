@@ -9,10 +9,11 @@ const myRequest = request({
 
 interface FetchEntityParams {
     route: string
+    entityId?: string
     options?: AxiosRequestConfig
 }
-export async function fetchEntity({ route, options }: FetchEntityParams) {
-    const response = await myRequest.get(`${route}`, options);
+export async function fetchEntity({ route, options, entityId }: FetchEntityParams) {
+    const response = await myRequest.get(entityId ? `${route}/${entityId}` : route, options);
     return response.data;
 }
 
