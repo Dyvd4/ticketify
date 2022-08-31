@@ -7,6 +7,10 @@ export type InlineStyleButtonMap = {
     [key in InlineStyle]: any
 }
 
+export const CONTENTSTATE = {
+    EMPTY: "<p><br></p>"
+}
+
 type MyEditorProps = {
     actions: Array<InlineStyle>
     wrapperProps?: React.ComponentPropsWithRef<"div">

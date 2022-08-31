@@ -3,6 +3,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import format from "date-fns/format";
 import { sanitize } from "dompurify";
+import { CONTENTSTATE } from "src/components/RichText/Editor";
 import IconButton from "src/components/Wrapper/IconButton";
 
 type HeadDataProps = {
@@ -11,6 +12,7 @@ type HeadDataProps = {
 }
 
 function HeadDataSection({ ticket, ...props }: HeadDataProps) {
+
     const {
         title,
         priority,
@@ -18,11 +20,12 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
         responsibleUser,
         description
     } = ticket;
+
     return (
         <>
             <Flex justifyContent="space-between">
-                <Heading as="h1" className="font-bold">
-                    {title}
+                <Heading as="h1" className="font-bold text-2xl">
+                    {`#${ticket.id} ${title}`}
                 </Heading>
                 <Tooltip label="edit" placement="top">
                     <IconButton
@@ -36,7 +39,7 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
             <Flex
                 gap={2}
                 direction="column"
-                className="my-2 font-bold text-gray-700 dark:text-gray-300">
+                className="my-2 text-gray-700 dark:text-gray-300">
                 <Flex justifyContent="space-between">
                     <div>priority</div>
                     <Tag
@@ -67,7 +70,7 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
             <Flex direction="column" className="my-2">
                 <Text
                     className="bg-white dark:bg-gray-800 p-2 rounded-md"
-                    dangerouslySetInnerHTML={{ __html: sanitize(description) }} />
+                    dangerouslySetInnerHTML={{ __html: sanitize(description === CONTENTSTATE.EMPTY ? "No description" : description) }} />
             </Flex>
         </>
     );
