@@ -40,14 +40,14 @@ Router.get('/ticket/:id', async (req, res, next) => {
                 priority: true,
                 responsibleUser: true,
                 status: true,
-                fileOnTickets: {
+                attachments: {
                     include: {
                         file: true
                     }
                 }
             }
         });
-        const attachments = ticket?.fileOnTickets.map(attachment => attachment.file) || [];
+        const attachments = ticket?.attachments.map(attachment => attachment.file) || [];
         const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
         const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
             .map(image => {
@@ -165,7 +165,7 @@ Router.post('/ticket/file', fileUpload, async (req, res, next) => {
                 id: parseInt(ticketId)
             },
             data: {
-                fileOnTickets: {
+                attachments: {
                     create: filesToCreate.map(file => {
                         return {
                             file: {

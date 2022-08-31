@@ -19,7 +19,7 @@ model User {
   createUser String?     @db.NVarChar(100)
   updateUser String?     @db.NVarChar(100)
   tickets    Ticket[]
-  fileOnUser FileOnUser?
+  avatar     FileOnUser?
 }
 
 model Ticket {
@@ -37,7 +37,7 @@ model Ticket {
   updateUser        String?        @db.NVarChar(100)
   statusId          String?        @db.NVarChar(100)
   status            TicketStatus?  @relation(fields: [statusId], references: [id])
-  fileOnTickets     FileOnTicket[]
+  attachments       FileOnTicket[]
 }
 
 model TicketPriority {
@@ -97,8 +97,8 @@ model File {
   updatedAt        DateTime?      @updatedAt
   createUser       String?        @db.NVarChar(100)
   updateUser       String?        @db.NVarChar(100)
-  fileOnTickets    FileOnTicket[]
-  fileOnUser       FileOnUser[]
+  tickets          FileOnTicket[]
+  avatars          FileOnUser[]
 }
 
 model FileOnTicket {
