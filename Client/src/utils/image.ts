@@ -7,3 +7,5 @@ export const createDataUrl = (blob: Blob) => {
         fileReader.readAsDataURL(blob);
     });
 }
+
+export const getDataUrl = (base64: string, mimeType?: string) => `data:${mimeType};base64,${base64}`;

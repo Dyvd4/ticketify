@@ -5,7 +5,7 @@ import AvatarInput from "src/components/AvatarInput";
 import FormControl from "src/components/Wrapper/FormControl";
 import { request } from "src/services/request";
 import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
-import { createDataUrl } from "src/utils/image";
+import { createDataUrl, getDataUrl } from "src/utils/image";
 
 type AvatarSectionProps = {
     user: any
@@ -14,10 +14,8 @@ type AvatarSectionProps = {
 
 function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
-    const getDataUrl = (avatar) => `data:${avatar.mimeType};base64,${avatar.content}`;
-
     const [avatar, setAvatar] = useState<File | null>(null);
-    const [avatarAsDataUrl, setAvatarAsDataUrl] = useState<string | undefined>(getDataUrl(user.avatar));
+    const [avatarAsDataUrl, setAvatarAsDataUrl] = useState<string | undefined>(getDataUrl(user.avatar.content, user.avatar.mimeType));
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
     const toast = useToast();
 
@@ -44,13 +42,13 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const handleChange = async (file: File | null) => {
         setAvatar(file);
-        if (!file) return setAvatarAsDataUrl(getDataUrl(user.avatar));
+        if (!file) return setAvatarAsDataUrl(getDataUrl(user.avatar.content, user.avatar.mimeType));
         const avatarAsDataUrl = await createDataUrl(file);
         if (!avatarAsDataUrl) return;
         setAvatarAsDataUrl(avatarAsDataUrl);
     }
 
-    const hasSelectedNewAvatar = avatarAsDataUrl !== getDataUrl(user.avatar);
+    const hasSelectedNewAvatar = avatarAsDataUrl !== getDataUrl(user.avatar.content, user.avatar.mimeType);
 
     return (
         <>
@@ -72,7 +70,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                         <ButtonGroup>
                             <Button
                                 size={"sm"}
-                                onClick={() => setAvatarAsDataUrl(getDataUrl(user.avatar))}
+                                onClick={() => setAvatarAsDataUrl(getDataUrl(user.avatar.content, user.avatar.mimeType))}
                                 colorScheme={"red"}>
                                 Discard
                             </Button>

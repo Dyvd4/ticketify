@@ -11,7 +11,8 @@ const config = {
     extend: {
       backgroundColor: ['active'],
       textColor: ['active'],
-      scale: ['active']
+      scale: ['active'],
+      ring: ["active"]
     }
   },
   theme: {

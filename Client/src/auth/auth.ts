@@ -24,3 +24,8 @@ export const signUp = async (username: string, password: string) => {
     }
     return response;
 }
+
+export const signOut = () => {
+    Cookies.set("auth-token", "");
+    window.location.href = "/";
+}
