@@ -1,5 +1,5 @@
 import { Flex, Heading, IconButton, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { generateFakePassword } from "src/utils/password";
 import PasswordEditModal from "../components/PasswordEditModal";
@@ -27,11 +27,10 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
 
     return (
         <>
-            <Flex justifyContent={"space-between"}>
-                <Heading as="h1" className="font-bold text-2xl">
-                    Profile data 😎
-                </Heading>
-            </Flex>
+            <Heading as="h1" className="font-bold text-2xl">
+                Profile data &nbsp;
+                <FontAwesomeIcon icon={faUser} />
+            </Heading>
             <Flex className="mt-2" justifyContent={"space-between"}>
                 <div>username</div>
                 <div className="flex gap-2 items-center">

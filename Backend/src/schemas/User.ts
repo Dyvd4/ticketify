@@ -30,7 +30,7 @@ export const UserUpdateSchema = Joi.object({
     updatedAt: Joi.date(),
     createUser: Joi.string(),
     updateUser: Joi.string()
-});
+})
 
 export const NewPasswordSchema = Joi.object({
     newPassword: Joi

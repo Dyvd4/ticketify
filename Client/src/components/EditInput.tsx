@@ -17,7 +17,7 @@ function EditInput({ children, onAbort, onSave, ...props }: EditInputProps) {
                     Abort
                 </Button>
                 <Button onClick={onSave} colorScheme="blue">
-                    Save
+                    Submit
                 </Button>
             </div>
         </div>

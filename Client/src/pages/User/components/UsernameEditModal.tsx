@@ -15,9 +15,10 @@ type UsernameEditModalProps = {
 function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
 
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
-    const [username, setUsername] = useState<any>("");
+    const [username, setUsername] = useState<any>(user.username);
 
     const mutation = useMutation(async () => {
+        delete user.avatar;
         const response = await request({
             validateStatus: (status) => status < 500
         }).put(`user`, {
@@ -37,7 +38,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
     });
 
     const handleClose = () => {
-        setUsername("");
+        setUsername(user.username);
         setErrorMap(null);
         props.onClose();
     }
