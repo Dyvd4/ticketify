@@ -12,7 +12,7 @@ const config = {
       backgroundColor: ['active'],
       textColor: ['active'],
       scale: ['active'],
-      ring: ["active"]
+      ringWidth: ["active"]
     }
   },
   theme: {

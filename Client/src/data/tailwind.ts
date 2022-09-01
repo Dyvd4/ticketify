@@ -7,8 +7,8 @@ export const screens = {
 }
 
 export const actionColorInactive = {
-    value: "teal-800",
-    hover: "teal-700"
+    value: "sky-800",
+    hover: "sky-700"
 }
 
 export const actionBackgroundColorInactive = {
@@ -22,8 +22,8 @@ export const actionTextColorInactive = {
 }
 
 export const actionColor: Tailwind.Color = {
-    value: "teal-600",
-    hover: "teal-500"
+    value: "sky-600",
+    hover: "sky-500"
 }
 
 export const actionBackgroundColor: Tailwind.Color = {
