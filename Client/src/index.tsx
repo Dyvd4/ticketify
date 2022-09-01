@@ -15,6 +15,7 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
+import UserIndex from "./pages/User/Index";
 import TicketFormIndex from "./pages/Ticket/Form/Index";
 import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import "./styles/index.scss";
@@ -41,6 +42,7 @@ root.render(
               <Route path="/" element={<ProtectedArea type="route" />}>
                 <Route index element={<Index />} />
                 <Route path="Test" element={<TestIndex />} />
+                <Route path="User" element={<UserIndex />} />
                 <Route path="Ticket">
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />
                   <Route path="Form/:params" element={<TicketFormIndex />} />

@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { User } from "@prisma/client";
 
-export const UserSchema = Joi.object<User>({
+const UserCreateSchema = Joi.object<User>({
     id: Joi.string(),
     username: Joi
         .string()
@@ -21,4 +21,30 @@ export const UserSchema = Joi.object<User>({
     abortEarly: false
 });
 
-export default UserSchema;
+export const UserUpdateSchema = Joi.object({
+    id: Joi.string(),
+    username: Joi
+        .string()
+        .required(),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    createUser: Joi.string(),
+    updateUser: Joi.string()
+});
+
+export const NewPasswordSchema = Joi.object({
+    newPassword: Joi
+        .string()
+        .max(100)
+        .messages({
+            "string.max": "Password should not be longer than 100 characters"
+        }),
+    repeatedNewPassword: Joi
+        .string()
+        .max(100)
+        .messages({
+            "string.max": "Password should not be longer than 100 characters"
+        })
+});
+
+export default UserCreateSchema;
