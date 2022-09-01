@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import AvatarInput from "src/components/AvatarInput";
+import AvatarInput from "src/pages/User/components/AvatarInput";
 import FormControl from "src/components/Wrapper/FormControl";
 import { request } from "src/services/request";
 import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";

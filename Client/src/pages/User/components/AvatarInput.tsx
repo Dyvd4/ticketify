@@ -2,7 +2,7 @@ import { Box, Image, VisuallyHidden } from "@chakra-ui/react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef, useRef, useState } from "react";
-import FileInput from "./FileInput";
+import FileInput from "../../../components/FileInput";
 
 type AvatarInputProps = {
     imageSrc?: any
