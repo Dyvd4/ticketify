@@ -32,24 +32,25 @@ class Heart extends React.Component<HeartProps, HeartState> {
                 hover: "text-gray-300"
             },
             size = "1x",
-            active
+            active,
+            ...props
         } = this.props;
         return (
             <div
                 ref={this.heartRef}
-                className="inline-block relative"
-                {...this.props}>
+                className={`inline-block relative 
+                            ${active ? "heart-button--mount" : "heart-button--unmount"}`}
+                {...props}>
                 <div className="heart-button-circles"></div>
                 <FontAwesomeIcon
                     onMouseDown={() => { this.setState({ mouseDown: true }) }}
                     onMouseUp={() => { this.setState({ mouseDown: false }) }}
                     onMouseLeave={() => { this.setState({ mouseDown: false }) }}
                     className={`transform
-                    ${active ? "text-green-400" : color.value} 
-                    ${!active ? `hover:${color.hover}` : ""}
-                    active:${color.value} active:scale-90
-                    ${active ? "heart-button--mount" : "heart-button--unmount"}
-                    cursor-pointer`}
+                                ${active ? "text-green-400" : color.value} 
+                                ${!active ? `hover:${color.hover}` : ""}
+                                active:${color.value} active:scale-90
+                                cursor-pointer`}
                     icon={(mouseDown || active) ? faHeart : farHeart}
                     size={size}
                 />
