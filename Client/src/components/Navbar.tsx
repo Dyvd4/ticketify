@@ -1,5 +1,5 @@
 import { Avatar, Flex, HStack, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { faAlignJustify, faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { signOut } from "src/auth/auth";
@@ -21,7 +21,7 @@ function Navbar(props: NavbarProps) {
                 onClick={() => setSidebarActive(!sidebarActive)}
                 size="sm"
                 aria-label="Homepage"
-                icon={<FontAwesomeIcon icon={faAlignJustify} />} />
+                icon={<FontAwesomeIcon icon={faBars} />} />
             <HStack gap={1}>
                 <DarkModeButton circle
                     size="sm"
