@@ -1,5 +1,6 @@
 import express from 'express';
 import mapFile from '../schemas/maps/File';
+import mapTicket from '../schemas/maps/Ticket';
 import TicketSchema from "../schemas/Ticket";
 import { prisma } from "../server";
 import { fileUpload, validateFiles, isImageFile } from '../utils/file';
@@ -98,7 +99,7 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
 
 Router.put('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
-    let ticket = req.body;
+    let ticket = mapTicket(req.body);
     try {
         const validation = TicketSchema.validate(ticket);
         if (validation.error) return res.status(400).json({ validation });
