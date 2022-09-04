@@ -12,7 +12,8 @@ const config = {
       backgroundColor: ['active'],
       textColor: ['active'],
       scale: ['active'],
-      ringWidth: ["active"]
+      ringWidth: ["active"],
+      display: ["group-hover"]
     }
   },
   theme: {
