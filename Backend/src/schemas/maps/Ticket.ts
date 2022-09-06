@@ -6,10 +6,6 @@ const mapTicket = (ticket) => {
         dueDate,
         priorityId,
         statusId,
-        createdAt,
-        updatedAt,
-        createUser,
-        updateUser
     } = ticket;
     return {
         title,
@@ -17,11 +13,7 @@ const mapTicket = (ticket) => {
         description,
         dueDate,
         priorityId,
-        statusId,
-        createdAt,
-        updatedAt,
-        createUser,
-        updateUser
+        statusId
     }
 }
 

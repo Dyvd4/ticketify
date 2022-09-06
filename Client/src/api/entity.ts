@@ -17,7 +17,7 @@ export async function fetchEntity({ route, options, entityId }: FetchEntityParam
     return response.data;
 }
 
-interface AddEntityParams {
+export interface AddEntityParams {
     route: string
     payload: any,
     options?: AxiosRequestConfig
@@ -28,7 +28,7 @@ export async function addEntity({ route, payload, options }: AddEntityParams) {
     return response;
 }
 
-interface UpdateEntityParams {
+export interface UpdateEntityParams {
     route: string
     entityId: string
     payload: any
@@ -40,7 +40,7 @@ export async function updateEntity({ route, entityId, payload, options }: Update
     return response;
 }
 
-interface RemoveEntityParams {
+export interface RemoveEntityParams {
     route: string
     entityId?: string
     options?: AxiosRequestConfig

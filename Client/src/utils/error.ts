@@ -24,7 +24,7 @@ const multerErrorMessageMap: MulterErrorMessageMap = {
 }
 
 export function getMulterErrorMessage(error: AxiosError) {
-    const unmappedErrorMessage = (error.response?.data as any).error as string;
+    const unmappedErrorMessage = (error.response?.data as any)?.error || "" as string;
     if (!unmappedErrorMessage.includes("MulterError")) return "";
     const multerErrorMessage = Object.keys(multerErrorMessageMap)
         .find(multerErrorMessage => {
@@ -32,7 +32,7 @@ export function getMulterErrorMessage(error: AxiosError) {
         })
     return multerErrorMessage
         ? multerErrorMessageMap[multerErrorMessage]
-        : unmappedErrorMessage.replace("MulterError:", "") as string || "";
+        : unmappedErrorMessage.replace("MulterError:", "") as string;
 }
 
 export type ValidationErrorMap = {

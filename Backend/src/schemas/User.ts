@@ -5,7 +5,8 @@ const UserCreateSchema = Joi.object<User>({
     id: Joi.string(),
     username: Joi
         .string()
-        .required(),
+        .required()
+        .max(40),
     password: Joi
         .string()
         .required()
