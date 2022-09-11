@@ -39,7 +39,15 @@ Router.get('/ticket/:id', async (req, res, next) => {
             },
             include: {
                 priority: true,
-                responsibleUser: true,
+                responsibleUser: {
+                    include: {
+                        avatar: {
+                            include: {
+                                file: true
+                            }
+                        }
+                    }
+                },
                 status: true,
                 attachments: {
                     include: {
@@ -57,6 +65,11 @@ Router.get('/ticket/:id', async (req, res, next) => {
                     content: image.content.toString("base64")
                 }
             });
+        // 🥵
+        (ticket!.responsibleUser!.avatar as any) = {
+            ...ticket!.responsibleUser!.avatar!.file,
+            content: ticket!.responsibleUser!.avatar!.file!.content.toString("base64")
+        };
         (ticket as any).attachments = attachments;
         (ticket as any).files = files;
         (ticket as any).images = images;
