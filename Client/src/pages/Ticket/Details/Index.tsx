@@ -42,7 +42,6 @@ function TicketDetailsIndex() {
     }
 
     const {
-        comments = [],
         files,
         images,
         attachments,
@@ -110,7 +109,7 @@ function TicketDetailsIndex() {
                     />
                 </EditView>
             </Box>
-            <CommentsSection comments={comments} />
+            <CommentsSection ticket={ticket} />
         </Container>
     );
 }

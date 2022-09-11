@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(uuid()) @db.NVarChar(100)
-  username   String      @unique @db.NVarChar(100)
-  password   String      @db.NVarChar(100)
-  createdAt  DateTime?   @default(now())
-  updatedAt  DateTime?   @updatedAt
-  createUser String?     @db.NVarChar(100)
-  updateUser String?     @db.NVarChar(100)
-  tickets    Ticket[]
-  avatar     FileOnUser?
+  id                  String               @id @default(uuid()) @db.NVarChar(100)
+  username            String               @unique @db.NVarChar(100)
+  password            String               @db.NVarChar(100)
+  createdAt           DateTime?            @default(now())
+  updatedAt           DateTime?            @updatedAt
+  createUser          String?              @db.NVarChar(100)
+  updateUser          String?              @db.NVarChar(100)
+  tickets             Ticket[]
+  avatar              FileOnUser?
+  comments            Comment[]
+  commentInteractions CommentInteraction[]
 }
 
 model Ticket {
@@ -38,6 +40,7 @@ model Ticket {
   statusId          String?        @db.NVarChar(100)
   status            TicketStatus?  @relation(fields: [statusId], references: [id])
   attachments       FileOnTicket[]
+  comments          Comment[]
 }
 
 model TicketPriority {
@@ -63,12 +66,35 @@ model TicketStatus {
 }
 
 model Comment {
-  id         String    @id @default(uuid()) @db.NVarChar(100)
-  content    String    @db.NVarChar(255)
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
-  createUser String?   @db.NVarChar(100)
-  updateUser String?   @db.NVarChar(100)
+  id           String               @id @default(uuid()) @db.NVarChar(100)
+  ticketId     Int                  @db.Int
+  ticket       Ticket               @relation(fields: [ticketId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  content      String               @db.NVarChar(1000)
+  authorId     String               @db.NVarChar(100)
+  author       User                 @relation(fields: [authorId], references: [id])
+  createdAt    DateTime?            @default(now())
+  updatedAt    DateTime?            @updatedAt
+  createUser   String?              @db.NVarChar(100)
+  updateUser   String?              @db.NVarChar(100)
+  parentId     String?              @db.NVarChar(100)
+  parent       Comment?             @relation("childs", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childs       Comment[]            @relation("childs")
+  interactions CommentInteraction[]
+}
+
+model CommentInteraction {
+  id            String    @id @default(uuid()) @db.NVarChar(100)
+  type          String    @db.NVarChar(100)
+  createdFromId String    @db.NVarChar(100)
+  createdFrom   User      @relation(fields: [createdFromId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  commentId     String    @db.NVarChar(100)
+  comment       Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  createUser    String?   @db.NVarChar(100)
+  updateUser    String?   @db.NVarChar(100)
+
+  @@unique([type, createdFromId, commentId])
 }
 
 model TicketDueDate {

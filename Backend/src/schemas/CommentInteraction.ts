@@ -1,20 +1,17 @@
 import Joi from "joi";
-import { Comment } from "@prisma/client";
+import { CommentInteraction } from "@prisma/client";
 
-export const CommentSchema = Joi.object<Comment>({
+export const CommentInteractionSchema = Joi.object<CommentInteraction>({
     id: Joi.string(),
-    ticketId: Joi
-        .number()
-        .required(),
-    content: Joi
-        .string()
-        .required()
-        .max(1000),
-    authorId: Joi
+    type: Joi
         .string()
         .required(),
-    parentId: Joi
-        .string(),
+    createdFromId: Joi
+        .string()
+        .required(),
+    commentId: Joi
+        .string()
+        .required(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
     createUser: Joi.string(),
@@ -23,4 +20,4 @@ export const CommentSchema = Joi.object<Comment>({
     abortEarly: false
 });
 
-export default CommentSchema;
+export default CommentInteractionSchema;

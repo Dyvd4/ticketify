@@ -7,15 +7,16 @@ import { errorHandler } from "./middlewares/errorHandler";
 import { userSignature } from "./middlewares/prisma";
 import { customRequest } from "./middlewares/requests";
 import AuthRouter from "./routes/Auth";
-import ErrorRouter from "./routes/Error";
-import UserRouter from "./routes/User";
-import TicketRouter from "./routes/Ticket";
-import TicketPriorityRouter from "./routes/TicketPriority";
 import CommentRouter from "./routes/Comment";
-import TicketDueDateRouter from "./routes/TicketDueDate";
-import TestRouter from "./routes/Test";
-import TicketStatusRouter from "./routes/TicketStatus";
+import CommentInteractionRouter from "./routes/CommentInteraction";
+import ErrorRouter from "./routes/Error";
 import FileRouter from "./routes/File";
+import TestRouter from "./routes/Test";
+import TicketRouter from "./routes/Ticket";
+import TicketDueDateRouter from "./routes/TicketDueDate";
+import TicketPriorityRouter from "./routes/TicketPriority";
+import TicketStatusRouter from "./routes/TicketStatus";
+import UserRouter from "./routes/User";
 import logger from "./services/logger";
 dotenv.config();
 
@@ -39,6 +40,7 @@ server.use("/api", TicketDueDateRouter);
 server.use("/api", TestRouter);
 server.use("/api", TicketStatusRouter);
 server.use("/api", FileRouter);
+server.use("/api", CommentInteractionRouter);
 
 server.use(errorHandler);
 
@@ -48,4 +50,4 @@ server.listen(PORT, () => {
 
 const prisma = new PrismaClient();
 prisma.$use(userSignature);
-export { prisma }
+export { prisma };
