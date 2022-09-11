@@ -15,7 +15,7 @@ export const useUrlParams = (name, fallBackValue?, options?: UseUrlParamsOptions
     useEffect(() => {
         let urlParam = new URLSearchParams(window.location.search).get(name);
         if (urlParam && !!options?.jsonParse) urlParam = JSON.parse(urlParam);
-        setUrlParamsState(urlParam || fallBackValue);
+        setUrlParams(urlParam || fallBackValue)
     }, [])
     const setUrlParams = (params) => {
         if (!options?.dontSetUrl) {

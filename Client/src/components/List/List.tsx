@@ -5,8 +5,8 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { actionBackgroundColor } from "src/data/tailwind";
-import { useFilterParams } from "src/hooks/useFilterParams";
-import { useOrderByParams } from "src/hooks/useOrderByParams";
+import { useFilterParams } from "src/components/List/Private/hooks/useFilterParams";
+import { useOrderByParams } from "src/components/List/Private/hooks/useOrderByParams";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { mapColorProps } from "src/utils/component";
 import { setUrlParam } from "src/utils/url";
@@ -58,7 +58,7 @@ function List(props: ListProps) {
     })
 
     const listItems = data?.items || [];
-    
+
     const pagingInfo = data?.pagesCount && data?.currentPage
         ? {
             pagesCount: data.pagesCount,

@@ -9,13 +9,17 @@ export type OrderByQueryParam = {
 export type OrderByQueryParams = Array<OrderByQueryParam>
 
 export const mapOrderByQuery = (query) => {
+    const mappedOrderBy = (orderBy) => {
+        const orderByObj = {};
+        Object.set(orderByObj, orderBy.property, orderBy.direction);
+        return orderByObj;
+    }
     if (!query.orderBy) return {};
-    const orderBys: OrderByQueryParams = JSON.parse((query.orderBy) as string);
-    return orderBys
-        .filter(orderBy => !orderBy.disabled)
-        .map((orderBy) => {
-            const orderByObj = {};
-            Object.set(orderByObj, orderBy.property, orderBy.direction);
-            return orderByObj;
-        });
+    const orderBy: OrderByQueryParams = JSON.parse((query.orderBy) as string);
+    if (orderBy.length) {
+        return orderBy
+            .filter(orderBy => !orderBy.disabled)
+            .map(mappedOrderBy);
+    }
+    return [mappedOrderBy(orderBy)];
 }

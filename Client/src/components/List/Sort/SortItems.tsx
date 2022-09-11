@@ -3,7 +3,7 @@ import autoAnimate from "@formkit/auto-animate";
 import { move } from "src/utils/array";
 import SortItem, { SortItemType } from "./Private/SortItem";
 
-export type DefaultSortItemType = Omit<SortItemType, "disabled" | "direction">;
+export type DefaultSortItemType = SortItemType;
 
 type SortItemsProps = {
     items: SortItemType[]

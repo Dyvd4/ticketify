@@ -3,8 +3,8 @@ export const getUrlParam = (name: string) => {
     return url.searchParams.get(name);
 }
 
-export const setUrlParam = (name: string, params) => {
+export const setUrlParam = (name: string, param) => {
     const newUrl = new URL(window.location.href);
-    newUrl.searchParams.set(name, JSON.stringify(params));
+    newUrl.searchParams.set(name, JSON.stringify(param));
     window.history.pushState(null, "", newUrl);
 }
