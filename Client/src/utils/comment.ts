@@ -36,82 +36,64 @@ export const getComment = (parentComments: any[], commentId) => {
 }
 
 export const addComment = (parentComments: any[], parentCommentId: string, comment) => {
-    const newParentComments: any = [...parentComments];
-    const oldParentComments: any = [...parentComments];
+    const newComments: any = [...parentComments];
+    const oldComments: any = [...parentComments];
 
     const parentCommentIndex = parentComments.findIndex(comment => comment.id === parentCommentId);
     const parentComment = parentComments[parentCommentIndex]
-    const oldChildComments = [...parentComment.childs];
-    const newChildComments = [
-        ...parentComment.childs,
-        comment
-    ];
     const newParentComment = {
         ...parentComment,
-        childs: newChildComments
+        childs: [
+            ...parentComment.childs,
+            comment
+        ]
     }
-    newParentComments[parentCommentIndex] = newParentComment;
+    newComments[parentCommentIndex] = newParentComment;
 
     return {
-        parentComments: newParentComments,
-        childComments: newChildComments,
-        oldChildComments,
-        oldParentComments
+        comments: newComments,
+        oldComments
     }
 }
 
 export const deleteComment = (parentComments: any[], commentId: string) => {
-    let newChildComments: any = [];
-    let oldChildComments: any = [];
-    let newParentComments: any = [...parentComments];
-    let oldParentComments: any = [...parentComments];
+    let newComments: any = [...parentComments];
+    let oldComments: any = [...parentComments];
     const { parentCommentIndex, commentIndex } = getCommentPosition(parentComments, commentId);
     const isParent = parentCommentIndex === -1 && commentIndex > -1
     const isChild = parentCommentIndex > -1 && commentIndex > -1;
 
     if (isParent) {
-        newParentComments.splice(commentIndex, 1);
+        newComments.splice(commentIndex, 1);
     }
     if (isChild) {
-        const parent = newParentComments[parentCommentIndex];
-        newChildComments = [...parent.childs];
-        oldChildComments = [...parent.childs];
-        newChildComments.splice(commentIndex, 1);
-        parent.childs = newChildComments;
+        const parent = newComments[parentCommentIndex];
+        parent.childs.splice(commentIndex, 1);
     }
 
     return {
-        parentComments: newParentComments,
-        childComments: newChildComments,
-        oldChildComments,
-        oldParentComments
+        comments: newComments,
+        oldComments
     };
 }
 
 export const replaceComment = (parentComments: any[], commentId: string, comment) => {
-    let newChildComments: any = [];
-    let oldChildComments: any = [];
-    let newParentComments: any = [...parentComments];
-    let oldParentComments: any = [...parentComments];
+    let newComments: any = [...parentComments];
+    let oldComments: any = [...parentComments];
     const { parentCommentIndex, commentIndex } = getCommentPosition(parentComments, commentId);
     const isParent = parentCommentIndex === -1 && commentIndex > -1
     const isChild = parentCommentIndex > -1 && commentIndex > -1;
 
     if (isParent) {
-        newParentComments[commentIndex] = comment;
+        newComments[commentIndex] = comment;
     }
     else if (isChild) {
-        const parent = newParentComments[parentCommentIndex];
-        newChildComments = [...parent.childs];
-        oldChildComments = [...parent.childs];
-        newChildComments[commentIndex] = comment;
-        parent.childs = newChildComments;
+        const parent = newComments[parentCommentIndex];
+        parent.childs[commentIndex] = comment;
     }
 
     return {
-        parentComments: newParentComments,
-        childComments: newChildComments,
-        oldChildComments,
-        oldParentComments
+        comments: newComments,
+        oldComments
     }
 }

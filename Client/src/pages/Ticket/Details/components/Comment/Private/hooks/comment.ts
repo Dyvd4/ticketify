@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { addEntity, removeEntity, updateEntity } from "src/api/entity";
-import { commentSortParamAtom } from "src/context/atoms";
+import { commentSortParamAtom, hackyCommentRefreshAtom } from "src/context/atoms";
 import { useCurrentUser } from "src/hooks/user";
 import { addComment, deleteComment, getComment, replaceComment } from "src/utils/comment";
 
@@ -15,41 +15,11 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
     const [editValue, setEditValue] = useState(defaultEditValue);
     const { currentUser } = useCurrentUser(true);
     const [sortParam] = useAtom(commentSortParamAtom);
+    const { 1: setCommentRefreshAtom } = useAtom(hackyCommentRefreshAtom);
 
     const cancelCommentQuery = () => queryClient.cancelQueries(["comments", sortParam]);
-    const getChildComments = (parentCommentId: string) => queryClient.getQueryData(["comment/childs", parentCommentId]) as any[];
-    const getComments = () => {
-        // 🥵
-        const comments = queryClient.getQueryData(["comments", sortParam]) as any[];
-        // otherwise the childs are outdated
-        return comments.map(comment => {
-            comment.childs = getChildComments(comment.id);
-            return comment;
-        });
-    }
-    const setCommentChildQuery = (parentCommentId: string, childs: any[]) => {
-        queryClient.setQueryData(["comment/childs", parentCommentId], childs);
-    }
-    const setCommentQuery = (parentComments: any[]) => {
-        queryClient.setQueryData(["comments", sortParam], parentComments);
-        // 🥵
-        parentComments.forEach(comment => {
-            if (comment.childs.length === 0) {
-                queryClient.setQueryData(["comment/childs", comment.id], []);
-            }
-        });
-    }
-    const setQuery = (newChildComments: any[], newParentComments: any[]) => {
-        if (newChildComments.length > 0) {
-            setCommentChildQuery(newChildComments[0].parentId, newChildComments);
-            // also update parent because otherwise there is
-            // a discrepancy of the childs which can lead to bugs
-            setCommentQuery(newParentComments);
-        }
-        else {
-            setCommentQuery(newParentComments);
-        }
-    }
+    const getComments = () => queryClient.getQueryData(["comments", sortParam]) as any[]
+    const setCommentQuery = (comments: any[]) => queryClient.setQueryData(["comments", sortParam], comments);
 
     const addReplyMutation = useMutation(addEntity, {
         onMutate: async ({ payload: comment }) => {
@@ -73,21 +43,23 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
                 updatedAt: new Date()
             };
 
-            const { childComments, parentComments, oldChildComments, oldParentComments } = addComment(currentComments, comment.parentId, newComment);
-            setQuery(childComments, parentComments);
-            return { parentComments: oldParentComments, childComments: oldChildComments, addedComment: newComment };
+            const { comments, oldComments } = addComment(currentComments, comment.parentId, newComment);
+            queryClient.setQueryData(["comments", sortParam], comments);
+            setCommentQuery(comments);
+            return { comments: oldComments, addedComment: newComment };
         },
         onError: (error, variables, context) => {
-            setQuery((context! as any).childComments, (context! as any).parentComments)
+            setCommentQuery((context! as any).comments)
         },
         onSuccess: async (response, { payload: newComment }, context) => {
             const currentComments = getComments();
             const addedComment = (context! as any).addedComment;
-            const { childComments, parentComments } = replaceComment(currentComments, newComment.id, {
+            const { comments } = replaceComment(currentComments, newComment.id, {
                 ...addedComment,
                 id: response.data.id
             });
-            setQuery(childComments, parentComments);
+
+            setCommentQuery(comments);
             await queryClient.invalidateQueries(["comments/count"]);
             setReplyValue("");
             toast({
@@ -101,15 +73,21 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
             await cancelCommentQuery();
             const currentComments = getComments();
             const oldComment = getComment(currentComments, commentId);
-            const { childComments, oldChildComments, parentComments, oldParentComments } = replaceComment(currentComments, commentId, {
+            const { comments, oldComments } = replaceComment(currentComments, commentId, {
                 ...oldComment,
                 ...comment
             });
-            setQuery(childComments, parentComments);
-            return { childComments: oldChildComments, parentComments: oldParentComments };
+            setCommentQuery(comments);
+            // I'm a genius
+            //     -
+            //     -
+            //     -
+            //     v
+            setCommentRefreshAtom(hackyNumber => hackyNumber + 1);
+            return { comments: oldComments };
         },
         onError: (error, variables, context) => {
-            setQuery((context! as any).childComments, (context! as any).parentComments)
+            setCommentQuery((context! as any).comments)
         },
         onSuccess: (response) => {
             setEditValue(response.data.content);
@@ -123,12 +101,12 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
         onMutate: async ({ entityId: commentId }) => {
             await cancelCommentQuery();
             const currentComments = getComments()
-            const { childComments, oldChildComments, parentComments, oldParentComments } = deleteComment(currentComments, commentId!);
-            setQuery(childComments, parentComments);
-            return { childComments: oldChildComments, parentComments: oldParentComments };
+            const { comments, oldComments } = deleteComment(currentComments, commentId!);
+            setCommentQuery(comments);
+            return { comments: oldComments };
         },
         onError: (error, variables, context) => {
-            setQuery((context! as any).childComments, (context! as any).parentComments)
+            setCommentQuery((context! as any).comments)
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries(["comments/count"])
@@ -169,12 +147,18 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
                 hearted: !!hearts.find(heart => heart.createdFromId === currentUser.id)
             }
 
-            const { childComments, oldChildComments, parentComments, oldParentComments } = replaceComment(currentComments, newComment.id, newComment);
-            setQuery(childComments, parentComments)
-            return { childComments: oldChildComments, parentComments: oldParentComments };
+            const { comments, oldComments } = replaceComment(currentComments, newComment.id, newComment);
+            setCommentQuery(comments);
+            // I'm a genius
+            //     -
+            //     -
+            //     -
+            //     v
+            setCommentRefreshAtom(hackyNumber => hackyNumber + 1);
+            return { comments: oldComments };
         },
         onError: (error, variables, context) => {
-            setQuery((context! as any).childComments, (context! as any).parentComments)
+            setCommentQuery((context! as any).comments)
         },
     });
 

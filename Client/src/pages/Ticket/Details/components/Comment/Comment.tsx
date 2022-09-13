@@ -1,7 +1,8 @@
 import { Avatar, Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useEffect, useRef, useState } from "react";
-import { useQuery } from "react-query";
 import HeartButton from "src/components/Buttons/Heart";
+import { hackyCommentRefreshAtom } from "src/context/atoms";
 import { useCurrentUser } from "src/hooks/user";
 import { useCommentMutations } from "src/pages/Ticket/Details/components/Comment/Private/hooks/comment";
 import { getDurationAgo } from "src/utils/date";
@@ -42,15 +43,8 @@ function Comment(props: CommentProps) {
         createdAt,
         likes,
         dislikes,
-        hearts
+        hearts,
     } = comment;
-
-    // 🥵
-    const { data: childs = [] } = useQuery(["comment/childs", comment.id], () => comment.childs, {
-        refetchOnWindowFocus: false,
-        cacheTime: Infinity,
-        staleTime: Infinity
-    });
 
     // state
     // -----
@@ -64,6 +58,12 @@ function Comment(props: CommentProps) {
     const { isOpen: deleteDialogOpen, onOpen: onDeleteDialogOpen, onClose: onDeleteDialogClose } = useDisclosure();
     const [contentHasOverflow, setContentHasOverflow] = useState(false);
     const contentRef = useRef<HTMLDivElement | null>(null);
+    // I'm a genius
+    //     -
+    //     -
+    //     -
+    //     v
+    useAtom(hackyCommentRefreshAtom);
 
     useEffect(() => {
         setContentHasOverflow(contentRef.current!.clientHeight < contentRef.current!.scrollHeight);
@@ -255,11 +255,11 @@ function Comment(props: CommentProps) {
                         onSubmit={handleReplyOnSubmit}
                     />
                 </>}
-                {childs.length > 0 && !activeState.edit && <>
+                {comment.childs.length > 0 && !activeState.edit && <>
                     <RepliesButton
                         className="mt-2"
                         ticket={ticket}
-                        comments={childs}
+                        comments={comment.childs}
                     />
                 </>}
                 {activeState.edit && <>
