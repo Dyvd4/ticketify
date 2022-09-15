@@ -3,37 +3,72 @@ import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useEffect, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
 import { hackyCommentRefreshAtom } from "src/context/atoms";
-import { useCurrentUser } from "src/hooks/user";
-import { useCommentMutations } from "src/pages/Ticket/Details/components/Comment/Private/hooks/comment";
 import { getDurationAgo } from "src/utils/date";
 import { getDataUrl } from "src/utils/image";
-import { v4 as uuid } from "uuid";
 import Input from "./Input";
 import ActionMenu from "./Private/ActionMenu";
+import ChildComments from "./Private/ChildComments";
 import DeleteDialog from "./Private/DeleteDialog";
 import LikeButton, { LikeButtonVariant } from "./Private/LikeButton";
 import RepliesButton from "./Private/RepliesButton";
 
 export type CommentSize = "normal" | "small"
 export type Interaction = LikeButtonVariant | "heart"
+export type AvatarType = {
+    username: string
+    content: string
+    mimeType: string
+}
 
 const defaultNoOfContentLines = 4;
 
 type CommentProps = {
-    ticket: any
-    comment: any
+    comment: {
+        authorId: string
+        ticketId: string
+        author: {
+            username: string
+        },
+        content: string
+        createdAt: Date
+        updatedAt: Date
+        likes: any[]
+        dislikes: any[]
+        hearts: any[]
+        liked: boolean
+        disliked: boolean
+        hearted: boolean
+        childs: any[]
+    }
+    avatar?: AvatarType
     size?: CommentSize
-    forceUpdate?(): void
+    replyInputAvatarEvaluator?(comment): AvatarType | undefined
+    replyButtonAvatarEvaluator?(comment): AvatarType | undefined
+    usernameTaggedEvaluator?(comment): boolean
+    canEditEvaluator?(comment): boolean
+    canDeleteEvaluator?(comment): boolean
+    onInteractionSubmit?(type: Interaction, comment): void
+    onReplySubmit?(e, comment, replyValue: string): void
+    onEditSubmit?(e, comment, editvalue: string): void
+    onDeleteSubmit?(e, comment): void
 } & ComponentPropsWithRef<"div">
 
 function Comment(props: CommentProps) {
     // props
     // -----
     const {
-        ticket,
         comment,
-        forceUpdate,
         size = "normal",
+        avatar,
+        replyInputAvatarEvaluator,
+        replyButtonAvatarEvaluator,
+        usernameTaggedEvaluator,
+        canEditEvaluator,
+        canDeleteEvaluator,
+        onInteractionSubmit,
+        onReplySubmit,
+        onEditSubmit,
+        onDeleteSubmit,
         ...restProps
     } = props;
 
@@ -51,36 +86,22 @@ function Comment(props: CommentProps) {
     const [activeState, setActiveState] = useState({
         reply: false,
         hover: false,
-        edit: false
+        edit: false,
+        childs: false
     });
+
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
-    const { currentUser } = useCurrentUser(true);
     const { isOpen: deleteDialogOpen, onOpen: onDeleteDialogOpen, onClose: onDeleteDialogClose } = useDisclosure();
     const [contentHasOverflow, setContentHasOverflow] = useState(false);
     const contentRef = useRef<HTMLDivElement | null>(null);
-    // I'm a genius
-    //     -
-    //     -
-    //     -
-    //     v
+    const [replyValue, setReplyValue] = useState("");
+    const [editValue, setEditValue] = useState(comment.content);
+
     useAtom(hackyCommentRefreshAtom);
 
     useEffect(() => {
         setContentHasOverflow(contentRef.current!.clientHeight < contentRef.current!.scrollHeight);
-    }, [])
-
-    // mutations
-    // ---------
-    const {
-        addReplyMutation,
-        editCommentMutation,
-        deleteCommentMutation,
-        addInteractionMutation,
-        replyValue,
-        setReplyValue,
-        editValue,
-        setEditValue
-    } = useCommentMutations("", comment.content);
+    }, []);
 
     // event handler
     // -------------
@@ -89,13 +110,7 @@ function Comment(props: CommentProps) {
             ...activeState,
             [type]: !activeState[type]
         });
-        addInteractionMutation.mutate({
-            route: "commentInteraction",
-            payload: {
-                type,
-                commentId: comment.id
-            }
-        });
+        if (props.onInteractionSubmit) props.onInteractionSubmit(type, comment);
     }
 
     const handleReplyOnCancel = () => {
@@ -103,19 +118,10 @@ function Comment(props: CommentProps) {
         setReplyValue("");
     }
 
-    const handleReplyOnSubmit = () => {
+    const handleReplyOnSubmit = (e) => {
         setActiveState({ ...activeState, reply: false });
-        addReplyMutation.mutate({
-            route: "comment",
-            payload: {
-                id: uuid(),
-                parentId: comment.parentId || comment.id,
-                ticketId: ticket.id,
-                content: replyValue
-            }
-        });
-        if (forceUpdate) forceUpdate();
         setReplyValue("");
+        if (props.onReplySubmit) props.onReplySubmit(e, comment, replyValue);
     }
 
     const handleEditOnCancel = () => {
@@ -123,32 +129,19 @@ function Comment(props: CommentProps) {
         setEditValue(comment.content);
     }
 
-    const handleEditOnSubmit = () => {
+    const handleEditOnSubmit = (e) => {
         setActiveState({ ...activeState, edit: false });
-        const { authorId, ticketId } = comment;
-        editCommentMutation.mutate({
-            route: "comment",
-            entityId: comment.id,
-            payload: {
-                ticketId,
-                authorId,
-                content: editValue
-            }
-        });
+        if (props.onEditSubmit) props.onEditSubmit(e, comment, editValue);
     }
 
-    const handleDeleteOnSubmit = () => {
-        deleteCommentMutation.mutate({
-            route: "comment",
-            entityId: comment.id
-        });
+    const handleDeleteOnSubmit = (e) => {
+        if (props.onDeleteSubmit) props.onDeleteSubmit(e, comment);
         onDeleteDialogClose();
     }
 
-    const ownsComment = currentUser.id === comment.authorId;
-    const canEdit = ownsComment;
-    const canDelete = ownsComment && comment.childs.length === 0;
-    const isResponsibleUser = ticket.responsibleUserId === comment.authorId;
+    const canEdit = props.canEditEvaluator && props.canEditEvaluator(comment)
+    const canDelete = props.canDeleteEvaluator && props.canDeleteEvaluator(comment);
+    const usernameTagged = props.usernameTaggedEvaluator && props.usernameTaggedEvaluator(comment);
     const showMore = noOfContentLines === defaultNoOfContentLines;
 
     return (
@@ -156,11 +149,13 @@ function Comment(props: CommentProps) {
             className="comment"
             gap={3}
             {...restProps}>
-            <Avatar
-                size={size === "small" ? "sm" : "md"}
-                name={author.username}
-                src={getDataUrl(author.avatar.content, author.avatar.mimeType)}
-            />
+            {avatar && <>
+                <Avatar
+                    size={size === "small" ? "sm" : "md"}
+                    name={author.username}
+                    src={getDataUrl(avatar.content, avatar.mimeType)}
+                />
+            </>}
             <Flex flexDirection={"column"} className="w-full">
                 <Flex
                     position={"relative"}
@@ -171,14 +166,14 @@ function Comment(props: CommentProps) {
                         justifyContent={"space-between"}
                         alignItems={"center"}>
                         <Flex gap={2} alignItems={"center"}>
-                            {isResponsibleUser && <>
+                            {usernameTagged && <>
                                 <Tag className="rounded-full">
                                     <div className="text-base font-bold">
                                         {author.username}
                                     </div>
                                 </Tag>
                             </>}
-                            {!isResponsibleUser && <>
+                            {!usernameTagged && <>
                                 <div className="text-base font-bold">
                                     {author.username}
                                 </div>
@@ -192,7 +187,7 @@ function Comment(props: CommentProps) {
                         <Box
                             ref={contentRef}
                             noOfLines={noOfContentLines}
-                            className={`text-sm ${isResponsibleUser ? "pl-1 pt-1" : ""}`}>
+                            className={`text-sm ${usernameTagged ? "pl-1 pt-1" : ""}`}>
                             {content}
                         </Box>
                         {contentHasOverflow && <>
@@ -247,6 +242,7 @@ function Comment(props: CommentProps) {
                 </Flex>
                 {activeState.reply && !activeState.edit && <>
                     <Input
+                        avatar={props.replyInputAvatarEvaluator && props.replyInputAvatarEvaluator(comment)}
                         variant="reply"
                         className="mt-2"
                         value={replyValue}
@@ -256,11 +252,29 @@ function Comment(props: CommentProps) {
                     />
                 </>}
                 {comment.childs.length > 0 && !activeState.edit && <>
-                    <RepliesButton
-                        className="mt-2"
-                        ticket={ticket}
-                        comments={comment.childs}
-                    />
+                    <Box>
+                        <RepliesButton
+                            avatar={props.replyButtonAvatarEvaluator && props.replyButtonAvatarEvaluator(comment)}
+                            active={activeState.childs}
+                            setActive={active => setActiveState({ ...activeState, childs: active })}
+                            repliesCount={comment.childs.length}
+                            className="mt-2"
+                        />
+                        {activeState.childs && <>
+                            <ChildComments
+                                comments={comment.childs}
+                                onInteractionSubmit={props.onInteractionSubmit}
+                                onReplySubmit={props.onReplySubmit}
+                                onEditSubmit={props.onEditSubmit}
+                                onDeleteSubmit={props.onDeleteSubmit}
+                                replyInputAvatarEvaluator={props.replyInputAvatarEvaluator}
+                                replyButtonAvatarEvaluator={props.replyButtonAvatarEvaluator}
+                                usernameTaggedEvaluator={props.usernameTaggedEvaluator}
+                                canEditEvaluator={props.canEditEvaluator}
+                                canDeleteEvaluator={props.canDeleteEvaluator}
+                            />
+                        </>}
+                    </Box>
                 </>}
                 {activeState.edit && <>
                     <Input

@@ -1,6 +1,5 @@
 import { useToast } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { addEntity, removeEntity, updateEntity } from "src/api/entity";
 import { commentSortParamAtom, hackyCommentRefreshAtom } from "src/context/atoms";
@@ -11,8 +10,6 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
 
     const toast = useToast();
     const queryClient = useQueryClient();
-    const [replyValue, setReplyValue] = useState(defaultReplyValue);
-    const [editValue, setEditValue] = useState(defaultEditValue);
     const { currentUser } = useCurrentUser(true);
     const [sortParam] = useAtom(commentSortParamAtom);
     const { 1: setCommentRefreshAtom } = useAtom(hackyCommentRefreshAtom);
@@ -58,10 +55,8 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
                 ...addedComment,
                 id: response.data.id
             });
-
             setCommentQuery(comments);
             await queryClient.invalidateQueries(["comments/count"]);
-            setReplyValue("");
             toast({
                 title: "successfully replied",
                 status: "success"
@@ -78,11 +73,6 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
                 ...comment
             });
             setCommentQuery(comments);
-            // I'm a genius
-            //     -
-            //     -
-            //     -
-            //     v
             setCommentRefreshAtom(hackyNumber => hackyNumber + 1);
             return { comments: oldComments };
         },
@@ -90,7 +80,6 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
             setCommentQuery((context! as any).comments)
         },
         onSuccess: (response) => {
-            setEditValue(response.data.content);
             toast({
                 title: "successfully edited comment",
                 status: "success"
@@ -149,11 +138,6 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
 
             const { comments, oldComments } = replaceComment(currentComments, newComment.id, newComment);
             setCommentQuery(comments);
-            // I'm a genius
-            //     -
-            //     -
-            //     -
-            //     v
             setCommentRefreshAtom(hackyNumber => hackyNumber + 1);
             return { comments: oldComments };
         },
@@ -166,10 +150,6 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
         addReplyMutation,
         editCommentMutation,
         deleteCommentMutation,
-        addInteractionMutation,
-        replyValue,
-        setReplyValue,
-        editValue,
-        setEditValue
+        addInteractionMutation
     }
 }

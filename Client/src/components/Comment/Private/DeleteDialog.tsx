@@ -8,7 +8,7 @@ type DeleteDialogProps = {
 }
 
 function DeleteDialog({ isOpen, ...props }: DeleteDialogProps) {
-    
+
     const cancelRef = useRef<any>(null);
 
     return (

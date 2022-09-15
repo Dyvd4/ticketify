@@ -13,7 +13,6 @@ type LikeButtonProps = {
 } & ComponentPropsWithRef<"div">
 
 function LikeButton({ variant, active, onClick, ...props }: LikeButtonProps) {
-
     return (
         <Tooltip label={variant} placement="bottom" {...props}>
             <span onClick={onClick} className="cursor-pointer">

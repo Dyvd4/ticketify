@@ -1,13 +1,14 @@
 import { Avatar, Button, ButtonGroup, Flex, Textarea } from "@chakra-ui/react";
 import { ComponentPropsWithRef, useState } from "react";
-import { useCurrentUser } from "src/hooks/user";
 import { getDataUrl } from "src/utils/image";
+import { AvatarType } from "./Comment";
 
 type InputVariant = "add" | "reply" | "edit";
 
 type InputProps = {
     value: string
     variant: InputVariant
+    avatar?: AvatarType
     setValue(value: string): void
     onCancel(...args: any[]): void
     onSubmit(...args: any[]): void
@@ -31,10 +32,9 @@ function Input(props: InputProps) {
         setValue,
         onCancel,
         onSubmit,
+        avatar,
         ...restProps
     } = props;
-
-    const { currentUser: user } = useCurrentUser(true);
 
     const [buttonsActive, setButtonsActive] = useState(variant !== "add");
 
@@ -50,10 +50,10 @@ function Input(props: InputProps) {
 
     return (
         <Flex gap={2} {...restProps}>
-            {variant !== "edit" && user && <>
+            {variant !== "edit" && avatar && <>
                 <Avatar
-                    name={user.username}
-                    src={getDataUrl(user.avatar.content, user.avatar.mimeType)}
+                    name={avatar.username}
+                    src={getDataUrl(avatar.content, avatar.mimeType)}
                     size={variant === "add" ? "md" : "sm"}
                 />
             </>}
