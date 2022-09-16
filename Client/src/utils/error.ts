@@ -1,15 +1,9 @@
 import { AxiosError } from "axios";
 
-interface HandleErrorOptions {
-    dontThrowError?: boolean
-    dontHandleError?: boolean
-}
+interface HandleErrorOptions { }
 
 export function handleError(error, options?: HandleErrorOptions) {
-    if (!options?.dontThrowError) console.error(error);
-    if (!options?.dontHandleError) {
-        window.dispatchEvent(new CustomEvent("CustomError", { detail: { error } }));
-    }
+    window.dispatchEvent(new CustomEvent("CustomError", { detail: { error } }));
 }
 
 type MulterErrorMessage = "File too large" | "Unexpected field"

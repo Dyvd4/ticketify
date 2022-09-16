@@ -1,4 +1,5 @@
 import { useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { request } from "src/services/request";
 import { getMulterErrorMessage, handleError } from "src/utils/error";
 
@@ -9,19 +10,20 @@ const getErrorMessage = (error) => {
 export function useErrorHandler() {
     const toast = useToast();
     window.onerror = e => {
-        handleError(String(e), { dontThrowError: true });
+        handleError(String(e));
     }
     window.onunhandledrejection = (e: PromiseRejectionEvent) => {
-        handleError(String(e.reason), { dontThrowError: true });
+        handleError(String(e.reason));
     }
     window.addEventListener("CustomError", e => {
         const { error } = e.detail;
         request().post("Error", { error });
+        if (error instanceof AxiosError && error.response?.status !== 500) return
         toast({
             title: "An unkown error occurred",
             description: getErrorMessage(error),
             status: "error",
             duration: 6000
-        })
+        });
     })
 }

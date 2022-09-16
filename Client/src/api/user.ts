@@ -1,10 +1,6 @@
 import { request } from "../services/request";
 
-const myRequest = request({
-    validateStatus: (status) => {
-        return status < 500
-    }
-});
+const myRequest = request();
 
 export async function fetchUser() {
     let user: any = null;

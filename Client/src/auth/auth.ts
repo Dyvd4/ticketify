@@ -1,11 +1,7 @@
 import Cookies from "js-cookie";
 import { request } from "../services/request";
 
-const myRequest = request({
-    validateStatus: (status) => {
-        return status < 500
-    }
-});
+const myRequest = request();
 
 export const signIn = async (username: string, password: string) => {
     const response = await myRequest.post("auth/signIn", { username, password });

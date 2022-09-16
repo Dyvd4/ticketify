@@ -1,11 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { request } from "../services/request"
 
-const myRequest = request({
-    validateStatus: (status) => {
-        return status < 500
-    }
-});
+const myRequest = request();
 
 interface FetchEntityParams {
     route: string

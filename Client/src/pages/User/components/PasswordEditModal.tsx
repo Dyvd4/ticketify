@@ -21,18 +21,16 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
     });
 
     const mutation = useMutation(async () => {
-        const response = await request({
-            validateStatus: (status) => status < 500
-        }).put(`user/newPassword`, passwordData);
+        const response = await request().put(`user/newPassword`, passwordData);
         return response;
     }, {
         onSuccess: (response) => {
-            const errorMap = getValidationErrorMap({ response });
+            if (props.onSuccess) props.onSuccess();
+            handleClose();
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
-            if (!errorMap) {
-                if (props.onSuccess) props.onSuccess();
-                handleClose();
-            }
         }
     });
 

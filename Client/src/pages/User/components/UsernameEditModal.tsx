@@ -18,20 +18,18 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
     const [username, setUsername] = useState<any>(user.username);
 
     const mutation = useMutation(async () => {
-        const response = await request({
-            validateStatus: (status) => status < 500
-        }).put(`user`, {
+        const response = await request().put(`user`, {
             username
         });
         return response;
     }, {
         onSuccess: (response) => {
-            const errorMap = getValidationErrorMap({ response });
+            if (props.onSuccess) props.onSuccess();
+            handleClose(response);
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
-            if (!errorMap) {
-                if (props.onSuccess) props.onSuccess();
-                handleClose(response);
-            }
         }
     });
 

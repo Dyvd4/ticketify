@@ -160,7 +160,7 @@ function CommentsSection(props: CommentsSectionProps) {
             </Alert>
         )
     }
-    
+
     const newestComment = !isLoading
         ? data
             .filter(comment => comment.authorId === currentUser.id)

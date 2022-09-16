@@ -1,10 +1,6 @@
 import { request } from "src/services/request";
 
-const myRequest = request({
-    validateStatus: (status) => {
-        return status < 500
-    }
-});
+const myRequest = request();
 
 export const addFiles = async (files: FileList, type?: "image" | "file") => {
     const route = type && type === "image"

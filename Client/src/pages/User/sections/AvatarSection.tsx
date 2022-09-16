@@ -23,9 +23,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
     const mutation = useMutation(() => {
         const formData = new FormData();
         formData.append("files", avatar || "");
-        return request({
-            validateStatus: (status) => status < 500
-        }).put("user/avatar", formData);
+        return request().put("user/avatar", formData);
     }, {
         onSuccess: (response) => {
             const errorMap = getValidationErrorMap({ response });

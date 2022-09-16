@@ -79,27 +79,27 @@ function FormWrapper(props: FormWrapperProps) {
     // ---------
     const mutation = useMutation(mutateTicket, {
         onSuccess: (response) => {
-            const errorMap = getValidationErrorMap({ response });
+            toast({
+                title: "successfully saved ticket",
+                status: "success"
+            });
+            // 🥵
+            if (onSuccess) onSuccess();
+            if (variant === "edit") return;
+            setTicket({
+                ...{},
+                id: response.data.id
+            });
+            setInput(null);
+            setEditorStates({
+                ...editorStates,
+                "description": getEmptyState(editorStates["description"])
+            });
+            setSuccess(true);
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
-            if (!errorMap) {
-                toast({
-                    title: "successfully saved ticket",
-                    status: "success"
-                });
-                // 🥵
-                if (onSuccess) onSuccess();
-                if (variant === "edit") return;
-                setTicket({
-                    ...{},
-                    id: response.data.id
-                });
-                setInput(null);
-                setEditorStates({
-                    ...editorStates,
-                    "description": getEmptyState(editorStates["description"])
-                });
-                setSuccess(true);
-            }
         }
     });
     // queries

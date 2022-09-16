@@ -24,7 +24,7 @@ export const request = (options?: RequestOptions) => {
     const instance = axios.create(options);
     instance.interceptors.request.use((config) => {
         return config
-    }, (error) => handleError(error, { dontThrowError: true }));
+    }, (error) => handleError(error));
     instance.interceptors.response.use((config) => {
         return config
     }, (error) => {
@@ -32,7 +32,7 @@ export const request = (options?: RequestOptions) => {
             (error.response?.status === 401 || ignoreErrorCodes.includes(error.code || ""))) {
             return;
         }
-        handleError(error, { dontThrowError: true })
+        handleError(error)
         return Promise.reject(error);
     });
     return instance;
