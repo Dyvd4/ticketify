@@ -18,6 +18,8 @@ import TicketPriorityRouter from "./routes/TicketPriority";
 import TicketStatusRouter from "./routes/TicketStatus";
 import UserRouter from "./routes/User";
 import logger from "./services/logger";
+import backgroundServices from "./services/background/index";
+
 dotenv.config();
 
 const server = express();
@@ -50,4 +52,6 @@ server.listen(PORT, () => {
 
 const prisma = new PrismaClient();
 prisma.$use(userSignature);
+
+backgroundServices();
 export { prisma };
