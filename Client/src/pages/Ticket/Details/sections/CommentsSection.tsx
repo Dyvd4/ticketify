@@ -49,16 +49,12 @@ function CommentsSection(props: CommentsSectionProps) {
     const { isLoading, isError, data } = useQuery(["comments", sortParam], () => {
         return fetchEntity({ route: `comments/?orderBy=${JSON.stringify(sortParam)}` });
     }, {
-        staleTime: Infinity,
-        cacheTime: Infinity,
         refetchOnWindowFocus: false
     });
 
     const { isError: countError, data: count } = useQuery(["comments/count"], () => {
         return fetchEntity({ route: `comments/count` });
     }, {
-        staleTime: Infinity,
-        cacheTime: Infinity,
         refetchOnWindowFocus: false
     });
 
