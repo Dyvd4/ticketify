@@ -2,16 +2,15 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { removeEntity } from "src/api/entity";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import IconButton from "src/components/Wrapper/IconButton";
 import Attachment from "../components/Attachment";
 
 type AttachmentsEditProps = {
-    ticketId: string
+    ticketId: number
     attachments: any[]
-    onRemoved(...args: any[]): void
     onDone(...args: any[]): void
 }
 
@@ -21,6 +20,7 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [attachmentToRemove, setAttachmentToRemove] = useState<any>();
 
+    const queryClient = useQueryClient();
     const cancelRef = useRef<any>(null);
     const toast = useToast();
 
@@ -32,12 +32,12 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
         })
     }, {
         onSuccess: () => {
-            props.onRemoved();
             onClose();
             toast({
                 title: "successfully removed attachment",
                 status: "success"
             });
+            queryClient.invalidateQueries(["ticket", String(ticketId)]);
         }
     });
 
@@ -45,7 +45,7 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
         setAttachmentToRemove(attachment);
         onOpen();
     }
-    
+
     return (
         mutation.isLoading
             ? <LoadingRipple centered />

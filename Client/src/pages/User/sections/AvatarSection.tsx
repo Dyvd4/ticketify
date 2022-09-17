@@ -1,40 +1,34 @@
 import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { useMutation } from "react-query";
-import AvatarInput from "src/pages/User/components/AvatarInput";
+import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
+import AvatarInput from "src/pages/User/components/AvatarInput";
 import { request } from "src/services/request";
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
 import { createDataUrl, getDataUrl } from "src/utils/image";
 
 type AvatarSectionProps = {
     user: any
-    refetch(...args: any[]): void
 }
 
 function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const [avatar, setAvatar] = useState<File | null>(null);
     const [avatarAsDataUrl, setAvatarAsDataUrl] = useState<string | undefined>(getDataUrl(user.avatar.content, user.avatar.mimeType));
-    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
-    const toast = useToast();
 
+    const queryClient = useQueryClient();
+    const toast = useToast();
 
     const mutation = useMutation(() => {
         const formData = new FormData();
         formData.append("files", avatar || "");
         return request().put("user/avatar", formData);
     }, {
-        onSuccess: (response) => {
-            const errorMap = getValidationErrorMap({ response });
-            setErrorMap(errorMap);
-            if (!errorMap) {
-                toast({
-                    title: "successfully saved avatar",
-                    status: "success"
-                });
-                props.refetch();
-            }
+        onSuccess: () => {
+            toast({
+                title: "successfully saved avatar",
+                status: "success"
+            });
+            queryClient.invalidateQueries(["user/all"]);
         }
     });
 
@@ -53,7 +47,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
             <Heading as="h1" className="font-bold text-2xl">
                 Avatar
             </Heading>
-            <FormControl errorMessage={errorMap?.Fildless}>
+            <FormControl>
                 <Flex
                     gap={2}
                     className="my-4"

@@ -1,13 +1,13 @@
 import { Flex, Heading, IconButton, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { faEdit, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQueryClient } from "react-query";
 import { generateFakePassword } from "src/utils/password";
 import PasswordEditModal from "../components/PasswordEditModal";
 import UsernameEditModal from "../components/UsernameEditModal";
 
 type UserDataSectionProps = {
     user: any
-    refetch(...args: any[]): void
 }
 
 function UserDataSection({ user, ...props }: UserDataSectionProps) {
@@ -15,14 +15,15 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
     const { isOpen: usernameEditModalOpen, onOpen: onUsernameEditModalOpen, onClose: onUsernameEditModalClose } = useDisclosure();
     const { isOpen: passwordEditModalOpen, onOpen: onPasswordEditModalOpen, onClose: onPasswordEditModalClose } = useDisclosure();
 
+    const queryClient = useQueryClient();
     const toast = useToast();
 
     const handleEditSuccess = (fieldName: string) => {
         toast({
             title: `successfully saved ${fieldName}`,
             status: "success"
-        })
-        props.refetch();
+        });
+        queryClient.invalidateQueries(["user/all"]);
     }
 
     return (

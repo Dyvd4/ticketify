@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { addEntity, fetchEntity, updateEntity } from "src/api/entity";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { fetchEntity } from "src/api/entity";
+import { mutateTicket } from "src/api/ticket";
 import { getEmptyState } from "src/utils/draftJs";
 import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
 import Form from "./Form";
@@ -43,48 +44,24 @@ function FormWrapper(props: FormWrapperProps) {
     const [success, setSuccess] = useState(false);
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const toast = useToast();
-    // handler
-    // -------
-    const mutateTicket = async () => {
-        if (variant === "add") {
-            const formData = new FormData();
-            // ugly as shit
-            // ------------
-            Object.keys(ticket || {}).forEach(key => {
-                if (key !== "files") {
-                    formData.append(key, ticket[key])
-                }
-            });
-            Array.from(ticket?.files || []).forEach(file => {
-                formData.append("files", file as File);
-            });
-            formData.append("description", stateToHTML(editorStates["description"].getCurrentContent()));
-            return addEntity({
-                route: "ticket",
-                payload: formData,
-                options: {
-                    headers: {
-                        "content-type": "multipart/form-data"
-                    }
-                }
-            })
-        }
-        return updateEntity({
-            route: "ticket",
-            entityId: ticket.id,
-            payload: ticket
-        });
-    }
+    const queryClient = useQueryClient();
+
     // mutations
     // ---------
-    const mutation = useMutation(mutateTicket, {
-        onSuccess: (response) => {
+    const mutation = useMutation(() => {
+        return mutateTicket({
+            ...ticket,
+            description: stateToHTML(editorStates["description"].getCurrentContent())
+        }, variant)
+    }, {
+        onSuccess: async (response) => {
             toast({
                 title: "successfully saved ticket",
                 status: "success"
             });
             // 🥵
             if (onSuccess) onSuccess();
+            await queryClient.invalidateQueries(["ticket", String(ticket.id)]);
             if (variant === "edit") return;
             setTicket({
                 ...{},
@@ -102,17 +79,16 @@ function FormWrapper(props: FormWrapperProps) {
             setErrorMap(errorMap);
         }
     });
+
     // queries
     // -------
-
-    // responsible user
     const {
         data: responsibleUsers,
         isLoading: responsibleUsersLoading,
         isError: responsibleUsersError
     }
         = useQuery(["responsibleUsers"], () => fetchEntity({ route: "users" }))
-    // priority
+
     const {
         data: priorities,
         isLoading: prioritiesLoading,
@@ -120,6 +96,8 @@ function FormWrapper(props: FormWrapperProps) {
     }
         = useQuery(["priorities"], () => fetchEntity({ route: "ticketPriorities" }))
 
+    // handler
+    // -------
     const handleInputChange = ([key, value]) => {
         setTicket(ticket => {
             return {

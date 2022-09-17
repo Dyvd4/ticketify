@@ -24,7 +24,7 @@ function TicketDetailsIndex() {
     // queries
     // -------
     const { id } = useParams();
-    const { isLoading, isError, data, refetch } = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
+    const { isLoading, isError, data } = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
     if (isLoading) {
         return <LoadingRipple centered />
@@ -71,7 +71,7 @@ function TicketDetailsIndex() {
                         <HeadDataEditSection
                             ticket={{ ...ticket, ...editedTicket }}
                             setTicket={setEditedTicket}
-                            onSuccess={() => { setEdit(false); refetch() }}
+                            onSuccess={() => setEdit(false)}
                             onAbort={() => setEdit(false)}
                         />
                     }>
@@ -86,15 +86,14 @@ function TicketDetailsIndex() {
                     editView={<>
                         {editAttachments && <>
                             <AttachmentsEditSection
-                                onRemoved={() => refetch()}
-                                onDone={() => { setEditAttachments(false); refetch() }}
+                                onDone={() => setEditAttachments(false)}
                                 ticketId={ticket.id}
                                 attachments={attachments}
                             />
                         </>}
                         {addAttachments && <>
                             <AttachmentsAddSection
-                                onSuccess={() => { setAddAttachments(false); refetch() }}
+                                onSuccess={() => setAddAttachments(false)}
                                 onAbort={() => setAddAttachments(false)}
                                 ticketId={ticket.id}
                             />

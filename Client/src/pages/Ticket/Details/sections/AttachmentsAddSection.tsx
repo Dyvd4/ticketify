@@ -1,12 +1,12 @@
 import { Box, Button, Heading, HStack, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 
 type AttachmentsAddSectionProps = {
-    ticketId: string
+    ticketId: number
     onSuccess(...args: any[]): void
     onAbort(...args: any[]): void
 }
@@ -17,6 +17,7 @@ function AttachmentsAddSection({ ticketId, ...props }: AttachmentsAddSectionProp
     const [files, setFiles] = useState<FileList | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const queryClient = useQueryClient();
     const toast = useToast();
 
     const handleSubmit = () => {
@@ -26,7 +27,7 @@ function AttachmentsAddSection({ ticketId, ...props }: AttachmentsAddSectionProp
 
     const mutation = useMutation(() => {
         const formData = new FormData();
-        formData.append("id", ticketId);
+        formData.append("id", String(ticketId));
         if (!files) return Promise.reject("");
         Array.from(files).forEach(file => {
             formData.append("files", file);
@@ -42,6 +43,7 @@ function AttachmentsAddSection({ ticketId, ...props }: AttachmentsAddSectionProp
                 title: "successfully added attachment",
                 status: "success"
             });
+            queryClient.invalidateQueries(["ticket", String(ticketId)])
         }
     });
 

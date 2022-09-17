@@ -9,7 +9,7 @@ type IndexProps = {}
 
 function Index(props: IndexProps) {
 
-    const { data, isLoading, isError, refetch } = useQuery(["user/all"], fetchUserAll);
+    const { data, isLoading, isError } = useQuery(["user/all"], fetchUserAll);
 
     if (isLoading) {
         return <LoadingRipple centered />
@@ -28,15 +28,9 @@ function Index(props: IndexProps) {
 
     return (
         <Container className="mt-4" maxW="sm">
-            <AvatarSection
-                user={data.user}
-                refetch={refetch}
-            />
+            <AvatarSection user={data.user} />
             <Divider className="my-2" />
-            <UserDataSection
-                user={data.user}
-                refetch={refetch}
-            />
+            <UserDataSection user={data.user} />
         </Container>
     )
 }
