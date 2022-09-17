@@ -100,8 +100,6 @@ function CommentsSection(props: CommentsSectionProps) {
         });
     }
     const handleReplySubmit = (e, comment, replyValue) => {
-        console.log(comment);
-
         addReplyMutation.mutate({
             route: "comment",
             payload: {

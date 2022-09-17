@@ -1,5 +1,6 @@
 import { FormControl, Input } from '@chakra-ui/react';
 import React, { Component } from 'react';
+import { getMatchingCharLength } from 'src/utils/string';
 import DiscardButton from './Private/DiscardButton';
 import ListItem from './Private/ListItem';
 import LoadingState from './Private/LoadingState';
@@ -37,13 +38,6 @@ class AutoCompleter extends Component<Props, State> {
         loading: false,
         listItems: [] as any[],
         keyPosition: -1,
-        interSectingListItems: {
-            value: [] as HTMLLIElement[],
-            indexRange: {
-                top: 0,
-                bottom: 7
-            }
-        },
         itemToIntersect: null as HTMLLIElement | null
     }
     constructor(props) {
@@ -126,8 +120,9 @@ class AutoCompleter extends Component<Props, State> {
             ]
             : this.props.items.slice(0, this.maxLength);
 
-        let listItems: JSX.Element[] = [];
+        let listItems: any = [];
         let { listItemRender, filter } = this.props;
+        const inputValue = this.inputRef.current?.value || "";
 
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
@@ -141,7 +136,6 @@ class AutoCompleter extends Component<Props, State> {
                 mappedDisplayValue,
                 ...item
             }
-            const inputValue = this.inputRef.current?.value;
             if (inputValue) {
                 let usesFilter = filter && filter.value && typeof filter.value === "function";
                 if (!usesFilter && this.filter(String(displayValue), inputValue)) {
@@ -170,7 +164,7 @@ class AutoCompleter extends Component<Props, State> {
         this.setState({
             loading: false,
             notFound: listItems.length === 0,
-            listItems,
+            listItems: listItems.sort((a, b) => getMatchingCharLength(inputValue, b.displayValue) - getMatchingCharLength(inputValue, a.displayValue)),
             keyPosition: listItems.length === 0 ? -1 : this.state.keyPosition
         });
     }
