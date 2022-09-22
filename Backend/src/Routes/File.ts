@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from 'express';
 import path from "path";
 import FileSchema from "../schemas/File";
-import mapFile from "../schemas/maps/File";
+import fileParams from "../schemas/params/File";
 import { prisma } from "../server";
 import { fileUpload, imageUpload, uploadFile, validateFiles, validateImageFiles } from "../utils/file";
 dotenv.config({ path: path.join(__dirname, "../../.env") });
@@ -40,7 +40,7 @@ Router.post('/files', fileUpload, validateFiles, async (req, res, next) => {
     // no type from multer exported :(
     const files = req.files as any[];
     try {
-        const filesToInsert = files.map(file => mapFile(file));
+        const filesToInsert = files.map(file => fileParams(file));
         const fileValidations = filesToInsert.map(file => {
             const validation = FileSchema.validate(file);
             if (validation.error) return validation;
@@ -66,7 +66,7 @@ Router.post('/images', imageUpload, validateImageFiles, async (req, res, next) =
     // no type from multer exported :(
     const files = req.files as any[];
     try {
-        const filesToInsert = files.map(file => mapFile(file));
+        const filesToInsert = files.map(file => fileParams(file));
         const fileValidations = filesToInsert.map(file => {
             const validation = FileSchema.validate(file);
             if (validation.error) return validation;
@@ -95,7 +95,7 @@ Router.put('/file/:id', fileUpload, validateFiles, async (req, res, next) => {
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = mapFile(file);
+        const fileToUpdate = fileParams(file);
         const validation = FileSchema.validate(fileToUpdate);
         if (validation.error) return res.status(400).json({ validation });
 
@@ -121,7 +121,7 @@ Router.put('/image/:id', imageUpload, validateImageFiles, async (req, res, next)
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = mapFile(file);
+        const fileToUpdate = fileParams(file);
         const validation = FileSchema.validate(fileToUpdate);
         if (validation.error) return res.status(400).json({ validation });
 

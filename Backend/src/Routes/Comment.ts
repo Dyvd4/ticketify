@@ -1,7 +1,8 @@
 import express from 'express';
 import CommentSchema from "../schemas/Comment";
-import mapComment from "../schemas/maps/Comment";
+import commentParams from "../schemas/params/Comment";
 import { prisma } from "../server";
+import { mapFile } from '../utils/file';
 
 const Router = express.Router();
 
@@ -50,20 +51,14 @@ Router.get('/comments', async (req, res, next) => {
                 ...comment,
                 author: {
                     ...comment.author,
-                    avatar: {
-                        ...comment.author.avatar?.file,
-                        content: comment.author.avatar?.file.content.toString("base64")
-                    }
+                    avatar: mapFile(comment.author.avatar?.file, "base64")
                 },
                 childs: comment.childs.map(child => {
                     return {
                         ...child,
                         author: {
                             ...child.author,
-                            avatar: {
-                                ...child.author.avatar?.file,
-                                content: child.author.avatar?.file.content.toString("base64")
-                            }
+                            avatar: mapFile(child.author.avatar?.file, "base64")
                         },
                         likes: child.interactions.filter(interaction => interaction.type === "like"),
                         dislikes: child.interactions.filter(interaction => interaction.type === "dislike"),
@@ -149,7 +144,7 @@ Router.get("/comment/newestFromCurrentUser", async (req, res, next) => {
 
 Router.post('/comment', async (req, res, next) => {
     const { UserId } = req;
-    let comment = mapComment(req.body);
+    let comment = commentParams(req.body);
     try {
         comment.authorId = UserId!;
 
@@ -185,7 +180,7 @@ Router.post('/comment', async (req, res, next) => {
 Router.put('/comment/:id', async (req, res, next) => {
     const { UserId } = req;
     const { id } = req.params;
-    let comment = mapComment(req.body);
+    let comment = commentParams(req.body);
     try {
 
         const commentDb = await prisma.comment.findFirst({

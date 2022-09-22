@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import mapFile from "../schemas/maps/File";
+import fileParams from "../schemas/params/File";
 import { NewPasswordSchema, UserUpdateSchema } from "../schemas/User";
 import { prisma } from "../server";
-import { imageUpload } from "../utils/file";
+import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
 const Router = express.Router();
 
@@ -39,10 +39,9 @@ Router.get("/user/all", async (req, res, next) => {
             }
         });
         if (!user) return res.status(404).json(null);
-        (user as any).avatar = {
-            ...user.avatar?.file,
-            content: user.avatar?.file.content.toString("base64")
-        }
+        (user as any).avatar = user.avatar?.file
+            ? mapFile(user.avatar?.file, "base64")
+            : null;
         res.json(mapUser(user));
     }
     catch (e) {
@@ -124,7 +123,7 @@ Router.put("/user/avatar", imageUpload, async (req, res, next) => {
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToCreateOrUpdate = mapFile(file);
+        const fileToCreateOrUpdate = fileParams(file);
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId

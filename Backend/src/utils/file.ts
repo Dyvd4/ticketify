@@ -1,3 +1,4 @@
+import { File } from "@prisma/client";
 import dotenv from "dotenv";
 import fsSync from "fs";
 import fs, { mkdir } from "fs/promises";
@@ -59,4 +60,11 @@ export const uploadFile = async (file) => {
     const filePath = path.join(uploadPath, fileName(file));
     await fs.writeFile(filePath, file.content);
     return filePath;
+}
+
+export const mapFile = (file: File, contentType: BufferEncoding) => {
+    return {
+        ...file,
+        content: file.content.toString(contentType)
+    }
 }

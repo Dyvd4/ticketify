@@ -2,7 +2,7 @@ import { CommentInteraction } from '@prisma/client';
 import express from 'express';
 import CommentInteractionSchema from "../schemas/CommentInteraction";
 import { prisma } from "../server";
-import mapCommentInteraction from "../schemas/maps/CommentInteraction";
+import commentInteractionParams from "../schemas/params/CommentInteraction";
 
 const Router = express.Router();
 
@@ -33,7 +33,7 @@ Router.get('/commentInteraction/:id', async (req, res, next) => {
 
 Router.post('/commentInteraction', async (req, res, next) => {
     const { UserId } = req;
-    let commentInteraction = mapCommentInteraction({
+    let commentInteraction = commentInteractionParams({
         ...req.body,
         createdFromId: UserId
     });
