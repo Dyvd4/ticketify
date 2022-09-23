@@ -1,6 +1,4 @@
 import { Button } from "@chakra-ui/react";
-import { actionBackgroundColor, actionBackgroundColorInactive } from "src/data/tailwind";
-import { mapColorProps } from "src/utils/component";
 
 type NumberButtonProps = React.PropsWithChildren<{
     active?: boolean
@@ -11,8 +9,8 @@ function NumberButton({ children, active, ...props }: NumberButtonProps) {
         <Button
             {...props}
             className={`${!active
-                ? mapColorProps([actionBackgroundColorInactive])
-                : mapColorProps([actionBackgroundColor])}`}
+                ? 'text-primary-inactive'
+                : 'text-primary'}`}
             onClick={(e) => props.onClick && props.onClick(e)}>
             {children}
         </Button>

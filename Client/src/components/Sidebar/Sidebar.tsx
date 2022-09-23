@@ -21,8 +21,8 @@ function Sidebar() {
                 </DrawerHeader>
                 <DrawerBody>
                     <UnorderedList className="m-0">
-                        <Link href="/">
-                            <ListItem active={path === "/"}>Tickets</ListItem>
+                        <Link href="/Ticket">
+                            <ListItem active={path === "/Ticket"}>Tickets</ListItem>
                         </Link>
                         <Divider />
                         <Link href="Comments">

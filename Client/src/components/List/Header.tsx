@@ -21,22 +21,26 @@ function Header(props: HeaderProps) {
     const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
     const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
     return (
-        <Heading className="text-center my-8 dark:text-gray-400 mb-2 flex justify-center items-center gap-2">
-            <>
+        <Heading className="text-center my-8 dark:text-gray-400 mb-2 flex justify-between items-center gap-2">
+            <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
                 <span>
                     {title}
                 </span>
                 {showCount && <>
-                    ({count})
+                    <span>
+                        ({count})
+                    </span>
                 </>}
-                {!!useSort && <>
-                    <Tooltip label="filter" placement="top" aria-label="filter">
+            </div>
+            <div className="flex items-center justify-center gap-2">
+                {!!add && <>
+                    <Tooltip label="add" placement="top" aria-label="add">
                         <span className="flex justify-center items-center">
                             <IconButton
                                 size={"sm"}
-                                onClick={() => setFilterDrawer(true)}
-                                aria-label="filter"
-                                icon={<FontAwesomeIcon icon={faFilter} />}
+                                onClick={() => window.location.href = add.route}
+                                aria-label="add"
+                                icon={<FontAwesomeIcon icon={faAdd} />}
                             />
                         </span>
                     </Tooltip>
@@ -53,19 +57,19 @@ function Header(props: HeaderProps) {
                         </span>
                     </Tooltip>
                 </>}
-                {!!add && <>
-                    <Tooltip label="add" placement="top" aria-label="add">
+                {!!useSort && <>
+                    <Tooltip label="filter" placement="top" aria-label="filter">
                         <span className="flex justify-center items-center">
                             <IconButton
                                 size={"sm"}
-                                onClick={() => window.location.href = add.route}
-                                aria-label="add"
-                                icon={<FontAwesomeIcon icon={faAdd} />}
+                                onClick={() => setFilterDrawer(true)}
+                                aria-label="filter"
+                                icon={<FontAwesomeIcon icon={faFilter} />}
                             />
                         </span>
                     </Tooltip>
                 </>}
-            </>
+            </div>
         </Heading>
     );
 }

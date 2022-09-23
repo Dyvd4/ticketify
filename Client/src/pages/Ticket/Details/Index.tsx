@@ -49,22 +49,22 @@ function TicketDetailsIndex() {
     } = data;
 
     return (
-        <Container className="mt-4" maxW="container.lg">
+        <Container maxW="container.lg">
+            <Breadcrumb
+                className="text-gray-700 dark:text-gray-300 font-bold my-4"
+                separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="/">
+                        Home
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="#" isCurrentPage>
+                        Details
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Box className="bg-gray-200 dark:bg-gray-700 rounded-md p-6">
-                <Breadcrumb
-                    className="text-gray-700 dark:text-gray-300 font-bold"
-                    separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href="/">
-                            Home
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href="#" isCurrentPage>
-                            Details
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                </Breadcrumb>
                 <EditView
                     edit={edit}
                     editView={

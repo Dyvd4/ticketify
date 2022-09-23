@@ -1,4 +1,5 @@
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
+import "draft-js/dist/Draft.css";
 import { Provider as AtomProvider } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -15,12 +16,12 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
-import UserIndex from "./pages/User/Index";
-import TicketFormIndex from "./pages/Ticket/Form/Index";
 import TicketDetailsIndex from "./pages/Ticket/Details/Index";
+import TicketFormIndex from "./pages/Ticket/Form/Index";
+import TicketIndex from "./pages/Ticket/Index";
+import UserIndex from "./pages/User/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
-import "draft-js/dist/Draft.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -44,6 +45,7 @@ root.render(
                 <Route path="Test" element={<TestIndex />} />
                 <Route path="User" element={<UserIndex />} />
                 <Route path="Ticket">
+                  <Route index element={<TicketIndex />} />
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />
                   <Route path="Form/:params" element={<TicketFormIndex />} />
                 </Route>
