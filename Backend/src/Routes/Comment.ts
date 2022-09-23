@@ -51,14 +51,18 @@ Router.get('/comments', async (req, res, next) => {
                 ...comment,
                 author: {
                     ...comment.author,
-                    avatar: mapFile(comment.author.avatar?.file, "base64")
+                    avatar: comment.author.avatar?.file
+                        ? mapFile(comment.author.avatar.file, "base64")
+                        : null
                 },
                 childs: comment.childs.map(child => {
                     return {
                         ...child,
                         author: {
                             ...child.author,
-                            avatar: mapFile(child.author.avatar?.file, "base64")
+                            avatar: child.author.avatar?.file
+                                ? mapFile(child.author.avatar.file, "base64")
+                                : null
                         },
                         likes: child.interactions.filter(interaction => interaction.type === "like"),
                         dislikes: child.interactions.filter(interaction => interaction.type === "dislike"),

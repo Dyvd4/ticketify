@@ -40,7 +40,7 @@ Router.get("/user/all", async (req, res, next) => {
         });
         if (!user) return res.status(404).json(null);
         (user as any).avatar = user.avatar?.file
-            ? mapFile(user.avatar?.file, "base64")
+            ? mapFile(user.avatar.file, "base64")
             : null;
         res.json(mapUser(user));
     }
