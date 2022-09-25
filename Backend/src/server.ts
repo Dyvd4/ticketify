@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import express from "express";
 import { authentication } from "./middlewares/auth";
 import { errorHandler } from "./middlewares/errorHandler";
-import { userSignature } from "./middlewares/prisma";
+import ticketActivity from "./middlewares/prisma/ticketActivity";
+import userSignature from "./middlewares/prisma/userSignature";
 import { customRequest } from "./middlewares/requests";
 import AuthRouter from "./routes/Auth";
 import CommentRouter from "./routes/Comment";
@@ -13,12 +14,13 @@ import ErrorRouter from "./routes/Error";
 import FileRouter from "./routes/File";
 import TestRouter from "./routes/Test";
 import TicketRouter from "./routes/Ticket";
+import TicketActivityRouter from "./routes/TicketActivity";
 import TicketDueDateRouter from "./routes/TicketDueDate";
 import TicketPriorityRouter from "./routes/TicketPriority";
 import TicketStatusRouter from "./routes/TicketStatus";
 import UserRouter from "./routes/User";
-import logger from "./services/logger";
 import backgroundServices from "./services/background/index";
+import logger from "./services/logger";
 
 dotenv.config();
 
@@ -43,6 +45,7 @@ server.use("/api", TestRouter);
 server.use("/api", TicketStatusRouter);
 server.use("/api", FileRouter);
 server.use("/api", CommentInteractionRouter);
+server.use("/api", TicketActivityRouter);
 
 server.use(errorHandler);
 
@@ -51,6 +54,7 @@ server.listen(PORT, () => {
 });
 
 const prisma = new PrismaClient();
+prisma.$use(ticketActivity("Comment"));
 prisma.$use(userSignature);
 
 backgroundServices();

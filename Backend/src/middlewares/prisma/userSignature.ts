@@ -1,6 +1,6 @@
-import { getCurrentUser } from "../services/currentUser";
+import { getCurrentUser } from "../../services/currentUser";
 
-export const userSignature = async (params, next) => {
+const userSignature = async (params, next) => {
     const currentUser = getCurrentUser();
     if (params.action === "create") {
         params.args.data.createUser = currentUser?.username || "NotSignedIn"
@@ -11,3 +11,5 @@ export const userSignature = async (params, next) => {
     }
     return (await next(params));
 }
+
+export default userSignature;

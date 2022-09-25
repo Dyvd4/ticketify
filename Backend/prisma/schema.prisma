@@ -22,25 +22,27 @@ model User {
   avatar              FileOnUser?
   comments            Comment[]
   commentInteractions CommentInteraction[]
+  ticketActivities    TicketActivity[]
 }
 
 model Ticket {
-  id                Int            @id @default(autoincrement()) @db.Int
-  title             String         @db.NVarChar(100)
-  responsibleUserId String?        @db.NVarChar(100)
-  responsibleUser   User?          @relation(references: [id], fields: [responsibleUserId])
-  description       String         @db.NVarChar(max)
-  dueDate           DateTime?      @db.DateTime
-  priorityId        String         @db.NVarChar(100)
-  priority          TicketPriority @relation(references: [id], fields: [priorityId])
-  createdAt         DateTime?      @default(now())
-  updatedAt         DateTime?      @updatedAt
-  createUser        String?        @db.NVarChar(100)
-  updateUser        String?        @db.NVarChar(100)
-  statusId          String?        @db.NVarChar(100)
-  status            TicketStatus?  @relation(fields: [statusId], references: [id])
+  id                Int              @id @default(autoincrement()) @db.Int
+  title             String           @db.NVarChar(100)
+  responsibleUserId String?          @db.NVarChar(100)
+  responsibleUser   User?            @relation(references: [id], fields: [responsibleUserId])
+  description       String           @db.NVarChar(max)
+  dueDate           DateTime?        @db.DateTime
+  priorityId        String           @db.NVarChar(100)
+  priority          TicketPriority   @relation(references: [id], fields: [priorityId])
+  createdAt         DateTime?        @default(now())
+  updatedAt         DateTime?        @updatedAt
+  createUser        String?          @db.NVarChar(100)
+  updateUser        String?          @db.NVarChar(100)
+  statusId          String?          @db.NVarChar(100)
+  status            TicketStatus?    @relation(fields: [statusId], references: [id])
   attachments       FileOnTicket[]
   comments          Comment[]
+  activities        TicketActivity[]
 }
 
 model TicketPriority {
@@ -143,4 +145,20 @@ model FileOnUser {
   user   User   @relation(fields: [userId], references: [id])
 
   @@id([fileId, userId])
+}
+
+model TicketActivity {
+  id            String    @id @default(uuid()) @db.NVarChar(100)
+  ticketId      Int       @db.Int
+  ticket        Ticket    @relation(fields: [ticketId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  entityName    String    @db.NVarChar(100)
+  action        String    @db.NVarChar(100)
+  icon          String?   @db.NVarChar(100)
+  color         String?   @db.NVarChar(100)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  createdFromId String    @db.NVarChar(100)
+  createdFrom   User      @relation(fields: [createdFromId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createUser    String?   @db.NVarChar(100)
+  updateUser    String?   @db.NVarChar(100)
 }
