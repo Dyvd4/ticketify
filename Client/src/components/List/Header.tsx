@@ -21,7 +21,7 @@ function Header(props: HeaderProps) {
     const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
     const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
     return (
-        <Heading className="text-center my-8 dark:text-gray-400 mb-2 flex justify-between items-center gap-2">
+        <Heading className="text-center my-8 mb-2 flex justify-between items-center gap-2">
             <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
                 <span>
                     {title}

@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Container, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef } from "react";
@@ -80,7 +80,7 @@ function List(props: ListProps) {
         refetch();
     }
     return (
-        <Container>
+        <>
             {header && <>
                 <Header
                     title={header.title}
@@ -153,7 +153,7 @@ function List(props: ListProps) {
                     currentPage={pagingInfo.currentPage}
                 />
             </>}
-        </Container>
+        </>
     );
 }
 
