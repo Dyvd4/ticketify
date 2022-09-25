@@ -14,7 +14,7 @@ const TicketActivityIconMap: ActivityModelMap = {
     "Comment": "comment"
 }
 const TicketActivityColorMap: ActivityActionMap = {
-    "update": "orange-500",
+    "update": "yellow-500",
     "create": "green-500",
 }
 const TicketActivityActionMap: ActivityActionMap = {
