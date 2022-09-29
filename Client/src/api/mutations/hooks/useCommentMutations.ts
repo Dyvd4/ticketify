@@ -6,7 +6,7 @@ import { commentSortParamAtom, hackyCommentRefreshAtom } from "src/context/atoms
 import { useCurrentUser } from "src/hooks/user";
 import { addComment, deleteComment, getComment, replaceComment } from "src/utils/comment";
 
-export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "") => {
+const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "") => {
 
     const toast = useToast();
     const queryClient = useQueryClient();
@@ -153,3 +153,5 @@ export const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "
         addInteractionMutation
     }
 }
+
+export default useCommentMutations

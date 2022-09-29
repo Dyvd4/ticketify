@@ -1,6 +1,4 @@
-import { Container, ContainerProps, Heading, useToast } from "@chakra-ui/react";
-import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ContainerProps, useToast } from "@chakra-ui/react";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { useState } from "react";
@@ -120,31 +118,25 @@ function FormWrapper(props: FormWrapperProps) {
     const error = [responsibleUsersError, prioritiesError].some(error => error);
 
     return (
-        <Container {...props}>
-            <Heading as="h1" className="my-4 flex items-center gap-4">
-                {variant} ticket
-                <FontAwesomeIcon icon={faFireFlameCurved} className="text-orange-600" />
-            </Heading>
-            <Form
-                variant={variant}
-                onAbort={(e) => onAbort && onAbort(e)}
-                onSubmit={() => mutation.mutate()}
-                onInputChange={handleInputChange}
-                onInputValueChange={handleInputValueChange}
-                onEditorStateChange={(key, newState) => {
-                    setEditorStates({ ...editorStates, [key]: newState })
-                }}
-                ticket={ticket}
-                input={input}
-                editorStates={editorStates}
-                loading={loading}
-                success={success}
-                error={error}
-                errorMap={errorMap || null}
-                responsibleUsers={responsibleUsers?.items || []}
-                priorities={priorities?.items || []}
-            />
-        </Container>
+        <Form
+            variant={variant}
+            onAbort={(e) => onAbort && onAbort(e)}
+            onSubmit={() => mutation.mutate()}
+            onInputChange={handleInputChange}
+            onInputValueChange={handleInputValueChange}
+            onEditorStateChange={(key, newState) => {
+                setEditorStates({ ...editorStates, [key]: newState })
+            }}
+            ticket={ticket}
+            input={input}
+            editorStates={editorStates}
+            loading={loading}
+            success={success}
+            error={error}
+            errorMap={errorMap || null}
+            responsibleUsers={responsibleUsers?.items || []}
+            priorities={priorities?.items || []}
+        />
     );
 }
 

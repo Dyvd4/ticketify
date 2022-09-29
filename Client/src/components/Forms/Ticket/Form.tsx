@@ -134,17 +134,22 @@ function TicketForm({ loading, success, error, errorMap, ticket, input, editorSt
                 </>}
             </VStack>
             <HStack gap={2} className="mt-4">
-                <Button
-                    onClick={props.onAbort}
-                    size="sm">
-                    Abort
-                </Button>
-                <Button
-                    onClick={props.onSubmit}
-                    colorScheme="blue"
-                    size={"sm"}>
-                    Submit
-                </Button>
+                {props.onAbort && <>
+                    <Button
+                        onClick={props.onAbort}
+                        size="sm">
+                        Abort
+                    </Button>
+
+                </>}
+                {props.onSubmit && <>
+                    <Button
+                        onClick={props.onSubmit}
+                        colorScheme="blue"
+                        size={"sm"}>
+                        Submit
+                    </Button>
+                </>}
                 {success && props.variant !== "edit" && <>
                     <Link href={`/Ticket/Details/${ticket?.id}`}>
                         <Button size="sm">
