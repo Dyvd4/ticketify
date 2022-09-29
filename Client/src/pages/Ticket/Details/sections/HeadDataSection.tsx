@@ -1,14 +1,10 @@
-import { Flex, Heading, Tag, Tooltip, Text } from "@chakra-ui/react";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Flex, Heading, Tag, Text } from "@chakra-ui/react";
 import format from "date-fns/format";
 import { sanitize } from "dompurify";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
-import IconButton from "src/components/Wrapper/IconButton";
 
 type HeadDataProps = {
     ticket: any
-    onEdit(...args: any[]): void
 }
 
 function HeadDataSection({ ticket, ...props }: HeadDataProps) {
@@ -23,19 +19,9 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
 
     return (
         <>
-            <Flex justifyContent="space-between">
-                <Heading as="h1" className="font-bold text-2xl">
-                    {`#${ticket.id} ${title}`}
-                </Heading>
-                <Tooltip label="edit" placement="top">
-                    <IconButton
-                        size={"sm"}
-                        onClick={props.onEdit}
-                        aria-label="edit"
-                        icon={<FontAwesomeIcon icon={faEdit} />}
-                    />
-                </Tooltip>
-            </Flex>
+            <Heading as="h1" className="font-bold text-xl">
+                {`#${ticket.id} ${title}`}
+            </Heading>
             <Flex
                 gap={2}
                 direction="column"

@@ -1,15 +1,16 @@
-import { Alert, AlertIcon, Button, Flex, Select, Text, useToast } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text, useToast } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addEntity, fetchEntity } from "src/api/entity";
-import { commentSortParamAtom } from "src/context/atoms";
-import { useCurrentUser } from "src/hooks/user";
-import Comment from "../../../../components/Comment/Comment";
+import useCommentMutations from "src/api/mutations/hooks/useCommentMutations";
 import CommentSkeleton from "src/components/Comment/CommentSkeleton";
 import Input from "src/components/Comment/Input";
-import { useCommentMutations } from "../hooks/comment";
+import MenuButton from "src/components/Wrapper/MenuButton";
+import { commentSortParamAtom } from "src/context/atoms";
+import { useCurrentUser } from "src/hooks/user";
 import { v4 as uuid } from "uuid";
+import Comment from "../../../../components/Comment/Comment";
 
 const newestCommentSortParam = {
     label: "Newest first",
@@ -25,8 +26,8 @@ const mostHeartedCommentSortParam = {
 }
 
 const sortParamsData = [
-    newestCommentSortParam,
     mostLikedCommentSortParam,
+    newestCommentSortParam,
     mostHeartedCommentSortParam
 ]
 
@@ -80,9 +81,8 @@ function CommentsSection(props: CommentsSectionProps) {
 
     // event handler
     // -------------
-    const handleOrderBySelectChange = async (e) => {
-        const selectedValue = e.target.value;
-        const selectedSortParam: any = sortParamsData.find(param => param.property === selectedValue) || {}
+    const handleMenuButtonClick = async (selectedProperty) => {
+        const selectedSortParam: any = sortParamsData.find(param => param.property === selectedProperty) || {}
         setSortParam(selectedSortParam)
     }
 
@@ -167,77 +167,84 @@ function CommentsSection(props: CommentsSectionProps) {
         ? data.filter(comment => comment.id !== newestComment?.id)
         : [];
 
-    return (<>
-        <Flex gap={2} className="my-4 items-center">
-            <Button as="h1">
-                comments ({count || 0})
-            </Button>
-            <Select
-                onChange={handleOrderBySelectChange}
-                placeholder="Sort by"
-                value={sortParam.property}>
-                {sortParamsData.map(({ label, property, ...sortParam }) => (
-                    <option
-                        key={property}
-                        value={property}>
-                        {label}
-                    </option>
-                ))}
-            </Select>
-        </Flex>
-        <Flex className="flex-col gap-6">
-            <Input
-                variant="add"
-                value={commentInputValue}
-                setValue={setCommentInputValue}
-                onCancel={() => setCommentInputValue("")}
-                onSubmit={() => addCommentMutation.mutate({
-                    route: "comment",
-                    payload: {
-                        ticketId: ticket.id,
-                        content: commentInputValue
-                    }
-                })}
-            />
-
-            <Flex className="flex-col gap-4">
-                {isLoading && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
-                {newestComment && <>
-                    <Comment
-                        comment={newestComment}
-                        avatar={{ username: newestComment.author.username, ...newestComment.author.avatar }}
-                        key={newestComment.id}
-                        onInteractionSubmit={handleInteractionSubmit}
-                        onReplySubmit={handleReplySubmit}
-                        onEditSubmit={handleEditSubmit}
-                        onDeleteSubmit={handleDeleteSubmit}
-                        replyInputAvatarEvaluator={replyInputAvatarEvaluator}
-                        replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
-                        usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                        canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
-                        canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
-                    />
-                </>}
-                {comments.map(comment => (
-                    <Comment
-                        comment={comment}
-                        avatar={{ username: comment.author.username, ...comment.author.avatar }}
-                        key={comment.id}
-                        onInteractionSubmit={handleInteractionSubmit}
-                        onReplySubmit={handleReplySubmit}
-                        onEditSubmit={handleEditSubmit}
-                        onDeleteSubmit={handleDeleteSubmit}
-                        replyInputAvatarEvaluator={replyInputAvatarEvaluator}
-                        replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
-                        usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                        canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
-                        canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
-                    />
-                ))}
+    return (
+        <Box>
+            <Flex gap={2} className="mt-4 mb-2 items-center justify-between">
+                <Heading className="text-2xl p-2 whitespace-nowrap">
+                    Comments ({count || 0})
+                </Heading>
+                <Menu>
+                    <MenuButton>
+                        Sort by
+                    </MenuButton>
+                    <MenuList>
+                        <MenuOptionGroup defaultValue={sortParam.property} type="radio">
+                            {sortParamsData.map(({ label, property, ...sortParam }) => (
+                                <MenuItemOption
+                                    onClick={() => handleMenuButtonClick(property)}
+                                    key={property}
+                                    value={property}>
+                                    {label}
+                                </MenuItemOption>
+                            ))}
+                        </MenuOptionGroup>
+                    </MenuList>
+                </Menu>
             </Flex>
-        </Flex>
-        <br />
-    </>
+            <Flex className="flex-col gap-6">
+                <Input
+                    variant="add"
+                    value={commentInputValue}
+                    setValue={setCommentInputValue}
+                    onCancel={() => setCommentInputValue("")}
+                    onSubmit={() => addCommentMutation.mutate({
+                        route: "comment",
+                        payload: {
+                            ticketId: ticket.id,
+                            content: commentInputValue
+                        }
+                    })}
+                />
+                <Flex className="flex-col gap-4">
+                    {isLoading && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
+                    {newestComment && <>
+                        <Text>Your newest added comment:</Text>
+                        <Comment
+                            comment={newestComment}
+                            avatar={{ username: newestComment.author.username, ...newestComment.author.avatar }}
+                            key={newestComment.id}
+                            onInteractionSubmit={handleInteractionSubmit}
+                            onReplySubmit={handleReplySubmit}
+                            onEditSubmit={handleEditSubmit}
+                            onDeleteSubmit={handleDeleteSubmit}
+                            replyInputAvatarEvaluator={replyInputAvatarEvaluator}
+                            replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
+                            usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
+                            canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
+                            canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                        />
+                        <Divider />
+                    </>}
+                    {comments.map(comment => (
+                        <Comment
+                            comment={comment}
+                            avatar={{ username: comment.author.username, ...comment.author.avatar }}
+                            key={comment.id}
+                            onInteractionSubmit={handleInteractionSubmit}
+                            onReplySubmit={handleReplySubmit}
+                            onEditSubmit={handleEditSubmit}
+                            onDeleteSubmit={handleDeleteSubmit}
+                            replyInputAvatarEvaluator={replyInputAvatarEvaluator}
+                            replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
+                            usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
+                            canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
+                            canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                        />
+                    ))}
+                </Flex>
+            </Flex>
+            <br />
+        </Box>
     );
 }
 

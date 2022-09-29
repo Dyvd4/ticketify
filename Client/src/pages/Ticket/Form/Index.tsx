@@ -1,3 +1,6 @@
+import { Container, Heading } from "@chakra-ui/react";
+import { faFireFlameCurved } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -26,20 +29,28 @@ function TicketFormIndex() {
     // https://stackoverflow.com/questions/72501651/what-state-represents-the-loading-or-data-not-fetched-yet-state-when-using-enabl
     const isLoading = status === "loading" && fetchStatus === "fetching";
 
-    return isLoading
-        ? <LoadingRipple centered />
-        : <FormWrapper
-            variant={type}
-            ticket={type === "add"
-                ? ticket
-                : {
-                    ...fetchedTicket,
-                    ...ticket
-                }}
-            setTicket={setTicket}
-            onSuccess={type === "edit" ? () => window.location.href = `/Ticket/Details/${id}` : undefined}
-            onAbort={() => window.location.href = "/"}
-        />
+    if (isLoading) return <LoadingRipple centered />
+
+    return (
+        <Container>
+            <Heading as="h1" className="my-4 flex items-center gap-4 text-xl">
+                Add ticket
+                <FontAwesomeIcon icon={faFireFlameCurved} className="text-orange-600" />
+            </Heading>
+            <FormWrapper
+                variant={type}
+                ticket={type === "add"
+                    ? ticket
+                    : {
+                        ...fetchedTicket,
+                        ...ticket
+                    }}
+                setTicket={setTicket}
+                onSuccess={type === "edit" ? () => window.location.href = `/Ticket/Details/${id}` : undefined}
+                onAbort={() => window.location.href = "/"}
+            />
+        </Container>
+    )
 }
 
 export default TicketFormIndex;

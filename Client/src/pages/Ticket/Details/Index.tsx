@@ -1,13 +1,12 @@
-import { Alert, AlertIcon, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import EditView from "src/components/EditView";
+import EditBlock from "src/components/EditBlock";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
-import AttachmentsAddSection from "./sections/AttachmentsAddSection";
 import AttachmentsEditSection from "./sections/AttachmentsEditSection";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
@@ -20,7 +19,6 @@ function TicketDetailsIndex() {
     const [editedTicket, setEditedTicket] = useState<any>();
     const [edit, setEdit] = useState(false);
     const [editAttachments, setEditAttachments] = useState(false);
-    const [addAttachments, setAddAttachments] = useState(false);
     // queries
     // -------
     const { id } = useParams();
@@ -64,50 +62,35 @@ function TicketDetailsIndex() {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-            <Box className="bg-gray-200 dark:bg-gray-700 rounded-md p-6">
-                <EditView
-                    edit={edit}
-                    editView={
-                        <HeadDataEditSection
-                            ticket={{ ...ticket, ...editedTicket }}
-                            setTicket={setEditedTicket}
-                            onSuccess={() => setEdit(false)}
-                            onAbort={() => setEdit(false)}
-                        />
-                    }>
-                    <HeadDataSection
-                        onEdit={() => setEdit(true)}
-                        ticket={ticket}
-                    />
-                </EditView>
-                {/* 🥵 */}
-                <EditView
-                    edit={editAttachments || addAttachments}
-                    editView={<>
-                        {editAttachments && <>
-                            <AttachmentsEditSection
-                                onDone={() => setEditAttachments(false)}
-                                ticketId={ticket.id}
-                                attachments={attachments}
-                            />
-                        </>}
-                        {addAttachments && <>
-                            <AttachmentsAddSection
-                                onSuccess={() => setAddAttachments(false)}
-                                onAbort={() => setAddAttachments(false)}
-                                ticketId={ticket.id}
-                            />
-                        </>}
-                    </>
-                    }>
+            <EditBlock
+                onSave={() => { }}
+                title="Head data"
+                onToggle={() => setEdit(!edit)}
+                edit={edit}
+                alternateView={
+                    <HeadDataSection ticket={ticket} />
+                }>
+                <HeadDataEditSection
+                    ticket={{ ...ticket, ...editedTicket }}
+                    setTicket={setEditedTicket}
+                    onSuccess={() => setEdit(false)}
+                    onAbort={() => setEdit(false)}
+                />
+            </EditBlock>
+            <EditBlock
+                className="mt-4"
+                title="Attachments"
+                onToggle={() => setEditAttachments(!editAttachments)}
+                disableEdit={images.concat(files).length === 0}
+                edit={editAttachments}
+                alternateView={
                     <AttachmentsSection
-                        onAdd={() => setAddAttachments(true)}
-                        onEdit={() => setEditAttachments(true)}
                         images={images}
                         files={files}
                     />
-                </EditView>
-            </Box>
+                }>
+                <AttachmentsEditSection attachments={attachments} />
+            </EditBlock>
             <CommentsSection ticket={ticket} />
         </Container>
     );

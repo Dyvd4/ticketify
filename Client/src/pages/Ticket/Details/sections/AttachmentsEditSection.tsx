@@ -1,25 +1,26 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, Heading, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import IconButton from "src/components/Wrapper/IconButton";
 import Attachment from "../components/Attachment";
 
 type AttachmentsEditProps = {
-    ticketId: number
     attachments: any[]
-    onDone(...args: any[]): void
 }
 
-function AttachmentsEditSection({ attachments, ticketId, ...props }: AttachmentsEditProps) {
+function AttachmentsEditSection({ attachments, ...props }: AttachmentsEditProps) {
+
     // state
     // -----
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [attachmentToRemove, setAttachmentToRemove] = useState<any>();
 
+    const { id } = useParams();
     const queryClient = useQueryClient();
     const cancelRef = useRef<any>(null);
     const toast = useToast();
@@ -28,7 +29,7 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
     // ---------
     const mutation = useMutation(() => {
         return removeEntity({
-            route: `ticket/fileOnTicket/${ticketId}/${attachmentToRemove.id}`,
+            route: `ticket/fileOnTicket/${id}/${attachmentToRemove.id}`,
         })
     }, {
         onSuccess: () => {
@@ -37,7 +38,7 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
                 title: "successfully removed attachment",
                 status: "success"
             });
-            queryClient.invalidateQueries(["ticket", String(ticketId)]);
+            queryClient.invalidateQueries(["ticket", String(id)]);
         }
     });
 
@@ -46,67 +47,60 @@ function AttachmentsEditSection({ attachments, ticketId, ...props }: Attachments
         onOpen();
     }
 
+    if (mutation.isLoading) return <LoadingRipple centered />
+
     return (
-        mutation.isLoading
-            ? <LoadingRipple centered />
-            : <Box className="my-2">
-                <Heading as="h3" size="md" className="mb-2">
-                    Edit attachments
-                </Heading>
-                <Flex direction={"column"} gap={2}>
-                    {attachments.map(attachment => (
-                        <Flex
-                            alignItems={"center"}
-                            justifyContent={"space-between"}
-                            gap={2}
-                            key={attachment.id}>
-                            <Attachment attachment={attachment} />
-                            <Tooltip label="remove" placement="top">
-                                <IconButton
-                                    circle
-                                    size={"sm"}
-                                    onClick={() => handleOpen(attachment)}
-                                    aria-label="remove"
-                                    icon={<FontAwesomeIcon icon={faRemove} />}
-                                />
-                            </Tooltip>
-                        </Flex>
-                    ))}
-                </Flex>
-                <Button
-                    onClick={props.onDone}
-                    size="sm"
-                    className="mt-2"
-                    colorScheme={"blue"}>
-                    done
-                </Button>
-                <AlertDialog
-                    isOpen={isOpen}
-                    leastDestructiveRef={cancelRef}
-                    onClose={onClose}>
-                    <AlertDialogOverlay>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                Delete attachment
-                            </AlertDialogHeader>
-                            <AlertDialogBody>
-                                Are you sure? You can't undo this action afterwards.
-                            </AlertDialogBody>
-                            <AlertDialogFooter>
-                                <Button ref={cancelRef} onClick={onClose}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    colorScheme="red"
-                                    onClick={() => mutation.mutate()}
-                                    ml={3} >
-                                    Delete
-                                </Button>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialogOverlay>
-                </AlertDialog>
-            </Box>
+        <>
+            <Flex
+                className="my-2"
+                direction={"column"}
+                gap={2}>
+                {attachments.map(attachment => (
+                    <Flex
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        gap={2}
+                        key={attachment.id}>
+                        <Attachment attachment={attachment} />
+                        <Tooltip label="remove" placement="top">
+                            <IconButton
+                                circle
+                                size={"sm"}
+                                onClick={() => handleOpen(attachment)}
+                                aria-label="remove"
+                                icon={<FontAwesomeIcon icon={faRemove} />}
+                            />
+                        </Tooltip>
+                    </Flex>
+                ))}
+            </Flex>
+            <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}>
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            Delete attachment
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Are you sure? You can't undo this action afterwards.
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button
+                                colorScheme="red"
+                                onClick={() => mutation.mutate()}
+                                ml={3} >
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
+        </>
     );
 }
 
