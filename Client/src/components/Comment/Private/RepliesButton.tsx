@@ -2,8 +2,6 @@ import { Avatar, Flex } from "@chakra-ui/react";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
-import { actionTextColor } from "src/data/tailwind";
-import { mapColorProps } from "src/utils/component";
 import { getDataUrl } from "src/utils/image";
 import { AvatarType } from "../Comment";
 
@@ -17,11 +15,11 @@ type RepliesButtonProps = {
 function RepliesButton(props: RepliesButtonProps) {
 
     const { avatar, repliesCount, active, setActive, ...restProps } = props;
-    
+
     return (
         <div className={`cursor-pointer uppercase select-none 
                          font-bold text-sm
-                         ${mapColorProps([actionTextColor])}`}>
+                         text-primary`}>
             <Flex
                 onClick={() => setActive(!active)}
                 gap={1}

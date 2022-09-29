@@ -1,16 +1,16 @@
-type EditViewProps = React.PropsWithChildren<{
+export type EditViewProps = React.PropsWithChildren<{
     edit: boolean
-    editView: React.ReactNode
+    alternateView: React.ReactNode
 }>
 
-function EditView({ edit, editView, children, ...props }: EditViewProps) {
+function EditView({ edit, alternateView, children, ...props }: EditViewProps) {
     return (
         <div {...props}>
-            {!edit && <>
+            {!!edit && <>
                 {children}
             </>}
-            {!!edit && <>
-                {editView}
+            {!edit && <>
+                {alternateView}
             </>}
         </div>
     );

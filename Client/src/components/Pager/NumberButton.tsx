@@ -9,8 +9,8 @@ function NumberButton({ children, active, ...props }: NumberButtonProps) {
         <Button
             {...props}
             className={`${!active
-                ? 'text-primary-inactive'
-                : 'text-primary'}`}
+                ? 'bg-primary-inactive'
+                : 'bg-primary'}`}
             onClick={(e) => props.onClick && props.onClick(e)}>
             {children}
         </Button>

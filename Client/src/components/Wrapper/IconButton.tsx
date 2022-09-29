@@ -1,25 +1,15 @@
 import { IconButton as ChakraIconButton, IconButtonProps as ChakraIconButtonProps } from "@chakra-ui/react";
-import { mapColorProps } from "src/utils/component";
 import { forwardRef } from "react";
 
 export type IconButtonProps = {
     icon: React.ReactNode
     circle?: boolean
-    backgroundColor?: Tailwind.Color
 } & ChakraIconButtonProps
 
 const IconButton = forwardRef((props: IconButtonProps, ref: React.LegacyRef<HTMLButtonElement>) => {
     const {
         icon,
         circle,
-        backgroundColor = {
-            value: "bg-gray-300",
-            hover: "bg-gray-200",
-            darkMode: {
-                value: "bg-gray-500",
-                hover: "bg-gray-400"
-            }
-        },
         className,
         ...rest
     } = props;
@@ -27,8 +17,9 @@ const IconButton = forwardRef((props: IconButtonProps, ref: React.LegacyRef<HTML
         <ChakraIconButton
             ref={ref}
             className={`text-black dark:text-white
+                        transform transition-transform duration-100 active:scale-90
                         ${circle ? "rounded-full" : "rounded-lg"} 
-                        ${mapColorProps([backgroundColor])}
+                        ${!(rest.colorScheme || rest.bgColor || rest.backgroundColor) ? "bg-gray" : ""} 
                         ${className}`}
             icon={icon}
             {...rest} />

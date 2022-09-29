@@ -132,7 +132,7 @@ function List(props: ListProps) {
                                         className={`rounded-full p-2 w-6 h-6
                                             text-black dark:text-white
                                             flex justify-center items-center
-                                            text-primary`}>
+                                            bg-primary`}>
                                         <FontAwesomeIcon icon={faEllipsisVertical} size="xs" />
                                     </MenuButton>
                                     <MenuList>
