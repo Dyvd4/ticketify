@@ -14,7 +14,8 @@ const IconButton = forwardRef((props: IconButtonProps, ref: React.LegacyRef<HTML
         className,
         ...rest
     } = props;
-    const useDefaultBgColor = rest.colorScheme === "gray" || !rest.colorScheme || !rest.bgColor || !rest.backgroundColor;
+    const useDefaultBgColor = (rest.colorScheme === "gray" || !rest.colorScheme) &&
+        !rest.bgColor && !rest.backgroundColor;
 
     return (
         <ChakraIconButton
