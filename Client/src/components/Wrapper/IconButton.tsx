@@ -7,19 +7,22 @@ export type IconButtonProps = {
 } & ChakraIconButtonProps
 
 const IconButton = forwardRef((props: IconButtonProps, ref: React.LegacyRef<HTMLButtonElement>) => {
+
     const {
         icon,
         circle,
         className,
         ...rest
     } = props;
+    const useDefaultBgColor = rest.colorScheme === "gray" || !rest.colorScheme || !rest.bgColor || !rest.backgroundColor;
+
     return (
         <ChakraIconButton
             ref={ref}
             className={`text-black dark:text-white
                         transform transition-transform duration-100 active:scale-90
                         ${circle ? "rounded-full" : "rounded-lg"} 
-                        ${!(rest.colorScheme || rest.bgColor || rest.backgroundColor) ? "bg-gray" : ""} 
+                        ${useDefaultBgColor ? "bg-gray" : ""} 
                         ${className}`}
             icon={icon}
             {...rest} />
