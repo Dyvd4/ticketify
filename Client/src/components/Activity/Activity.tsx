@@ -18,10 +18,8 @@ type ActivityProps = {
 
 function Activity({ activity }: ActivityProps) {
     return (
-        <Flex className={`rounded-md p-4 gap-4
-                        bg-gray-200 dark:bg-gray-700 
-                        
-                        w-72`}>
+        <Flex className={`rounded-md p-4 gap-4 w-72
+                          bg-gray-200 dark:bg-gray-700`}>
             <Box className="p-2 rounded-full aspect-square">
                 <FontAwesomeIcon icon={activity.icon || "pen"} size={"2x"} />
             </Box>
