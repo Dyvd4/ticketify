@@ -7,7 +7,7 @@ type DiscardButtonProps = {}
     & React.ComponentPropsWithRef<"div">
 
 function DiscardButton({ className, ...rest }: DiscardButtonProps) {
-    const backgroundColor = {
+    const textColor = {
         value: "text-gray-500",
         hover: "text-gray-800",
         darkMode: {
@@ -20,7 +20,7 @@ function DiscardButton({ className, ...rest }: DiscardButtonProps) {
             <>
                 <div
                     className={`cursor-pointer
-                            ${mapColorProps([backgroundColor])}  
+                            ${mapColorProps([textColor])}  
                             ${className}`}
                     {...rest}>
                     <FontAwesomeIcon icon={faMinusCircle} size="lg" />
