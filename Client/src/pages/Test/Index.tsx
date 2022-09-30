@@ -1,3 +1,4 @@
+import { Container } from "@chakra-ui/react";
 import List from "src/components/List/List";
 import ListItemContent from "./ListItemContent";
 import ListItemFilter from "./ListItemFilter";
@@ -7,24 +8,26 @@ interface IndexProps { }
 
 function Index(props: IndexProps) {
     return (
-        <List
-            fetch={{
-                route: "test",
-                queryKey: "test"
-            }}
-            listItemRender={(item) => {
-                return {
-                    content: <ListItemContent item={item} />
+        <Container>
+            <List
+                fetch={{
+                    route: "test",
+                    queryKey: "test"
+                }}
+                listItemRender={(item) => {
+                    return {
+                        content: <ListItemContent item={item} />
+                    }
                 }
-            }
-            }
-            header={{
-                title: "test",
-                showCount: true
-            }}
-            sort={<ListItemSort />}
-            filter={<ListItemFilter />}
-        />
+                }
+                header={{
+                    title: "test",
+                    showCount: true
+                }}
+                sort={<ListItemSort />}
+                filter={<ListItemFilter />}
+            />
+        </Container>
     )
 }
 

@@ -6,24 +6,23 @@ import { prisma } from "../server";
 import { fileUpload, validateFiles, isImageFile, mapFile } from '../utils/file';
 import { mapFilterQuery } from '../utils/filter';
 import { mapOrderByQuery } from '../utils/orderBy';
-import { PagerResult } from '../utils/pager';
+import PagerResult, { prismaParams } from '../utils/List/PagerResult';
 
 const Router = express.Router();
 
-const ITEMS_PER_PAGE = 10;
-
 Router.get('/tickets', async (req, res, next) => {
     try {
+        const params = prismaParams(req.query);
         const tickets = await prisma.ticket.findMany({
+            ...params,
             include: {
                 priority: true
             },
             orderBy: mapOrderByQuery(req.query),
             where: mapFilterQuery(req.query)
         });
-        res.json(new PagerResult(tickets,
-            ITEMS_PER_PAGE,
-            parseInt((req.query.page as string | undefined) || "1")));
+        const ticketsCount = await prisma.ticket.count();
+        res.json(new PagerResult(tickets, ticketsCount, params));
     }
     catch (e) {
         next(e)
