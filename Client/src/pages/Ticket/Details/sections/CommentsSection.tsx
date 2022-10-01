@@ -47,7 +47,11 @@ function CommentsSection(props: CommentsSectionProps) {
 
     // queries
     // -------
-    const { isLoading, isError, data } = useQuery(["comments", sortParam], () => {
+    const {
+        isLoading,
+        isError,
+        data: comments = []
+    } = useQuery(["comments", sortParam], () => {
         return fetchEntity({ route: `comments/?orderBy=${JSON.stringify(sortParam)}` });
     }, {
         refetchOnWindowFocus: false
@@ -144,7 +148,7 @@ function CommentsSection(props: CommentsSectionProps) {
         return avatar;
     }
 
-    if (isError || countError) {
+    if (countError || isError) {
         return (
             <Alert className="rounded-md" status="error" variant="top-accent">
                 <AlertIcon />
@@ -155,17 +159,12 @@ function CommentsSection(props: CommentsSectionProps) {
         )
     }
 
-    const newestComment = !isLoading
-        ? data
-            .filter(comment => comment.authorId === currentUser.id)
-            .sort((a, b) => {
-                // @ts-ignore
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            })[0]
-        : null;
-    const comments = !isLoading
-        ? data.filter(comment => comment.id !== newestComment?.id)
-        : [];
+    const newestComment = comments
+        .filter(comment => comment.authorId === currentUser.id)
+        .sort((a, b) => {
+            // @ts-ignore
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        })[0];
 
     return (
         <Box>
@@ -206,7 +205,7 @@ function CommentsSection(props: CommentsSectionProps) {
                     })}
                 />
                 <Flex className="flex-col gap-4">
-                    {isLoading && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
+                    {(isLoading) && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
                     {newestComment && <>
                         <Text>Your newest added comment:</Text>
                         <Comment
@@ -225,22 +224,23 @@ function CommentsSection(props: CommentsSectionProps) {
                         />
                         <Divider />
                     </>}
-                    {comments.map(comment => (
-                        <Comment
-                            comment={comment}
-                            avatar={{ username: comment.author.username, ...comment.author.avatar }}
-                            key={comment.id}
-                            onInteractionSubmit={handleInteractionSubmit}
-                            onReplySubmit={handleReplySubmit}
-                            onEditSubmit={handleEditSubmit}
-                            onDeleteSubmit={handleDeleteSubmit}
-                            replyInputAvatarEvaluator={replyInputAvatarEvaluator}
-                            replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
-                            usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                            canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
-                            canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
-                        />
-                    ))}
+                    {comments.filter(comment => comment.id !== newestComment?.id)
+                        .map(comment => (
+                            <Comment
+                                comment={comment}
+                                avatar={{ username: comment.author.username, ...comment.author.avatar }}
+                                key={comment.id}
+                                onInteractionSubmit={handleInteractionSubmit}
+                                onReplySubmit={handleReplySubmit}
+                                onEditSubmit={handleEditSubmit}
+                                onDeleteSubmit={handleDeleteSubmit}
+                                replyInputAvatarEvaluator={replyInputAvatarEvaluator}
+                                replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
+                                usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
+                                canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
+                                canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                            />
+                        ))}
                 </Flex>
             </Flex>
             <br />

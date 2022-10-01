@@ -2,6 +2,7 @@ import express from 'express';
 import CommentSchema from "../schemas/Comment";
 import commentParams from "../schemas/params/Comment";
 import { prisma } from "../server";
+import { getInteractions, userHasInteracted } from '../utils/comment';
 import { mapFile } from '../utils/file';
 
 const Router = express.Router();
@@ -64,20 +65,16 @@ Router.get('/comments', async (req, res, next) => {
                                 ? mapFile(child.author.avatar.file, "base64")
                                 : null
                         },
-                        likes: child.interactions.filter(interaction => interaction.type === "like"),
-                        dislikes: child.interactions.filter(interaction => interaction.type === "dislike"),
-                        hearts: child.interactions.filter(interaction => interaction.type === "heart"),
-                        liked: child.interactions.find(interaction => interaction.type === "like" && interaction.createdFromId === UserId),
-                        disliked: child.interactions.find(interaction => interaction.type === "dislike" && interaction.createdFromId === UserId),
-                        hearted: child.interactions.find(interaction => interaction.type === "heart" && interaction.createdFromId === UserId)
+                        ...getInteractions(child.interactions),
+                        liked: userHasInteracted(child.interactions, "like", UserId!),
+                        disliked: userHasInteracted(child.interactions, "dislike", UserId!),
+                        hearted: userHasInteracted(child.interactions, "heart", UserId!)
                     }
                 }),
-                likes: comment.interactions.filter(interaction => interaction.type === "like"),
-                dislikes: comment.interactions.filter(interaction => interaction.type === "dislike"),
-                hearts: comment.interactions.filter(interaction => interaction.type === "heart"),
-                liked: comment.interactions.find(interaction => interaction.type === "like" && interaction.createdFromId === UserId),
-                disliked: comment.interactions.find(interaction => interaction.type === "dislike" && interaction.createdFromId === UserId),
-                hearted: comment.interactions.find(interaction => interaction.type === "heart" && interaction.createdFromId === UserId)
+                ...getInteractions(comment.interactions),
+                liked: userHasInteracted(comment.interactions, "like", UserId!),
+                disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
+                hearted: userHasInteracted(comment.interactions, "heart", UserId!)
             }
         }).sort((a, b) => {
             if (orderBy.property === "newestFirst") {
@@ -103,6 +100,7 @@ Router.get('/comments', async (req, res, next) => {
     }
 });
 
+
 Router.get("/comments/count", async (req, res, next) => {
     try {
         const count = await prisma.comment.count();
@@ -122,24 +120,6 @@ Router.get('/comment/:id', async (req, res, next) => {
             }
         });
         res.json(comment);
-    }
-    catch (e) {
-        next(e)
-    }
-});
-
-Router.get("/comment/newestFromCurrentUser", async (req, res, next) => {
-    const { UserId } = req;
-    try {
-        const newestComment = await prisma.comment.findFirst({
-            where: {
-                authorId: UserId
-            },
-            orderBy: {
-                createdAt: "desc"
-            }
-        });
-        res.json(newestComment);
     }
     catch (e) {
         next(e)
