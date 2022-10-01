@@ -1,5 +1,5 @@
 import { ListResultPrismaParams } from ".";
-import ListResult from "./Result";
+import { ListResult } from "./Result";
 
 const ITEMS_PER_LOAD = 10;
 
