@@ -148,17 +148,6 @@ function CommentsSection(props: CommentsSectionProps) {
         return avatar;
     }
 
-    if (countError || isError) {
-        return (
-            <Alert className="rounded-md" status="error" variant="top-accent">
-                <AlertIcon />
-                <Text>
-                    There was an error processing your request
-                </Text>
-            </Alert>
-        )
-    }
-
     const newestComment = comments
         .filter(comment => comment.authorId === currentUser.id)
         .sort((a, b) => {
@@ -205,6 +194,14 @@ function CommentsSection(props: CommentsSectionProps) {
                     })}
                 />
                 <Flex className="flex-col gap-4">
+                    {(countError || isError) && <>
+                        <Alert className="rounded-md" status="error" variant="top-accent">
+                            <AlertIcon />
+                            <Text>
+                                There was an error processing your request
+                            </Text>
+                        </Alert>
+                    </>}
                     {(isLoading) && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
                     {newestComment && <>
                         <Text>Your newest added comment:</Text>
