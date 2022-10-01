@@ -3,11 +3,11 @@ import Comment, { AvatarType, Interaction } from "../Comment";
 
 type ChildCommentsProps = {
     comments: any[]
-    replyInputAvatarEvaluator?(comment): AvatarType | undefined
-    replyButtonAvatarEvaluator?(comment): AvatarType | undefined
-    usernameTaggedEvaluator?(comment): boolean
-    canEditEvaluator?(comment): boolean
-    canDeleteEvaluator?(comment): boolean
+    replyInputAvatar?(comment): AvatarType | undefined
+    replyButtonAvatar?(comment): AvatarType | undefined
+    usernameTagged?(comment): boolean
+    canEdit?(comment): boolean
+    canDelete?(comment): boolean
     onInteractionSubmit?(type: Interaction, comment): void
     onReplySubmit?(e, comment, replyValue: string): void
     onEditSubmit?(e, comment, editvalue: string): void
@@ -30,11 +30,11 @@ function ChildComments({ comments, ...props }: ChildCommentsProps) {
                     onReplySubmit={props.onReplySubmit}
                     onEditSubmit={props.onEditSubmit}
                     onDeleteSubmit={props.onDeleteSubmit}
-                    replyInputAvatarEvaluator={props.replyInputAvatarEvaluator}
-                    replyButtonAvatarEvaluator={props.replyButtonAvatarEvaluator}
-                    usernameTaggedEvaluator={props.usernameTaggedEvaluator}
-                    canEditEvaluator={props.canEditEvaluator}
-                    canDeleteEvaluator={props.canDeleteEvaluator}
+                    replyInputAvatar={props.replyInputAvatar}
+                    replyButtonAvatar={props.replyButtonAvatar}
+                    usernameTagged={props.usernameTagged}
+                    canEdit={props.canEdit}
+                    canDelete={props.canDelete}
                 />
             ))}
         </Flex>

@@ -70,7 +70,8 @@ const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "") => {
             const oldComment = getComment(currentComments, commentId);
             const { comments, oldComments } = replaceComment(currentComments, commentId, {
                 ...oldComment,
-                ...comment
+                ...comment,
+                updatedAt: new Date()
             });
             setCommentQuery(comments);
             setCommentRefreshAtom(hackyNumber => hackyNumber + 1);

@@ -1,4 +1,5 @@
 import { Avatar, Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { isAfter } from "date-fns/esm";
 import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useEffect, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
@@ -42,11 +43,11 @@ type CommentProps = {
     }
     avatar?: AvatarType
     size?: CommentSize
-    replyInputAvatarEvaluator?(comment): AvatarType | undefined
-    replyButtonAvatarEvaluator?(comment): AvatarType | undefined
-    usernameTaggedEvaluator?(comment): boolean
-    canEditEvaluator?(comment): boolean
-    canDeleteEvaluator?(comment): boolean
+    replyInputAvatar?(comment): AvatarType | undefined
+    replyButtonAvatar?(comment): AvatarType | undefined
+    usernameTagged?(comment): boolean
+    canEdit?(comment): boolean
+    canDelete?(comment): boolean
     onInteractionSubmit?(type: Interaction, comment): void
     onReplySubmit?(e, comment, replyValue: string): void
     onEditSubmit?(e, comment, editvalue: string): void
@@ -60,11 +61,11 @@ function Comment(props: CommentProps) {
         comment,
         size = "normal",
         avatar,
-        replyInputAvatarEvaluator,
-        replyButtonAvatarEvaluator,
-        usernameTaggedEvaluator,
-        canEditEvaluator,
-        canDeleteEvaluator,
+        replyInputAvatar,
+        replyButtonAvatar,
+        usernameTagged: usernameTaggedEvaluator,
+        canEdit: canEditEvaluator,
+        canDelete: canDeleteEvaluator,
         onInteractionSubmit,
         onReplySubmit,
         onEditSubmit,
@@ -76,6 +77,7 @@ function Comment(props: CommentProps) {
         author,
         content,
         createdAt,
+        updatedAt,
         likes,
         dislikes,
         hearts,
@@ -139,9 +141,9 @@ function Comment(props: CommentProps) {
         onDeleteDialogClose();
     }
 
-    const canEdit = props.canEditEvaluator && props.canEditEvaluator(comment)
-    const canDelete = props.canDeleteEvaluator && props.canDeleteEvaluator(comment);
-    const usernameTagged = props.usernameTaggedEvaluator && props.usernameTaggedEvaluator(comment);
+    const canEdit = canEditEvaluator && canEditEvaluator(comment)
+    const canDelete = canDeleteEvaluator && canDeleteEvaluator(comment);
+    const usernameTagged = usernameTaggedEvaluator && usernameTaggedEvaluator(comment);
     const showMore = noOfContentLines === defaultNoOfContentLines;
 
     return (
@@ -178,8 +180,15 @@ function Comment(props: CommentProps) {
                                     {author.username}
                                 </div>
                             </>}
-                            <div className="text-sm cursor-pointer text-secondary">
-                                {getDurationAgo(new Date(createdAt))}
+                            <div className="text-sm cursor-pointer text-secondary flex items-center gap-1">
+                                <span>
+                                    {getDurationAgo(new Date(createdAt))}
+                                </span>
+                                {isAfter(new Date(updatedAt), new Date(createdAt)) && <>
+                                    <span>
+                                        (edited)
+                                    </span>
+                                </>}
                             </div>
                         </Flex>
                     </Flex>
@@ -242,7 +251,7 @@ function Comment(props: CommentProps) {
                 </Flex>
                 {activeState.reply && !activeState.edit && <>
                     <Input
-                        avatar={props.replyInputAvatarEvaluator && props.replyInputAvatarEvaluator(comment)}
+                        avatar={props.replyInputAvatar && props.replyInputAvatar(comment)}
                         variant="reply"
                         className="mt-2"
                         value={replyValue}
@@ -254,7 +263,7 @@ function Comment(props: CommentProps) {
                 {comment.childs.length > 0 && !activeState.edit && <>
                     <Box>
                         <RepliesButton
-                            avatar={props.replyButtonAvatarEvaluator && props.replyButtonAvatarEvaluator(comment)}
+                            avatar={props.replyButtonAvatar && props.replyButtonAvatar(comment)}
                             active={activeState.childs}
                             setActive={active => setActiveState({ ...activeState, childs: active })}
                             repliesCount={comment.childs.length}
@@ -267,11 +276,11 @@ function Comment(props: CommentProps) {
                                 onReplySubmit={props.onReplySubmit}
                                 onEditSubmit={props.onEditSubmit}
                                 onDeleteSubmit={props.onDeleteSubmit}
-                                replyInputAvatarEvaluator={props.replyInputAvatarEvaluator}
-                                replyButtonAvatarEvaluator={props.replyButtonAvatarEvaluator}
-                                usernameTaggedEvaluator={props.usernameTaggedEvaluator}
-                                canEditEvaluator={props.canEditEvaluator}
-                                canDeleteEvaluator={props.canDeleteEvaluator}
+                                replyInputAvatar={props.replyInputAvatar}
+                                replyButtonAvatar={props.replyButtonAvatar}
+                                usernameTagged={props.usernameTagged}
+                                canEdit={props.canEdit}
+                                canDelete={props.canDelete}
                             />
                         </>}
                     </Box>

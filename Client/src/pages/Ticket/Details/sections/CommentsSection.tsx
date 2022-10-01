@@ -128,7 +128,7 @@ function CommentsSection(props: CommentsSectionProps) {
             entityId: comment.id
         });
     }
-    const replyInputAvatarEvaluator = evalComment => {
+    const replyInputAvatar = evalComment => {
         const avatar = currentUser
             ? {
                 username: currentUser.username,
@@ -137,7 +137,7 @@ function CommentsSection(props: CommentsSectionProps) {
             : null;
         return avatar;
     }
-    const replyButtonAvatarEvaluator = evalComment => {
+    const replyButtonAvatar = evalComment => {
         const responsibleUserHasReplied = evalComment.childs.some(childComment => childComment.authorId === ticket.responsibleUserId);
         const avatar = responsibleUserHasReplied
             ? {
@@ -213,11 +213,11 @@ function CommentsSection(props: CommentsSectionProps) {
                             onReplySubmit={handleReplySubmit}
                             onEditSubmit={handleEditSubmit}
                             onDeleteSubmit={handleDeleteSubmit}
-                            replyInputAvatarEvaluator={replyInputAvatarEvaluator}
-                            replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
-                            usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                            canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
-                            canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                            replyInputAvatar={replyInputAvatar}
+                            replyButtonAvatar={replyButtonAvatar}
+                            usernameTagged={evalComment => ticket.responsibleUserId === evalComment.authorId}
+                            canEdit={evalComment => currentUser.id === evalComment.authorId}
+                            canDelete={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
                         />
                         <Divider />
                     </>}
@@ -231,11 +231,11 @@ function CommentsSection(props: CommentsSectionProps) {
                                 onReplySubmit={handleReplySubmit}
                                 onEditSubmit={handleEditSubmit}
                                 onDeleteSubmit={handleDeleteSubmit}
-                                replyInputAvatarEvaluator={replyInputAvatarEvaluator}
-                                replyButtonAvatarEvaluator={replyButtonAvatarEvaluator}
-                                usernameTaggedEvaluator={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                                canEditEvaluator={evalComment => currentUser.id === evalComment.authorId}
-                                canDeleteEvaluator={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                                replyInputAvatar={replyInputAvatar}
+                                replyButtonAvatar={replyButtonAvatar}
+                                usernameTagged={evalComment => ticket.responsibleUserId === evalComment.authorId}
+                                canEdit={evalComment => currentUser.id === evalComment.authorId}
+                                canDelete={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
                             />
                         ))}
                 </Flex>
