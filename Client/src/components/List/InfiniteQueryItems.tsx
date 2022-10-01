@@ -10,8 +10,8 @@ type InfiniteLoadingResult = {
 type InfiniteQueryItemsProps = {
     query: UseInfiniteQueryResult<InfiniteLoadingResult>
     children(item: any): JSX.Element
-    loadingDisplay: JSX.Element
-    errorDisplay: JSX.Element
+    loadingDisplay?: JSX.Element
+    errorDisplay?: JSX.Element
     fetchingNextDisplay?: JSX.Element
 }
 
@@ -35,8 +35,8 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
         }
     });
 
-    if (isLoading) return props.loadingDisplay;
-    if (isError) return props.errorDisplay;
+    if (isLoading) return props.loadingDisplay || null;
+    if (isError) return props.errorDisplay || null;
 
     return <>
         {data.pages.map(page => (

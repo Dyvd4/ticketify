@@ -17,7 +17,6 @@ type EditBlockProps = {
 function EditBlock(props: EditBlockProps) {
 
     const { title, edit, disableEdit, alternateView, children, onToggle, onSave, ...restProps } = props;
-    console.log(edit);
 
     return (
         <Box {...restProps}>
