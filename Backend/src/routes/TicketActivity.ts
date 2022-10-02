@@ -1,17 +1,21 @@
 import express from 'express';
 import { prisma } from "../server";
+import InfiniteLoadingResult, { prismaParams } from '../utils/List/InfiniteLoadingResult';
 
 const Router = express.Router();
 
 Router.get('/ticketActivities', async (req, res, next) => {
     try {
+        const infiniteLoadingParams = prismaParams(req.query);
         const ticketActivities = await prisma.ticketActivity.findMany({
+            ...infiniteLoadingParams,
             include: {
                 ticket: true,
-                createdFrom: true
+                createdFrom: true,
             }
         });
-        res.json({ items: ticketActivities });
+        const ticketActivitiesCount = await prisma.ticketActivity.count();
+        res.json(new InfiniteLoadingResult(ticketActivities, ticketActivitiesCount, infiniteLoadingParams));
     }
     catch (e) {
         next(e)

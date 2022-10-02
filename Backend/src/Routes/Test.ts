@@ -2,7 +2,7 @@ import express from "express"
 import { prisma } from "../server";
 import { mapFilterQuery } from "../utils/filter";
 import { mapOrderByQuery } from "../utils/orderBy";
-import InfiniteLoadingResult, { prismaParams } from "../utils/List/PagerResult";
+import InfiniteLoadingResult, { prismaParams } from "../utils/List/InfiniteLoadingResult";
 const Router = express.Router();
 
 Router.get("/test", async (req, res, next) => {
@@ -14,7 +14,10 @@ Router.get("/test", async (req, res, next) => {
             where: mapFilterQuery(req.query),
             orderBy: mapOrderByQuery(req.query)
         });
-        const testItemsCount = await prisma.test.count();
+        const testItemsCount = await prisma.test.count({
+            where: mapFilterQuery(req.query),
+            orderBy: mapOrderByQuery(req.query)
+        });
         const pagerResult = new InfiniteLoadingResult(testItems, testItemsCount, params);
 
         res.json(pagerResult);

@@ -39,7 +39,7 @@ function Activity({ activity }: ActivityProps) {
                     </>}
                 </Box>
                 <Box className="text-sm italic">
-                    {activity.entityName} has been &nbsp;
+                    {activity.entityName} &nbsp;
                     <span className={`text-${activity.color}`}>
                         {activity.action}
                     </span>
