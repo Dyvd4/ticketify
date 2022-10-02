@@ -11,7 +11,7 @@ export type OrderByQueryParams = Array<OrderByQueryParam>
 export const mapOrderByQuery = (query) => {
     const mappedOrderBy = (orderBy) => {
         const orderByObj = {};
-        Object.set(orderByObj, orderBy.property, orderBy.direction);
+        Object.set(orderByObj, orderBy.property, orderBy.direction.value);
         return orderByObj;
     }
     if (!query.orderBy) return {};

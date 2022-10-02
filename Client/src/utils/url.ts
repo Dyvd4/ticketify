@@ -8,3 +8,9 @@ export const setUrlParam = (name: string, param) => {
     newUrl.searchParams.set(name, JSON.stringify(param));
     window.history.pushState(null, "", newUrl);
 }
+
+export const deleteUrlParam = (name: string) => {
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete(name);
+    window.history.pushState(null, "", newUrl);
+}

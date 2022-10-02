@@ -3,13 +3,28 @@ import { request } from "../services/request"
 
 const myRequest = request();
 
-interface FetchEntityParams {
-    route: string
-    entityId?: string
+export type FetchEntityParams = {
+    route: string,
     options?: AxiosRequestConfig
-}
-export async function fetchEntity({ route, options, entityId }: FetchEntityParams) {
-    const response = await myRequest.get(entityId ? `${route}/${entityId}` : route, options);
+} & ({
+    entityId?: string
+    queryParams?: never
+} | {
+    queryParams?: any
+    entityId?: never
+})
+
+export async function fetchEntity({ route, options, ...args }: FetchEntityParams) {
+    let mappedRoute = `${route}`;
+    if ("entityId" in args) mappedRoute += `/${args.entityId}`;
+    else if ("queryParams" in args) {
+        const tempURL = new URL(window.location.origin);
+        Object.keys(args.queryParams).forEach(key => {
+            tempURL.searchParams.set(key, JSON.stringify(args.queryParams[key]));
+        });
+        mappedRoute += `/?${tempURL.searchParams.toString()}`;
+    }
+    const response = await myRequest.get(mappedRoute, options);
     return response.data;
 }
 

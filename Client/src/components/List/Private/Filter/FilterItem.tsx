@@ -1,46 +1,45 @@
-import { FormControl, FormLabel, IconButton, Tooltip, VisuallyHidden } from "@chakra-ui/react";
+import { FormControl, FormLabel, IconButton, Tooltip } from "@chakra-ui/react";
 import { faBan, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useId } from "react";
+import { TFilterOperation, TFilterOperations } from "../../";
 import FilterInput from "./FilterInput";
-import FilterOperations, { FilterOperation, FilterOperationsType } from "./FilterOperations";
-
-export type FilterItemType = FilterItemProps
+import FilterOperations from "./FilterOperations";
 
 export type FilterItemProps = {
+    onChange(property: string, changedItem: any)
     label?: string
     property: string
-    type: FilterOperationsType
+    type: TFilterOperations
     value?: string
-    operation?: FilterOperation
+    operation?: TFilterOperation
     disabled?: boolean
-    onChange(...args)
 }
 
 function FilterItem({ onChange, ...item }: FilterItemProps) {
-    const inputId = useId();
     return (
         <FormControl>
-            <VisuallyHidden className={`filter-item-props-${inputId}`}>
-                properties that are not dynamically changed
-                (will be picked up by useFilterParams)
-                <input readOnly name="label" value={item.label} />
-                <input readOnly name="type" value={item.type} />
-                <input readOnly name="property" value={item.property} />
-            </VisuallyHidden>
             <FormLabel>{item.label || item.property}</FormLabel>
             <div className="flex items-center gap-2">
                 <FilterInput
+                    onChange={(value) => onChange(item.property, {
+                        ...item,
+                        value
+                    })}
                     name={item.property}
+                    value={item.value}
                     type={item.type}
-                    defaultValue={item.value}
-                    id={inputId}
                     disabled={item.disabled}
                 />
                 <FilterOperations
+                    onChange={(value) => onChange(item.property, {
+                        ...item,
+                        operation: {
+                            ...item.operation,
+                            value
+                        }
+                    })}
                     operation={item.operation}
                     type={item.type}
-                    for={inputId}
                     disabled={item.disabled}
                 />
                 <Tooltip label={item.disabled ? "enable" : "disable"} placement="top">

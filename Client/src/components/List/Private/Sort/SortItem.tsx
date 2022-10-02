@@ -1,27 +1,20 @@
 import { IconButton, Input, Tooltip } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faCircleCheck, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TSortDirection } from "../..";
 import SortDirections from "./SortDirections";
-import { useId } from "react";
-
-export type SortItemType = Omit<SortItemProps, "onChange" | "onSortUp" | "onSortDown">
 
 export type SortItemProps = {
-    /** the name of the property to order by */
     property: string
-    /** the value that will be displayed
-     * (doesn't affect orderBy in any way)
-     */
     label?: string
     disabled?: boolean
-    direction?: "asc" | "desc"
-    onChange(...args)
+    direction?: TSortDirection
+    onChange(property: string, changedItem: any)
     onSortUp?(...args)
     onSortDown?(...args)
 }
 
 function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
-    const inputId = useId();
     return (
         <div className="flex items-center gap-2">
             <Input
@@ -30,12 +23,19 @@ function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
                 name={item.property}
                 type="text"
                 value={item.label || item.property}
-                id={inputId}
+                onChange={e => onChange(item.property, { ...item, value: e.target.value })}
             />
             <SortDirections
                 disabled={item.disabled}
-                onSelect={(direction) => onChange(item.property, { ...item, direction })}
-                for={inputId}
+                onSelect={(value) =>{
+                    onChange(item.property, { 
+                        ...item, 
+                        direction: {
+                            ...item.direction,
+                            value
+                        }
+                     })
+                } }
                 direction={item.direction}
             />
             <Tooltip label="move up" placement="top">

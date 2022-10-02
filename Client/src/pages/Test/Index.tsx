@@ -1,8 +1,6 @@
 import { Container } from "@chakra-ui/react";
 import List from "src/components/List/List";
 import ListItemContent from "./ListItemContent";
-import ListItemFilter from "./ListItemFilter";
-import ListItemSort from "./ListItemSort";
 
 interface IndexProps { }
 
@@ -24,8 +22,35 @@ function Index(props: IndexProps) {
                     title: "test",
                     showCount: true
                 }}
-                sort={<ListItemSort />}
-                filter={<ListItemFilter />}
+                sort={[
+                    {
+                        property: "isAmazing",
+                        label: "Is amazing"
+                    },
+                    {
+                        property: "description",
+                    },
+                    {
+                        property: "createdAt",
+                        label: "created at"
+                    }
+                ]}
+                filter={[
+                    {
+                        property: "isAmazing",
+                        type: "boolean",
+                        label: "Is amazing"
+                    },
+                    {
+                        property: "description",
+                        type: "string",
+                    },
+                    {
+                        property: "createdAt",
+                        type: "date",
+                        label: "created at"
+                    }
+                ]}
             />
         </Container>
     )

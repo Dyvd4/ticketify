@@ -1,13 +1,4 @@
-import { Select } from "@chakra-ui/react";
-
-export type FilterOperationsType = "string" | "number" | "date" | "boolean"
-
-export type FilterOperation = {
-    label: string
-    value: string
-}
-
-const operations = {
+export const operations = {
     contains: {
         label: "contains",
         value: "contains"
@@ -46,7 +37,7 @@ const operations = {
     }
 }
 
-const typeOperations = {
+export const typeOperations = {
     string: [
         operations.contains,
         operations.equals,
@@ -74,23 +65,3 @@ const typeOperations = {
         operations.not
     ]
 }
-
-type FilterOperationsProps = {
-    /** the name of the input which the operation is for */
-    for: string
-    type: FilterOperationsType
-    operation?: FilterOperation
-    disabled?: boolean
-}
-
-function FilterOperations(props: FilterOperationsProps) {
-    return (
-        <Select name={`filter-operations-${props.for}`} disabled={props.disabled}>
-            {typeOperations[props.type].map((operation, index) => (
-                <option selected={operation.value === props.operation?.value} key={index} value={operation.value}>{operation.label}</option>
-            ))}
-        </Select>
-    );
-}
-
-export default FilterOperations;

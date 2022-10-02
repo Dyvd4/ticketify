@@ -33,7 +33,9 @@ const parseFilterValue = (value, type: FilterOperationsType) => {
         case "boolean":
             return Boolean(value)
         case "date":
-            return new Date(value)
+            return value
+                ? new Date(value)
+                : undefined
         default:
             return value
     }

@@ -1,8 +1,7 @@
 import { Checkbox, Heading } from "@chakra-ui/react";
 import { format } from "date-fns";
 
-
-function TicketListItemContent({ item }: { item }) {
+function TestListItemContent({ item }: { item }) {
     return (
         <div className="flex justify-between items-center gap-2">
             <div>
@@ -18,4 +17,4 @@ function TicketListItemContent({ item }: { item }) {
     );
 }
 
-export default TicketListItemContent;
+export default TestListItemContent;

@@ -2,11 +2,8 @@ import express from "express"
 import { prisma } from "../server";
 import { mapFilterQuery } from "../utils/filter";
 import { mapOrderByQuery } from "../utils/orderBy";
-//import PagerResult from "../utils/List/PagerResult";
 import InfiniteLoadingResult, { prismaParams } from "../utils/List/PagerResult";
 const Router = express.Router();
-
-const ITEMS_PER_PAGE = 5;
 
 Router.get("/test", async (req, res, next) => {
     try {

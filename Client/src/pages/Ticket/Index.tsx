@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import List from "src/components/List/List";
 import TicketListItemActions from "./TicketListItemActions";
 import TicketListItemContent from "./TicketListItemContent";
-import TicketListItemFilter from "./TicketListItemFilter";
-import TicketListItemSort from "./TicketListItemSort";
 
 interface IndexProps { }
 
@@ -42,8 +40,30 @@ function Index(props: IndexProps) {
           title: "pending tickets",
           showCount: true
         }}
-        sort={<TicketListItemSort />}
-        filter={<TicketListItemFilter />}
+        sort={[
+          {
+            property: "title"
+          },
+          {
+            property: "priority.name",
+            label: "priority"
+          },
+          {
+            property: "dueDate"
+          },
+        ]}
+        filter={[
+          {
+            property: "title",
+            label: "Title",
+            type: "string"
+          },
+          {
+            property: "priority.name",
+            label: "priority",
+            type: "string"
+          }
+        ]}
         add={{
           // 🥵
           route: "Ticket/Form/id="

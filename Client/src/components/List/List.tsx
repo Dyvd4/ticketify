@@ -1,19 +1,24 @@
 import { Alert, AlertIcon, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef } from "react";
-import { useInfiniteQuery } from "react-query";
-import { fetchEntity } from "src/api/entity";
-import { useFilterParams } from "src/components/List/Private/hooks/useFilterParams";
-import { useOrderByParams } from "src/components/List/Private/hooks/useOrderByParams";
+import { useAtom } from "jotai";
+import { useEffect, useRef, useState } from "react";
+import useFilterItemsInit from "src/context/hooks/useFilterItemsInit";
+import useSortItemsInit from "src/context/hooks/useSortItemsInit";
+import { filterItemsAtom, filterItemsResetAtomWithUrl } from "src/context/stores/filter";
+import { sortItemsAtom, sortItemsResetAtomWithUrl } from "src/context/stores/sort";
+import useInfiniteQuery from "src/hooks/useInfiniteQuery";
 import { useUrlParams } from "src/hooks/useUrlParams";
-import { setUrlParam } from "src/utils/url";
+import { getUrlParam, setUrlParam } from "src/utils/url";
+import { TDrawer, TFilterItem, TSortItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
 import Pager from "../Pager/Pager";
-import FilterDrawer from "./Filter/Private/FilterDrawer";
 import Header from "./Header";
 import InfiniteQueryItems from "./InfiniteQueryItems";
-import SortDrawer from "./Sort/Private/SortDrawer";
+import FilterDrawer from "./Private/Filter/FilterDrawer";
+import FilterItems from "./Private/Filter/FilterItems";
+import SortDrawer from "./Private/Sort/SortDrawer";
+import SortItems from "./Private/Sort/SortItems";
 
 type ListProps = {
     fetch: {
@@ -33,8 +38,8 @@ type ListProps = {
         title: string
         showCount?: boolean
     }
-    sort?: React.ReactNode
-    filter?: React.ReactNode
+    sort: TSortItem[]
+    filter: TFilterItem[]
     add?: {
         /** the url path to where you can add the entity */
         route: string
@@ -44,18 +49,43 @@ type ListProps = {
 function List(props: ListProps) {
     const { listItemRender, fetch: { queryKey, route }, header } = props;
 
-    // sort, filter, page
     const drawerRef = useRef<HTMLDivElement | null>(null);
-    const { filterParamsUrl, setFilterParamsUrl, resetFilterParamsUrl } = useFilterParams(drawerRef);
-    const { orderByParamsUrl, setOrderByParamsUrl, resetOrderByParamsUrl } = useOrderByParams(drawerRef);
+    // sort, filter, page
+    const [filterItems] = useAtom(filterItemsAtom);
+    const [sortItems] = useAtom(sortItemsAtom);
+    const [, filterItemsReset] = useAtom(filterItemsResetAtomWithUrl);
+    const [, sortItemsReset] = useAtom(sortItemsResetAtomWithUrl);
+    const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1, { jsonParse: true });
 
-    const query = useInfiniteQuery([queryKey, page, filterParamsUrl, orderByParamsUrl], ({ pageParam }) => {
-        return fetchEntity({
-            route: `${route}/${window.location.search}&skip=${pageParam}`
+    useFilterItemsInit(props.filter, (filterItems) => {
+        if (!getUrlParam("filter")) return;
+        setQueryParams(params => {
+            return {
+                ...params,
+                filter: filterItems
+            }
         });
+    });
+
+    useSortItemsInit(props.sort, (sortItems) => {
+        if (!getUrlParam("orderBy")) return;
+        setQueryParams(params => {
+            return {
+                ...params,
+                orderBy: sortItems
+            }
+        });
+    });
+
+    const query = useInfiniteQuery([queryKey, page, queryParams], {
+        route,
+        queryParams: {
+            ...queryParams,
+            page
+        }
     }, {
-        getNextPageParam: (lastPage) => lastPage.type !== "pagination"
+        getNextPageParam: (lastPage: any) => lastPage.type !== "pagination"
             ? lastPage.nextSkip
             : undefined
     });
@@ -99,6 +129,24 @@ function List(props: ListProps) {
         query.refetch();
     }
 
+    const handleDrawerApply = (type: TDrawer) => {
+        const itemsToSet = type === "filter"
+            ? filterItems
+            : sortItems;
+        setUrlParam(type, itemsToSet);
+        setQueryParams({
+            ...queryParams,
+            [type]: itemsToSet
+        });
+    }
+    const handleDrawerReset = (type: TDrawer) => {
+        if (type === "filter") filterItemsReset();
+        else sortItemsReset();
+        const newQueryParams = { ...queryParams };
+        delete newQueryParams[type];
+        setQueryParams(newQueryParams);
+    }
+
     return (
         <>
             {header && <>
@@ -114,17 +162,17 @@ function List(props: ListProps) {
             </>}
             <SortDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                inputs={props.sort}
+                inputs={<SortItems />}
                 fetch={{ queryKey, route }}
-                onApply={setOrderByParamsUrl}
-                onReset={resetOrderByParamsUrl}
+                onApply={() => handleDrawerApply("orderBy")}
+                onReset={() => handleDrawerReset("orderBy")}
             />
             <FilterDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                inputs={props.filter}
+                inputs={<FilterItems />}
                 fetch={{ queryKey, route }}
-                onApply={setFilterParamsUrl}
-                onReset={resetFilterParamsUrl}
+                onApply={() => handleDrawerApply("filter")}
+                onReset={() => handleDrawerReset("filter")}
             />
             <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400">
                 <InfiniteQueryItems

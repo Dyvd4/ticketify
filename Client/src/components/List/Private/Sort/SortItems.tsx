@@ -1,20 +1,20 @@
 import { CircularProgress } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
+import { useAtom } from "jotai";
+import { sortItemsAtom } from "src/context/stores/sort";
 import { move } from "src/utils/array";
-import SortItem, { SortItemType } from "./Private/SortItem";
+import SortItem from "./SortItem";
 
-export type DefaultSortItemType = SortItemType;
+type SortItemsProps = {}
 
-type SortItemsProps = {
-    items: SortItemType[]
-    onChange(items)
-}
+function SortItems(props: SortItemsProps) {
 
-function SortItems({ items, ...props }: SortItemsProps) {
+    const [items, setItems] = useAtom(sortItemsAtom);
+
     const handleSort = (direction: "up" | "down", name) => {
         const itemToChange = items.find(item => item.property === name)!
         const newItems = [...move(items, itemToChange, direction)];
-        props.onChange(newItems);
+        setItems(newItems);
     }
 
     const handleChange = (name, changedItem) => {
@@ -22,7 +22,7 @@ function SortItems({ items, ...props }: SortItemsProps) {
         const spliceIndex = items.indexOf(oldItem);
         const newItems = [...items];
         newItems.splice(spliceIndex, 1, changedItem);
-        props.onChange(newItems);
+        setItems(newItems);
     }
 
     return items
