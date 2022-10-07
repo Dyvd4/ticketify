@@ -1,5 +1,5 @@
 import { Checkbox, Input } from "@chakra-ui/react";
-import { TFilterOperations } from "../../";
+import { TFilterOperations } from ".";
 
 type FilterInputProps = {
     onChange(value): void

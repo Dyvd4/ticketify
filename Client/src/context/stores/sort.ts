@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { TSortItem } from "src/components/List";
+import { TSortItem } from "components/List/Sort/SortItems";
 import { deleteUrlParam } from "src/utils/url";
 
 export const sortItemsAtom = atom([] as TSortItem[]);

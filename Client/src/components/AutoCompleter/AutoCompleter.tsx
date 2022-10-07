@@ -1,10 +1,10 @@
 import { FormControl, Input } from '@chakra-ui/react';
 import React, { Component } from 'react';
 import { getMatchingCharLength } from 'src/utils/string';
-import DiscardButton from './Private/DiscardButton';
-import ListItem from './Private/ListItem';
-import LoadingState from './Private/LoadingState';
-import NotFoundState from './Private/NotFoundState';
+import DiscardButton from './DiscardButton';
+import ListItem from './ListItem';
+import LoadingState from './LoadingState';
+import NotFoundState from './NotFoundState';
 
 type InputPropsOmitLiterals = "autoComplete" | "value" | "onChange" | "type" | "disabled" | "size"
 type InputProps = Omit<React.ComponentPropsWithRef<"input">, InputPropsOmitLiterals>

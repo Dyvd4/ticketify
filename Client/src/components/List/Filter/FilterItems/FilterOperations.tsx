@@ -1,6 +1,6 @@
 import { Select } from "@chakra-ui/react";
-import { TFilterOperation, TFilterOperations } from "../../";
-import { typeOperations } from "./data/operations";
+import { TFilterOperation, TFilterOperations } from ".";
+import { typeOperations } from "../data/operations";
 
 type FilterOperationsProps = {
     onChange(value): void

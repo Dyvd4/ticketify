@@ -1,12 +1,11 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { TSortItem } from "src/components/List";
-import { getUrlParam } from "src/utils/url";
-// import * from directionsData??? 🤔
-import { directionsData } from "src/components/List";
+import { sortDirections } from "src/components/List/Sort/data/directions";
 import { sortItemsAtom } from "../stores/sort";
+import { TSortItem } from "components/List/Sort/SortItems";
+import { getUrlParam } from "src/utils/url";
 
-const getDefaultDirection = () => directionsData.sortDirections[0];
+const getDefaultDirection = () => sortDirections[0];
 
 const useSortItemsInit = (defaultSortItems: TSortItem[], onInit?: (sortItems) => void) => {
 

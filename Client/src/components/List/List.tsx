@@ -4,21 +4,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import useFilterItemsInit from "src/context/hooks/useFilterItemsInit";
+import useSearchItemInit from "src/context/hooks/useSearchItemInit";
 import useSortItemsInit from "src/context/hooks/useSortItemsInit";
 import { filterItemsAtom, filterItemsResetAtomWithUrl } from "src/context/stores/filter";
+import { searchItemAtom } from "src/context/stores/search";
 import { sortItemsAtom, sortItemsResetAtomWithUrl } from "src/context/stores/sort";
 import useInfiniteQuery from "src/hooks/useInfiniteQuery";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { getUrlParam, setUrlParam } from "src/utils/url";
-import { TDrawer, TFilterItem, TSortItem } from ".";
+import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
 import Pager from "../Pager/Pager";
+import FilterDrawer from "./Filter/FilterDrawer";
+import FilterItems, { TFilterItem } from "./Filter/FilterItems";
 import Header from "./Header";
 import InfiniteQueryItems from "./InfiniteQueryItems";
-import FilterDrawer from "./Private/Filter/FilterDrawer";
-import FilterItems from "./Private/Filter/FilterItems";
-import SortDrawer from "./Private/Sort/SortDrawer";
-import SortItems from "./Private/Sort/SortItems";
+import SortDrawer from "./Sort/SortDrawer";
+import SortItems, { TSortItem } from "./Sort/SortItems";
 
 type ListProps = {
     fetch: {
@@ -40,6 +42,7 @@ type ListProps = {
     }
     sort: TSortItem[]
     filter: TFilterItem[]
+    search?: TSearchItem
     add?: {
         /** the url path to where you can add the entity */
         route: string
@@ -53,6 +56,7 @@ function List(props: ListProps) {
     // sort, filter, page
     const [filterItems] = useAtom(filterItemsAtom);
     const [sortItems] = useAtom(sortItemsAtom);
+    const [searchItem] = useAtom(searchItemAtom);
     const [, filterItemsReset] = useAtom(filterItemsResetAtomWithUrl);
     const [, sortItemsReset] = useAtom(sortItemsResetAtomWithUrl);
     const [queryParams, setQueryParams] = useState<any>({});
@@ -67,7 +71,6 @@ function List(props: ListProps) {
             }
         });
     });
-
     useSortItemsInit(props.sort, (sortItems) => {
         if (!getUrlParam("orderBy")) return;
         setQueryParams(params => {
@@ -77,6 +80,7 @@ function List(props: ListProps) {
             }
         });
     });
+    useSearchItemInit(props.search);
 
     const query = useInfiniteQuery([queryKey, page, queryParams], {
         route,
@@ -124,8 +128,20 @@ function List(props: ListProps) {
         }
     });
 
+    useEffect(() => {
+        if (!searchItem) return;
+        const oldFilterParams = [...queryParams.filter || []].filter((filterItem: TFilterItem) => {
+            return filterItem.property !== searchItem.property;
+        });
+        setQueryParams({
+            ...queryParams,
+            filter: [...oldFilterParams, searchItem]
+        });
+    }, [searchItem]);
+
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);
+        // todo: check if needed
         query.refetch();
     }
 
@@ -154,8 +170,9 @@ function List(props: ListProps) {
                     title={header.title}
                     count={count}
                     showCount={header?.showCount}
-                    useSort={!!props.sort}
-                    useFilter={!!props.filter}
+                    useSearch={!!searchItem}
+                    useSort={props.sort.length > 0}
+                    useFilter={props.filter.length > 0}
                     add={props.add}
                 />
                 <Divider />

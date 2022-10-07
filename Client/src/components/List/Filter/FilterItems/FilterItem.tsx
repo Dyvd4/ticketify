@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, IconButton, Tooltip } from "@chakra-ui/react";
 import { faBan, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TFilterOperation, TFilterOperations } from "../../";
+import { TFilterOperation, TFilterOperations } from ".";
 import FilterInput from "./FilterInput";
 import FilterOperations from "./FilterOperations";
 

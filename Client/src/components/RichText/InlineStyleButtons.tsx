@@ -1,7 +1,7 @@
 import { faBold, faCode, faItalic, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditorState, RichUtils } from "draft-js";
-import { InlineStyle, InlineStyleButtonMap } from "../Editor";
+import { InlineStyle, InlineStyleButtonMap } from "./Editor";
 import InlineStyleButton from "./InlineStyleButton";
 
 const inlineStyleButtonMap: InlineStyleButtonMap = {

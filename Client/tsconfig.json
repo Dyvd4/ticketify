@@ -2,9 +2,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "src/*": [
-        "./src/*"
-      ],
+      "src/*": ["src/*"],
+      "components/*": ["src/components/*"],
+      "stores/*": ["src/context/stores/*"],
+      "pages/*": ["src/pages/*"],
+      "utils/*": ["src/utils/*"]
     },
     "target": "ESNext",
     "lib": [
@@ -27,8 +29,5 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+  }
 }

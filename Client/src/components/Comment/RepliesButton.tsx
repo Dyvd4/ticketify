@@ -3,7 +3,7 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
 import { getDataUrl } from "src/utils/image";
-import { AvatarType } from "../Comment";
+import { AvatarType } from "./Comment";
 
 type RepliesButtonProps = {
     avatar?: AvatarType

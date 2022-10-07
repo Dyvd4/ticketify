@@ -1,7 +1,7 @@
 import { IconButton, Input, Tooltip } from "@chakra-ui/react";
 import { faBan, faCircleCheck, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TSortDirection } from "../..";
+import { TSortDirection } from ".";
 import SortDirections from "./SortDirections";
 
 export type SortItemProps = {

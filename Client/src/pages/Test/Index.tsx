@@ -22,6 +22,14 @@ function Index(props: IndexProps) {
                     title: "test",
                     showCount: true
                 }}
+                search={{
+                    label: "search for description",
+                    property: "description",
+                    operation: {
+                        value: "contains"
+                    },
+                    type: "string"
+                }}
                 sort={[
                     {
                         property: "isAmazing",

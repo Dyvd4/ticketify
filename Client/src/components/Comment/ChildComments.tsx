@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import Comment, { AvatarType, Interaction } from "../Comment";
+import Comment, { AvatarType, Interaction } from "./Comment";
 
 type ChildCommentsProps = {
     comments: any[]

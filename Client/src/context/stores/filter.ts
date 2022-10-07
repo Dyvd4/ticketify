@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { TFilterItem } from "src/components/List";
+import { TFilterItem } from "components/List/Filter/FilterItems";
 import { deleteUrlParam } from "src/utils/url";
 
 export const filterItemsAtom = atom([] as TFilterItem[]);

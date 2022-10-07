@@ -7,11 +7,11 @@ import { hackyCommentRefreshAtom } from "src/context/atoms";
 import { getDurationAgo } from "src/utils/date";
 import { getDataUrl } from "src/utils/image";
 import Input from "./Input";
-import ActionMenu from "./Private/ActionMenu";
-import ChildComments from "./Private/ChildComments";
-import DeleteDialog from "./Private/DeleteDialog";
-import LikeButton, { LikeButtonVariant } from "./Private/LikeButton";
-import RepliesButton from "./Private/RepliesButton";
+import ActionMenu from "./ActionMenu";
+import ChildComments from "./ChildComments";
+import DeleteDialog from "./DeleteDialog";
+import LikeButton, { LikeButtonVariant } from "./LikeButton";
+import RepliesButton from "./RepliesButton";
 
 export type CommentSize = "normal" | "small"
 export type Interaction = LikeButtonVariant | "heart"

@@ -11,7 +11,6 @@ const Router = express.Router();
 Router.get('/files', async (req, res, next) => {
     try {
         const files = await prisma.file.findMany();
-        // no blobs yet
         res.json({ items: files });
     }
     catch (e) {

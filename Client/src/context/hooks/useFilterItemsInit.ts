@@ -1,12 +1,11 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { TFilterItem } from "src/components/List";
+import { typeOperations } from "src/components/List/Filter/data/operations";
+import { TFilterItem } from "src/components/List/Filter/FilterItems";
 import { getUrlParam } from "src/utils/url";
 import { filterItemsAtom } from "../stores/filter";
-// import * from operationsData??? 🤔
-import { operationsData } from "src/components/List";
 
-const getDefaultOperation = (filterItem: TFilterItem) => operationsData.typeOperations[filterItem.type][0];
+const getDefaultOperation = (filterItem: TFilterItem) => typeOperations[filterItem.type][0];
 
 const useFilterItemsInit = (defaultFilterItems: TFilterItem[], onInit?: (filterItems) => void) => {
 

@@ -1,8 +1,9 @@
-import { Heading, Tooltip } from "@chakra-ui/react";
+import { Heading, Input, Tooltip } from "@chakra-ui/react";
 import { faAdd, faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { filterDrawerAtom, sortDrawerAtom } from "src/context/atoms";
+import { searchItemAtom } from "src/context/stores/search";
 import IconButton from "../Wrapper/IconButton";
 
 type HeaderProps = {
@@ -11,15 +12,20 @@ type HeaderProps = {
     showCount?: boolean
     useSort: boolean
     useFilter: boolean
+    useSearch: boolean
     add?: {
         route: string
     }
 }
 
 function Header(props: HeaderProps) {
-    const { title, count, showCount, useSort, useFilter, add } = props;
+
+    const { title, count, showCount, useSort, useFilter, useSearch, add } = props;
+
     const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
     const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
+    const [searchItem, setSearchItem] = useAtom(searchItemAtom);
+
     return (
         <Heading className="text-center my-8 mb-2 flex justify-between items-center gap-2">
             <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
@@ -32,6 +38,14 @@ function Header(props: HeaderProps) {
                     </span>
                 </>}
             </div>
+            {!!useSearch && <>
+                <Input
+                    placeholder={searchItem!.label}
+                    onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
+                    value={searchItem!.value}
+                    type={"search"}
+                />
+            </>}
             <div className="flex items-center justify-center gap-2">
                 {!!add && <>
                     <Tooltip label="add" placement="top" aria-label="add">

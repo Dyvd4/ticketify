@@ -1,5 +1,5 @@
 import { Editor, EditorProps, RichUtils } from "draft-js";
-import InlineStyleButtons from "./Private/InlineStyleButtons";
+import InlineStyleButtons from "./InlineStyleButtons";
 
 export type InlineStyle = "BOLD" | "ITALIC" | "UNDERLINE" | "CODE"
 

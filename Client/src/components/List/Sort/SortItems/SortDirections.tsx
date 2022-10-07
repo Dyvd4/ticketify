@@ -1,6 +1,6 @@
 import { Select } from "@chakra-ui/react";
-import { TSortDirection } from "../..";
-import { sortDirections } from "./data/directions";
+import { TSortDirection } from ".";
+import { sortDirections } from "../data/directions";
 
 type SortDirectionsProps = {
     direction?: TSortDirection
