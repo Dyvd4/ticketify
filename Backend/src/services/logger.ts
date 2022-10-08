@@ -37,7 +37,6 @@ const errorFormat = winston.format((info, opts) => {
 if (process.env.NODE_ENV !== "production") {
     logger.add(new transports.Console({
         format: winston.format.combine(
-            winston.format.errors({ stack: true }),
             errorFormat(),
             winston.format.prettyPrint()
         )
