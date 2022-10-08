@@ -10,14 +10,11 @@ const getErrorMessage = (error) => {
 export function useErrorHandler() {
     const toast = useToast();
     window.onerror = e => {
-        handleError(String(e));
-    }
-    window.onunhandledrejection = (e: PromiseRejectionEvent) => {
-        handleError(String(e.reason));
+        handleError(String(e), { postError: true });
     }
     window.addEventListener("CustomError", e => {
-        const { error } = e.detail;
-        request().post("Error", { error });
+        const { error, options } = e.detail;
+        if (options.postError) request().post("Error", { error });
         if (error instanceof AxiosError && error.response?.status !== 500) return
         toast({
             title: "An unkown error occurred",
