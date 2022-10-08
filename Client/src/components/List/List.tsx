@@ -180,14 +180,12 @@ function List(props: ListProps) {
             <SortDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                 inputs={<SortItems />}
-                fetch={{ queryKey, route }}
                 onApply={() => handleDrawerApply("orderBy")}
                 onReset={() => handleDrawerReset("orderBy")}
             />
             <FilterDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                 inputs={<FilterItems />}
-                fetch={{ queryKey, route }}
                 onApply={() => handleDrawerApply("filter")}
                 onReset={() => handleDrawerReset("filter")}
             />

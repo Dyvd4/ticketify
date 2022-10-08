@@ -4,16 +4,12 @@ import { filterDrawerAtom } from "src/context/atoms";
 
 type FilterDrawerProps = {
     inputs: React.ReactNode
-    fetch: {
-        queryKey: string
-        route: string
-    }
     onReset(...args)
     onApply(...args)
     onDrawerBodyRefChange(drawerRef: HTMLDivElement | null)
 }
 
-function FilterDrawer({ inputs, fetch: { queryKey, route }, ...props }: FilterDrawerProps) {
+function FilterDrawer({ inputs, ...props }: FilterDrawerProps) {
     const [drawerActive, setDrawer] = useAtom(filterDrawerAtom);
 
     const handleOnClose = () => {

@@ -48,7 +48,10 @@ function Header(props: HeaderProps) {
             </>}
             <div className="flex items-center justify-center gap-2">
                 {!!add && <>
-                    <Tooltip label="add" placement="top" aria-label="add">
+                    <Tooltip
+                        label="add"
+                        placement="top"
+                        aria-label="add">
                         <span className="flex justify-center items-center">
                             <IconButton
                                 size={"sm"}
@@ -60,7 +63,11 @@ function Header(props: HeaderProps) {
                     </Tooltip>
                 </>}
                 {!!useFilter && <>
-                    <Tooltip label="sort" placement="top" aria-label="sort">
+                    <Tooltip
+                        data-testid="list-sort-button"
+                        label="sort"
+                        placement="top"
+                        aria-label="sort">
                         <span className="flex justify-center items-center">
                             <IconButton
                                 size={"sm"}
@@ -72,7 +79,11 @@ function Header(props: HeaderProps) {
                     </Tooltip>
                 </>}
                 {!!useSort && <>
-                    <Tooltip label="filter" placement="top" aria-label="filter">
+                    <Tooltip
+                        data-testid="list-filter-button"
+                        label="filter"
+                        placement="top"
+                        aria-label="filter">
                         <span className="flex justify-center items-center">
                             <IconButton
                                 size={"sm"}

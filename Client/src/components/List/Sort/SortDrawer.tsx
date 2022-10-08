@@ -4,16 +4,12 @@ import { sortDrawerAtom } from "src/context/atoms";
 
 type SortDrawerProps = {
     inputs: React.ReactNode
-    fetch: {
-        queryKey: string
-        route: string
-    }
     onReset(...args)
     onApply(...args)
     onDrawerBodyRefChange(drawerRef: HTMLDivElement | null)
 }
 
-function SortDrawer({ inputs, fetch: { queryKey, route }, ...props }: SortDrawerProps) {
+function SortDrawer({ inputs, ...props }: SortDrawerProps) {
     const [drawerActive, setDrawer] = useAtom(sortDrawerAtom);
 
     const handleOnClose = () => {
