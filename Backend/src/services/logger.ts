@@ -27,9 +27,20 @@ const logger = createLogger({
     exitOnError: false
 });
 
+const errorFormat = winston.format((info, opts) => {
+    if ("stack" in info) {
+        return info.stack;
+    }
+    return info;
+});
+
 if (process.env.NODE_ENV !== "production") {
     logger.add(new transports.Console({
-        format: winston.format.simple()
+        format: winston.format.combine(
+            winston.format.errors({ stack: true }),
+            errorFormat(),
+            winston.format.prettyPrint()
+        )
     }));
 }
 
