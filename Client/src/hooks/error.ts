@@ -9,8 +9,11 @@ const getErrorMessage = (error) => {
 
 export function useErrorHandler() {
     const toast = useToast();
-    window.onerror = e => {
-        handleError(String(e), { postError: true });
+    window.onerror = (e, source, lineNo, colNo, error) => {
+        handleError({
+            message: error?.message,
+            stack: error?.stack
+        }, { postError: true });
     }
     window.addEventListener("CustomError", e => {
         const { error, options } = e.detail;

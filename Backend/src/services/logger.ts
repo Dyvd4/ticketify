@@ -1,6 +1,7 @@
-import winston, { createLogger, format, transports } from "winston";
+import { format } from "date-fns";
 import dotenv from "dotenv";
 import path from "path";
+import winston, { createLogger, transports } from "winston";
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const logPath = path.join(__dirname, "../../", process.env.logPath!);
@@ -27,18 +28,18 @@ const logger = createLogger({
     exitOnError: false
 });
 
-const errorFormat = winston.format((info, opts) => {
-    if ("stack" in info) {
-        return info.stack;
-    }
-    return info;
-});
+const myFormat = winston.format.printf(({ level, message, error, timestamp }) => {
+    timestamp = `[${format(new Date(timestamp), "HH:mm:ss")}]`;
+    if (error) return `${timestamp} ${level}: ${error.message}\n stack: ${error.stack}`
+    return `${timestamp} ${level}: ${message}`
+})
 
 if (process.env.NODE_ENV !== "production") {
     logger.add(new transports.Console({
         format: winston.format.combine(
-            errorFormat(),
-            winston.format.prettyPrint()
+            winston.format.colorize(),
+            winston.format.timestamp(),
+            myFormat
         )
     }));
 }
