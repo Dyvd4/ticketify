@@ -2,7 +2,7 @@ import express from 'express';
 import CommentSchema from "../schemas/Comment";
 import commentParams from "../schemas/params/Comment";
 import { prisma } from "../server";
-import { getInteractions, userHasInteracted } from '../utils/comment';
+import { getInteractions, prismaIncludeParams, userHasInteracted } from '../utils/comment';
 import { mapFile } from '../utils/file';
 
 const Router = express.Router();
@@ -15,36 +15,73 @@ Router.get('/comments', async (req, res, next) => {
             where: {
                 parentId: null
             },
-            include: {
+            include: prismaIncludeParams as any
+        });
+        const orderBy: any = JSON.parse((req.query.orderBy || "{}") as string);
+        (comments as any[]) = (comments as any[]).map(comment => {
+            return {
+                ...comment,
                 author: {
-                    include: {
-                        avatar: {
-                            include: {
-                                file: true
-                            }
-                        }
-                    }
+                    ...comment.author,
+                    avatar: comment.author.avatar?.file
+                        ? mapFile(comment.author.avatar.file, "base64")
+                        : null
                 },
-                childs: {
-                    include: {
+                childs: comment.childs.map(child => {
+                    return {
+                        ...child,
                         author: {
-                            include: {
-                                avatar: {
-                                    include: {
-                                        file: true
-                                    }
-                                }
-                            }
+                            ...child.author,
+                            avatar: child.author.avatar?.file
+                                ? mapFile(child.author.avatar.file, "base64")
+                                : null
                         },
-                        interactions: true,
-                        childs: true
-                    },
-                    orderBy: {
-                        createdAt: "asc"
+                        ...getInteractions(child.interactions),
+                        liked: userHasInteracted(child.interactions, "like", UserId!),
+                        disliked: userHasInteracted(child.interactions, "dislike", UserId!),
+                        hearted: userHasInteracted(child.interactions, "heart", UserId!)
                     }
-                },
-                interactions: true
+                }),
+                ...getInteractions(comment.interactions),
+                liked: userHasInteracted(comment.interactions, "like", UserId!),
+                disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
+                hearted: userHasInteracted(comment.interactions, "heart", UserId!)
             }
+        }).sort((a, b) => {
+            if (orderBy.property === "newestFirst") {
+                // @ts-ignore
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+            if (orderBy.property === "mostLikes") {
+                const aLikesLength = a.interactions.filter(interaction => interaction.type === "like").length;
+                const bLikesLength = b.interactions.filter(interaction => interaction.type === "like").length;
+                return bLikesLength - aLikesLength;
+            }
+            if (orderBy.property === "mostHearts") {
+                const aHeartsLength = a.interactions.filter(interaction => interaction.type === "heart").length;
+                const bHeartsLength = b.interactions.filter(interaction => interaction.type === "heart").length;
+                return bHeartsLength - aHeartsLength;
+            }
+            return 0;
+        })
+        res.json(comments);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.get('/comments/:ticketId', async (req, res, next) => {
+    const { UserId } = req;
+    const ticketId = parseInt(req.params.ticketId);
+
+    try {
+        let comments = await prisma.comment.findMany({
+            where: {
+                parentId: null,
+                ticketId
+            },
+            include: prismaIncludeParams as any
         });
         const orderBy: any = JSON.parse((req.query.orderBy || "{}") as string);
         (comments as any[]) = (comments as any[]).map(comment => {
@@ -104,6 +141,21 @@ Router.get('/comments', async (req, res, next) => {
 Router.get("/comments/count", async (req, res, next) => {
     try {
         const count = await prisma.comment.count();
+        res.json(count);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.get("/comments/count/:ticketId", async (req, res, next) => {
+    const ticketId = parseInt(req.params.ticketId);
+    try {
+        const count = await prisma.comment.count({
+            where: {
+                ticketId
+            }
+        });
         res.json(count);
     }
     catch (e) {

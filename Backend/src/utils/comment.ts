@@ -18,3 +18,34 @@ export function getInteractions(interactions: CommentInteraction[], type?: Comme
 export const userHasInteracted = (interactions: CommentInteraction[], type: CommentInteractionType, userId: string) => {
     return !!interactions.find(interaction => interaction.type === type && interaction.createdFromId === userId);
 }
+
+export const prismaIncludeParams = {
+    author: {
+        include: {
+            avatar: {
+                include: {
+                    file: true
+                }
+            }
+        }
+    },
+    childs: {
+        include: {
+            author: {
+                include: {
+                    avatar: {
+                        include: {
+                            file: true
+                        }
+                    }
+                }
+            },
+            interactions: true,
+            childs: true
+        },
+        orderBy: {
+            createdAt: "asc"
+        }
+    },
+    interactions: true
+}

@@ -51,14 +51,14 @@ function CommentsSection(props: CommentsSectionProps) {
         isLoading,
         isError,
         data: comments = []
-    } = useQuery(["comments", sortParam], () => {
-        return fetchEntity({ route: `comments/?orderBy=${JSON.stringify(sortParam)}` });
+    } = useQuery(["comments", sortParam, ticket.id], () => {
+        return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${JSON.stringify(sortParam)}` });
     }, {
         refetchOnWindowFocus: false
     });
 
     const { isError: countError, data: count } = useQuery(["comments/count"], () => {
-        return fetchEntity({ route: `comments/count` });
+        return fetchEntity({ route: `comments/count/${ticket.id}` });
     }, {
         refetchOnWindowFocus: false
     });
@@ -81,7 +81,7 @@ function CommentsSection(props: CommentsSectionProps) {
         addReplyMutation,
         editCommentMutation,
         deleteCommentMutation
-    } = useCommentMutations();
+    } = useCommentMutations(ticket.id);
 
     // event handler
     // -------------

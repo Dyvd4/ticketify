@@ -60,7 +60,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
         const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
             .map(image => mapFile(image, "base64"));
         // 🥵
-        (ticket!.responsibleUser!.avatar as any) = mapFile(ticket!.responsibleUser!.avatar!.file, "base64");
+        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = mapFile(ticket.responsibleUser.avatar.file, "base64");
         (ticket as any).attachments = attachments;
         (ticket as any).files = files;
         (ticket as any).images = images;

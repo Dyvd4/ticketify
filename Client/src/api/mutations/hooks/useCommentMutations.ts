@@ -6,7 +6,7 @@ import { commentSortParamAtom, hackyCommentRefreshAtom } from "src/context/atoms
 import { useCurrentUser } from "src/hooks/user";
 import { addComment, deleteComment, getComment, replaceComment } from "src/utils/comment";
 
-const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "") => {
+const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue = "") => {
 
     const toast = useToast();
     const queryClient = useQueryClient();
@@ -14,9 +14,9 @@ const useCommentMutations = (defaultReplyValue = "", defaultEditValue = "") => {
     const [sortParam] = useAtom(commentSortParamAtom);
     const { 1: setCommentRefreshAtom } = useAtom(hackyCommentRefreshAtom);
 
-    const cancelCommentQuery = () => queryClient.cancelQueries(["comments", sortParam]);
-    const getComments = () => queryClient.getQueryData(["comments", sortParam]) as any[]
-    const setCommentQuery = (comments: any[]) => queryClient.setQueryData(["comments", sortParam], comments);
+    const cancelCommentQuery = () => queryClient.cancelQueries(["comments", sortParam, ticketId]);
+    const getComments = () => queryClient.getQueryData(["comments", sortParam, ticketId]) as any[]
+    const setCommentQuery = (comments: any[]) => queryClient.setQueryData(["comments", sortParam, ticketId], comments);
 
     const addReplyMutation = useMutation(addEntity, {
         onMutate: async ({ payload: comment }) => {
