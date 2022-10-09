@@ -19,7 +19,7 @@ function Index(props: IndexProps) {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/Ticket" isCurrentPage>
+          <BreadcrumbLink href="#" isCurrentPage>
             Tickets
           </BreadcrumbLink>
         </BreadcrumbItem>

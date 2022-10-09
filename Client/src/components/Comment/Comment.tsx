@@ -1,15 +1,17 @@
 import { Avatar, Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
 import { isAfter } from "date-fns/esm";
 import { useAtom } from "jotai";
-import { ComponentPropsWithRef, useEffect, useRef, useState } from "react";
+import { ComponentPropsWithRef, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
 import { hackyCommentRefreshAtom } from "src/context/atoms";
+import useHasOverflow from "src/hooks/useHasOverflow";
 import { getDurationAgo } from "src/utils/date";
 import { getDataUrl } from "src/utils/image";
-import Input from "./Input";
+import ShowMore from "../ShowMore";
 import ActionMenu from "./ActionMenu";
 import ChildComments from "./ChildComments";
 import DeleteDialog from "./DeleteDialog";
+import Input from "./Input";
 import LikeButton, { LikeButtonVariant } from "./LikeButton";
 import RepliesButton from "./RepliesButton";
 
@@ -94,16 +96,12 @@ function Comment(props: CommentProps) {
 
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
     const { isOpen: deleteDialogOpen, onOpen: onDeleteDialogOpen, onClose: onDeleteDialogClose } = useDisclosure();
-    const [contentHasOverflow, setContentHasOverflow] = useState(false);
     const contentRef = useRef<HTMLDivElement | null>(null);
+    const contentHasOverflow = useHasOverflow(contentRef);
     const [replyValue, setReplyValue] = useState("");
     const [editValue, setEditValue] = useState(comment.content);
 
     useAtom(hackyCommentRefreshAtom);
-
-    useEffect(() => {
-        setContentHasOverflow(contentRef.current!.clientHeight < contentRef.current!.scrollHeight);
-    }, []);
 
     // event handler
     // -------------
@@ -200,13 +198,10 @@ function Comment(props: CommentProps) {
                             {content}
                         </Box>
                         {contentHasOverflow && <>
-                            <Box
-                                className="pl-1 my-1 text-secondary hover:underline cursor-pointer text-sm"
-                                onClick={() => setNoOfContentLines(showMore ? 100000000000 : defaultNoOfContentLines)}>
-                                {showMore
-                                    ? "Read more"
-                                    : "Show less"}
-                            </Box>
+                            <ShowMore
+                                onClick={() => setNoOfContentLines(showMore ? 100000000000 : defaultNoOfContentLines)}
+                                showMore={showMore}
+                            />
                         </>}
                         <Flex
                             alignItems={"center"}

@@ -137,7 +137,6 @@ Router.get('/comments/:ticketId', async (req, res, next) => {
     }
 });
 
-
 Router.get("/comments/count", async (req, res, next) => {
     try {
         const count = await prisma.comment.count();
