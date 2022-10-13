@@ -20,6 +20,7 @@ import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import TicketFormIndex from "./pages/Ticket/Form/Index";
 import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
+import LogIndex from "./pages/Log/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 
@@ -49,6 +50,7 @@ root.render(
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />
                   <Route path="Form/:params" element={<TicketFormIndex />} />
                 </Route>
+                <Route path="Log" element={<LogIndex />} />
               </Route>
               <Route path="*" element={<NotFound />} />
               <Route path="/NotAuthorized" element={<NotAuthorized />} />

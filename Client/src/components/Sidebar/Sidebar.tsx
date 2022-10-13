@@ -32,6 +32,10 @@ function Sidebar() {
                         <Link href="Test">
                             <ListItem active={path === "/Test"}>Test</ListItem>
                         </Link>
+                        <Divider />
+                        <Link href="Log">
+                            <ListItem active={path === "/Log"}>Logs</ListItem>
+                        </Link>
                     </UnorderedList>
                 </DrawerBody>
             </DrawerContent>
