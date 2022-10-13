@@ -1,6 +1,4 @@
-import { Alert, AlertIcon, Divider, List as ChakraList, ListItem, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
-import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Alert, AlertIcon, Divider, List as ChakraList, Text } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import useFilterItemsInit from "src/context/hooks/useFilterItemsInit";
@@ -30,12 +28,7 @@ type ListProps = {
         route: string
         onResult?(listItems)
     }
-    listItemRender(listItem): {
-        /** the content to display */
-        content: React.ReactNode,
-        /** this should be menuItems from chakra */
-        actions?: React.ReactNode
-    }
+    listItemRender(listItem): React.ReactElement
     header?: {
         title: string
         showCount?: boolean
@@ -205,31 +198,7 @@ function List(props: ListProps) {
                             </Text>
                         </Alert>
                     }>
-                    {listItem => (
-                        <ListItem className="rounded-lg p-4 grid grid-cols-12 bg-gray-400 dark:bg-gray-700">
-                            <div className="col-span-10">
-                                {listItemRender(listItem).content}
-                            </div>
-                            {!!listItemRender(listItem).actions && <>
-                                <div className="w-fit justify-self-end col-span-2">
-                                    <Menu>
-                                        <MenuButton
-                                            aria-label="actions"
-                                            as="button"
-                                            className={`rounded-full p-2 w-6 h-6
-                                                      text-black dark:text-white
-                                                        flex justify-center items-center
-                                                        bg-primary`}>
-                                            <FontAwesomeIcon icon={faEllipsisVertical} size="xs" />
-                                        </MenuButton>
-                                        <MenuList>
-                                            {listItemRender(listItem).actions}
-                                        </MenuList>
-                                    </Menu>
-                                </div>
-                            </>}
-                        </ListItem>
-                    )}
+                    {listItem => listItemRender(listItem)}
                 </InfiniteQueryItems>
             </ChakraList>
             {!!pagingInfo && <>

@@ -2,6 +2,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container } from "@chakra-u
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import List from "src/components/List/List";
+import ListItem from "src/components/List/ListItem";
 import TicketListItemActions from "./TicketListItemActions";
 import TicketListItemContent from "./TicketListItemContent";
 
@@ -29,13 +30,12 @@ function Index(props: IndexProps) {
           route: "tickets",
           queryKey: "tickets"
         }}
-        listItemRender={(item) => {
-          return {
-            content: <TicketListItemContent item={item} />,
-            actions: <TicketListItemActions item={item} />
-          }
-        }
-        }
+        listItemRender={(item) => (
+          <ListItem
+            content={<TicketListItemContent item={item} />}
+            actions={<TicketListItemActions item={item} />}
+          />
+        )}
         header={{
           title: "pending tickets",
           showCount: true

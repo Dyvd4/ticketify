@@ -1,5 +1,6 @@
 import { Container } from "@chakra-ui/react";
 import List from "src/components/List/List";
+import ListItem from "src/components/List/ListItem";
 import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
@@ -12,12 +13,7 @@ function Index(props: IndexProps) {
                     route: "test",
                     queryKey: "test"
                 }}
-                listItemRender={(item) => {
-                    return {
-                        content: <ListItemContent item={item} />
-                    }
-                }
-                }
+                listItemRender={(item) => <ListItem content={<ListItemContent item={item} />} />}
                 header={{
                     title: "test",
                     showCount: true
