@@ -10,7 +10,7 @@ export const LogLevelIconMap: LogLevelMap = {
     "info": "circle-info"
 }
 
-export const LogLevelColorMap: LogLevelMap = {
-    "error": "red-500",
-    "warn": "yellow-600",
+export const LogLevelColorSchemeMap: LogLevelMap = {
+    "error": "red",
+    "warn": "orange.300",
 }

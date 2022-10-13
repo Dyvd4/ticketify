@@ -1,8 +1,8 @@
-import { format } from "date-fns";
+import { format, intlFormat } from "date-fns";
 import dotenv from "dotenv";
 import path from "path";
 import winston, { createLogger, Logger, transports } from "winston";
-import { LogLevelColorMap, LogLevelIconMap } from "../maps/log";
+import { LogLevelColorSchemeMap, LogLevelIconMap } from "../maps/log";
 import { prisma } from "../server";
 import Transport from "winston-transport";
 
@@ -23,9 +23,12 @@ class DbTransport extends Transport {
         });
         await prisma.log.create({
             data: {
-                color: LogLevelColorMap[info.level],
+                level: info.level,
+                message: info.message,
+                errorMessage: info?.error?.message,
+                errorStack: info?.error?.stack,
                 icon: LogLevelIconMap[info.level],
-                ...info
+                colorScheme: LogLevelColorSchemeMap[info.level]
             }
         });
         next();

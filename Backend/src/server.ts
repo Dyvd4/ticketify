@@ -21,6 +21,7 @@ import TicketStatusRouter from "./routes/TicketStatus";
 import UserRouter from "./routes/User";
 import backgroundServices from "./services/background/index";
 import logger from "./services/logger";
+import LogRouter from "./routes/Log";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ server.use("/api", TicketStatusRouter);
 server.use("/api", FileRouter);
 server.use("/api", CommentInteractionRouter);
 server.use("/api", TicketActivityRouter);
+server.use("/api", LogRouter);
 
 server.use(errorHandler);
 

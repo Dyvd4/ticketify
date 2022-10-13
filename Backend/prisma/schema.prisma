@@ -173,6 +173,6 @@ model Log {
   message      String    @db.NVarChar(255)
   errorMessage String?   @db.NVarChar(max)
   errorStack   String?   @db.NVarChar(max)
-  color        String?   @db.NVarChar(50)
+  colorScheme  String?   @db.NVarChar(50)
   icon         String?   @db.NVarChar(50)
 }
