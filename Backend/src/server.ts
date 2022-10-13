@@ -50,7 +50,7 @@ server.use("/api", TicketActivityRouter);
 server.use(errorHandler);
 
 server.listen(PORT, () => {
-    logger.info(`Server listening on port: ${PORT}`);
+    logger.info(`Server listening on port: ${PORT}`, { private: true });
 });
 
 const prisma = new PrismaClient();
