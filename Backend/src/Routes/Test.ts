@@ -1,24 +1,23 @@
 import express from "express"
 import { prisma } from "../server";
-import { mapFilterQuery } from "../utils/filter";
-import { mapOrderByQuery } from "../utils/orderBy";
-import InfiniteLoadingResult, { prismaParams } from "../utils/List/InfiniteLoadingResult";
+import { prismaFilterArgs } from "../utils/filter";
+import { prismaOrderByArgs } from "../utils/orderBy";
+import InfiniteLoadingResult, { prismaArgs } from "../utils/List/InfiniteLoadingResult";
 const Router = express.Router();
 
 Router.get("/test", async (req, res, next) => {
     try {
-
-        const params = prismaParams(req.query);
+        const infiniteLoadingArgs = prismaArgs(req.query);
         const testItems = await prisma.test.findMany({
-            ...params,
-            where: mapFilterQuery(req.query),
-            orderBy: mapOrderByQuery(req.query)
+            ...infiniteLoadingArgs,
+            where: prismaFilterArgs(req.query),
+            orderBy: prismaOrderByArgs(req.query)
         });
         const testItemsCount = await prisma.test.count({
-            where: mapFilterQuery(req.query),
-            orderBy: mapOrderByQuery(req.query)
+            where: prismaFilterArgs(req.query),
+            orderBy: prismaOrderByArgs(req.query)
         });
-        const pagerResult = new InfiniteLoadingResult(testItems, testItemsCount, params);
+        const pagerResult = new InfiniteLoadingResult(testItems, testItemsCount, infiniteLoadingArgs);
 
         res.json(pagerResult);
     }
@@ -30,8 +29,8 @@ Router.get("/test", async (req, res, next) => {
 Router.get("/test/woPager", async (req, res, next) => {
     try {
         const testItems = await prisma.test.findMany({
-            where: mapFilterQuery(req.query),
-            orderBy: mapOrderByQuery(req.query)
+            where: prismaFilterArgs(req.query),
+            orderBy: prismaOrderByArgs(req.query)
         });
         res.json(testItems);
     }

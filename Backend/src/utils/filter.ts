@@ -14,7 +14,7 @@ export type FilterOperation = {
 }
 export type FilterQueryParams = Array<FilterItemProps>
 
-export const mapFilterQuery = (query) => {
+export const prismaFilterArgs = (query) => {
     if (!query.filter) return {};
     const filter: FilterQueryParams = JSON.parse((query.filter) as string);
     const mappedFilter = filter

@@ -35,25 +35,32 @@ function Index(props: IndexProps) {
         }}
         sort={[
           {
-            property: "title"
+            property: "createdAt"
           },
           {
-            property: "priority.name",
-            label: "priority"
+            property: "level",
           },
           {
-            property: "dueDate"
+            property: "message"
           },
         ]}
         filter={[
           {
-            property: "title",
-            label: "Title",
+            property: "message",
             type: "string"
           },
           {
-            property: "priority.name",
-            label: "priority",
+            property: "errorMessage",
+            label: "error message",
+            type: "string"
+          },
+          {
+            property: "errorStack",
+            label: "error stack",
+            type: "string"
+          },
+          {
+            property: "level",
             type: "string"
           }
         ]}

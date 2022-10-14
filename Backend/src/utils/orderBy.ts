@@ -8,7 +8,7 @@ export type OrderByQueryParam = {
 
 export type OrderByQueryParams = Array<OrderByQueryParam>
 
-export const mapOrderByQuery = (query) => {
+export const prismaOrderByArgs = (query) => {
     const mappedOrderBy = (orderBy) => {
         const orderByObj = {};
         Object.set(orderByObj, orderBy.property, orderBy.direction.value);

@@ -3,7 +3,7 @@ import { ListResult } from "./Result";
 
 const ITEMS_PER_LOAD = 10;
 
-export const prismaParams = (query): ListResultPrismaParams => {
+export const prismaArgs = (query): ListResultPrismaParams => {
     return {
         skip: parseInt(query.skip) || 0,
         take: ITEMS_PER_LOAD

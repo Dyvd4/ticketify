@@ -4,8 +4,8 @@ import ticketParams from '../schemas/params/Ticket';
 import TicketSchema from "../schemas/Ticket";
 import { prisma } from "../server";
 import { fileUpload, validateFiles, isImageFile, mapFile } from '../utils/file';
-import { mapFilterQuery } from '../utils/filter';
-import { mapOrderByQuery } from '../utils/orderBy';
+import { prismaFilterArgs } from '../utils/filter';
+import { prismaOrderByArgs } from '../utils/orderBy';
 import PagerResult, { prismaParams } from '../utils/List/PagerResult';
 
 const Router = express.Router();
@@ -18,8 +18,8 @@ Router.get('/tickets', async (req, res, next) => {
             include: {
                 priority: true
             },
-            orderBy: mapOrderByQuery(req.query),
-            where: mapFilterQuery(req.query)
+            orderBy: prismaOrderByArgs(req.query),
+            where: prismaFilterArgs(req.query)
         });
         const ticketsCount = await prisma.ticket.count();
         res.json(new PagerResult(tickets, ticketsCount, params));
