@@ -10,14 +10,14 @@ function Index(props: IndexProps) {
   return (
     <Container>
       <Breadcrumb
-        className="text-secondary-hover font-bold mt-4"
+        className="font-bold mt-4"
         separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/" isCurrentPage>
+        <BreadcrumbItem className="text-secondary-hover">
+          <BreadcrumbLink href="/">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbItem>
+        <BreadcrumbItem className="text-secondary-hover">
           <BreadcrumbLink href="#" isCurrentPage>
             Logs
           </BreadcrumbLink>
