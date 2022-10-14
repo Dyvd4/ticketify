@@ -1,4 +1,4 @@
-import { Box, ListItem as ChakraListItem, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import { Box, Button, ListItem as ChakraListItem, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
@@ -14,8 +14,11 @@ function ListItem({ content, actions, className, ...props }: ListItemProps) {
     return (
         <ChakraListItem
             {...props}
-            className={`rounded-lg p-4 grid grid-cols-12
-                     bg-gray-400 dark:bg-gray-700 text-white ${className}`}>
+            _light={{
+                backgroundColor: "gray.200"
+            }}
+            bgColor={"gray.700"}
+            className={`rounded-lg p-4 grid grid-cols-12 ${className}`}>
             <Box className={`${!!actions ? "col-span-10" : "col-span-12"}`}>
                 {content}
             </Box>
@@ -24,12 +27,11 @@ function ListItem({ content, actions, className, ...props }: ListItemProps) {
                     <Menu>
                         <MenuButton
                             aria-label="actions"
-                            as="button"
-                            className={`rounded-full p-2 w-6 h-6
-                                      text-black dark:text-white
-                                        flex justify-center items-center
-                                        bg-primary`}>
-                            <FontAwesomeIcon icon={faEllipsisVertical} size="xs" />
+                            as={Button}
+                            colorScheme="cyan"
+                            className={`rounded-full p-2 h-6
+                                        flex justify-center items-center`}>
+                            <FontAwesomeIcon icon={faEllipsisVertical} size="1x" />
                         </MenuButton>
                         <MenuList>
                             {actions}

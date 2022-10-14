@@ -49,7 +49,7 @@ function TicketDetailsIndex() {
     return (
         <Container maxW="container.lg">
             <Breadcrumb
-                className="text-gray-700 dark:text-gray-300 font-bold my-4"
+                className="font-bold my-4 text-secondary-hover"
                 separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
                 <BreadcrumbItem>
                     <BreadcrumbLink href="/">

@@ -1,4 +1,4 @@
-import { Avatar, Flex } from "@chakra-ui/react";
+import { Avatar, Box, Flex } from "@chakra-ui/react";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
@@ -17,9 +17,9 @@ function RepliesButton(props: RepliesButtonProps) {
     const { avatar, repliesCount, active, setActive, ...restProps } = props;
 
     return (
-        <div className={`cursor-pointer uppercase select-none 
-                         font-bold text-sm
-                         text-primary`}>
+        <Box
+            className={`cursor-pointer uppercase select-none text-sky-600 hover:text-sky-500
+                         font-bold text-sm`}>
             <Flex
                 onClick={() => setActive(!active)}
                 gap={1}
@@ -41,7 +41,7 @@ function RepliesButton(props: RepliesButtonProps) {
                     replies
                 </div>
             </Flex>
-        </div>
+        </Box>
     );
 }
 

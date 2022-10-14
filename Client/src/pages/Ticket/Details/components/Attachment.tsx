@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import BgBox from "src/components/BgBox";
 
 type AttachmentProps = {
     attachment: any
@@ -6,9 +6,11 @@ type AttachmentProps = {
 
 function Attachment({ attachment }: AttachmentProps) {
     return (
-        <Flex className="rounded-md p-2 bg-white dark:bg-gray-500 flex-1">
+        <BgBox
+            variant="child"
+            className="rounded-md flex flex-1">
             {attachment.originalFileName}
-        </Flex>
+        </BgBox>
     );
 }
 

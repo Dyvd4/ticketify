@@ -1,6 +1,7 @@
-import { Flex, Heading, Tag, Text } from "@chakra-ui/react";
+import { Flex, Heading, Tag } from "@chakra-ui/react";
 import format from "date-fns/format";
 import { sanitize } from "dompurify";
+import BgBox from "src/components/BgBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
 
 type HeadDataProps = {
@@ -25,7 +26,7 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
             <Flex
                 gap={2}
                 direction="column"
-                className="my-2 text-gray-700 dark:text-gray-300">
+                className="my-2 text-secondary">
                 <Flex justifyContent="space-between">
                     <div>priority</div>
                     <Tag
@@ -54,8 +55,8 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
                 </Flex>
             </Flex>
             <Flex direction="column" className="my-2">
-                <Text
-                    className="bg-white dark:bg-gray-800 p-2 rounded-md"
+                <BgBox
+                    variant="child"
                     dangerouslySetInnerHTML={{ __html: sanitize(description === CONTENTSTATE.EMPTY ? "No description" : description) }} />
             </Flex>
         </>

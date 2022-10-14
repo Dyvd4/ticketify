@@ -37,14 +37,14 @@ function LogListItemContent({ item }: { item }) {
                         noOfLines={noOfContentLines}>
                         <Box>
                             <b>Message: </b>
-                            <span className="text-gray-300">{message}</span>
+                            <span className="text-secondary">{message}</span>
                         </Box>
                         {errorMessage && <>
                             <Box>
                                 <div className="mt-1 mb-2">
                                     <b>Error message: </b>
                                 </div>
-                                <span className="text-gray-300">{errorMessage}</span>
+                                <span className="text-secondary">{errorMessage}</span>
                             </Box>
                         </>}
                         {errorStack && <>
@@ -54,7 +54,7 @@ function LogListItemContent({ item }: { item }) {
                                         Error stack:
                                     </b>
                                 </div>
-                                <div className="text-gray-300">{errorStack}</div>
+                                <div className="text-secondary">{errorStack}</div>
                             </Box>
                         </>}
                     </Box>

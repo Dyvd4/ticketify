@@ -54,6 +54,7 @@ function Header(props: HeaderProps) {
                         aria-label="add">
                         <span className="flex justify-center items-center">
                             <IconButton
+                                colorScheme={"cyan"}
                                 size={"sm"}
                                 onClick={() => window.location.href = add.route}
                                 aria-label="add"
@@ -70,6 +71,7 @@ function Header(props: HeaderProps) {
                         aria-label="sort">
                         <span className="flex justify-center items-center">
                             <IconButton
+                                colorScheme={"cyan"}
                                 size={"sm"}
                                 onClick={() => setSortDrawer(true)}
                                 aria-label="sort"
@@ -86,6 +88,7 @@ function Header(props: HeaderProps) {
                         aria-label="filter">
                         <span className="flex justify-center items-center">
                             <IconButton
+                                colorScheme={"cyan"}
                                 size={"sm"}
                                 onClick={() => setFilterDrawer(true)}
                                 aria-label="filter"

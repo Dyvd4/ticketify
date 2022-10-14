@@ -16,7 +16,7 @@ function Navbar(props: NavbarProps) {
     const [sidebarActive, setSidebarActive] = useAtom(sidebarAtom);
     if (!currentUser) return null;
     return (
-        <nav className="w-full bg-indigo-500 dark:bg-gray-700 flex justify-between p-2">
+        <nav className="w-full border-b-2 flex justify-between p-2">
             <IconButton circle
                 onClick={() => setSidebarActive(!sidebarActive)}
                 size="sm"

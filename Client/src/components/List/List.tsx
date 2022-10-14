@@ -182,7 +182,7 @@ function List(props: ListProps) {
                 onApply={() => handleDrawerApply("filter")}
                 onReset={() => handleDrawerReset("filter")}
             />
-            <ChakraList className="p-4 flex flex-col gap-4 dark:text-gray-400">
+            <ChakraList className="p-4 flex flex-col gap-4">
                 <InfiniteQueryItems
                     query={query}
                     loadingDisplay={

@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Tooltip } from "@chakra-ui/react";
 import { faCheck, faEdit, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
+import BgBox from "./BgBox";
 import EditView, { EditViewProps } from "./EditView";
 import IconButton from "./Wrapper/IconButton";
 
@@ -61,13 +62,13 @@ function EditBlock(props: EditBlockProps) {
             <EditView
                 edit={edit}
                 alternateView={<>
-                    <Box className="bg-box rounded-md p-4">
+                    <BgBox>
                         {alternateView}
-                    </Box>
+                    </BgBox>
                 </>}>
-                <Box className="bg-box rounded-md p-4">
+                <BgBox>
                     {children}
-                </Box>
+                </BgBox>
             </EditView>
         </Box>
     );

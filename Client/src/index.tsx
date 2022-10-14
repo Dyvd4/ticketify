@@ -1,4 +1,4 @@
-import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import "draft-js/dist/Draft.css";
 import { Provider as AtomProvider } from "jotai";
 import React from "react";
@@ -10,17 +10,17 @@ import NotAuthorized from "./auth/NotAuthorized";
 import ProtectedArea from "./auth/ProtectedArea";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { themeConfig } from "./config/theme";
+import theme from "./config/theme";
 import Init from "./init";
 import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
+import LogIndex from "./pages/Log/Index";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
 import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import TicketFormIndex from "./pages/Ticket/Form/Index";
 import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
-import LogIndex from "./pages/Log/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 
@@ -28,7 +28,6 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 const queryClient = new QueryClient();
-const theme = extendTheme(themeConfig);
 
 root.render(
   <React.StrictMode>

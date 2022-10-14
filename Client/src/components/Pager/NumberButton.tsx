@@ -7,10 +7,12 @@ type NumberButtonProps = React.PropsWithChildren<{
 function NumberButton({ children, active, ...props }: NumberButtonProps) {
     return (
         <Button
+            _dark={{
+                backgroundColor: active ? "cyan.400" : "" // originial is 200
+            }}
+            backgroundColor={active ? "cyan.600" : ""} // original is 400
+            colorScheme={"cyan"}
             {...props}
-            className={`${!active
-                ? 'bg-primary-inactive'
-                : 'bg-primary'}`}
             onClick={(e) => props.onClick && props.onClick(e)}>
             {children}
         </Button>

@@ -15,26 +15,11 @@
         @apply focus-within:ring-2 ring-blue-500 border p-2 !important;
     }
     .text-secondary {
-        @apply text-gray-500 hover:text-black
-        dark:text-gray-400 dark:hover:text-white;
+        @apply text-gray-600
+        dark:text-gray-300;
     }
-    .bg-primary-inactive {
-        @apply bg-sky-800 hover:bg-sky-700 !important;
-    }
-    .text-primary-inactive {
-        @apply text-sky-800 hover:text-sky-700 !important;
-    }
-    .bg-primary {
-        @apply bg-sky-600 hover:bg-sky-500 !important;
-    }
-    .text-primary {
-        @apply text-sky-600 hover:text-sky-500 !important;
-    }
-    .bg-box {
-        @apply bg-gray-200 dark:bg-gray-700 !important;
-    }
-    .bg-gray {
-        @apply bg-gray-300 hover:bg-gray-200
-        dark:bg-gray-500 dark:hover:bg-gray-400 !important;
+    .text-secondary-hover {
+        @apply text-gray-600 hover:text-black 
+        dark:text-gray-300 dark:hover:text-white;
     }
 }
