@@ -18,7 +18,6 @@ import LogIndex from "./pages/Log/Index";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
 import TicketDetailsIndex from "./pages/Ticket/Details/Index";
-import TicketFormIndex from "./pages/Ticket/Form/Index";
 import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
 import "./styles/index.scss";
@@ -47,7 +46,6 @@ root.render(
                 <Route path="Ticket">
                   <Route index element={<TicketIndex />} />
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />
-                  <Route path="Form/:params" element={<TicketFormIndex />} />
                 </Route>
                 <Route path="Log" element={<LogIndex />} />
               </Route>
