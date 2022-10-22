@@ -1,24 +1,26 @@
-import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text } from "@chakra-ui/react";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, IconButton, Text, Tooltip } from "@chakra-ui/react";
+import { faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import EditBlock from "src/components/EditBlock";
+import EditModalBlock from "src/components/EditModalBlock";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import AttachmentsEditSection from "./sections/AttachmentsEditSection";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
-import HeadDataEditSection from "./sections/HeadDataEditSection";
 import HeadDataSection from "./sections/HeadDataSection";
+import TicketFormModal from "src/components/FormModals/Ticket";
 
 function TicketDetailsIndex() {
     // state
     // -----
-    const [editedTicket, setEditedTicket] = useState<any>();
-    const [edit, setEdit] = useState(false);
     const [editAttachments, setEditAttachments] = useState(false);
+    // refs
+    // ----
+    const headDataEditButtonRef = useRef<HTMLButtonElement | null>(null);
     // queries
     // -------
     const { id } = useParams();
@@ -62,21 +64,27 @@ function TicketDetailsIndex() {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-            <EditBlock
-                onSave={() => { }}
+            <EditModalBlock
                 title="Head data"
-                onToggle={() => setEdit(!edit)}
-                edit={edit}
-                alternateView={
-                    <HeadDataSection ticket={ticket} />
+                editButton={
+                    <Tooltip
+                        label={"edit"}
+                        placement="top">
+                        <IconButton
+                            ref={headDataEditButtonRef}
+                            size={"sm"}
+                            aria-label={"edit"}
+                            icon={<FontAwesomeIcon icon={faEdit} />}
+                        />
+                    </Tooltip>
                 }>
-                <HeadDataEditSection
-                    ticket={{ ...ticket, ...editedTicket }}
-                    setTicket={setEditedTicket}
-                    onSuccess={() => setEdit(false)}
-                    onAbort={() => setEdit(false)}
-                />
-            </EditBlock>
+                <HeadDataSection ticket={ticket} />
+            </EditModalBlock>
+            <TicketFormModal
+                id={id}
+                mountButtonRef={headDataEditButtonRef}
+                variant="edit"
+            />
             <EditBlock
                 className="mt-4"
                 title="Attachments"

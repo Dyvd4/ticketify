@@ -1,6 +1,8 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, VisuallyHidden } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef } from "react";
+import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
 import TicketListItemActions from "./TicketListItemActions";
@@ -9,6 +11,9 @@ import TicketListItemContent from "./TicketListItemContent";
 interface IndexProps { }
 
 function Index(props: IndexProps) {
+
+  const addButtonRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <Container>
       <Breadcrumb
@@ -28,7 +33,7 @@ function Index(props: IndexProps) {
       <List
         fetch={{
           route: "tickets",
-          queryKey: "tickets"
+          queryKey: "ticket"
         }}
         listItemRender={(item) => (
           <ListItem
@@ -64,11 +69,12 @@ function Index(props: IndexProps) {
             type: "string"
           }
         ]}
-        add={{
-          // 🥵
-          route: "Ticket/Form/id="
-        }}
+        onAdd={() => addButtonRef.current?.click()}
       />
+      <VisuallyHidden>
+        <Button ref={addButtonRef} />
+      </VisuallyHidden>
+      <TicketFormModal mountButtonRef={addButtonRef} />
     </Container>
   )
 }

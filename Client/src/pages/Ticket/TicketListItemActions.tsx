@@ -1,15 +1,25 @@
-import { Link, MenuItem } from "@chakra-ui/react";
+import { MenuItem } from "@chakra-ui/react";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef } from "react";
+import TicketFormModal from "src/components/FormModals/Ticket";
 
 function TicketListItemActions({ item }: { item }) {
+
+    const editButtonRef = useRef<HTMLButtonElement | null>(null);
+
     return (
         <>
-            <Link href={`Ticket/Form/${new URLSearchParams({ id: item.id }).toString()}`}>
-                <MenuItem icon={<FontAwesomeIcon icon={faEdit} />}>
-                    Edit
-                </MenuItem>
-            </Link>
+            <MenuItem
+                ref={editButtonRef}
+                icon={<FontAwesomeIcon icon={faEdit} />}>
+                Edit
+            </MenuItem>
+            <TicketFormModal
+                mountButtonRef={editButtonRef}
+                id={item.id}
+                variant="edit"
+            />
         </>
     );
 }

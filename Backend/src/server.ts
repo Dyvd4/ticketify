@@ -28,7 +28,7 @@ dotenv.config();
 const server = express();
 const PORT = process.env.PORT!;
 
-server.use(express.json());
+server.use(express.json({ limit: "200mb" }));
 server.use(cors());
 
 server.use(customRequest)
