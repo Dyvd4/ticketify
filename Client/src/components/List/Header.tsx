@@ -13,14 +13,12 @@ type HeaderProps = {
     useSort: boolean
     useFilter: boolean
     useSearch: boolean
-    add?: {
-        route: string
-    }
+    onAdd?(...args: any[]): void
 }
 
 function Header(props: HeaderProps) {
 
-    const { title, count, showCount, useSort, useFilter, useSearch, add } = props;
+    const { title, count, showCount, useSort, useFilter, useSearch, onAdd } = props;
 
     const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
     const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
@@ -47,7 +45,7 @@ function Header(props: HeaderProps) {
                 />
             </>}
             <div className="flex items-center justify-center gap-2">
-                {!!add && <>
+                {!!onAdd && <>
                     <Tooltip
                         label="add"
                         placement="top"
@@ -56,7 +54,7 @@ function Header(props: HeaderProps) {
                             <IconButton
                                 colorScheme={"cyan"}
                                 size={"sm"}
-                                onClick={() => window.location.href = add.route}
+                                onClick={onAdd}
                                 aria-label="add"
                                 icon={<FontAwesomeIcon icon={faAdd} />}
                             />
@@ -71,7 +69,6 @@ function Header(props: HeaderProps) {
                         aria-label="sort">
                         <span className="flex justify-center items-center">
                             <IconButton
-                                colorScheme={"cyan"}
                                 size={"sm"}
                                 onClick={() => setSortDrawer(true)}
                                 aria-label="sort"
@@ -88,7 +85,6 @@ function Header(props: HeaderProps) {
                         aria-label="filter">
                         <span className="flex justify-center items-center">
                             <IconButton
-                                colorScheme={"cyan"}
                                 size={"sm"}
                                 onClick={() => setFilterDrawer(true)}
                                 aria-label="filter"

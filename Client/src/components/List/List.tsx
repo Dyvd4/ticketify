@@ -36,10 +36,7 @@ type ListProps = {
     sort: TSortItem[]
     filter: TFilterItem[]
     search?: TSearchItem
-    add?: {
-        /** the url path to where you can add the entity */
-        route: string
-    }
+    onAdd?(...args: any[]): void
 }
 
 function List(props: ListProps) {
@@ -166,7 +163,7 @@ function List(props: ListProps) {
                     useSearch={!!searchItem}
                     useSort={props.sort.length > 0}
                     useFilter={props.filter.length > 0}
-                    add={props.add}
+                    onAdd={props.onAdd}
                 />
                 <Divider />
             </>}
