@@ -128,7 +128,7 @@ function CommentsSection(props: CommentsSectionProps) {
             entityId: comment.id
         });
     }
-    const replyInputAvatar = evalComment => {
+    const replyInputAvatar = comment => {
         const avatar = currentUser
             ? {
                 username: currentUser.username,
@@ -137,8 +137,8 @@ function CommentsSection(props: CommentsSectionProps) {
             : null;
         return avatar;
     }
-    const replyButtonAvatar = evalComment => {
-        const responsibleUserHasReplied = evalComment.childs.some(childComment => childComment.authorId === ticket.responsibleUserId);
+    const replyButtonAvatar = comment => {
+        const responsibleUserHasReplied = comment.childs.some(childComment => childComment.authorId === ticket.responsibleUserId);
         const avatar = responsibleUserHasReplied
             ? {
                 username: ticket.responsibleUser.username,
@@ -215,9 +215,9 @@ function CommentsSection(props: CommentsSectionProps) {
                             onDeleteSubmit={handleDeleteSubmit}
                             replyInputAvatar={replyInputAvatar}
                             replyButtonAvatar={replyButtonAvatar}
-                            usernameTagged={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                            canEdit={evalComment => currentUser.id === evalComment.authorId}
-                            canDelete={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                            usernameTagged={comment => ticket.responsibleUserId === comment.authorId}
+                            canEdit={comment => currentUser.id === comment.authorId}
+                            canDelete={comment => currentUser.id === comment.authorId && comment.childs.length === 0}
                         />
                         <Divider />
                     </>}
@@ -233,9 +233,9 @@ function CommentsSection(props: CommentsSectionProps) {
                                 onDeleteSubmit={handleDeleteSubmit}
                                 replyInputAvatar={replyInputAvatar}
                                 replyButtonAvatar={replyButtonAvatar}
-                                usernameTagged={evalComment => ticket.responsibleUserId === evalComment.authorId}
-                                canEdit={evalComment => currentUser.id === evalComment.authorId}
-                                canDelete={evalComment => currentUser.id === evalComment.authorId && evalComment.childs.length === 0}
+                                usernameTagged={comment => ticket.responsibleUserId === comment.authorId}
+                                canEdit={comment => currentUser.id === comment.authorId}
+                                canDelete={comment => currentUser.id === comment.authorId && comment.childs.length === 0}
                             />
                         ))}
                 </Flex>

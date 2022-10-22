@@ -28,7 +28,7 @@ const defaultNoOfContentLines = 4;
 type CommentProps = {
     comment: {
         authorId: string
-        ticketId: string
+        ticketId: number
         author: {
             username: string
         },
@@ -146,6 +146,7 @@ function Comment(props: CommentProps) {
 
     return (
         <Flex
+            data-testid="Comment"
             className="comment"
             gap={3}
             {...restProps}>
@@ -231,6 +232,7 @@ function Comment(props: CommentProps) {
                                 {hearts.length}
                             </Flex>
                             <Box
+                                data-testid="CommentReplyButton"
                                 onClick={() => setActiveState({ ...activeState, reply: true })}
                                 className="uppercase ml-2 select-none text-sm
                                     cursor-pointer text-secondary">

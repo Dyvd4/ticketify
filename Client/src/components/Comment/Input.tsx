@@ -49,7 +49,10 @@ function Input(props: InputProps) {
     }
 
     return (
-        <Flex gap={2} {...restProps}>
+        <Flex
+            data-testid="CommentInput"
+            gap={2}
+            {...restProps}>
             {variant !== "edit" && avatar && <>
                 <Avatar
                     name={avatar.username}
