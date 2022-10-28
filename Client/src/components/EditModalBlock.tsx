@@ -1,11 +1,11 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
-import { PropsWithChildren } from "react";
+import { ComponentPropsWithRef, PropsWithChildren } from "react";
 import BgBox from "./BgBox";
 
 type EditModalBlockProps = PropsWithChildren<{
     title: string
     editButton: React.ReactElement
-}>
+}> & ComponentPropsWithRef<"div">
 
 function EditModalBlock(props: EditModalBlockProps) {
 

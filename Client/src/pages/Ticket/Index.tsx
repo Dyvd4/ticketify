@@ -1,7 +1,6 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, VisuallyHidden } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, useDisclosure } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef } from "react";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
@@ -12,7 +11,7 @@ interface IndexProps { }
 
 function Index(props: IndexProps) {
 
-  const addButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Container>
@@ -69,12 +68,12 @@ function Index(props: IndexProps) {
             type: "string"
           }
         ]}
-        onAdd={() => addButtonRef.current?.click()}
+        onAdd={onOpen}
       />
-      <VisuallyHidden>
-        <Button ref={addButtonRef} />
-      </VisuallyHidden>
-      <TicketFormModal mountButtonRef={addButtonRef} />
+      <TicketFormModal
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Container>
   )
 }

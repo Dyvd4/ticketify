@@ -1,7 +1,7 @@
-import { ContainerProps, useDisclosure, useToast } from "@chakra-ui/react";
+import { ContainerProps, useToast } from "@chakra-ui/react";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { mutateTicket } from "src/api/ticket";
@@ -11,19 +11,20 @@ import Form from "./Form";
 
 type FormWrapperProps = ({
     variant?: "add"
-    mountButtonRef: React.MutableRefObject<HTMLButtonElement | null>
+    isOpen: boolean
+    onClose(...args: any[]): void
 } | {
     variant?: "edit"
     id: any
-    mountButtonRef: React.MutableRefObject<HTMLButtonElement | null>
+    isOpen: boolean
+    onClose(...args: any[]): void
 }) & ContainerProps
 
 function FormWrapper(props: FormWrapperProps) {
 
-    const { variant = "add", id } = props
+    const { variant = "add", id, isOpen, onClose } = props
     // state
     // -----
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [localTicketState, setLocalTicketState] = useState<any>();
     const [localInputState, setLocalInputState] = useState<any>();
     const [localEditorState, setLocalEditorState] = useState<any>();
@@ -31,10 +32,6 @@ function FormWrapper(props: FormWrapperProps) {
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const toast = useToast();
     const queryClient = useQueryClient();
-
-    useEffect(() => {
-        props.mountButtonRef.current!.addEventListener("click", onOpen);
-    });
 
     // queries
     // -------

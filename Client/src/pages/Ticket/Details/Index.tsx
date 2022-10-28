@@ -1,26 +1,22 @@
-import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, IconButton, Text, Tooltip } from "@chakra-ui/react";
+import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, IconButton, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import EditBlock from "src/components/EditBlock";
 import EditModalBlock from "src/components/EditModalBlock";
+import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
-import AttachmentsEditSection from "./sections/AttachmentsEditSection";
+import AttachmentsEditModal from "./modals/AttachmentsEditModal";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
 import HeadDataSection from "./sections/HeadDataSection";
-import TicketFormModal from "src/components/FormModals/Ticket";
 
 function TicketDetailsIndex() {
     // state
     // -----
-    const [editAttachments, setEditAttachments] = useState(false);
-    // refs
-    // ----
-    const headDataEditButtonRef = useRef<HTMLButtonElement | null>(null);
+    const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
+    const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
     // queries
     // -------
     const { id } = useParams();
@@ -71,7 +67,7 @@ function TicketDetailsIndex() {
                         label={"edit"}
                         placement="top">
                         <IconButton
-                            ref={headDataEditButtonRef}
+                            onClick={onTicketFormModalOpen}
                             size={"sm"}
                             aria-label={"edit"}
                             icon={<FontAwesomeIcon icon={faEdit} />}
@@ -79,26 +75,39 @@ function TicketDetailsIndex() {
                     </Tooltip>
                 }>
                 <HeadDataSection ticket={ticket} />
+                <TicketFormModal
+                    id={id}
+                    isOpen={ticketFormModalIsOpen}
+                    onClose={onTicketFormModalClose}
+                    variant="edit"
+                />
             </EditModalBlock>
-            <TicketFormModal
-                id={id}
-                mountButtonRef={headDataEditButtonRef}
-                variant="edit"
-            />
-            <EditBlock
+            <EditModalBlock
                 className="mt-4"
                 title="Attachments"
-                onToggle={() => setEditAttachments(!editAttachments)}
-                disableEdit={images.concat(files).length === 0}
-                edit={editAttachments}
-                alternateView={
-                    <AttachmentsSection
-                        images={images}
-                        files={files}
-                    />
+                editButton={
+                    <Tooltip
+                        label={"edit"}
+                        placement="top">
+                        <IconButton
+                            onClick={onAttachmentsEditModalOpen}
+                            disabled={images.concat(files).length === 0}
+                            size={"sm"}
+                            aria-label={"edit"}
+                            icon={<FontAwesomeIcon icon={faEdit} />}
+                        />
+                    </Tooltip>
                 }>
-                <AttachmentsEditSection attachments={attachments} />
-            </EditBlock>
+                <AttachmentsSection
+                    images={images}
+                    files={files}
+                />
+                <AttachmentsEditModal
+                    isOpen={attachmentsEditModalIsOpen}
+                    onClose={onAttachmentsEditModalClose}
+                    attachments={attachments}
+                />
+            </EditModalBlock>
             <CommentsSection ticket={ticket} />
         </Container>
     );
