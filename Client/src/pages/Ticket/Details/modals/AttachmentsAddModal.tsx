@@ -61,7 +61,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
             <ModalContent>
                 <ModalCloseButton />
                 <ModalHeader>
-                    Add attachments
+                    ADD attachments
                 </ModalHeader>
                 <ModalBody>
                     <Box className="mt-2">
