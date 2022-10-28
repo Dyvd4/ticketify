@@ -1,5 +1,5 @@
 import { Avatar, Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
-import { isAfter } from "date-fns/esm";
+import isAfter from "date-fns/isAfter";
 import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
