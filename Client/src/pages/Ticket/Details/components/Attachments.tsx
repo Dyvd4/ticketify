@@ -20,7 +20,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
                     return variant === "images"
                         ? <Zoom key={attachment.id}>
                             <Image
-                                className={`w-40 h-40 rounded-md m-0`}
+                                className={`w-20 h-20 rounded-md m-0`}
                                 objectFit="cover"
                                 alt={attachment.originalFileName}
                                 src={`data:${attachment.mimeType};base64,${attachment.content}`}

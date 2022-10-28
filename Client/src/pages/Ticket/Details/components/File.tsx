@@ -24,8 +24,8 @@ function File({ file }: FileProps) {
             <Tooltip label={file.originalFileName} placement="top">
                 <BgBox
                     variant="child"
-                    className="w-40 h-40 flex justify-center items-center">
-                    <FontAwesomeIcon icon={faFileArrowDown} size="5x" />
+                    className="w-20 h-20 flex justify-center items-center">
+                    <FontAwesomeIcon icon={faFileArrowDown} size="3x" />
                 </BgBox>
             </Tooltip>
         </Link>
