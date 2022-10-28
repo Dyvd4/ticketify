@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef } from "react";
 
 type MenuButtonProps = {
-
 } & ChakraMenuButtonProps
 
 function MenuButton(props: MenuButtonProps) {
 
     const [active, setActive] = useBoolean(false);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const { children } = props;
 
     useOutsideClick({
         ref: buttonRef,
@@ -24,7 +24,7 @@ function MenuButton(props: MenuButtonProps) {
             as={Button}
             {...props}>
             <span>
-                Sort by
+                {children}
             </span>&nbsp;&nbsp;
             <FontAwesomeIcon
                 className={`transition-all duration-100 transform ${active ? "rotate-180" : ""}`}

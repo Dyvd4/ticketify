@@ -1,12 +1,13 @@
 import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, IconButton, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
-import { faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import EditModalBlock from "src/components/EditModalBlock";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
+import SectionBlock from "src/components/SectionBlock";
+import AttachmentsAddModal from "./modals/AttachmentsAddModal";
 import AttachmentsEditModal from "./modals/AttachmentsEditModal";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
@@ -17,6 +18,7 @@ function TicketDetailsIndex() {
     // -----
     const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
     const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
+    const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
     // queries
     // -------
     const { id } = useParams();
@@ -60,7 +62,7 @@ function TicketDetailsIndex() {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-            <EditModalBlock
+            <SectionBlock
                 title="Head data"
                 editButton={
                     <Tooltip
@@ -81,17 +83,30 @@ function TicketDetailsIndex() {
                     onClose={onTicketFormModalClose}
                     variant="edit"
                 />
-            </EditModalBlock>
-            <EditModalBlock
+            </SectionBlock>
+            <SectionBlock
                 className="mt-4"
                 title="Attachments"
+                addButton={
+                    <Tooltip
+                        label={"add"}
+                        placement="top">
+                        <IconButton
+                            colorScheme={"cyan"}
+                            onClick={onAttachmentsAddModalOpen}
+                            size={"sm"}
+                            aria-label={"add"}
+                            icon={<FontAwesomeIcon icon={faAdd} />}
+                        />
+                    </Tooltip>
+                }
                 editButton={
                     <Tooltip
                         label={"edit"}
                         placement="top">
                         <IconButton
                             onClick={onAttachmentsEditModalOpen}
-                            disabled={images.concat(files).length === 0}
+                            disabled={attachments.length === 0}
                             size={"sm"}
                             aria-label={"edit"}
                             icon={<FontAwesomeIcon icon={faEdit} />}
@@ -107,7 +122,11 @@ function TicketDetailsIndex() {
                     onClose={onAttachmentsEditModalClose}
                     attachments={attachments}
                 />
-            </EditModalBlock>
+                <AttachmentsAddModal
+                    isOpen={attachmentsAddModalIsOpen}
+                    onClose={onAttachmentsAddModalClose}
+                />
+            </SectionBlock>
             <CommentsSection ticket={ticket} />
         </Container>
     );

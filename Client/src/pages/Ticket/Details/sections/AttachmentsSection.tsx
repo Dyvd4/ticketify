@@ -1,6 +1,5 @@
 import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import Attachments from "../components/Attachments";
-import AttachmentsAddSection from "./AttachmentsAddSection";
 
 type AttachmentsProps = {
     images: any[]
@@ -21,11 +20,6 @@ function Index({ images, files, ...props }: AttachmentsProps) {
                         files ({files.length})
                     </Heading>
                 </Tab>
-                <Tab>
-                    <Heading as="h3" size="md">
-                        Add attachment (+)
-                    </Heading>
-                </Tab>
             </TabList>
             <TabPanels>
                 <TabPanel>
@@ -33,9 +27,6 @@ function Index({ images, files, ...props }: AttachmentsProps) {
                 </TabPanel>
                 <TabPanel>
                     <Attachments attachments={files} variant="files" />
-                </TabPanel>
-                <TabPanel>
-                    <AttachmentsAddSection />
                 </TabPanel>
             </TabPanels>
         </Tabs>

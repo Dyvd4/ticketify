@@ -2,12 +2,13 @@ import { Box, Flex, Heading } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
 import BgBox from "./BgBox";
 
-type EditModalBlockProps = PropsWithChildren<{
+type SectionBlockProps = PropsWithChildren<{
     title: string
-    editButton: React.ReactElement
+    editButton?: React.ReactElement
+    addButton?: React.ReactElement
 }> & ComponentPropsWithRef<"div">
 
-function EditModalBlock(props: EditModalBlockProps) {
+function SectionBlock(props: SectionBlockProps) {
 
     const {
         title,
@@ -17,7 +18,7 @@ function EditModalBlock(props: EditModalBlockProps) {
     } = props;
 
     return (
-        <Box {...restProps} data-testid="EditModalBlock">
+        <Box {...restProps} data-testid="SectionBlock">
             <Flex
                 justifyContent={"space-between"}
                 alignItems={"center"}>
@@ -26,8 +27,13 @@ function EditModalBlock(props: EditModalBlockProps) {
                         {title}
                     </Heading>
                 </Box>
-                <Box>
-                    {props.editButton}
+                <Box className="flex justify-center items-center gap-2">
+                    <Box>
+                        {props.addButton}
+                    </Box>
+                    <Box>
+                        {props.editButton}
+                    </Box>
                 </Box>
             </Flex>
             <BgBox>
@@ -37,4 +43,4 @@ function EditModalBlock(props: EditModalBlockProps) {
     );
 }
 
-export default EditModalBlock;
+export default SectionBlock;

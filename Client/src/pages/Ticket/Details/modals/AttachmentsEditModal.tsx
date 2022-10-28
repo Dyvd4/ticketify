@@ -35,13 +35,15 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
             route: `ticket/fileOnTicket/${id}/${attachmentToRemove.id}`,
         })
     }, {
-        onSuccess: () => {
+        onSuccess: async () => {
             onAlertClose();
             toast({
                 title: "successfully removed attachment",
                 status: "success"
             });
-            queryClient.invalidateQueries(["ticket", String(id)]);
+            await queryClient.invalidateQueries(["ticket", String(id)]);
+            const { attachments } = queryClient.getQueryData(["ticket", String(id)]) as any;
+            if (attachments.length === 0) onClose();
         }
     });
 
