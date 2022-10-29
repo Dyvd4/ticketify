@@ -3,8 +3,8 @@ import { faEdit, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "react-query";
 import { generateFakePassword } from "src/utils/password";
-import PasswordEditModal from "../components/PasswordEditModal";
-import UsernameEditModal from "../components/UsernameEditModal";
+import PasswordEditModal from "../modals/PasswordEditModal";
+import UsernameEditModal from "../modals/UsernameEditModal";
 
 type UserDataSectionProps = {
     user: any

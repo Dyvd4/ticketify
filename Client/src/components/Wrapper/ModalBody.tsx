@@ -11,7 +11,7 @@ function ModalBody({ children, isLoading, isError, ...props }: ModalBodyProps) {
     return (
         <ChakraModalBody {...props}>
             {!!isLoading && !isError && <>
-                <Box style={{ minHeight: "40vh" }} className="relative">
+                <Box style={{ minHeight: "25vh" }} className="relative">
                     <LoadingRipple centered />
                 </Box>
             </>}

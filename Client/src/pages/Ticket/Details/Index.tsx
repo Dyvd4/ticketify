@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, IconButton, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { faAdd, faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
@@ -7,6 +7,7 @@ import { fetchEntity } from "src/api/entity";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
+import IconButton from "src/components/Wrapper/IconButton";
 import AttachmentsAddModal from "./modals/AttachmentsAddModal";
 import AttachmentsEditModal from "./modals/AttachmentsEditModal";
 import AttachmentsSection from "./sections/AttachmentsSection";

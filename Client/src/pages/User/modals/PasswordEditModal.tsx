@@ -81,13 +81,14 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                     </FormControl>
                 </ModalBody>
                 <ModalFooter>
-                    <Button mr={3} onClick={handleClose}>
-                        Close
-                    </Button>
                     <Button
+                        mr={3}
                         colorScheme={"blue"}
                         onClick={() => mutation.mutate()}>
-                        Submit
+                        Save
+                    </Button>
+                    <Button onClick={handleClose}>
+                        Close
                     </Button>
                 </ModalFooter>
             </ModalContent>

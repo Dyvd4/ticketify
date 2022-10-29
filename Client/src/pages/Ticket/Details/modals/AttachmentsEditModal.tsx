@@ -1,12 +1,12 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
 import IconButton from "src/components/Wrapper/IconButton";
+import ModalBody from "src/components/Wrapper/ModalBody";
 import Attachment from "../components/Attachment";
 
 type AttachmentsEditProps = {
@@ -36,14 +36,14 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
         })
     }, {
         onSuccess: async () => {
+            await queryClient.invalidateQueries(["ticket", String(id)]);
             onAlertClose();
+            const { attachments } = queryClient.getQueryData(["ticket", String(id)]) as any;
+            if (attachments.length === 0) onClose();
             toast({
                 title: "successfully removed attachment",
                 status: "success"
             });
-            await queryClient.invalidateQueries(["ticket", String(id)]);
-            const { attachments } = queryClient.getQueryData(["ticket", String(id)]) as any;
-            if (attachments.length === 0) onClose();
         }
     });
 
@@ -51,8 +51,6 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
         setAttachmentToRemove(attachment);
         onAlertOpen();
     }
-
-    if (mutation.isLoading) return <LoadingRipple centered />
 
     return (
         <Modal
@@ -65,7 +63,7 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                 <ModalHeader>
                     EDIT attachments
                 </ModalHeader>
-                <ModalBody>
+                <ModalBody isLoading={mutation.isLoading}>
                     <Flex
                         className="my-2"
                         direction={"column"}

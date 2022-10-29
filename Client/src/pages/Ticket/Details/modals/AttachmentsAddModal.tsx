@@ -35,13 +35,13 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
             payload: formData
         });
     }, {
-        onSuccess: () => {
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(["ticket", String(id)]);
+            onClose();
             toast({
                 title: "successfully added attachment",
                 status: "success"
             });
-            queryClient.invalidateQueries(["ticket", String(id)]);
-            onClose();
         }
     });
 

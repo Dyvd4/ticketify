@@ -20,15 +20,15 @@ function File({ file }: FileProps) {
         window.URL.revokeObjectURL(downloadUrl)
     }
     return (
-        <Link className="m-0" onClick={downloadFile}>
-            <Tooltip label={file.originalFileName} placement="top">
+        <Tooltip label={file.originalFileName} placement="top">
+            <Link className="m-0" onClick={downloadFile}>
                 <BgBox
                     variant="child"
                     className="w-20 h-20 flex justify-center items-center">
                     <FontAwesomeIcon icon={faFileArrowDown} size="3x" />
                 </BgBox>
-            </Tooltip>
-        </Link>
+            </Link>
+        </Tooltip>
     );
 }
 
