@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { REACT_APP_DOMAIN } from "../env.local";
 import Cookies from "js-cookie";
 import { handleError } from "../utils/error";
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 interface RequestOptions extends AxiosRequestConfig {
     /** determines wheter an error is thrown or not */
@@ -15,7 +16,7 @@ const ignoreErrorCodes = [
 export const request = (options?: RequestOptions) => {
     options = {
         ...options,
-        baseURL: REACT_APP_DOMAIN,
+        baseURL: API_URL,
         headers: {
             "auth-token": Cookies.get("auth-token") || ""
         }
