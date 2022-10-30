@@ -1,26 +1,27 @@
 import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import FormControl from "src/components/Wrapper/FormControl";
-import { signIn } from "../../auth/auth";
+import { signUp } from "../../auth/auth";
 import Card from "../../components/Card";
 import { getValidationErrorMap, ValidationErrorMap } from "../../utils/error";
 
-function SignIn() {
-    const { prevRoute } = window.history.state.usr ?? {};
+function SignUp() {
+
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = async () => {
-        const response = await signIn(usernameRef.current!.value, passwordRef.current!.value);
-        if (response.status === 200) return window.location.href = prevRoute || "/";
+        const response = await signUp(usernameRef.current!.value, passwordRef.current!.value);
+        if (response.status === 200) return window.location.href = "/";
         const errorMap = getValidationErrorMap({ response });
         setErrorMap(errorMap);
     }
+
     return (
         <Card className="w-3/4 sm:w-auto" centered>
             <Heading as="h1" className="mb-2">
-                Sign in
+                Sign up
             </Heading>
             <VStack>
                 <FormControl errorMessage={errorMap?.Fieldless}>
@@ -44,12 +45,12 @@ function SignIn() {
                     colorScheme="blue">
                     Submit
                 </Button>
-                <Link href="/Auth/SignUp">
-                    Sign up
+                <Link href="/Auth/SignIn">
+                    Sign in
                 </Link>
             </VStack>
         </Card>
     );
 }
 
-export default SignIn;
+export default SignUp;
