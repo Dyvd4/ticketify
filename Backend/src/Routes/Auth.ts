@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import UserSchema from "../schemas/User";
+import UserSchema, { UserSignInSchema } from "../schemas/User";
 import { prisma } from "../server";
 import bcrypt from "bcrypt";
 import path from "path";
@@ -15,7 +15,7 @@ Router.post("/signIn", async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
-        const validation = UserSchema.validate({ username, password });
+        const validation = UserSignInSchema.validate({ username, password });
         if (validation.error) return res.status(400).json({ validation });
 
         // check if user exist
@@ -27,7 +27,9 @@ Router.post("/signIn", async (req, res, next) => {
 
         if (!user) {
             return res.status(400).json({
-                validation: { message: `User with name: ${username} not existing` }
+                validation: {
+                    message: `User with name: ${username} not existing`
+                }
             });
         }
 
@@ -54,26 +56,43 @@ Router.post("/signIn", async (req, res, next) => {
 
 Router.post("/signUp", async (req, res, next) => {
     try {
-        const { username, password } = req.body;
+        const { username, email, password } = req.body;
 
-        const alreadyExistingEntity = await prisma.user.findFirst({
+        const existingUsername = await prisma.user.findFirst({
             where: {
                 username
             }
         });
-        if (alreadyExistingEntity) {
+
+        if (existingUsername) {
             return res.status(400).json({
-                validation: { message: `User with name: ${username} already existing` }
+                validation: {
+                    message: `User with name: ${username} already existing`
+                }
             });
         }
 
-        const validation = UserSchema.validate({ username, password });
+        const existingEmail = await prisma.user.findFirst({
+            where: {
+                email
+            }
+        });
+
+        if (existingEmail) {
+            return res.status(400).json({
+                validation: {
+                    message: `Email: ${email} already existing`
+                }
+            });
+        }
+
+        const validation = UserSchema.validate({ username, email, password });
         if (validation.error) return res.status(400).json({ validation });
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await prisma.user.create({
             data: {
-                username, 
+                username,
                 password: hashedPassword
             }
         });

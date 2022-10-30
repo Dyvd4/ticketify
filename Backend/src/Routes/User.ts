@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import fileParams from "../schemas/params/File";
-import { NewPasswordSchema, UserUpdateSchema } from "../schemas/User";
+import { NewPasswordSchema, username as UsernameSchema, email as EmailSchema } from "../schemas/User";
 import { prisma } from "../server";
+import { getCurrentUser } from "../services/currentUser";
 import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
 const Router = express.Router();
@@ -61,19 +62,73 @@ Router.get("/users", async (req, res, next) => {
     }
 });
 
-Router.put("/user", async (req, res, next) => {
+Router.put("/user/username", async (req, res, next) => {
     const { UserId } = req;
-    const user = req.body;
+    const { username } = req.body;
     try {
 
-        const validation = UserUpdateSchema.validate(user);
+        const validation = UsernameSchema.validate(username);
         if (validation.error) return res.status(400).json({ validation });
+
+        const existingUsername = await prisma.user.findFirst({
+            where: {
+                username
+            }
+        });
+
+        if (existingUsername && username !== getCurrentUser().username) {
+            return res.status(400).json({
+                validation: {
+                    message: `User with name: ${username} already existing`
+                }
+            });
+        }
 
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId
             },
-            data: user
+            data: {
+                username
+            }
+        });
+
+        res.json(mapUser(updatedUser))
+    }
+    catch (e) {
+        next(e);
+    }
+});
+
+Router.put("/user/email", async (req, res, next) => {
+    const { UserId } = req;
+    const { email } = req.body;
+    try {
+
+        const validation = EmailSchema.validate(email);
+        if (validation.error) return res.status(400).json({ validation });
+
+        const existingEmail = await prisma.user.findFirst({
+            where: {
+                email
+            }
+        });
+
+        if (existingEmail && email !== getCurrentUser().email) {
+            return res.status(400).json({
+                validation: {
+                    message: `E-mail: ${email} already existing`
+                }
+            });
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: UserId
+            },
+            data: {
+                email
+            }
         });
 
         res.json(mapUser(updatedUser))

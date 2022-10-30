@@ -15,11 +15,11 @@ type UsernameEditModalProps = {
 function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
 
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
-    const [username, setUsername] = useState<any>(user.username);
+    const [email, setEmail] = useState<any>(user.email);
 
     const mutation = useMutation(async () => {
-        const response = await request().put(`user/username`, {
-            username
+        const response = await request().put(`user/email`, {
+            email
         });
         return response;
     }, {
@@ -34,7 +34,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
     });
 
     const handleClose = (response?) => {
-        setUsername(response?.data?.username || user.username);
+        setEmail(response?.data?.email || user.email);
         setErrorMap(null);
         props.onClose();
     }
@@ -44,16 +44,16 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
-                    Edit username
+                    Edit email
                 </ModalHeader>
                 <ModalBody>
                     <FormControl errorMessage={errorMap?.Fieldless}>
-                        <FormControl errorMessage={errorMap?.username}>
+                        <FormControl errorMessage={errorMap?.email}>
                             <Input
-                                name="username"
-                                type={"text"}
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                name="email"
+                                type={"email"}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
                     </FormControl>

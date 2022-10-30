@@ -88,14 +88,14 @@ function FormWrapper(props: FormWrapperProps) {
         }, variant)
     }, {
         onSuccess: async (response) => {
-            toast({
-                title: "successfully saved ticket",
-                status: "success"
-            });
             // 🥵
             await queryClient.invalidateQueries(["ticket", String(ticketState.id)]);
             await queryClient.invalidateQueries(["ticket"]);
             if (variant === "edit") handleOnClose();
+            toast({
+                title: "successfully saved ticket",
+                status: "success"
+            });
             setLocalTicketState({
                 id: response.data.id
             });
@@ -131,13 +131,10 @@ function FormWrapper(props: FormWrapperProps) {
         });
     }
 
-    const resetLocalState = () => {
+    const handleOnClose = () => {
         setLocalTicketState({});
         setLocalInputState({});
         setLocalEditorState({});
-    }
-    const handleOnClose = () => {
-        resetLocalState();
         onClose();
     }
 

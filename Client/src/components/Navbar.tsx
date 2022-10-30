@@ -41,7 +41,9 @@ function Navbar(props: NavbarProps) {
                                 className="ring-2 ring-sky-500"
                                 size={"sm"}
                                 name={currentUser?.username}
-                                src={getDataUrl(currentUser.avatar.content, currentUser.avatar.mimeType)}
+                                src={currentUser.avatar
+                                    ? getDataUrl(currentUser.avatar.content, currentUser.avatar.mimeType)
+                                    : undefined}
                             />
                         </Flex>
                     </MenuButton>

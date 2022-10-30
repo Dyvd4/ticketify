@@ -27,7 +27,7 @@ function Index(props: IndexProps) {
     }
 
     return (
-        <Container className="mt-4" maxW="sm">
+        <Container className="mt-4" maxW="md">
             <AvatarSection user={data.user} />
             <Divider className="my-2" />
             <UserDataSection user={data.user} />
