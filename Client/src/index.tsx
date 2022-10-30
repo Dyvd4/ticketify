@@ -13,7 +13,6 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import theme from "./config/theme";
 import Init from "./init";
 import SignIn from "./pages/Auth/SignIn";
-import SignUp from "./pages/Auth/SignUp";
 import LogIndex from "./pages/Log/Index";
 import NotFound from "./pages/NotFound";
 import TestIndex from "./pages/Test/Index";
@@ -53,7 +52,6 @@ root.render(
               <Route path="/NotAuthorized" element={<NotAuthorized />} />
               <Route path="/Auth">
                 <Route path="SignIn" element={<SignIn />} />
-                <Route path="SignUp" element={<SignUp />} />
               </Route>
             </Routes>
           </Router>

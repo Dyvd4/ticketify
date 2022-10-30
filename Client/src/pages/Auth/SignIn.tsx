@@ -1,52 +1,41 @@
-import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import FormControl from "src/components/Wrapper/FormControl";
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signIn } from "../../auth/auth";
 import Card from "../../components/Card";
-import { getValidationErrorMap, ValidationErrorMap } from "../../utils/error";
 
 function SignIn() {
-    const { prevRoute } = window.history.state.usr ?? {};
-    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
-    const usernameRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-
-    const handleSubmit = async () => {
-        const response = await signIn(usernameRef.current!.value, passwordRef.current!.value);
-        if (response.status === 200) return window.location.href = prevRoute || "/";
-        const errorMap = getValidationErrorMap({ response });
-        setErrorMap(errorMap);
-    }
     return (
-        <Card className="w-3/4 sm:w-auto" centered>
-            <Heading as="h1" className="mb-2">
-                Sign in
+        <Card centered>
+            <Heading as="h1" className="text-center mb-4 text-2xl md:text-3xl">
+                Welcome to Ticketify
             </Heading>
-            <VStack>
-                <FormControl errorMessage={errorMap?.Fieldless}>
-                    <FormControl errorMessage={errorMap?.username}>
-                        <FormLabel>
-                            Username
-                        </FormLabel>
-                        <Input size="sm" ref={usernameRef} name="username" />
-                    </FormControl>
-                    <FormControl errorMessage={errorMap?.password}>
-                        <FormLabel>
-                            Password
-                        </FormLabel>
-                        <Input type="password" size="sm" ref={passwordRef} name="password" />
-                    </FormControl>
-                </FormControl>
+            <VStack gap={2} className="px-10">
                 <Button
-                    size="sm"
-                    className="mt-4"
-                    onClick={handleSubmit}
-                    colorScheme="blue">
-                    Submit
+                    className="flex justify-around items-center w-full"
+                    onClick={signIn.withEmailLink}
+                    colorScheme="cyan">
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                    Sign in with E-mail
                 </Button>
-                <Link href="/Auth/SignUp">
-                    Sign up
-                </Link>
+                <Box>
+                    OR
+                </Box>
+                <Button
+                    onClick={signIn.withGoogle}
+                    colorScheme={"blue"}
+                    className="flex justify-around items-center w-full">
+                    <FontAwesomeIcon icon={faGoogle} />
+                    Sign in with Google
+                </Button>
+                <Button
+                    onClick={signIn.withGithub}
+                    colorScheme={"blue"}
+                    className="flex justify-around items-center w-full">
+                    <FontAwesomeIcon icon={faGithub} />
+                    Sign in with GitHub
+                </Button>
             </VStack>
         </Card>
     );

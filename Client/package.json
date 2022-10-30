@@ -21,6 +21,7 @@
     "dompurify": "^2.4.0",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
+    "firebase": "^9.13.0",
     "framer-motion": "^7.1.1",
     "jotai": "^1.7.8",
     "lodash": "^4.17.21",
