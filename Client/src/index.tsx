@@ -6,8 +6,8 @@ import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Index from "src/pages/Index/Index";
-import NotAuthorized from "./auth/NotAuthorized";
-import ProtectedArea from "./auth/ProtectedArea";
+import AuthenticatedArea from "./auth/AuthenticatedArea";
+import EmailNotConfirmed from "./auth/EmailNotConfirmed";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import theme from "./config/theme";
@@ -39,7 +39,8 @@ root.render(
           <Sidebar />
           <Router>
             <Routes>
-              <Route path="/" element={<ProtectedArea type="route" />}>
+              {/* authorized */}
+              <Route path="/" element={<AuthenticatedArea type="route" />}>
                 <Route index element={<Index />} />
                 <Route path="Test" element={<TestIndex />} />
                 <Route path="User" element={<UserIndex />} />
@@ -49,8 +50,12 @@ root.render(
                 </Route>
                 <Route path="Log" element={<LogIndex />} />
               </Route>
+              {/* authenticated */}
+              <Route path="/EmailNotConfirmed" element={<AuthenticatedArea type="route" />}>
+                <Route index element={<EmailNotConfirmed />} />
+              </Route>
+              {/* Not authenticated or authorized */}
               <Route path="*" element={<NotFound />} />
-              <Route path="/NotAuthorized" element={<NotAuthorized />} />
               <Route path="/Auth">
                 <Route path="SignIn" element={<SignIn />} />
                 <Route path="SignUp" element={<SignUp />} />

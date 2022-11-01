@@ -25,3 +25,6 @@ export const signOut = () => {
     Cookies.set("auth-token", "");
     window.location.href = "/";
 }
+
+export const isAuthenticated = (user) => !!user && user.emailConfirmed;
+export const isAuthorized = (user) => isAuthenticated(user);

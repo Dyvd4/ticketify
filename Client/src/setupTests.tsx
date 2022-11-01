@@ -23,8 +23,10 @@ export const mockUser = {
     createdAt: new Date(),
     updatedAt: new Date()
 }
-export const authorizedUser = { ...mockUser };
-export const unauthorizedUser = {
+
+export const authenticatedUser = { ...mockUser };
+export const fullyUnauthenticatedUser = null;
+export const halfUnauthenticatedUser = {
     ...mockUser,
     emailConfirmed: false
 }
