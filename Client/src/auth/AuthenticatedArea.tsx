@@ -2,14 +2,22 @@ import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { fetchUser } from "../api/user";
-import { isAuthenticated } from "./auth";
+import { isAuthenticated, isHalfAuthenticated } from "./auth";
 import RestrictedAccess from "./RestrictedAccess";
 
 type AuthenticatedAreaProps = ({
     type?: "route"
+    /** If set to true, checks if user is half authenticated instead of full.
+     * Half authenticated means that the e-mail is not confirmed yet.
+     */
+    half?: boolean
 } |
 {
     type?: "area"
+    /** If set to true, checks if user is half authenticated instead of full.
+     * Half authenticated means that the e-mail is not confirmed yet.
+     */
+    half?: boolean
     children: React.ReactNode
     showRestrictedAccess?: boolean
 });
@@ -30,7 +38,9 @@ function AuthenticatedArea(props: AuthenticatedAreaProps) {
 
     else if (isError) returnElement = <div className="text-red-500">An error occurred</div>;
 
-    else if (isAuthenticated(data.user)) {
+    else if (props.half
+        ? isHalfAuthenticated(data.user)
+        : isAuthenticated(data.user)) {
         if (type === "route") {
             returnElement = <Outlet />
         }

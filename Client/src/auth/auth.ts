@@ -26,5 +26,6 @@ export const signOut = () => {
     window.location.href = "/";
 }
 
+export const isHalfAuthenticated = (user) => !!user;
 export const isAuthenticated = (user) => !!user && user.emailConfirmed;
 export const isAuthorized = (user) => isAuthenticated(user);

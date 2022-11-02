@@ -6,7 +6,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 const username = process.env.SMTP_USERNAME;
 const password = process.env.SMTP_PASSWORD;
 
-export const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     host: "smtp.mailgun.org",
     port: 587,
     secure: false,
@@ -15,3 +15,5 @@ export const transporter = nodemailer.createTransport({
         pass: password
     }
 });
+
+export default transporter;

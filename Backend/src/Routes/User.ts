@@ -1,14 +1,15 @@
 import bcrypt from "bcrypt";
 import express from "express";
+import { authentication } from "../middlewares/auth";
 import fileParams from "../schemas/params/File";
-import { NewPasswordSchema, username as UsernameSchema, email as EmailSchema } from "../schemas/User";
+import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "../schemas/User";
 import { prisma } from "../server";
 import { getCurrentUser } from "../services/currentUser";
 import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
 const Router = express.Router();
 
-Router.get("/user", async (req, res, next) => {
+Router.get("/user", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
     try {
         let user = await prisma.user.findFirst({
@@ -24,7 +25,7 @@ Router.get("/user", async (req, res, next) => {
     }
 });
 
-Router.get("/user/all", async (req, res, next) => {
+Router.get("/user/all", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
     try {
         let user = await prisma.user.findFirst({
@@ -50,7 +51,7 @@ Router.get("/user/all", async (req, res, next) => {
     }
 });
 
-Router.get("/users", async (req, res, next) => {
+Router.get("/users", authentication(), async (req, res, next) => {
     try {
         const users = await prisma.user.findMany();
         res.json({
@@ -62,7 +63,7 @@ Router.get("/users", async (req, res, next) => {
     }
 });
 
-Router.put("/user/username", async (req, res, next) => {
+Router.put("/user/username", authentication(), async (req, res, next) => {
     const { UserId } = req;
     const { username } = req.body;
     try {
@@ -100,7 +101,7 @@ Router.put("/user/username", async (req, res, next) => {
     }
 });
 
-Router.put("/user/email", async (req, res, next) => {
+Router.put("/user/email", authentication(), async (req, res, next) => {
     const { UserId } = req;
     const { email } = req.body;
     try {
@@ -138,7 +139,7 @@ Router.put("/user/email", async (req, res, next) => {
     }
 });
 
-Router.put("/user/newPassword", async (req, res, next) => {
+Router.put("/user/newPassword", authentication(), async (req, res, next) => {
     const { UserId } = req;
     const passwordData = req.body;
     try {
@@ -171,7 +172,7 @@ Router.put("/user/newPassword", async (req, res, next) => {
     }
 });
 
-Router.put("/user/avatar", imageUpload, async (req, res, next) => {
+Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next) => {
     const { UserId } = req;
     const file = req.files
         ? req.files[0]

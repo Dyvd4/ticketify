@@ -30,10 +30,9 @@ export const request = (options?: RequestOptions) => {
         return config
     }, (error) => {
         if (error instanceof AxiosError &&
-            (error.response?.status === 401 || ignoreErrorCodes.includes(error.code || ""))) {
-            return;
+            (error.response?.status !== 401 || !ignoreErrorCodes.includes(error.code || ""))) {
+            handleError(error);
         }
-        handleError(error)
         return Promise.reject(error);
     });
     return instance;
