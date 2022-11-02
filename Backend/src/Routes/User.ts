@@ -1,13 +1,15 @@
 import bcrypt from "bcrypt";
 import express from "express";
+import { authentication } from "../middlewares/auth";
 import fileParams from "../schemas/params/File";
-import { NewPasswordSchema, UserUpdateSchema } from "../schemas/User";
+import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "../schemas/User";
 import { prisma } from "../server";
+import { getCurrentUser } from "../services/currentUser";
 import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
 const Router = express.Router();
 
-Router.get("/user", async (req, res, next) => {
+Router.get("/user", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
     try {
         let user = await prisma.user.findFirst({
@@ -23,7 +25,7 @@ Router.get("/user", async (req, res, next) => {
     }
 });
 
-Router.get("/user/all", async (req, res, next) => {
+Router.get("/user/all", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
     try {
         let user = await prisma.user.findFirst({
@@ -49,7 +51,7 @@ Router.get("/user/all", async (req, res, next) => {
     }
 });
 
-Router.get("/users", async (req, res, next) => {
+Router.get("/users", authentication(), async (req, res, next) => {
     try {
         const users = await prisma.user.findMany();
         res.json({
@@ -61,19 +63,35 @@ Router.get("/users", async (req, res, next) => {
     }
 });
 
-Router.put("/user", async (req, res, next) => {
+Router.put("/user/username", authentication(), async (req, res, next) => {
     const { UserId } = req;
-    const user = req.body;
+    const { username } = req.body;
     try {
 
-        const validation = UserUpdateSchema.validate(user);
+        const validation = UsernameSchema.validate(username);
         if (validation.error) return res.status(400).json({ validation });
+
+        const existingUsername = await prisma.user.findFirst({
+            where: {
+                username
+            }
+        });
+
+        if (existingUsername && username !== getCurrentUser().username) {
+            return res.status(400).json({
+                validation: {
+                    message: `User with name: ${username} already existing`
+                }
+            });
+        }
 
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId
             },
-            data: user
+            data: {
+                username
+            }
         });
 
         res.json(mapUser(updatedUser))
@@ -83,7 +101,45 @@ Router.put("/user", async (req, res, next) => {
     }
 });
 
-Router.put("/user/newPassword", async (req, res, next) => {
+Router.put("/user/email", authentication({ half: true }), async (req, res, next) => {
+    const { UserId } = req;
+    const { email } = req.body;
+    try {
+
+        const validation = EmailSchema.validate({ email });
+        if (validation.error) return res.status(400).json({ validation });
+
+        const existingEmail = await prisma.user.findFirst({
+            where: {
+                email
+            }
+        });
+
+        if (existingEmail && email !== getCurrentUser().email) {
+            return res.status(400).json({
+                validation: {
+                    message: `E-mail: ${email} already existing`
+                }
+            });
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: UserId
+            },
+            data: {
+                email
+            }
+        });
+
+        res.json(mapUser(updatedUser))
+    }
+    catch (e) {
+        next(e);
+    }
+});
+
+Router.put("/user/newPassword", authentication(), async (req, res, next) => {
     const { UserId } = req;
     const passwordData = req.body;
     try {
@@ -116,7 +172,7 @@ Router.put("/user/newPassword", async (req, res, next) => {
     }
 });
 
-Router.put("/user/avatar", imageUpload, async (req, res, next) => {
+Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next) => {
     const { UserId } = req;
     const file = req.files
         ? req.files[0]

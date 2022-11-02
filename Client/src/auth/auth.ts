@@ -12,8 +12,8 @@ export const signIn = async (username: string, password: string) => {
     return response;
 }
 
-export const signUp = async (username: string, password: string) => {
-    const response = await myRequest.post("auth/signUp", { username, password });
+export const signUp = async (username: string, email: string, password: string) => {
+    const response = await myRequest.post("auth/signUp", { username, email, password });
     if (response.status === 200) {
         const { authToken } = response.data;
         Cookies.set("auth-token", authToken);
@@ -25,3 +25,7 @@ export const signOut = () => {
     Cookies.set("auth-token", "");
     window.location.href = "/";
 }
+
+export const isHalfAuthenticated = (user) => !!user;
+export const isAuthenticated = (user) => !!user && user.emailConfirmed;
+export const isAuthorized = (user) => isAuthenticated(user);

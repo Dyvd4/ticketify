@@ -39,7 +39,7 @@ function CommentsSection(props: CommentsSectionProps) {
     const { ticket } = props;
 
     const [commentInputValue, setCommentInputValue] = useState("");
-    const { currentUser } = useCurrentUser(true);
+    const { currentUser } = useCurrentUser({ includeAllEntities: true });
     const queryClient = useQueryClient();
     const toast = useToast();
 

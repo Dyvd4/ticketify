@@ -32,22 +32,19 @@ server.use(express.json({ limit: "200mb" }));
 server.use(cors());
 
 server.use(customRequest)
-server.use(authentication({
-    excludePaths: ["/api/auth/signIn", "/api/auth/signUp", "/api/error"]
-}));
 server.use("/api", ErrorRouter);
 server.use("/api/auth", AuthRouter);
 server.use("/api", UserRouter);
-server.use("/api", TicketRouter);
-server.use("/api", TicketPriorityRouter);
-server.use("/api", CommentRouter);
-server.use("/api", TicketDueDateRouter);
-server.use("/api", TestRouter);
-server.use("/api", TicketStatusRouter);
-server.use("/api", FileRouter);
-server.use("/api", CommentInteractionRouter);
-server.use("/api", TicketActivityRouter);
-server.use("/api", LogRouter);
+server.use("/api", authentication(), TicketRouter);
+server.use("/api", authentication(), TicketPriorityRouter);
+server.use("/api", authentication(), CommentRouter);
+server.use("/api", authentication(), TicketDueDateRouter);
+server.use("/api", authentication(), TestRouter);
+server.use("/api", authentication(), TicketStatusRouter);
+server.use("/api", authentication(), FileRouter);
+server.use("/api", authentication(), CommentInteractionRouter);
+server.use("/api", authentication(), TicketActivityRouter);
+server.use("/api", authentication(), LogRouter);
 
 server.use(errorHandler);
 

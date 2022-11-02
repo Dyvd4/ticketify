@@ -1,5 +1,6 @@
 import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
+import { useMutation } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
 import { signUp } from "../../auth/auth";
 import Card from "../../components/Card";
@@ -9,14 +10,20 @@ function SignUp() {
 
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const usernameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
-    const handleSubmit = async () => {
-        const response = await signUp(usernameRef.current!.value, passwordRef.current!.value);
-        if (response.status === 200) return window.location.href = "/";
-        const errorMap = getValidationErrorMap({ response });
-        setErrorMap(errorMap);
-    }
+    const mutation = useMutation(() => {
+        return signUp(usernameRef.current!.value, emailRef.current!.value, passwordRef.current!.value)
+    }, {
+        onSuccess: () => {
+            window.location.href = "/"
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
+            setErrorMap(errorMap);
+        }
+    });
 
     return (
         <Card className="w-3/4 sm:w-auto" centered>
@@ -31,6 +38,12 @@ function SignUp() {
                         </FormLabel>
                         <Input size="sm" ref={usernameRef} name="username" />
                     </FormControl>
+                    <FormControl errorMessage={errorMap?.email}>
+                        <FormLabel>
+                            E-mail
+                        </FormLabel>
+                        <Input size="sm" ref={emailRef} name="email" />
+                    </FormControl>
                     <FormControl errorMessage={errorMap?.password}>
                         <FormLabel>
                             Password
@@ -41,7 +54,7 @@ function SignUp() {
                 <Button
                     size="sm"
                     className="mt-4"
-                    onClick={handleSubmit}
+                    onClick={() => mutation.mutate()}
                     colorScheme="blue">
                     Submit
                 </Button>
