@@ -10,7 +10,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
 
     const toast = useToast();
     const queryClient = useQueryClient();
-    const { currentUser } = useCurrentUser(true);
+    const { currentUser } = useCurrentUser({ includeAllEntities: true });
     const [sortParam] = useAtom(commentSortParamAtom);
     const { 1: setCommentRefreshAtom } = useAtom(hackyCommentRefreshAtom);
 

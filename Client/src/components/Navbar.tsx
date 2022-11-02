@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { signOut } from "src/auth/auth";
 import { sidebarAtom } from "src/context/atoms";
-import { useCurrentUser } from "src/hooks/user";
+import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import { getDataUrl } from "src/utils/image";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
@@ -12,9 +12,12 @@ import IconButton from "./Wrapper/IconButton";
 type NavbarProps = {}
 
 function Navbar(props: NavbarProps) {
-    const { currentUser } = useCurrentUser(true);
+
+    const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
     const [sidebarActive, setSidebarActive] = useAtom(sidebarAtom);
-    if (!currentUser) return null;
+
+    if (!isAuthenticated) return null;
+
     return (
         <nav className="w-full border-b-2 flex justify-between p-2">
             <IconButton circle

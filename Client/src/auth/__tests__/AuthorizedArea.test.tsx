@@ -75,7 +75,7 @@ describe("type route", () => {
             </Routes>
         ), `/${dummyRoute}`);
 
-        expect(window.location.pathname).toEqual("/EmailNotConfirmed");
+        expect(window.location.pathname).toEqual("/Auth/EmailNotConfirmed");
     });
     it("redirects to sign in page when unauthorized", () => {
 

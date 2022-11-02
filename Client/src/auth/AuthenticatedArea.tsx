@@ -54,7 +54,7 @@ function AuthenticatedArea(props: AuthenticatedAreaProps) {
         if (type === "route") {
             // half unauthenticated
             if (data.user && !data.user.emailConfirmed) {
-                returnElement = <Navigate to="/EmailNotConfirmed" />
+                returnElement = <Navigate to="/Auth/EmailNotConfirmed" />
             }
             // fully unauthenticated
             else {

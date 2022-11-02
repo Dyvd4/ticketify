@@ -1,13 +1,12 @@
-import { FormControl as ChakraFormControl, FormErrorMessage } from "@chakra-ui/react";
+import { FormControl as ChakraFormControl, FormControlProps as ChakraFormControlProps, FormErrorMessage } from "@chakra-ui/react";
 
 type FormControlProps = {
-    children: React.ReactNode
     errorMessage?: string
-}
+} & ChakraFormControlProps
 
-function FormControl({ errorMessage, children }: FormControlProps) {
+function FormControl({ errorMessage, children, ...props }: FormControlProps) {
     return (
-        <ChakraFormControl isInvalid={!!errorMessage}>
+        <ChakraFormControl isInvalid={!!errorMessage} {...props}>
             {children}
             <FormErrorMessage>
                 {errorMessage}
