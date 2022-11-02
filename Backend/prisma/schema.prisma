@@ -14,7 +14,8 @@ model User {
   id                  String               @id @default(uuid()) @db.NVarChar(100)
   username            String               @unique @db.NVarChar(100)
   password            String               @db.NVarChar(100)
-  email               String?              @db.NVarChar(100)
+  email               String?              @unique @db.NVarChar(100)
+  emailConfirmed      Boolean              @default(false)
   createdAt           DateTime?            @default(now())
   updatedAt           DateTime?            @updatedAt
   createUser          String?              @db.NVarChar(100)

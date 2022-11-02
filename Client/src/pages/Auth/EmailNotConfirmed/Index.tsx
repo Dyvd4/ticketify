@@ -1,4 +1,4 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, Box, Button, Container, Divider, Input, useToast } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Container, Divider, Input, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
@@ -7,13 +7,12 @@ import FormControl from "src/components/Wrapper/FormControl";
 import { useCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
 import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
-import { isAuthenticated } from "../../auth/auth";
+import { isAuthenticated } from "../../../auth/auth";
+import MutationErrorAlert from "./components/MutationErrorAlert";
 
-const SUPPORT_EMAIL = process.env.REACT_APP_SUPPORT_EMAIL;
+interface EmailNotConfirmedIndexProps { }
 
-interface EmailNotConfirmedProps { }
-
-function EmailNotConfirmed(props: EmailNotConfirmedProps) {
+function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
     const [email, setEmail] = useState<any>("");
@@ -91,7 +90,7 @@ function EmailNotConfirmed(props: EmailNotConfirmedProps) {
                             <AccordionIcon />
                         </AccordionButton>
                     </h2>
-                    <AccordionPanel>
+                    <AccordionPanel className="leading-relaxed">
                         <div>
                             We got you 🙂
                         </div>
@@ -99,23 +98,13 @@ function EmailNotConfirmed(props: EmailNotConfirmedProps) {
                             In case you didn't get an e-mail, <b>press the resend-button</b> and we will send you an e-mail again.
                         </div>
                         <Button
-                            className="mt-2"
+                            className="mt-2 mb-4"
                             isLoading={confirmEmailMutation.isLoading}
                             onClick={() => confirmEmailMutation.mutate()}>
                             Resend
                         </Button>
                         {confirmEmailMutation.isError && <>
-                            <Alert status="error" className="mt-2 flex-col items-start rounded-md">
-                                <div>
-                                    We're sorry but it seems that an error occurred during your request.
-                                </div>
-                                <div>
-                                    Please write an e-mail to our support <b>({SUPPORT_EMAIL})</b>.
-                                </div>
-                                <div>
-                                    We will take care of the problem!
-                                </div>
-                            </Alert>
+                            <MutationErrorAlert />
                         </>}
                     </AccordionPanel>
                 </AccordionItem>
@@ -127,12 +116,12 @@ function EmailNotConfirmed(props: EmailNotConfirmedProps) {
                             <AccordionIcon />
                         </AccordionButton>
                     </h2>
-                    <AccordionPanel>
+                    <AccordionPanel className="leading-relaxed">
                         <div>
                             If you provided the wrong e-mail, we give you the opportunity to change it.
                         </div>
-                        <FormControl errorMessage={errorMap?.Fieldless}>
-                            <FormControl className="mt-2" errorMessage={errorMap?.email}>
+                        <FormControl className="mt-2" errorMessage={errorMap?.Fieldless}>
+                            <FormControl errorMessage={errorMap?.email}>
                                 <Input
                                     type="email"
                                     name="email"
@@ -142,12 +131,14 @@ function EmailNotConfirmed(props: EmailNotConfirmedProps) {
                             </FormControl>
                         </FormControl>
                         <Button
-                            className="mt-2"
-                            colorScheme={"blue"}
+                            className="my-4"
                             isLoading={updateEmailMutation.isLoading}
                             onClick={() => updateEmailMutation.mutate()}>
                             Save
                         </Button>
+                        {updateEmailMutation.isError && <>
+                            <MutationErrorAlert />
+                        </>}
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
@@ -155,4 +146,4 @@ function EmailNotConfirmed(props: EmailNotConfirmedProps) {
     )
 }
 
-export default EmailNotConfirmed;
+export default EmailNotConfirmedIndex;

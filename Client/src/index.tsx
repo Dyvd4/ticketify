@@ -12,7 +12,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import theme from "./config/theme";
 import Init from "./init";
 import EmailConfirmed from "./pages/Auth/EmailConfirmed";
-import EmailNotConfirmed from "./pages/Auth/EmailNotConfirmed";
+import EmailNotConfirmed from "./pages/Auth/EmailNotConfirmed/Index";
 import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import LogIndex from "./pages/Log/Index";

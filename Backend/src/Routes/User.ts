@@ -101,12 +101,12 @@ Router.put("/user/username", authentication(), async (req, res, next) => {
     }
 });
 
-Router.put("/user/email", authentication(), async (req, res, next) => {
+Router.put("/user/email", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
     const { email } = req.body;
     try {
 
-        const validation = EmailSchema.validate(email);
+        const validation = EmailSchema.validate({ email });
         if (validation.error) return res.status(400).json({ validation });
 
         const existingEmail = await prisma.user.findFirst({

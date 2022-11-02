@@ -1,15 +1,18 @@
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 import express from "express";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import path from "path";
+import { authentication } from "../middlewares/auth";
 import UserSchema, { UserSignInSchema } from "../schemas/User";
 import { prisma } from "../server";
-import bcrypt from "bcrypt";
-import path from "path";
+import { sendEmailConfirmationEmail } from "../utils/auth";
+
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const Router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
-
+const CLIENT_URL = process.env.CLIENT_URL!;
 
 Router.post("/signIn", async (req, res, next) => {
     try {
@@ -103,10 +106,48 @@ Router.post("/signUp", async (req, res, next) => {
                 userId: user.id
             }
         }, SECRET_KEY);
+
+        sendEmailConfirmationEmail(user);
+
         res.json({
             message: "Successfully created user",
             authToken
         });
+    }
+    catch (e) {
+        next(e);
+    }
+});
+
+Router.post("/confirmEmail", authentication({ half: true }), async (req, res, next) => {
+    const { UserId } = req;
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                id: UserId
+            }
+        });
+        await sendEmailConfirmationEmail(user!);
+        res.json("Successfully sent e-mail");
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.get("/confirmEmail/:redirectToken", async (req, res, next) => {
+    const { redirectToken } = req.params;
+    try {
+        const { data: { userId } } = jwt.verify(redirectToken, SECRET_KEY) as { data: { userId: string } };
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                emailConfirmed: true
+            }
+        });
+        return res.redirect(`${CLIENT_URL}/Auth/EmailConfirmed`);
     }
     catch (e) {
         next(e);
