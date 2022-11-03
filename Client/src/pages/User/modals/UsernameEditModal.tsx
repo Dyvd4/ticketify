@@ -28,7 +28,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
             handleClose(response);
         },
         onError: (error) => {
-            const errorMap = getValidationErrorMap(error);
+            const errorMap = getValidationErrorMap(error, "username");
             setErrorMap(errorMap);
         }
     });

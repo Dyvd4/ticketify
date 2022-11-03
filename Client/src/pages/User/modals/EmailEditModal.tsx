@@ -1,4 +1,4 @@
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
 import { useState } from "react"
 import { useMutation } from "react-query"
 import FormControl from "src/components/Wrapper/FormControl"
@@ -28,7 +28,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
             handleClose(response);
         },
         onError: (error) => {
-            const errorMap = getValidationErrorMap(error);
+            const errorMap = getValidationErrorMap(error, "email");
             setErrorMap(errorMap);
         }
     });
@@ -57,6 +57,17 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
                             />
                         </FormControl>
                     </FormControl>
+                    <Alert status="warning" className="mt-4 rounded-md">
+                        <AlertIcon />
+                        <Box>
+                            <AlertTitle>
+                                Changing your e-mail makes you unauthenticated again.
+                            </AlertTitle>
+                            <AlertDescription>
+                                After your e-mail has changed, we will send you an e-mail confirmation link to your new e-mail to make sure it exists.
+                            </AlertDescription>
+                        </Box>
+                    </Alert>
                 </ModalBody>
                 <ModalFooter>
                     <Button

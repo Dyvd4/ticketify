@@ -5,6 +5,7 @@ import fileParams from "../schemas/params/File";
 import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "../schemas/User";
 import { prisma } from "../server";
 import { getCurrentUser } from "../services/currentUser";
+import { sendEmailConfirmationEmail } from "../utils/auth";
 import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
 const Router = express.Router();
@@ -106,7 +107,7 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
     const { email } = req.body;
     try {
 
-        const validation = EmailSchema.validate({ email });
+        const validation = EmailSchema.validate(email);
         if (validation.error) return res.status(400).json({ validation });
 
         const existingEmail = await prisma.user.findFirst({
@@ -115,7 +116,9 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
             }
         });
 
-        if (existingEmail && email !== getCurrentUser().email) {
+        const isOwnEmail = email === getCurrentUser().email;
+
+        if (existingEmail && !isOwnEmail) {
             return res.status(400).json({
                 validation: {
                     message: `E-mail: ${email} already existing`
@@ -128,9 +131,14 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
                 id: UserId
             },
             data: {
-                email
+                email,
+                emailConfirmed: isOwnEmail
+                    ? true
+                    : false
             }
         });
+
+        if (!isOwnEmail) sendEmailConfirmationEmail(updatedUser);
 
         res.json(mapUser(updatedUser))
     }

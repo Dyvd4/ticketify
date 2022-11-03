@@ -15,7 +15,7 @@ function EmailConfirmed(props: EmailConfirmedProps) {
         <Container maxW={"container.lg"}>
             <Box className="mt-10 flex flex-col items-center justify-center">
                 <h1 className="text-6xl">
-                    You e-mail has been confirmed
+                    Your e-mail has been confirmed
                 </h1>
                 <Box className="mt-10">
                     {isAuthenticated(currentUser) && <>

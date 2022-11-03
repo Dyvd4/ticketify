@@ -6,13 +6,11 @@ export const username = Joi
     .required()
     .max(40);
 
-export const email = Joi.object({
-    email: Joi
-        .string()
-        .required()
-        .max(100)
-        .email()
-})
+export const email = Joi
+    .string()
+    .required()
+    .max(100)
+    .email()
 
 export const password = Joi
     .string()

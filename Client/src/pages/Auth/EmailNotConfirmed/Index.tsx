@@ -45,7 +45,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
             });
         },
         onError: (error) => {
-            const errorMap = getValidationErrorMap(error);
+            const errorMap = getValidationErrorMap(error, "email");
             setErrorMap(errorMap);
         }
     });
@@ -67,7 +67,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
                 </div>
                 <Box>
                     <h3 className="text-3xl">
-                        Your e-mail has not been confirmed yet
+                        Your e-mail has not been confirmed
                     </h3>
                     <Box className="px-2">
                         <p className="mt-2">
@@ -136,7 +136,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
                             onClick={() => updateEmailMutation.mutate()}>
                             Save
                         </Button>
-                        {updateEmailMutation.isError && <>
+                        {updateEmailMutation.isError && !errorMap && <>
                             <MutationErrorAlert />
                         </>}
                     </AccordionPanel>

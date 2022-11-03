@@ -40,7 +40,8 @@ export type ValidationErrorMap = {
     [key: string]: string
 }
 
-export function getValidationErrorMap(error): ValidationErrorMap | null {
+/** @param key - the name of the field (for single field validations) */
+export function getValidationErrorMap(error, key?: string): ValidationErrorMap | null {
     const { response: { data: { validation, validations } } } = error;
     let errorDetails: any[] = [];
     const validationsToMap = validation
@@ -56,7 +57,7 @@ export function getValidationErrorMap(error): ValidationErrorMap | null {
         if (index === 0) {
             map = {}
         }
-        map[detail.context.key] = detail.message
+        map[key || detail.context.key] = detail.message
         return map;
     }, {});
     if (validation?.message) validationErrorMap["Fieldless"] = validation.message;
