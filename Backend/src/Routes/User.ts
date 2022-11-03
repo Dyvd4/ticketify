@@ -8,6 +8,7 @@ import { getCurrentUser } from "../services/currentUser";
 import { sendEmailConfirmationEmail } from "../utils/auth";
 import { imageUpload, mapFile } from "../utils/file";
 import { mapUser } from "../utils/user";
+
 const Router = express.Router();
 
 Router.get("/user", authentication({ half: true }), async (req, res, next) => {
@@ -154,6 +155,14 @@ Router.put("/user/newPassword", authentication(), async (req, res, next) => {
 
         const validation = NewPasswordSchema.validate(passwordData);
         if (validation.error) return res.status(400).json({ validation });
+
+        if (!(await bcrypt.compare(passwordData.currentPassword, getCurrentUser().password))) {
+            return res.status(400).json({
+                validation: {
+                    message: "Current password is not valid"
+                }
+            });
+        }
 
         if (passwordData.newPassword !== passwordData.repeatedNewPassword) {
             return res.status(400).json({

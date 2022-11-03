@@ -1,5 +1,5 @@
-import Joi from "joi";
 import { User } from "@prisma/client";
+import Joi from "joi";
 
 export const username = Joi
     .string()
@@ -35,6 +35,7 @@ export const UserSignInSchema = Joi.object({
 });
 
 export const NewPasswordSchema = Joi.object({
+    currentPassword: password,
     newPassword: password,
     repeatedNewPassword: password
 });

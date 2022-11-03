@@ -16,6 +16,7 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
 
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
     const [passwordData, setPasswordData] = useState<any>({
+        currentPassword: "",
         newPassword: "",
         repeatedNewPassword: ""
     });
@@ -56,9 +57,20 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                 </ModalHeader>
                 <ModalBody>
                     <FormControl errorMessage={errorMap?.Fieldless}>
-                        <FormControl errorMessage={errorMap?.newPassword}>
+                        <FormControl errorMessage={errorMap?.currentPassword}>
                             <FormLabel>
-                                new password
+                                Current password
+                            </FormLabel>
+                            <Input
+                                name="currentPassword"
+                                type={"password"}
+                                value={passwordData.currentPassword}
+                                onChange={handleChange}
+                            />
+                        </FormControl>
+                        <FormControl errorMessage={errorMap?.newPassword} className="mt-2">
+                            <FormLabel>
+                                New password
                             </FormLabel>
                             <Input
                                 name="newPassword"
@@ -67,9 +79,9 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                                 onChange={handleChange}
                             />
                         </FormControl>
-                        <FormControl errorMessage={errorMap?.repeatedNewPassword}>
+                        <FormControl errorMessage={errorMap?.repeatedNewPassword} className="mt-2">
                             <FormLabel>
-                                repeat new password
+                                Repeat new password
                             </FormLabel>
                             <Input
                                 name="repeatedNewPassword"
