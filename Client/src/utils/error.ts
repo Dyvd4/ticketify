@@ -13,6 +13,10 @@ export function handleError(error, options?: HandleErrorOptions) {
     }));
 }
 
+export const getErrorMessage = (error) => {
+    return getMulterErrorMessage(error) || error.message;;
+}
+
 type MulterErrorMessage = "File too large" | "Unexpected field"
 
 type MulterErrorMessageMap = {

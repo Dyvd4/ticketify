@@ -1,20 +1,19 @@
 import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { request } from "src/services/request";
-import { getMulterErrorMessage, handleError } from "src/utils/error";
-
-const getErrorMessage = (error) => {
-    return getMulterErrorMessage(error) || error.message;;
-}
+import { getErrorMessage, handleError } from "src/utils/error";
 
 export function useErrorHandler() {
+
     const toast = useToast();
+
     window.onerror = (e, source, lineNo, colNo, error) => {
         handleError({
             message: error?.message,
             stack: error?.stack
         }, { postError: true });
     }
+
     window.addEventListener("CustomError", e => {
         const { error, options } = e.detail;
         if (options.postError) request().post("Error", { error });
@@ -25,5 +24,5 @@ export function useErrorHandler() {
             status: "error",
             duration: 6000
         });
-    })
+    });
 }
