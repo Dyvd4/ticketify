@@ -132,7 +132,7 @@ function CommentsSection(props: CommentsSectionProps) {
         const avatar = currentUser
             ? {
                 username: currentUser.username,
-                ...ticket.responsibleUser.avatar
+                ...currentUser.avatar
             }
             : null;
         return avatar;
