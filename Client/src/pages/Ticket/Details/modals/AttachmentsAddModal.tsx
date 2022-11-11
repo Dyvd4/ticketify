@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
 
 type AttachmentsAddProps = {
     isOpen: boolean
@@ -37,7 +36,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
     }, {
         onSuccess: async () => {
             await queryClient.invalidateQueries(["ticket", String(id)]);
-            onClose();
+            handleClose();
             toast({
                 title: "successfully added attachment",
                 status: "success"
@@ -50,13 +49,17 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
         mutation.mutate();
     }
 
-    if (mutation.isLoading) return <LoadingRipple centered />
+    const handleClose = () => {
+        setFiles(null);
+        setErrorMessage("");
+        onClose();
+    }
 
     return (
         <Modal
             closeOnOverlayClick={false}
             isOpen={isOpen}
-            onClose={onClose}>
+            onClose={handleClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalCloseButton />
@@ -70,7 +73,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                             onChange={setFiles}
                         />
                         {errorMessage && <>
-                            <div className="text-red-500">
+                            <div className="text-red-500 m-1">
                                 {errorMessage}
                             </div>
                         </>}
@@ -78,12 +81,13 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                 </ModalBody>
                 <ModalFooter>
                     <Button
+                        isLoading={mutation.isLoading}
                         mr={3}
                         onClick={handleSubmit}
                         colorScheme={"cyan"}>
                         Submit
                     </Button>
-                    <Button onClick={onClose}>
+                    <Button onClick={handleClose}>
                         Abort
                     </Button>
                 </ModalFooter>

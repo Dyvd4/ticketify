@@ -94,6 +94,7 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                 </ModalBody>
                 <ModalFooter>
                     <Button
+                        isLoading={mutation.isLoading}
                         mr={3}
                         colorScheme={"blue"}
                         onClick={() => mutation.mutate()}>

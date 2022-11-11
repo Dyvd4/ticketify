@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "start": "ts-node src/server.ts",
+    "debug": "set DEBUG=* & npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "David Kimmich",

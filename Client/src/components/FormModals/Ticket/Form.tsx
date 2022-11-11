@@ -1,10 +1,10 @@
-import { Button, FormLabel, Input, Link, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react"
+import { Button, FormLabel, Input, Link, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react"
 import { EditorState } from "draft-js"
 import AutoCompleter from "src/components/AutoCompleter/AutoCompleter"
 import FileInput from "src/components/FileInput"
 import Editor from "src/components/RichText/Editor"
 import FormControl from "src/components/Wrapper/FormControl"
-import ModalBody from "src/components/Wrapper/ModalBody"
+import Modal from "src/components/Wrapper/Modal"
 import { mapLookup } from "src/utils/autoCompleter"
 import { ValidationErrorMap } from "src/utils/error"
 
@@ -12,6 +12,7 @@ type TicketFormProps = {
     modalIsOpen: boolean
     variant: "add" | "edit"
     loading: boolean
+    mutationLoading: boolean
     error: boolean
     success: boolean
     responsibleUsers: any[]
@@ -35,6 +36,7 @@ function TicketForm(props: TicketFormProps) {
 
     const {
         loading,
+        mutationLoading,
         success,
         error,
         errorMap,
@@ -46,6 +48,8 @@ function TicketForm(props: TicketFormProps) {
 
     return (
         <Modal
+            isLoading={loading}
+            isError={error}
             closeOnOverlayClick={false}
             isOpen={modalIsOpen}
             onClose={props.onAbort}>
@@ -55,7 +59,7 @@ function TicketForm(props: TicketFormProps) {
                 <ModalHeader>
                     {props.variant.toUpperCase()} ticket
                 </ModalHeader>
-                <ModalBody isLoading={loading} isError={error}>
+                <ModalBody>
                     <FormControl errorMessage={errorMap?.Fieldless}>
                         <VStack gap={2}>
                             <FormControl errorMessage={errorMap?.title}>
@@ -154,6 +158,7 @@ function TicketForm(props: TicketFormProps) {
                         </Link>
                     </>}
                     <Button
+                        isLoading={mutationLoading}
                         mr={3}
                         colorScheme={"cyan"}
                         onClick={props.onSubmit}>

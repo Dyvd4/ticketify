@@ -138,7 +138,7 @@ function FormWrapper(props: FormWrapperProps) {
         onClose();
     }
 
-    const loading = [responsibleUsersLoading, prioritiesLoading, ticketFetchStatus === "fetching", mutation.isLoading].some(loading => loading);
+    const loading = [responsibleUsersLoading, prioritiesLoading, ticketFetchStatus === "fetching"].some(loading => loading);
     const error = [responsibleUsersError, prioritiesError].some(error => error);
 
     return (
@@ -156,6 +156,7 @@ function FormWrapper(props: FormWrapperProps) {
             inputState={inputState}
             editorState={editorState}
             loading={loading}
+            mutationLoading={mutation.isLoading}
             success={success}
             error={error}
             errorMap={errorMap || null}

@@ -71,6 +71,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
                 </ModalBody>
                 <ModalFooter>
                     <Button
+                        isLoading={mutation.isLoading}
                         mr={3}
                         colorScheme={"blue"}
                         onClick={() => mutation.mutate()}>

@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
 import IconButton from "src/components/Wrapper/IconButton";
-import ModalBody from "src/components/Wrapper/ModalBody";
+import Modal from "src/components/Wrapper/Modal";
 import Attachment from "../components/Attachment";
 
 type AttachmentsEditProps = {
@@ -54,7 +54,6 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
 
     return (
         <Modal
-            closeOnOverlayClick={false}
             isOpen={isOpen}
             onClose={onClose}>
             <ModalOverlay />
@@ -63,7 +62,7 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                 <ModalHeader>
                     EDIT attachments
                 </ModalHeader>
-                <ModalBody isLoading={mutation.isLoading}>
+                <ModalBody>
                     <Flex
                         className="my-2"
                         direction={"column"}
@@ -104,6 +103,7 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                                         Cancel
                                     </Button>
                                     <Button
+                                        isLoading={mutation.isLoading}
                                         colorScheme="red"
                                         onClick={() => mutation.mutate()}
                                         ml={3} >
@@ -114,13 +114,6 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                         </AlertDialogOverlay>
                     </AlertDialog>
                 </ModalBody>
-                <ModalFooter>
-                    <Button
-                        onClick={onClose}
-                        colorScheme={"cyan"}>
-                        Done
-                    </Button>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );
