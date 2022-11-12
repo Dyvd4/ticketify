@@ -2,8 +2,8 @@ import { useDisclosure } from "@chakra-ui/react";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
-import TicketListItemActions from "./TicketListItemActions";
-import TicketListItemContent from "./TicketListItemContent";
+import TicketListItemActions from "./ListItemActions";
+import TicketListItemContent from "./ListItemContent";
 
 type TicketListProps = {}
 

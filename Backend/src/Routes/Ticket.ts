@@ -3,16 +3,18 @@ import fileParams from '../schemas/params/File';
 import ticketParams from '../schemas/params/Ticket';
 import TicketSchema from "../schemas/Ticket";
 import { prisma } from "../server";
-import { fileUpload, validateFiles, isImageFile, mapFile } from '../utils/file';
+import { getCurrentUser } from '../services/currentUser';
+import { fileUpload, isImageFile, mapFile, validateFiles } from '../utils/file';
 import { prismaFilterArgs } from '../utils/filter';
+import InfiniteLoadingResult, { prismaArgs as infiniteLoadingResultPrismaArgs } from '../utils/List/InfiniteLoadingResult';
+import PagerResult, { prismaArgs as pagerResultPrismaArgs } from '../utils/List/PagerResult';
 import { prismaOrderByArgs } from '../utils/orderBy';
-import PagerResult, { prismaParams } from '../utils/List/PagerResult';
 
 const Router = express.Router();
 
 Router.get('/tickets', async (req, res, next) => {
     try {
-        const params = prismaParams(req.query);
+        const params = pagerResultPrismaArgs(req.query);
         const tickets = await prisma.ticket.findMany({
             ...params,
             include: {
@@ -28,6 +30,26 @@ Router.get('/tickets', async (req, res, next) => {
         next(e)
     }
 });
+
+Router.get("/tickets/assigned", async (req, res, next) => {
+    try {
+        const params = infiniteLoadingResultPrismaArgs(req.query);
+        const tickets = await prisma.ticket.findMany({
+            ...params,
+            include: {
+                priority: true
+            },
+            where: {
+                responsibleUserId: getCurrentUser().id
+            }
+        });
+        const ticketsCount = await prisma.ticket.count();
+        res.json(new InfiniteLoadingResult(tickets, ticketsCount, params));
+    }
+    catch (e) {
+        next(e)
+    }
+})
 
 Router.get('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
