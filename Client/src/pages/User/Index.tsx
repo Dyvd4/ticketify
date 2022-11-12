@@ -2,6 +2,7 @@ import { Alert, AlertIcon, Container, Divider, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { fetchUserAll } from "src/api/user";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
+import AssignedTicketsSection from "./sections/AssignedTicketsSection";
 import AvatarSection from "./sections/AvatarSection";
 import UserDataSection from "./sections/UserDataSection";
 
@@ -27,10 +28,12 @@ function Index(props: IndexProps) {
     }
 
     return (
-        <Container className="mt-4" maxW="md">
+        <Container className="mt-4" maxW="lg">
             <AvatarSection user={data.user} />
             <Divider className="my-2" />
             <UserDataSection user={data.user} />
+            <Divider className="my-2" />
+            <AssignedTicketsSection user={data.user} />
         </Container>
     )
 }

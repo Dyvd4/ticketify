@@ -34,7 +34,7 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
                 Profile data &nbsp;
                 <FontAwesomeIcon icon={faUser} />
             </Heading>
-            <Flex className="mt-2" justifyContent={"space-between"}>
+            <Flex className="mt-4" justifyContent={"space-between"}>
                 <div>Username</div>
                 <div className="flex gap-2 items-center">
                     <div>{user.username}</div>
