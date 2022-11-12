@@ -1,5 +1,7 @@
+import { Alert, AlertIcon, Text } from "@chakra-ui/react";
 import { UseInfiniteQueryResult } from "react-query";
 import useIntersectionObserver from "src/hooks/useIntersectionObserver";
+import LoadingRipple from "../Loading/LoadingRipple";
 
 type InfiniteLoadingResult = {
     type: "infiniteLoading"
@@ -35,8 +37,17 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
         }
     });
 
-    if (isLoading) return props.loadingDisplay || null;
-    if (isError) return props.errorDisplay || null;
+    if (isLoading) return props.loadingDisplay || <LoadingRipple centered />;
+
+    if (isError) {
+        return props.errorDisplay ||
+            <Alert className="rounded-md" status="error" variant="top-accent">
+                <AlertIcon />
+                <Text>
+                    There was an error processing your request
+                </Text>
+            </Alert>;
+    }
 
     return <>
         {data.pages.map(page => (
