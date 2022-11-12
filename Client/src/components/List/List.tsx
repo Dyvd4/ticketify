@@ -7,7 +7,7 @@ import useSortItemsInit from "src/context/hooks/useSortItemsInit";
 import { filterItemsAtom, filterItemsResetAtomWithUrl } from "src/context/stores/filter";
 import { searchItemAtom } from "src/context/stores/search";
 import { sortItemsAtom, sortItemsResetAtomWithUrl } from "src/context/stores/sort";
-import useInfiniteQuery from "src/hooks/useInfiniteQuery";
+import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { getUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
@@ -84,10 +84,7 @@ function List(props: ListProps) {
             : undefined
     });
 
-    const count = query.data?.pages.reduce((pageCount, nextPage) => {
-        pageCount += nextPage.items.length;
-        return pageCount;
-    }, 0);
+    const count = useInfiniteQueryCount(query);
 
     // 🥵
     const pagingResult = query.data?.pages[0]?.type === "pagination"

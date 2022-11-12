@@ -1,8 +1,7 @@
-import { Alert, AlertIcon, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Container, Flex, Heading } from "@chakra-ui/react";
 import Activity from "src/components/Activity/Activity";
 import InfiniteQueryItems from "src/components/List/InfiniteQueryItems";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
-import useInfiniteQuery from "src/hooks/useInfiniteQuery";
+import { useInfiniteQuery } from "src/hooks/infiniteQuery";
 
 interface IndexProps { }
 
@@ -24,16 +23,7 @@ function Index(props: IndexProps) {
       </Heading>
       <Flex className="flex-col gap-4">
         <InfiniteQueryItems
-          query={actvitiesQuery}
-          loadingDisplay={<LoadingRipple centered />}
-          errorDisplay={
-            <Alert className="rounded-md" status="error" variant="top-accent">
-              <AlertIcon />
-              <Text>
-                There was an error processing your request
-              </Text>
-            </Alert>
-          }>
+          query={actvitiesQuery}>
           {activity => (
             <Activity key={activity.id} activity={activity} />
           )}
