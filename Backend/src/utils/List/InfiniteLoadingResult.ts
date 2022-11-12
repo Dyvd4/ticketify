@@ -1,9 +1,9 @@
-import { ListResultPrismaParams } from ".";
+import { ListResultPrismaArgs } from ".";
 import { ListResult } from "./Result";
 
 const ITEMS_PER_LOAD = 10;
 
-export const prismaArgs = (query): ListResultPrismaParams => {
+export const prismaArgs = (query): ListResultPrismaArgs => {
     return {
         skip: parseInt(query.skip) || 0,
         take: ITEMS_PER_LOAD
@@ -14,7 +14,7 @@ export default class InfiniteLoadingResult<T> extends ListResult<T>{
 
     nextSkip?: number
 
-    constructor(items: T[], itemsCount: number, { skip }: ListResultPrismaParams) {
+    constructor(items: T[], itemsCount: number, { skip }: ListResultPrismaArgs) {
         super(items, "infiniteLoading");
         const newNextSkip = skip + ITEMS_PER_LOAD;
         this.nextSkip = newNextSkip < itemsCount

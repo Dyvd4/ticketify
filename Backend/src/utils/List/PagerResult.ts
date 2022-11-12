@@ -1,9 +1,9 @@
-import { ListResultPrismaParams } from ".";
+import { ListResultPrismaArgs } from ".";
 import { ListResult } from "./Result"
 
 const ITEMS_PER_PAGE = 10;
 
-export const prismaParams = (query): ListResultPrismaParams => {
+export const prismaArgs = (query): ListResultPrismaArgs => {
     const page = parseInt(query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
     return {
@@ -18,7 +18,7 @@ export default class PagerResult<T> extends ListResult<T>{
     pagesCount: number
     pagesCountShrunk: boolean
 
-    constructor(items: T[], itemsCount: number, { skip }: ListResultPrismaParams) {
+    constructor(items: T[], itemsCount: number, { skip }: ListResultPrismaArgs) {
         super(items, "pagination");
         this.pagesCount = Math.floor(itemsCount / ITEMS_PER_PAGE);
         this.pagesCount += itemsCount % ITEMS_PER_PAGE > 0 ? 1 : 0
