@@ -1,5 +1,6 @@
 import { render, RenderResult } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import ResizeObserver from "resize-observer-polyfill";
 
 declare global {
     let renderWithRouter: (renderComponent, route) => RenderResult
@@ -15,6 +16,10 @@ declare global {
         </BrowserRouter>
     )
 }
+
+// @formkit/auto-animate wasn't working bc of missing RezizeObserver
+// shout out to this mf: https://stackoverflow.com/questions/64558062/how-to-mock-resizeobserver-to-work-in-unit-tests-using-react-testing-library
+(global as any).ResizeObserver = ResizeObserver;
 
 export const mockUser = {
     username: "David",
