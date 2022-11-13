@@ -2,6 +2,7 @@ import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
+import { useIsCurrentUser } from "src/hooks/user";
 import AvatarInput from "src/pages/User/components/AvatarInput";
 import { request } from "src/services/request";
 import { createDataUrl, getDataUrl } from "src/utils/image";
@@ -12,6 +13,7 @@ type AvatarSectionProps = {
 
 function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
+    const isOwnSite = useIsCurrentUser(user);
     const userAvatarAsDataUrl = user.avatar
         ? getDataUrl(user.avatar.content, user.avatar.mimeType)
         : undefined;
@@ -27,12 +29,12 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
         formData.append("files", avatar || "");
         return request().put("user/avatar", formData);
     }, {
-        onSuccess: () => {
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(["user/all"]);
             toast({
                 title: "successfully saved avatar",
                 status: "success"
             });
-            queryClient.invalidateQueries(["user/all"]);
         }
     });
 
@@ -60,6 +62,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                     alignItems={"center"}
                     flexDirection={"column"}>
                     <AvatarInput
+                        disabled={!isOwnSite}
                         username={user.username}
                         imageSrc={avatarAsDataUrl}
                         onChange={(file) => handleChange(file)}

@@ -31,7 +31,8 @@ Router.get('/tickets', async (req, res, next) => {
     }
 });
 
-Router.get("/tickets/assigned", async (req, res, next) => {
+Router.get("/tickets/assigned/:userId?", async (req, res, next) => {
+    const { userId } = req.params;
     try {
         const params = infiniteLoadingResultPrismaArgs(req.query);
         const tickets = await prisma.ticket.findMany({
@@ -40,7 +41,7 @@ Router.get("/tickets/assigned", async (req, res, next) => {
                 priority: true
             },
             where: {
-                responsibleUserId: getCurrentUser().id
+                responsibleUserId: userId || getCurrentUser().id
             }
         });
         const ticketsCount = await prisma.ticket.count();
@@ -49,7 +50,7 @@ Router.get("/tickets/assigned", async (req, res, next) => {
     catch (e) {
         next(e)
     }
-})
+});
 
 Router.get('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;

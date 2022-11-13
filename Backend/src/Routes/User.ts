@@ -13,10 +13,11 @@ const Router = express.Router();
 
 Router.get("/user", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
+    const id = req.query.id as string;
     try {
         let user = await prisma.user.findFirst({
             where: {
-                id: UserId
+                id: id || UserId
             }
         });
         if (!user) return res.status(404).json(null);
@@ -29,10 +30,11 @@ Router.get("/user", authentication({ half: true }), async (req, res, next) => {
 
 Router.get("/user/all", authentication({ half: true }), async (req, res, next) => {
     const { UserId } = req;
+    const id = req.query.id as string;
     try {
         let user = await prisma.user.findFirst({
             where: {
-                id: UserId
+                id: id || UserId
             },
             include: {
                 avatar: {

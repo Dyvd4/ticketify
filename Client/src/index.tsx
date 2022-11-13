@@ -45,6 +45,7 @@ root.render(
                 <Route index element={<Index />} />
                 <Route path="Test" element={<TestIndex />} />
                 <Route path="User" element={<UserIndex />} />
+                <Route path="User/:id" element={<UserIndex />} />
                 <Route path="Ticket">
                   <Route index element={<TicketIndex />} />
                   <Route path="Details/:id" element={<TicketDetailsIndex />} />

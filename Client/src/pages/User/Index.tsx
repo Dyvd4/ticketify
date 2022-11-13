@@ -1,6 +1,8 @@
 import { Alert, AlertIcon, Container, Divider, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { fetchUserAll } from "src/api/user";
+import { useParams } from "react-router-dom";
+import { fetchEntity } from "src/api/entity";
+import { fetchCurrentUserAll } from "src/api/user";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import AssignedTicketsSection from "./sections/AssignedTicketsSection";
 import AvatarSection from "./sections/AvatarSection";
@@ -10,7 +12,18 @@ type IndexProps = {}
 
 function Index(props: IndexProps) {
 
-    const { data, isLoading, isError } = useQuery(["user/all"], fetchUserAll);
+    const { id } = useParams();
+    const {
+        data: user,
+        isLoading,
+        isError
+    } = useQuery(id
+        ? ["user/all", id]
+        : ["user/all"], () => {
+            return id
+                ? fetchEntity({ route: `user/all`, queryParams: { id } })
+                : fetchCurrentUserAll()
+        });
 
     if (isLoading) {
         return <LoadingRipple centered />
@@ -29,11 +42,11 @@ function Index(props: IndexProps) {
 
     return (
         <Container className="mt-4" maxW="lg">
-            <AvatarSection user={data.user} />
+            <AvatarSection user={user} />
             <Divider className="my-2" />
-            <UserDataSection user={data.user} />
+            <UserDataSection user={user} />
             <Divider className="my-2" />
-            <AssignedTicketsSection user={data.user} />
+            <AssignedTicketsSection user={user} />
         </Container>
     )
 }

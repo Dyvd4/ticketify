@@ -46,9 +46,7 @@ describe("type route", () => {
     it("renders child routes when authenticated", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: authenticatedUser
-            }
+            data: authenticatedUser
         }));
 
         renderWithRouter(() => (
@@ -64,9 +62,7 @@ describe("type route", () => {
     it("redirects to email confirmation page when user's email is not confirmed yet", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: halfUnauthenticatedUser
-            }
+            data: halfUnauthenticatedUser
         }));
 
         renderWithRouter(() => (
@@ -80,9 +76,7 @@ describe("type route", () => {
     it("redirects to sign in page when unauthenticated", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: fullyUnauthenticatedUser
-            }
+            data: fullyUnauthenticatedUser
         }));
 
         renderWithRouter(() => (
@@ -105,9 +99,7 @@ describe("type area", () => {
     it("displays children when authorized", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: authenticatedUser
-            }
+            data: authenticatedUser
         }));
 
         renderWithRouter(() => (
@@ -127,9 +119,7 @@ describe("type area", () => {
     it("doesn't display child component and restricted access component when unauthorized", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: fullyUnauthenticatedUser
-            }
+            data: fullyUnauthenticatedUser
         }));
 
         renderWithRouter(() => (
@@ -152,9 +142,7 @@ describe("type area", () => {
     it("doesn't display child component and displays restricted access component when unauthorized", () => {
 
         mockedUseQuery.mockImplementation(() => ({
-            data: {
-                user: fullyUnauthenticatedUser
-            }
+            data: fullyUnauthenticatedUser
         }));
 
         renderWithRouter(() => (

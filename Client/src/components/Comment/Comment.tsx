@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Tag, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Link, Tag, useDisclosure } from "@chakra-ui/react";
 import isAfter from "date-fns/isAfter";
 import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useRef, useState } from "react";
@@ -31,6 +31,7 @@ type CommentProps = {
         ticketId: number
         author: {
             username: string
+            id: string
         },
         content: string
         createdAt: Date
@@ -151,11 +152,13 @@ function Comment(props: CommentProps) {
             gap={3}
             {...restProps}>
             {avatar && <>
-                <Avatar
-                    size={size === "small" ? "sm" : "md"}
-                    name={author.username}
-                    src={getDataUrl(avatar.content, avatar.mimeType)}
-                />
+                <Link href={`/User/${author.id}`}>
+                    <Avatar
+                        size={size === "small" ? "sm" : "md"}
+                        name={author.username}
+                        src={getDataUrl(avatar.content, avatar.mimeType)}
+                    />
+                </Link>
             </>}
             <Flex flexDirection={"column"} className="w-full">
                 <Flex

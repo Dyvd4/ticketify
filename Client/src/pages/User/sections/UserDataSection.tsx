@@ -2,6 +2,7 @@ import { Flex, Heading, IconButton, Tooltip, useDisclosure, useToast } from "@ch
 import { faEdit, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "react-query";
+import { useIsCurrentUser } from "src/hooks/user";
 import { generateFakePassword } from "src/utils/password";
 import EmailEditModal from "../modals/EmailEditModal";
 import PasswordEditModal from "../modals/PasswordEditModal";
@@ -17,6 +18,7 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
     const { isOpen: emailEditModalOpen, onOpen: onEmailEditModalOpen, onClose: onEmailEditModalClose } = useDisclosure();
     const { isOpen: passwordEditModalOpen, onOpen: onPasswordEditModalOpen, onClose: onPasswordEditModalClose } = useDisclosure();
 
+    const isOwnSite = useIsCurrentUser(user);
     const queryClient = useQueryClient();
     const toast = useToast();
 
@@ -38,14 +40,16 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
                 <div>Username</div>
                 <div className="flex gap-2 items-center">
                     <div>{user.username}</div>
-                    <Tooltip label="edit" placement="top">
-                        <IconButton
-                            size={"sm"}
-                            onClick={onUsernameEditModalOpen}
-                            aria-label="edit"
-                            icon={<FontAwesomeIcon icon={faEdit} />}
-                        />
-                    </Tooltip>
+                    {isOwnSite && <>
+                        <Tooltip label="edit" placement="top">
+                            <IconButton
+                                size={"sm"}
+                                onClick={onUsernameEditModalOpen}
+                                aria-label="edit"
+                                icon={<FontAwesomeIcon icon={faEdit} />}
+                            />
+                        </Tooltip>
+                    </>}
                 </div>
             </Flex>
             <Flex
@@ -56,30 +60,34 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
                 <div>E-mail</div>
                 <div className="flex gap-2 items-center min-w-0">
                     <div className="truncate">{user.email || "-"}</div>
-                    <Tooltip label="edit" placement="top">
-                        <IconButton
-                            size={"sm"}
-                            onClick={onEmailEditModalOpen}
-                            aria-label="edit"
-                            icon={<FontAwesomeIcon icon={faEdit} />}
-                        />
-                    </Tooltip>
+                    {isOwnSite && <>
+                        <Tooltip label="edit" placement="top">
+                            <IconButton
+                                size={"sm"}
+                                onClick={onEmailEditModalOpen}
+                                aria-label="edit"
+                                icon={<FontAwesomeIcon icon={faEdit} />}
+                            />
+                        </Tooltip>
+                    </>}
                 </div>
             </Flex>
-            <Flex className="mt-2" justifyContent={"space-between"}>
-                <div>Password</div>
-                <div className="flex gap-2 items-center">
-                    <div>{generateFakePassword(10)}</div>
-                    <Tooltip label="edit" placement="top">
-                        <IconButton
-                            size={"sm"}
-                            onClick={onPasswordEditModalOpen}
-                            aria-label="edit"
-                            icon={<FontAwesomeIcon icon={faEdit} />}
-                        />
-                    </Tooltip>
-                </div>
-            </Flex>
+            {isOwnSite && <>
+                <Flex className="mt-2" justifyContent={"space-between"}>
+                    <div>Password</div>
+                    <div className="flex gap-2 items-center">
+                        <div>{generateFakePassword(10)}</div>
+                        <Tooltip label="edit" placement="top">
+                            <IconButton
+                                size={"sm"}
+                                onClick={onPasswordEditModalOpen}
+                                aria-label="edit"
+                                icon={<FontAwesomeIcon icon={faEdit} />}
+                            />
+                        </Tooltip>
+                    </div>
+                </Flex>
+            </>}
             <UsernameEditModal
                 user={user}
                 isOpen={usernameEditModalOpen}

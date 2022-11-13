@@ -6,9 +6,10 @@ type AvatarInputProps = {
     username: string
     imageSrc?: any
     onChange(file: File | null): void
+    disabled?: boolean
 } & ComponentPropsWithRef<"div">
 
-function AvatarInput({ imageSrc, username, onChange, ...props }: AvatarInputProps) {
+function AvatarInput({ imageSrc, username, disabled, onChange, ...props }: AvatarInputProps) {
 
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -21,22 +22,30 @@ function AvatarInput({ imageSrc, username, onChange, ...props }: AvatarInputProp
     }
 
     const handleDrop = (e) => {
+        if (disabled) return;
         e.preventDefault();
         setDragOver(false);
         onChange(e.dataTransfer.files?.[0] || null);
     }
 
+    const handleDrag = (e, dragOver: boolean) => {
+        if (disabled) return;
+        e.preventDefault();
+        setDragOver(dragOver);
+    }
+
     return (
         <Box
-            className={`rounded-full relative cursor-pointer z-10
+            className={`rounded-full relative z-10
                         flex justify-center items-center
-                        ${dragOver ? "border-dashed" : ""}`}
-            onDragLeave={(e) => { e.preventDefault(); setDragOver(false) }}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
-            onMouseOver={(e) => setDragOver(true)}
-            onMouseOut={(e) => setDragOver(false)}
+                        ${dragOver ? "border-dashed" : ""}
+                        ${!disabled ? "cursor-pointer" : ""}`}
+            onDragLeave={(e) => handleDrag(e, false)}
+            onDragOver={(e) => handleDrag(e, true)}
+            onMouseOver={(e) => !disabled && setDragOver(true)}
+            onMouseOut={(e) => !disabled && setDragOver(false)}
             onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => !disabled && fileInputRef.current?.click()}
             {...props}>
             <Avatar
                 className="ring-2 ring-sky-500 relative"

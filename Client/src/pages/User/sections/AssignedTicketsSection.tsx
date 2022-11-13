@@ -5,6 +5,7 @@ import { InfiniteQueryItems } from "src/components/List";
 import ListItem from "src/components/List/ListItem";
 import TicketListItemContent from "src/components/Lists/Ticket/ListItemContent";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useIsCurrentUser } from "src/hooks/user";
 
 type AssignedTicketsSectionsProps = {
     user: any
@@ -12,7 +13,8 @@ type AssignedTicketsSectionsProps = {
 
 function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
 
-    const query = useInfiniteQuery<any, any>(["ticket"], { route: "tickets/assigned" });
+    const isOwnSite = useIsCurrentUser(user);
+    const query = useInfiniteQuery<any, any>(["ticket"], { route: `tickets/assigned/${isOwnSite ? null : user.id}` });
     const ticketCount = useInfiniteQueryCount(query);
 
     return (
@@ -29,7 +31,7 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
             </List>
             {ticketCount === 0 && <>
                 <Text className="text-secondary">
-                    You don't have tickets assigned &nbsp;
+                    {isOwnSite ? "You don't have" : "He doesn't has"} tickets assigned &nbsp;
                     <FontAwesomeIcon icon={faSmile} />
                 </Text>
             </>}
