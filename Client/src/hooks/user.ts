@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchUser, fetchUserAll } from "src/api/user";
+import { fetchCurrentUser, fetchCurrentUserAll } from "src/api/user";
 import { isAuthenticated, isHalfAuthenticated } from "src/auth/auth";
 
 interface UseCurrentUserParams {
@@ -12,10 +12,10 @@ interface UseCurrentUserParams {
 }
 export const useCurrentUser = (params?: UseCurrentUserParams) => {
 
-    const { data, ...queryResult } = useQuery([params?.includeAllEntities ? "user/all" : "user"], params?.includeAllEntities ? fetchUserAll : fetchUser);
+    const { data, ...queryResult } = useQuery([params?.includeAllEntities ? "user/all" : "user"], params?.includeAllEntities ? fetchCurrentUserAll : fetchCurrentUser);
 
     return {
-        currentUser: data?.user,
+        currentUser: data,
         ...queryResult
     };
 }
@@ -43,4 +43,9 @@ export const useCurrentUserWithAuthentication = (params: UseCurrentUserWithAuthe
             ? isHalfAuthenticated(currentUser)
             : isAuthenticated(currentUser)
     }
+}
+
+export const useIsCurrentUser = (user) => {
+    const { currentUser } = useCurrentUser();
+    return currentUser?.id === user.id;
 }

@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
-import { fetchUser } from "../api/user";
+import { fetchCurrentUser } from "../api/user";
 import { isAuthenticated, isAuthorized as defaultIsAuthorized } from "./auth";
 import RestrictedAccess from "./RestrictedAccess";
 
@@ -24,7 +24,11 @@ function AuthorizedArea(props: AuthorizedAreaProps) {
         showRestrictedAccess = type === "area" ? true : false,
     } = props;
 
-    const { isLoading, isError, data } = useQuery(["user"], fetchUser);
+    const {
+        isLoading,
+        isError,
+        data: user
+    } = useQuery(["user"], fetchCurrentUser);
 
     let returnElement: any = null;
 
@@ -36,7 +40,7 @@ function AuthorizedArea(props: AuthorizedAreaProps) {
 
     else if (isError) returnElement = <div className="text-red-500">An error occurred</div>;
 
-    else if (isAuthorized(data.user)) {
+    else if (isAuthorized(user)) {
         if (type === "route") {
             returnElement = <Outlet />
         }
@@ -49,7 +53,7 @@ function AuthorizedArea(props: AuthorizedAreaProps) {
     else {
         if (type === "route") {
             // half unauthenticated
-            if (data.user && !data.user.emailConfirmed) {
+            if (user && !user.emailConfirmed) {
                 returnElement = <Navigate to="/Auth/EmailNotConfirmed" />
             }
             // fully unauthenticated

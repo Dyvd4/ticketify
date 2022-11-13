@@ -6,16 +6,16 @@ const myRequest = request({
     validateStatus: (status) => validStatuses.includes(status)
 });
 
-export async function fetchUser() {
+export async function fetchCurrentUser() {
     let user: any = null;
     const response = await myRequest.get("user");
     if (response.status === 200) user = response.data;
-    return { user };
+    return user;
 }
 
-export async function fetchUserAll() {
+export async function fetchCurrentUserAll() {
     let user: any = null;
     const response = await myRequest.get("user/all");
     if (response.status === 200) user = response.data;
-    return { user };
+    return user;
 }

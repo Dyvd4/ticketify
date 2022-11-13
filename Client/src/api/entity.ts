@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { request } from "../services/request"
+import { request } from "../services/request";
 
 const myRequest = request();
 
@@ -20,7 +20,9 @@ export async function fetchEntity({ route, options, ...args }: FetchEntityParams
     else if ("queryParams" in args) {
         const tempURL = new URL(window.location.origin);
         Object.keys(args.queryParams).forEach(key => {
-            tempURL.searchParams.set(key, JSON.stringify(args.queryParams[key]));
+            tempURL.searchParams.set(key, typeof args.queryParams[key] === "object"
+                ? JSON.stringify(args.queryParams[key])
+                : args.queryParams[key]);
         });
         mappedRoute += `/?${tempURL.searchParams.toString()}`;
     }
