@@ -35,7 +35,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
         });
     }, {
         onSuccess: async () => {
-            await queryClient.invalidateQueries(["ticket", String(id)]);
+            await queryClient.invalidateQueries(["ticket/attachments", String(id)]);
             handleClose();
             toast({
                 title: "successfully added attachment",

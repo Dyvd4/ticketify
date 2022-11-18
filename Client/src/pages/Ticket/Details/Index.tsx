@@ -20,15 +20,31 @@ function TicketDetailsIndex() {
     const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
     const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
     const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
+   
+    const { id } = useParams();
+
     // queries
     // -------
-    const { id } = useParams();
-    const { isLoading, isError, data } = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
+    const {
+        isLoading: ticketLoading,
+        isError: ticketError,
+        data: ticket
+    } = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
+    const {
+        isLoading: ticketAttachmentsLoading,
+        isError: ticketAttachmentsError,
+        data: ticketAttachments
+    } = useQuery(["ticket/attachments", id], () => fetchEntity({ route: `ticket/attachments/${id}` }), {
+        refetchOnWindowFocus: false
+    });
+
+    const isLoading = [ticketLoading, ticketAttachmentsLoading].some(loading => loading);
     if (isLoading) {
         return <LoadingRipple centered />
     }
 
+    const isError = [ticketError, ticketAttachmentsError].some(error => error);
     if (isError) {
         return (
             <Alert className="rounded-md" status="error" variant="top-accent">
@@ -44,8 +60,7 @@ function TicketDetailsIndex() {
         files,
         images,
         attachments,
-        ...ticket
-    } = data;
+    } = ticketAttachments;
 
     return (
         <Container maxW="container.lg">

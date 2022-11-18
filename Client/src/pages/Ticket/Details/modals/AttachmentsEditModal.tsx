@@ -36,9 +36,9 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
         })
     }, {
         onSuccess: async () => {
-            await queryClient.invalidateQueries(["ticket", String(id)]);
+            await queryClient.invalidateQueries(["ticket/attachments", String(id)]);
             onAlertClose();
-            const { attachments } = queryClient.getQueryData(["ticket", String(id)]) as any;
+            const { attachments } = queryClient.getQueryData(["ticket/attachments", String(id)]) as any;
             if (attachments.length === 0) onClose();
             toast({
                 title: "successfully removed attachment",
