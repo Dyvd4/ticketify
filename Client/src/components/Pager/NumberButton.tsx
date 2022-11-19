@@ -7,6 +7,7 @@ type NumberButtonProps = React.PropsWithChildren<{
 function NumberButton({ children, active, ...props }: NumberButtonProps) {
     return (
         <Button
+            data-testid="NumberButton"
             _dark={{
                 backgroundColor: active ? "cyan.400" : "" // originial is 200
             }}

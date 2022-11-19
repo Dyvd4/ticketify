@@ -22,11 +22,12 @@ function FilterDrawer({ inputs, ...props }: FilterDrawerProps) {
     }
 
     return (
-        <Drawer isOpen={drawerActive}
+        <Drawer
+            isOpen={drawerActive}
             placement={"right"}
             onClose={() => setDrawer(false)}>
             <DrawerOverlay />
-            <DrawerContent>
+            <DrawerContent data-testid="FilterDrawer">
                 <DrawerCloseButton />
                 <DrawerHeader>
                     Filter

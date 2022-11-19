@@ -13,6 +13,7 @@ type ListItemProps = {
 function ListItem({ content, actions, className, ...props }: ListItemProps) {
     return (
         <ChakraListItem
+            data-testid="ListItem"
             {...props}
             _light={{
                 backgroundColor: "gray.200"

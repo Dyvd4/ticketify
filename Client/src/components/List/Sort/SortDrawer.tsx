@@ -22,11 +22,12 @@ function SortDrawer({ inputs, ...props }: SortDrawerProps) {
     }
 
     return (
-        <Drawer isOpen={drawerActive}
+        <Drawer
+            isOpen={drawerActive}
             placement={"right"}
             onClose={() => setDrawer(false)}>
             <DrawerOverlay />
-            <DrawerContent>
+            <DrawerContent data-testid="SortDrawer">
                 <DrawerCloseButton />
                 <DrawerHeader>
                     Sort

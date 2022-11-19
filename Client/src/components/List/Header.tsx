@@ -25,7 +25,9 @@ function Header(props: HeaderProps) {
     const [searchItem, setSearchItem] = useAtom(searchItemAtom);
 
     return (
-        <Heading className="text-center my-8 mb-2 flex justify-between items-center gap-2">
+        <Heading
+            data-testid="ListHeader"
+            className="text-center my-8 mb-2 flex justify-between items-center gap-2">
             <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
                 <span>
                     {title}
@@ -61,14 +63,14 @@ function Header(props: HeaderProps) {
                         </span>
                     </Tooltip>
                 </>}
-                {!!useFilter && <>
+                {!!useSort && <>
                     <Tooltip
-                        data-testid="list-sort-button"
                         label="sort"
                         placement="top"
                         aria-label="sort">
                         <span className="flex justify-center items-center">
                             <IconButton
+                                data-testid="ListHeader-sort-button"
                                 size={"sm"}
                                 onClick={() => setSortDrawer(true)}
                                 aria-label="sort"
@@ -77,14 +79,14 @@ function Header(props: HeaderProps) {
                         </span>
                     </Tooltip>
                 </>}
-                {!!useSort && <>
+                {!!useFilter && <>
                     <Tooltip
-                        data-testid="list-filter-button"
                         label="filter"
                         placement="top"
                         aria-label="filter">
                         <span className="flex justify-center items-center">
                             <IconButton
+                                data-testid="ListHeader-filter-button"
                                 size={"sm"}
                                 onClick={() => setFilterDrawer(true)}
                                 aria-label="filter"
