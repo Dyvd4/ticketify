@@ -8,9 +8,11 @@ class PagerResult<T> extends ListResult<T>{
     currentPage: number
     pagesCount: number
     pagesCountShrunk: boolean
+    pageIsFull: boolean
 
     constructor(items: T[], itemsCount: number, { skip }: ListResultPrismaArgs, itemsPerPage: number) {
         super(items, "pagination");
+        this.pageIsFull = this.items.length === itemsPerPage;
         this.pagesCount = Math.floor(itemsCount / itemsPerPage);
         this.pagesCount += itemsCount % itemsPerPage > 0 ? 1 : 0
         const currentPage = skip / itemsPerPage + 1

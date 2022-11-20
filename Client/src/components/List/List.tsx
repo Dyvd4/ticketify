@@ -29,6 +29,7 @@ type ListProps = {
         onResult?(listItems)
     }
     listItemRender(listItem): React.ReactElement
+    loadingDisplay?: JSX.Element
     header?: {
         title: string
         showCount?: boolean
@@ -128,8 +129,6 @@ function List(props: ListProps) {
 
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);
-        // todo: check if needed
-        query.refetch();
     }
 
     const handleDrawerApply = (type: TDrawer) => {
@@ -179,7 +178,7 @@ function List(props: ListProps) {
             <ChakraList className="p-4 flex flex-col gap-4">
                 <InfiniteQueryItems
                     query={query}
-                    loadingDisplay={
+                    loadingDisplay={props.loadingDisplay ||
                         <div className="flex justify-center items-center">
                             <LoadingRipple />
                         </div>

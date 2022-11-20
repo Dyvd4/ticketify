@@ -1,5 +1,6 @@
 import List from "src/components/List/List";
 import LogListItem from "./LogListItem";
+import LogListItemSkeleton from "./LogListItemSkeleton";
 
 type LogListProps = {}
 
@@ -12,6 +13,7 @@ function LogList(props: LogListProps) {
                     queryKey: "logs"
                 }}
                 listItemRender={(item) => <LogListItem item={item} />}
+                loadingDisplay={<LogListItemSkeleton />}
                 header={{
                     title: "Logs",
                     showCount: true
