@@ -2,14 +2,14 @@ import express from "express"
 import { prisma } from "../server";
 import { prismaFilterArgs } from "../utils/filter";
 import { prismaOrderByArgs } from "../utils/orderBy";
-import InfiniteLoadingResult, { prismaArgs } from "../utils/List/InfiniteLoadingResult";
+import Pager from "../utils/List/Pager";
 const Router = express.Router();
 
 Router.get("/test", async (req, res, next) => {
     try {
-        const infiniteLoadingArgs = prismaArgs(req.query);
+        const pager = new Pager(req.query);
         const testItems = await prisma.test.findMany({
-            ...infiniteLoadingArgs,
+            ...pager.getPrismaArgs(),
             where: prismaFilterArgs(req.query),
             orderBy: prismaOrderByArgs(req.query)
         });
@@ -17,9 +17,8 @@ Router.get("/test", async (req, res, next) => {
             where: prismaFilterArgs(req.query),
             orderBy: prismaOrderByArgs(req.query)
         });
-        const pagerResult = new InfiniteLoadingResult(testItems, testItemsCount, infiniteLoadingArgs);
 
-        res.json(pagerResult);
+        res.json(pager.getResult(testItems, testItemsCount));
     }
     catch (e) {
         next(e)

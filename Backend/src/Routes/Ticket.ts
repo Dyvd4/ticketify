@@ -6,17 +6,17 @@ import { prisma } from "../server";
 import { getCurrentUser } from '../services/currentUser';
 import { fileUpload, isImageFile, mapFile, validateFiles } from '../utils/file';
 import { prismaFilterArgs } from '../utils/filter';
-import InfiniteLoadingResult, { prismaArgs as infiniteLoadingResultPrismaArgs } from '../utils/List/InfiniteLoadingResult';
-import PagerResult, { prismaArgs as pagerResultPrismaArgs } from '../utils/List/PagerResult';
+import InfiniteLoader from '../utils/List/InfiniteLoader';
+import Pager from '../utils/List/Pager';
 import { prismaOrderByArgs } from '../utils/orderBy';
 
 const Router = express.Router();
 
 Router.get('/tickets', async (req, res, next) => {
     try {
-        const params = pagerResultPrismaArgs(req.query);
+        const pager = new Pager(req.query);
         const tickets = await prisma.ticket.findMany({
-            ...params,
+            ...pager.getPrismaArgs(),
             include: {
                 priority: true
             },
@@ -24,7 +24,7 @@ Router.get('/tickets', async (req, res, next) => {
             where: prismaFilterArgs(req.query)
         });
         const ticketsCount = await prisma.ticket.count();
-        res.json(new PagerResult(tickets, ticketsCount, params));
+        res.json(pager.getResult(tickets, ticketsCount));
     }
     catch (e) {
         next(e)
@@ -34,9 +34,9 @@ Router.get('/tickets', async (req, res, next) => {
 Router.get("/tickets/assigned/:userId?", async (req, res, next) => {
     const { userId } = req.params;
     try {
-        const params = infiniteLoadingResultPrismaArgs(req.query);
+        const infiniteLoader = new InfiniteLoader(req.query);
         const tickets = await prisma.ticket.findMany({
-            ...params,
+            ...infiniteLoader.getPrismaArgs(),
             include: {
                 priority: true
             },
@@ -45,7 +45,7 @@ Router.get("/tickets/assigned/:userId?", async (req, res, next) => {
             }
         });
         const ticketsCount = await prisma.ticket.count();
-        res.json(new InfiniteLoadingResult(tickets, ticketsCount, params));
+        res.json(infiniteLoader.getResult(tickets, ticketsCount));
     }
     catch (e) {
         next(e)
