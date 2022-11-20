@@ -37,7 +37,9 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
             data-testid="Pager"
             className={`flex gap-2 m-4 ${centered ? "justify-center" : ""}`}
             {...props}>
-            <Button onClick={() => handlePageChange(currentPage - 1)}>
+            <Button
+                data-testid="prev-button"
+                onClick={() => handlePageChange(currentPage - 1)}>
                 <FontAwesomeIcon icon={faChevronLeft} />
             </Button>
             {pageNumbers.map((pageNumber) => (
@@ -73,7 +75,9 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
                     {pagesCount}
                 </NumberButton>
             </>}
-            <Button onClick={() => handlePageChange(currentPage + 1)}>
+            <Button
+                data-testid="next-button"
+                onClick={() => handlePageChange(currentPage + 1)}>
                 <FontAwesomeIcon icon={faChevronRight} />
             </Button>
         </div>
