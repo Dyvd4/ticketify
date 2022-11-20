@@ -13,7 +13,7 @@ function LogList(props: LogListProps) {
                     queryKey: "logs"
                 }}
                 listItemRender={(item) => <LogListItem item={item} />}
-                loadingDisplay={<LogListItemSkeleton />}
+                loadingDisplay={<>{new Array(3).fill(undefined).map(() => <LogListItemSkeleton />)}</>}
                 header={{
                     title: "Logs",
                     showCount: true
