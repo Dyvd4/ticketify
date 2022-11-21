@@ -112,7 +112,7 @@ function List(props: ListProps) {
 
     useEffect(() => {
         if (pagingInfo?.pagesCountShrunk) {
-            setUrlParam("page", pagingInfo.currentPage);
+            setPage(pagingInfo.currentPage);
         }
     });
 
