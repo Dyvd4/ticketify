@@ -10,13 +10,13 @@ class PagerResult<T> extends ListResult<T>{
     pagesCountShrunk: boolean
     pageIsFull: boolean
 
-    constructor(items: T[], itemsCount: number, itemsPerPage: number, currentPage: number) {
+    constructor(items: T[], totalItemsCount: number, itemsPerPage: number, currentPage: number) {
         super(items, "pagination");
 
         this.pageIsFull = this.items.length === itemsPerPage;
 
-        this.pagesCount = Math.floor(itemsCount / itemsPerPage);
-        this.pagesCount += itemsCount % itemsPerPage > 0 ? 1 : 0
+        this.pagesCount = Math.floor(totalItemsCount / itemsPerPage);
+        this.pagesCount += totalItemsCount % itemsPerPage > 0 ? 1 : 0
         this.pagesCountShrunk = !!currentPage && currentPage > this.pagesCount;
 
         if (!currentPage) this.currentPage = 1;
@@ -46,7 +46,7 @@ export default class Pager<T> {
 
     getPrismaArgs = () => this.prismaArgs;
 
-    getResult = (items: T[], itemsCount: number) => {
-        return new PagerResult(items, itemsCount, this.itemsPerPage, this.currentPage);
+    getResult = (items: T[], totalItemsCount: number) => {
+        return new PagerResult(items, totalItemsCount, this.itemsPerPage, this.currentPage);
     }
 }
