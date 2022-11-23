@@ -1,10 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "This is the backend for MERN_TW_TS template",
+  "description": "This is the backend for ticketify",
   "main": "server.ts",
   "scripts": {
     "start": "ts-node src/server.ts",
+    "dev-start": "nodemon --exec ts-node src/server.ts",
     "debug": "set DEBUG=* & npm start",
     "test": "jest"
   },
