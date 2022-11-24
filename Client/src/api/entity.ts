@@ -43,14 +43,14 @@ export async function addEntity({ route, payload, options }: AddEntityParams) {
 
 export interface UpdateEntityParams {
     route: string
-    entityId: string
+    entityId?: string
     payload: any
     options?: AxiosRequestConfig
 }
 
 export async function updateEntity({ route, entityId, payload, options }: UpdateEntityParams) {
-    const response = await myRequest.put(`${route}/${entityId}`, payload, options);
-    return response;
+    if (entityId) return myRequest.put(`${route}/${entityId}`, payload, options);
+    return myRequest.put(`${route}`, payload, options);
 }
 
 export interface RemoveEntityParams {

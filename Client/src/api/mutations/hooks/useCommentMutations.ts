@@ -68,7 +68,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
             await cancelCommentQuery();
             const currentComments = getComments();
             const oldComment = getComment(currentComments, commentId);
-            const { comments, oldComments } = replaceComment(currentComments, commentId, {
+            const { comments, oldComments } = replaceComment(currentComments, commentId!, {
                 ...oldComment,
                 ...comment,
                 updatedAt: new Date()
