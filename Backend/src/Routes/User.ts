@@ -119,9 +119,9 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
             }
         });
 
-        const isOwnEmail = email === getCurrentUser().email;
+        const isSameEmail = email === getCurrentUser().email;
 
-        if (existingEmail && !isOwnEmail) {
+        if (existingEmail && !isSameEmail) {
             return res.status(400).json({
                 validation: {
                     message: `E-mail: ${email} already existing`
@@ -129,19 +129,19 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
             });
         }
 
+        if (isSameEmail) return res.json("Your e-mail is already equal to the provided value");
+
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId
             },
             data: {
                 email,
-                emailConfirmed: isOwnEmail
-                    ? true
-                    : false
+                emailConfirmed: false
             }
         });
 
-        if (!isOwnEmail) sendEmailConfirmationEmail(updatedUser);
+        if (!isSameEmail) sendEmailConfirmationEmail(updatedUser);
 
         res.json(mapUser(updatedUser))
     }
