@@ -97,7 +97,10 @@ Router.post("/signUp", async (req, res, next) => {
             data: {
                 username,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                settings: {
+                    create: {}
+                }
             }
         });
 

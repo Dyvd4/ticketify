@@ -34,6 +34,10 @@ body {
   box-sizing: border-box !important;
 }
 
+.switch > * {
+  box-sizing: content-box !important;
+}
+
 .inactive-v {
   visibility: hidden !important;
   opacity: 0 !important;

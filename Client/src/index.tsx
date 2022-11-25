@@ -21,6 +21,7 @@ import TestIndex from "./pages/Test/Index";
 import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
+import UserSettingsIndex from "./pages/User/Settings/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.output.css";
 
@@ -45,6 +46,7 @@ root.render(
                 <Route index element={<Index />} />
                 <Route path="Test" element={<TestIndex />} />
                 <Route path="User" element={<UserIndex />} />
+                <Route path="User/Settings" element={<UserSettingsIndex />} />
                 <Route path="User/:id" element={<UserIndex />} />
                 <Route path="Ticket">
                   <Route index element={<TicketIndex />} />

@@ -56,6 +56,11 @@ function Navbar(props: NavbarProps) {
                                 Profile data
                             </MenuItem>
                         </Link>
+                        <Link href="/User/Settings">
+                            <MenuItem icon={<FontAwesomeIcon icon={faSliders} />}>
+                                Settings
+                            </MenuItem>
+                        </Link>
                         <MenuItem
                             color="red"
                             onClick={signOut}

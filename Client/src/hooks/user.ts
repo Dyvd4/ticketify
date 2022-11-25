@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { fetchEntity } from "src/api/entity";
 import { fetchCurrentUser, fetchCurrentUserAll } from "src/api/user";
 import { isAuthenticated, isHalfAuthenticated } from "src/auth/auth";
 
@@ -16,6 +17,16 @@ export const useCurrentUser = (params?: UseCurrentUserParams) => {
 
     return {
         currentUser: data,
+        ...queryResult
+    };
+}
+
+export const useCurrentUserSettings = () => {
+
+    const { data, ...queryResult } = useQuery(["userSettings"], () => fetchEntity({ route: "userSettings" }));
+
+    return {
+        currentUserSettings: data,
         ...queryResult
     };
 }

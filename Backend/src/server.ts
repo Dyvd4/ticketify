@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { authentication } from "./middlewares/auth";
+import { authentication, authorization } from "./middlewares/auth";
 import { errorHandler } from "./middlewares/errorHandler";
 import ticketActivity from "./middlewares/prisma/ticketActivity";
 import userSignature from "./middlewares/prisma/userSignature";
@@ -22,6 +22,8 @@ import UserRouter from "./routes/User";
 import backgroundServices from "./services/background/index";
 import logger from "./services/logger";
 import LogRouter from "./routes/Log";
+import UserSettingsRouter from "./routes/UserSettings";
+import { getCurrentUser } from "./services/currentUser";
 
 dotenv.config();
 
@@ -45,6 +47,12 @@ server.use("/api", authentication(), FileRouter);
 server.use("/api", authentication(), CommentInteractionRouter);
 server.use("/api", authentication(), TicketActivityRouter);
 server.use("/api", authentication(), LogRouter);
+server.use("/api", authorization({
+    strategy: (user) => [
+        user.id === getCurrentUser().id,
+        "You try to modify user setting af an other user. That is not allowed."
+    ]
+}), UserSettingsRouter);
 
 server.use(errorHandler);
 
