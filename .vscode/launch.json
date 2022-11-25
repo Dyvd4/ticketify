@@ -18,14 +18,19 @@
             "runtimeExecutable": "${workspaceRoot}/Client/node_modules/.bin/react-scripts",
             "args": [
                 "test",
+                "--transformIgnorePatterns=\"node_modules/(?!@formkit/auto-animate)/\"",
                 "--runInBand",
                 "--no-cache",
-                "--env=jsdom",
                 "--watchAll=false"
             ],
             "cwd": "${workspaceRoot}/Client",
+            "protocol": "inspector",
             "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "CI": "true"
+            },
+            "disableOptimisticBPs": true
         }
     ]
 }
