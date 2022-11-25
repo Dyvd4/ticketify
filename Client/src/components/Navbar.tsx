@@ -29,12 +29,6 @@ function Navbar(props: NavbarProps) {
                 <DarkModeButton circle
                     size="sm"
                     aria-label="Toggle darkmode" />
-                <Link href="/Settings">
-                    <IconButton circle
-                        size="sm"
-                        aria-label="Settings"
-                        icon={<FontAwesomeIcon icon={faSliders} />} />
-                </Link>
                 <Menu>
                     <MenuButton>
                         <Flex
@@ -56,7 +50,7 @@ function Navbar(props: NavbarProps) {
                                 Profile data
                             </MenuItem>
                         </Link>
-                        <Link href="/User/Settings">
+                        <Link href="/UserSettings">
                             <MenuItem icon={<FontAwesomeIcon icon={faSliders} />}>
                                 Settings
                             </MenuItem>

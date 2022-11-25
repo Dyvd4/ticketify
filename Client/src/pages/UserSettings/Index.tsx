@@ -5,7 +5,6 @@ import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { useCurrentUserSettings } from "src/hooks/user";
 import FilterAndSortPersistenceSection from "./sections/FilterAndSortPersistenceSection";
 
-
 function UserSettingsIndex() {
 
     const { isLoading, isError } = useCurrentUserSettings();
@@ -29,11 +28,6 @@ function UserSettingsIndex() {
                 <BreadcrumbItem className="text-secondary-hover">
                     <BreadcrumbLink href="/">
                         Home
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem className="text-secondary-hover">
-                    <BreadcrumbLink href="/User" isCurrentPage>
-                        User
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbItem className="text-secondary-hover">
