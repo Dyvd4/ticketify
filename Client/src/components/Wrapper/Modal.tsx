@@ -12,7 +12,7 @@ function Modal({ isLoading, isError, children, ...props }: ModalProps) {
 
     const [isOpen, setIsOpen] = useBoolean(true);
 
-    if (isLoading) return <LoadingRipple centered />;
+    if (isLoading) return <LoadingRipple usePortal />;
 
     if (isError) return (
         <ChakraModal
