@@ -1,6 +1,9 @@
 export const getUrlParam = (name: string) => {
     const url = new URL(window.location.href);
-    return url.searchParams.get(name);
+    const urlParam = url.searchParams.get(name)
+    return urlParam
+        ? JSON.parse(urlParam)
+        : null;
 }
 
 export const setUrlParam = (name: string, param) => {
