@@ -8,6 +8,7 @@ function LogList(props: LogListProps) {
     return (
         <>
             <List
+                id="6802edfd-85e0-41d7-818a-b2e7ab0c6d54"
                 fetch={{
                     route: "logs",
                     queryKey: "logs"

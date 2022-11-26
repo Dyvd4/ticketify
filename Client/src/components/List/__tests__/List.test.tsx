@@ -1,8 +1,10 @@
 import autoAnimate from "@formkit/auto-animate";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { createRef } from "react";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useCurrentUserSettings } from "src/hooks/user";
 import ListItemContent from "src/pages/Test/ListItemContent";
+import { getUrlParam, setUrlParam } from "src/utils/url";
 import List from "..";
 import ListItem from "../ListItem";
 
@@ -11,10 +13,14 @@ jest.mock("../../../hooks/infiniteQuery", () => ({
     useInfiniteQueryCount: jest.fn()
 }));
 jest.mock("@formkit/auto-animate");
+jest.mock("../../../hooks/user", () => ({
+    useCurrentUserSettings: jest.fn()
+}));
 
 const mockedUseInfiniteQuery = useInfiniteQuery as jest.Mock<any>
 const mockedUseInfiniteQueryCount = useInfiniteQueryCount as jest.Mock<any>
 const mockedAutoAnimate = autoAnimate as jest.Mock<any>
+const mockedUseCurrentUserSettings = useCurrentUserSettings as jest.Mock<any>
 
 const pages = [
     {
@@ -123,8 +129,10 @@ const pages = [
     }
 ]
 
+const listId = "372fdeec-9638-41ef-a073-12c4b6ec397c";
 const listRenderer = () => (
     render(<List
+        id={listId}
         fetch={{
             route: "test",
             queryKey: "test"
@@ -168,6 +176,21 @@ beforeEach(() => {
     }));
     mockedUseInfiniteQueryCount.mockImplementation(() => (5));
     mockedAutoAnimate.mockReturnValue(createRef());
+    mockedUseCurrentUserSettings.mockReturnValue({
+        currentUserSettings: {
+            allowFilterItemsByLocalStorage: false,
+            allowFilterItemsByUrl: false,
+            allowSortItemsByLocalStorage: false,
+            allowSortItemsByUrl: false
+        },
+        isLoading: false
+    });
+    localStorage.clear();
+    const cleanedUrl = new URL(window.location.href)
+    cleanedUrl.searchParams.delete(`filter-${listId}`);
+    cleanedUrl.searchParams.delete(`orderBy-${listId}`);
+    window.history.pushState(null, "", cleanedUrl);
+    cleanup();
 });
 
 describe("header", () => {
@@ -196,6 +219,7 @@ describe("filter", () => {
     const listRenderer = () => (
         render(
             <List
+                id={listId}
                 fetch={{
                     route: "test",
                     queryKey: "test"
@@ -232,29 +256,121 @@ describe("filter", () => {
     });
 
     describe("filter items", () => {
-        it("renders inputs", async () => {
-            listRenderer();
+        describe("render", () => {
+            it("renders inputs", async () => {
+                listRenderer();
 
-            const filterButton = screen.getByTestId("ListHeader-filter-button");
-            fireEvent.click(filterButton);
+                const filterButton = screen.getByTestId("ListHeader-filter-button");
+                fireEvent.click(filterButton);
 
-            const drawer = await screen.findByTestId("FilterDrawer");
+                const drawer = await screen.findByTestId("FilterDrawer");
 
-            expect(within(drawer).getByLabelText("Is amazing")).toBeTruthy();
-            expect(within(drawer).getByLabelText("description")).toBeTruthy();
-            expect(within(drawer).getByLabelText("created at")).toBeTruthy();
+                expect(within(drawer).getByLabelText("Is amazing")).toBeTruthy();
+                expect(within(drawer).getByLabelText("description")).toBeTruthy();
+                expect(within(drawer).getByLabelText("created at")).toBeTruthy();
+            });
+            it("renders operations", async () => {
+                listRenderer();
+
+                const filterButton = screen.getByTestId("ListHeader-filter-button");
+                fireEvent.click(filterButton);
+
+                const drawer = await screen.findByTestId("FilterDrawer");
+
+                expect(within(drawer).getByText("contains")).toBeTruthy();
+                expect(within(drawer).getByText("greater than")).toBeTruthy();
+                expect(within(drawer).getAllByText("equals")).toHaveLength(3);
+            });
         });
-        it("renders operations", async () => {
-            listRenderer();
+        describe("applying and initialization", () => {
+            describe("via URL", () => {
+                beforeEach(() => {
+                    mockedUseCurrentUserSettings.mockReturnValue({
+                        currentUserSettings: {
+                            allowFilterItemsByLocalStorage: false,
+                            allowFilterItemsByUrl: true,
+                            allowSortItemsByLocalStorage: false,
+                            allowSortItemsByUrl: false
+                        },
+                        isLoading: false
+                    });
+                });
+                it("initializes filter items via url if user setting is true", async () => {
 
-            const filterButton = screen.getByTestId("ListHeader-filter-button");
-            fireEvent.click(filterButton);
+                    setUrlParam(`filter-${listId}`, [{
+                        property: "testProperty",
+                        type: "string",
+                    }]);
 
-            const drawer = await screen.findByTestId("FilterDrawer");
+                    listRenderer();
 
-            expect(within(drawer).getByText("contains")).toBeTruthy();
-            expect(within(drawer).getByText("greater than")).toBeTruthy();
-            expect(within(drawer).getAllByText("equals")).toHaveLength(3);
+                    const filterButton = screen.getByTestId("ListHeader-filter-button");
+                    fireEvent.click(filterButton);
+
+                    const drawer = await screen.findByTestId("FilterDrawer");
+
+                    expect(within(drawer).getByLabelText("testProperty")).toBeTruthy();
+                });
+                it("sets filter items to url if user setting is true", async () => {
+                    listRenderer();
+
+                    const filterButton = screen.getByTestId("ListHeader-filter-button");
+                    fireEvent.click(filterButton);
+
+                    const drawer = await screen.findByTestId("FilterDrawer");
+
+                    expect(getUrlParam(`filter-${listId}`)).not.toBeTruthy();
+
+                    const applyButton = within(drawer).getByRole("button", { name: "apply" });
+                    fireEvent.click(applyButton);
+
+                    expect(getUrlParam(`filter-${listId}`).length).toEqual(3);
+                });
+            });
+            describe("via localStorage", () => {
+                beforeEach(() => {
+                    mockedUseCurrentUserSettings.mockReturnValue({
+                        currentUserSettings: {
+                            allowFilterItemsByLocalStorage: true,
+                            allowFilterItemsByUrl: false,
+                            allowSortItemsByLocalStorage: false,
+                            allowSortItemsByUrl: false
+                        },
+                        isLoading: false
+                    });
+                });
+                it("initializes filter items via local storage if user setting is true", async () => {
+
+                    localStorage.setItem(`filter-${listId}`, JSON.stringify([{
+                        property: "testProperty",
+                        type: "string",
+                    }]));
+
+                    listRenderer();
+
+                    const filterButton = screen.getByTestId("ListHeader-filter-button");
+                    fireEvent.click(filterButton);
+
+                    const drawer = await screen.findByTestId("FilterDrawer");
+
+                    expect(within(drawer).getByLabelText("testProperty")).toBeTruthy();
+                });
+                it("sets filter items to local storage if user setting is true", async () => {
+                    listRenderer();
+
+                    const filterButton = screen.getByTestId("ListHeader-filter-button");
+                    fireEvent.click(filterButton);
+
+                    const drawer = await screen.findByTestId("FilterDrawer");
+
+                    expect(localStorage.getItem(`filter-${listId}`)).not.toBeTruthy();
+
+                    const applyButton = within(drawer).getByRole("button", { name: "apply" });
+                    fireEvent.click(applyButton);
+
+                    expect(JSON.parse(localStorage.getItem(`filter-${listId}`)!).length).toEqual(3);
+                });
+            });
         });
     });
 });
@@ -263,6 +379,7 @@ describe("sort", () => {
 
     const listRenderer = () => (
         render(<List
+            id={listId}
             fetch={{
                 route: "test",
                 queryKey: "test"
@@ -296,28 +413,118 @@ describe("sort", () => {
     });
 
     describe("sort items", () => {
-        it("renders inputs", async () => {
-            listRenderer();
+        describe("render", () => {
+            it("renders inputs", async () => {
+                listRenderer();
 
-            const sortButton = screen.getByTestId("ListHeader-sort-button");
-            fireEvent.click(sortButton);
+                const sortButton = screen.getByTestId("ListHeader-sort-button");
+                fireEvent.click(sortButton);
 
-            const drawer = await screen.findByTestId("SortDrawer");
+                const drawer = await screen.findByTestId("SortDrawer");
 
-            expect(within(drawer).getByDisplayValue("Is amazing")).toBeTruthy();
-            expect(within(drawer).getByDisplayValue("description")).toBeTruthy();
-            expect(within(drawer).getByDisplayValue("created at")).toBeTruthy();
+                expect(within(drawer).getByDisplayValue("Is amazing")).toBeTruthy();
+                expect(within(drawer).getByDisplayValue("description")).toBeTruthy();
+                expect(within(drawer).getByDisplayValue("created at")).toBeTruthy();
+            });
+            it("renders directions", async () => {
+                listRenderer();
+
+                const sortButton = screen.getByTestId("ListHeader-sort-button");
+                fireEvent.click(sortButton);
+
+                const drawer = await screen.findByTestId("SortDrawer");
+
+                expect(within(drawer).getAllByText("ascending")).toHaveLength(3);
+                expect(within(drawer).getAllByText("descending")).toHaveLength(3);
+            });
         });
-        it("renders directions", async () => {
-            listRenderer();
+        describe("applying and initialization", () => {
+            describe("via URL", () => {
+                beforeEach(() => {
+                    mockedUseCurrentUserSettings.mockReturnValue({
+                        currentUserSettings: {
+                            allowFilterItemsByLocalStorage: false,
+                            allowFilterItemsByUrl: false,
+                            allowSortItemsByLocalStorage: false,
+                            allowSortItemsByUrl: true
+                        },
+                        isLoading: false
+                    });
+                });
+                it("initializes sort items via url if user setting is true", async () => {
 
-            const sortButton = screen.getByTestId("ListHeader-sort-button");
-            fireEvent.click(sortButton);
+                    setUrlParam(`orderBy-${listId}`, [{
+                        property: "testProperty"
+                    }]);
 
-            const drawer = await screen.findByTestId("SortDrawer");
+                    listRenderer();
 
-            expect(within(drawer).getAllByText("ascending")).toHaveLength(3);
-            expect(within(drawer).getAllByText("descending")).toHaveLength(3);
+                    const sortButton = screen.getByTestId("ListHeader-sort-button");
+                    fireEvent.click(sortButton);
+
+                    const drawer = await screen.findByTestId("SortDrawer");
+
+                    expect(within(drawer).getByDisplayValue("testProperty")).toBeTruthy();
+                });
+                it("sets sort items to url if user setting is true", async () => {
+                    listRenderer();
+
+                    const sortButton = screen.getByTestId("ListHeader-sort-button");
+                    fireEvent.click(sortButton);
+
+                    const drawer = await screen.findByTestId("SortDrawer");
+
+                    expect(getUrlParam(`orderBy-${listId}`)).not.toBeTruthy();
+
+                    const applyButton = within(drawer).getByRole("button", { name: "apply" });
+                    fireEvent.click(applyButton);
+
+                    expect(getUrlParam(`orderBy-${listId}`).length).toEqual(3);
+                });
+            });
+            describe("via localStorage", () => {
+                beforeEach(() => {
+                    mockedUseCurrentUserSettings.mockReturnValue({
+                        currentUserSettings: {
+                            allowFilterItemsByLocalStorage: false,
+                            allowFilterItemsByUrl: false,
+                            allowSortItemsByLocalStorage: true,
+                            allowSortItemsByUrl: false
+                        },
+                        isLoading: false
+                    });
+                });
+                it("initializes sort items via local storage if user setting is true", async () => {
+
+                    localStorage.setItem(`orderBy-${listId}`, JSON.stringify([{
+                        property: "testProperty"
+                    }]));
+
+                    listRenderer();
+
+                    const sortButton = screen.getByTestId("ListHeader-sort-button");
+                    fireEvent.click(sortButton);
+
+                    const drawer = await screen.findByTestId("SortDrawer");
+
+                    expect(within(drawer).getByDisplayValue("testProperty")).toBeTruthy();
+                });
+                it("sets sort items to local storage if user setting is true", async () => {
+                    listRenderer();
+
+                    const sortButton = screen.getByTestId("ListHeader-sort-button");
+                    fireEvent.click(sortButton);
+
+                    const drawer = await screen.findByTestId("SortDrawer");
+
+                    expect(localStorage.getItem(`orderBy-${listId}`)).not.toBeTruthy();
+
+                    const applyButton = within(drawer).getByRole("button", { name: "apply" });
+                    fireEvent.click(applyButton);
+
+                    expect(JSON.parse(localStorage.getItem(`orderBy-${listId}`)!).length).toEqual(3);
+                });
+            });
         });
     });
 });

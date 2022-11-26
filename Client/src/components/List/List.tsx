@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import useFilterItemsInit from "src/context/hooks/useFilterItemsInit";
 import useSearchItemInit from "src/context/hooks/useSearchItemInit";
 import useSortItemsInit from "src/context/hooks/useSortItemsInit";
-import { filterItemsAtom, filterItemsResetAtomWithUrl } from "src/context/stores/filter";
+import { filterItemsAtom } from "src/context/stores/filter";
 import { searchItemAtom } from "src/context/stores/search";
-import { sortItemsAtom, sortItemsResetAtomWithUrl } from "src/context/stores/sort";
+import { sortItemsAtom } from "src/context/stores/sort";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useCurrentUserSettings } from "src/hooks/user";
 import { useUrlParams } from "src/hooks/useUrlParams";
-import { getUrlParam, setUrlParam } from "src/utils/url";
+import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
 import Pager from "../Pager/Pager";
@@ -34,6 +35,11 @@ type ListProps = {
         title: string
         showCount?: boolean
     }
+    /**
+     * - unique id for the list
+     * - the id is used to create a relation between the filter and sort items in the local storage and the list
+     */
+    id: string
     sort: TSortItem[]
     filter: TFilterItem[]
     search?: TSearchItem
@@ -45,16 +51,18 @@ function List(props: ListProps) {
 
     const drawerRef = useRef<HTMLDivElement | null>(null);
     // sort, filter, page
-    const [filterItems] = useAtom(filterItemsAtom);
-    const [sortItems] = useAtom(sortItemsAtom);
+    const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
+    const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
-    const [, filterItemsReset] = useAtom(filterItemsResetAtomWithUrl);
-    const [, sortItemsReset] = useAtom(sortItemsResetAtomWithUrl);
     const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1, { jsonParse: true });
 
-    useFilterItemsInit(props.filter, (filterItems) => {
-        if (!getUrlParam("filter")) return;
+    const { currentUserSettings } = useCurrentUserSettings();
+
+    useFilterItemsInit({
+        defaultFilterItems: props.filter,
+        listId: props.id
+    }, (filterItems) => {
         setQueryParams(params => {
             return {
                 ...params,
@@ -62,8 +70,10 @@ function List(props: ListProps) {
             }
         });
     });
-    useSortItemsInit(props.sort, (sortItems) => {
-        if (!getUrlParam("orderBy")) return;
+    useSortItemsInit({
+        defaultSortItems: props.sort,
+        listId: props.id
+    }, (sortItems) => {
         setQueryParams(params => {
             return {
                 ...params,
@@ -135,15 +145,37 @@ function List(props: ListProps) {
         const itemsToSet = type === "filter"
             ? filterItems
             : sortItems;
-        setUrlParam(type, itemsToSet);
+
+        if ((type === "filter" && currentUserSettings.allowFilterItemsByUrl) ||
+            (type === "orderBy" && currentUserSettings.allowSortItemsByUrl)) {
+            setUrlParam(`${type}-${props.id}`, itemsToSet);
+        }
+        if ((type === "filter" && currentUserSettings.allowFilterItemsByLocalStorage) ||
+            (type === "orderBy" && currentUserSettings.allowSortItemsByLocalStorage)) {
+            localStorage.setItem(`${type}-${props.id}`, JSON.stringify(itemsToSet))
+        }
+
         setQueryParams({
             ...queryParams,
             [type]: itemsToSet
         });
     }
     const handleDrawerReset = (type: TDrawer) => {
-        if (type === "filter") filterItemsReset();
-        else sortItemsReset();
+        if (type === "filter") {
+            const newFilterItems = [...filterItems];
+            newFilterItems.forEach(filterItem => {
+                filterItem.value = undefined;
+            });
+            setFilterItems(newFilterItems);
+            localStorage.removeItem("filter");
+            deleteUrlParam("filter");
+        }
+        else {
+            const newFilterItems = [...sortItems];
+            setSortItems(newFilterItems);
+            localStorage.removeItem("orderBy");
+            deleteUrlParam("orderBy");
+        }
         const newQueryParams = { ...queryParams };
         delete newQueryParams[type];
         setQueryParams(newQueryParams);

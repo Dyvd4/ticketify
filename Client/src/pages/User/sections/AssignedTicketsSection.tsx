@@ -23,7 +23,9 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
                 Assigned tickets ({ticketCount}) &nbsp;
                 <FontAwesomeIcon icon={faTicketSimple} />
             </Heading>
-            <List className="flex flex-col gap-4 mt-4">
+            <List
+                id="9151947b-ad33-44cd-bbcc-7e8316ba1439"
+                className="flex flex-col gap-4 mt-4">
                 <InfiniteQueryItems
                     query={query}>
                     {ticket => <ListItem content={<TicketListItemContent item={ticket} />} />}

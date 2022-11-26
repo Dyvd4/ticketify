@@ -9,6 +9,7 @@ function Index(props: IndexProps) {
     return (
         <Container>
             <List
+                id="6ed914af-4959-4920-8327-1bec3dccebc7"
                 fetch={{
                     route: "test",
                     queryKey: "test"
