@@ -7,20 +7,21 @@ import ListItemContent from "src/pages/Test/ListItemContent";
 import { getUrlParam, setUrlParam } from "src/utils/url";
 import List from "..";
 import ListItem from "../ListItem";
+import { Mock, vi } from "vitest"
 
-jest.mock("../../../hooks/infiniteQuery", () => ({
-    useInfiniteQuery: jest.fn(),
-    useInfiniteQueryCount: jest.fn()
+vi.mock("../../../hooks/infiniteQuery", () => ({
+    useInfiniteQuery: vi.fn(),
+    useInfiniteQueryCount: vi.fn()
 }));
-jest.mock("@formkit/auto-animate");
-jest.mock("../../../hooks/user", () => ({
-    useCurrentUserSettings: jest.fn()
+vi.mock("@formkit/auto-animate");
+vi.mock("../../../hooks/user", () => ({
+    useCurrentUserSettings: vi.fn()
 }));
 
-const mockedUseInfiniteQuery = useInfiniteQuery as jest.Mock<any>
-const mockedUseInfiniteQueryCount = useInfiniteQueryCount as jest.Mock<any>
-const mockedAutoAnimate = autoAnimate as jest.Mock<any>
-const mockedUseCurrentUserSettings = useCurrentUserSettings as jest.Mock<any>
+const mockedUseInfiniteQuery = useInfiniteQuery as Mock<any>
+const mockedUseInfiniteQueryCount = useInfiniteQueryCount as Mock<any>
+const mockedAutoAnimate = autoAnimate as Mock<any>
+const mockedUseCurrentUserSettings = useCurrentUserSettings as Mock<any>
 
 const pages = [
     {
@@ -160,7 +161,7 @@ const listRenderer = () => (
 )
 
 beforeEach(() => {
-    const mockIntersectionObserver = jest.fn().mockImplementation(() => ({
+    const mockIntersectionObserver = vi.fn().mockImplementation(() => ({
         observe: () => null
     }));
     window.IntersectionObserver = mockIntersectionObserver

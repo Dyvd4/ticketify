@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import svgrPlugin from 'vite-plugin-svgr';
@@ -9,6 +11,17 @@ export default defineConfig({
     // comment this out if that isn't relevant for your project
     build: {
         outDir: 'build'
+    },
+    test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "./src/setupTests.tsx",
+        coverage: {
+            reporter: ["text", "html"],
+            exclude: [
+                "node_modules"
+            ]
+        }
     },
     optimizeDeps: {
         esbuildOptions: {

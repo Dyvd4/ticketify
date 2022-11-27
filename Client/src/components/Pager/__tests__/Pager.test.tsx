@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 import Pager from "../Pager"
+import { Mock, vi } from "vitest"
 
 const PagerDummy = ({ pagesCount, initialPage = 1 }) => {
     const [page, setPage] = React.useState(initialPage);
@@ -15,7 +16,7 @@ const PagerDummy = ({ pagesCount, initialPage = 1 }) => {
 
 beforeEach(() => {
     cleanup();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
 });
 
 it("displays page button with value of first page", () => {
@@ -36,8 +37,8 @@ it("displays page button with value of last page", () => {
 
 it("lets navigate via next button", () => {
 
-    const setState = jest.fn();
-    (jest.spyOn(React, "useState") as jest.Mock<any>)
+    const setState = vi.fn();
+    (vi.spyOn(React, "useState") as Mock<any>)
         .mockImplementation((initialState) => [initialState, setState]);
 
     render(<PagerDummy pagesCount={11} />);
@@ -52,8 +53,8 @@ it("lets navigate via next button", () => {
 
 it("lets navigate via prev button", () => {
 
-    const setState = jest.fn();
-    (jest.spyOn(React, "useState") as jest.Mock<any>)
+    const setState = vi.fn();
+    (vi.spyOn(React, "useState") as Mock<any>)
         .mockImplementation((initialState) => [initialState, setState]);
 
     render(<PagerDummy pagesCount={11} initialPage={2} />);

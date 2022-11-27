@@ -3,12 +3,13 @@ import { useQuery } from "react-query";
 import { Route, Routes } from "react-router-dom";
 import { authenticatedUser, DummyComponent, halfUnauthenticatedUser } from "src/setupTests";
 import AuthorizedArea from "../AuthorizedArea";
+import { Mock, vi } from "vitest"
 
-jest.mock("react-query", () => ({
-    useQuery: jest.fn()
+vi.mock("react-query", () => ({
+    useQuery: vi.fn()
 }));
 
-const mockedUseQuery = useQuery as jest.Mock<any>
+const mockedUseQuery = useQuery as Mock<any>
 const dummyRoute = "dummyRoute";
 const dummySubroute = "subRoute";
 
