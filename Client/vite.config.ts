@@ -19,7 +19,8 @@ export default defineConfig({
         coverage: {
             reporter: ["text", "html"],
             exclude: [
-                "node_modules"
+                "node_modules",
+                "src/setupTests.tsx"
             ]
         }
     },
