@@ -1,6 +1,6 @@
 import { Flex, Heading, Tag } from "@chakra-ui/react";
 import format from "date-fns/format";
-import { sanitize } from "dompurify";
+import dompurify from "dompurify";
 import BgBox from "src/components/BgBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
 
@@ -57,7 +57,7 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
             <Flex direction="column" className="my-2">
                 <BgBox
                     variant="child"
-                    dangerouslySetInnerHTML={{ __html: sanitize(description === CONTENTSTATE.EMPTY ? "No description" : description) }} />
+                    dangerouslySetInnerHTML={{ __html: dompurify.sanitize(description === CONTENTSTATE.EMPTY ? "No description" : description) }} />
             </Flex>
         </>
     );
