@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { handleError } from "../utils/error";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface RequestOptions extends AxiosRequestConfig {
     /** determines wheter an error is thrown or not */
