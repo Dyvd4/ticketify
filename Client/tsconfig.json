@@ -2,11 +2,21 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "components/*": ["src/components/*"],
-      "stores/*": ["src/context/stores/*"],
-      "pages/*": ["src/pages/*"],
-      "utils/*": ["src/utils/*"]
+      "src/*": [
+        "src/*"
+      ],
+      "components/*": [
+        "src/components/*"
+      ],
+      "stores/*": [
+        "src/context/stores/*"
+      ],
+      "pages/*": [
+        "src/pages/*"
+      ],
+      "utils/*": [
+        "src/utils/*"
+      ]
     },
     "target": "ESNext",
     "lib": [
@@ -28,6 +38,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": [
+      "vite/client"
+    ]
   }
 }

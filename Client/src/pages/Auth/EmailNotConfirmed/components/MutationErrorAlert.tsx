@@ -1,6 +1,6 @@
 import { Alert } from "@chakra-ui/react";
 
-const SUPPORT_EMAIL = process.env.REACT_APP_SUPPORT_EMAIL;
+const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL;
 
 type MutationErrorAlertProps = {}
 
