@@ -22,7 +22,6 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
     const {
         isError,
         isLoading,
-        isFetchingNextPage,
         data,
         hasNextPage,
         fetchNextPage
@@ -57,7 +56,6 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
                 </div>
             ))
         ))}
-        {isFetchingNextPage && props.fetchingNextDisplay}
     </>
 }
 

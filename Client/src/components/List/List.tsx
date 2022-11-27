@@ -1,4 +1,5 @@
-import { Alert, AlertIcon, Divider, List as ChakraList, Text } from "@chakra-ui/react";
+import { Divider, List as ChakraList } from "@chakra-ui/react";
+import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import useFilterItemsInit from "src/context/hooks/useFilterItemsInit";
@@ -207,21 +208,13 @@ function List(props: ListProps) {
                 onApply={() => handleDrawerApply("filter")}
                 onReset={() => handleDrawerReset("filter")}
             />
-            <ChakraList className="p-4 flex flex-col gap-4">
+            <ChakraList className="p-4 flex flex-col gap-4" ref={(listRef) => listRef && autoAnimate(listRef)}>
                 <InfiniteQueryItems
                     query={query}
                     loadingDisplay={props.loadingDisplay ||
                         <div className="flex justify-center items-center">
                             <LoadingRipple />
                         </div>
-                    }
-                    errorDisplay={
-                        <Alert className="rounded-md" status="error" variant="top-accent">
-                            <AlertIcon />
-                            <Text>
-                                There was an error processing your request
-                            </Text>
-                        </Alert>
                     }>
                     {listItem => listItemRender(listItem)}
                 </InfiniteQueryItems>

@@ -16,7 +16,7 @@ function LogListItemContent({ item }: { item }) {
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
     const { level, colorScheme, message, errorMessage, errorStack, createdAt } = item;
     const contentRef = useRef<HTMLDivElement | null>(null);
-    const contentHasOverflow = useHasOverflow(contentRef);
+    const contentHasOverflow = useHasOverflow(contentRef, true);
     const showMore = noOfContentLines === defaultNoOfContentLines;
 
     return (
