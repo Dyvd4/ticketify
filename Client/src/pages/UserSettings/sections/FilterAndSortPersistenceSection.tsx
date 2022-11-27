@@ -1,4 +1,4 @@
-import { Divider, Heading } from "@chakra-ui/react";
+import { Divider, Heading, Mark, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
 import { updateEntity } from "src/api/entity";
 import { useCurrentUserSettings } from "src/hooks/user";
@@ -42,7 +42,25 @@ function FilterAndSortPersistenceSection() {
     return (
         <>
             <Heading as="h3" className="text-xl font-bold">
-                Filter and sort persistence (XOR)...
+                Filter and sort persistence
+                (
+                <Popover placement="top">
+                    <PopoverTrigger>
+                        <Mark
+                            cursor={"pointer"}
+                            textDecoration={"underline"}
+                            color={"orange.100"}>
+                            XOR
+                        </Mark>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverBody className="text-base font-normal">
+                            This means that only one of the below settings-group can be checked.
+                        </PopoverBody>
+                    </PopoverContent>
+                </Popover>
+                )...
             </Heading>
             <Divider className="mb-2 mt-4" />
             <SettingsSwitch
