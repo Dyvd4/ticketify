@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import path from "path";
-import nodeMailer from "../services/nodeMailer";
+import nodeMailer from "@lib/nodeMailer";
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
@@ -10,6 +10,7 @@ const URL = process.env.URL!;
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 const fromEmail = process.env.SUPPORT_EMAIL;
 
+// TODO: move out to e-mail delivery
 export const sendEmailConfirmationEmail = async (user: User) => {
     const redirectToken = jwt.sign({
         data: {

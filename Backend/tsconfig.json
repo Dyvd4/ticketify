@@ -60,6 +60,41 @@
     // "emitDecoratorMetadata": true,               /* Enables experimental support for emitting type metadata for decorators. */
     /* Advanced Options */
     "skipLibCheck": true, /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
+    "baseUrl": "./src/",
+    "paths": {
+      "@prisma": [
+        "prisma.ts"
+      ],
+      "@logger": [
+        "logger.ts"
+      ],
+      "@config": [
+        "config.ts"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@middlewares/*": [
+        "lib/middlewares/*"
+      ],
+      "@data/*": [
+        "lib/data/*"
+      ],
+      "@services/*": [
+        "entity/services/*"
+      ],
+      "@schemas/*": [
+        "entity/schemas/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+    }
+  },
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }
