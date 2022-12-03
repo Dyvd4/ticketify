@@ -1,14 +1,11 @@
 import prisma from "@prisma";
 import { format } from "date-fns";
-import dotenv from "dotenv";
-import path from "path";
 import winston, { createLogger, transports } from "winston";
 import Transport from "winston-transport";
 import { LogLevelColorSchemeMap, LogLevelIconMap } from "@lib/data/maps/log";
+import config from "@config";
 
-dotenv.config({ path: path.join(__dirname, "../../.env") });
-
-const logPath = path.join(__dirname, "../../", process.env.logPath!);
+const { LOG_PATH } = config;
 
 // custom transports
 // -----------------
@@ -52,11 +49,11 @@ const logger = createLogger({
     level: "info",
     transports: [
         new transports.File({
-            filename: `${logPath}comined.json`
+            filename: `${LOG_PATH}comined.json`
         }),
         new transports.File({
             level: "error",
-            filename: `${logPath}error.json`
+            filename: `${LOG_PATH}error.json`
         }),
         new DbTransport({
             format: winston.format.combine(
@@ -65,11 +62,11 @@ const logger = createLogger({
         })
     ],
     exceptionHandlers: [
-        new transports.File({ filename: `${logPath}exceptions.json` }),
+        new transports.File({ filename: `${LOG_PATH}exceptions.json` }),
         new transports.Console({ format: winston.format.simple() })
     ],
     rejectionHandlers: [
-        new transports.File({ filename: `${logPath}rejections.json` }),
+        new transports.File({ filename: `${LOG_PATH}rejections.json` }),
         new transports.Console({ format: winston.format.simple() })
     ],
     exitOnError: false

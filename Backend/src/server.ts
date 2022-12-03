@@ -1,9 +1,9 @@
+import config from "@config";
 import backgroundAgents from "@lib/backgroundAgents/index";
 import { authentication, authorization } from "@middlewares/auth";
 import { errorHandler } from "@middlewares/errorHandler";
 import { customRequest } from "@middlewares/requests";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 import AuthController from "./controller/Auth";
 import CommentController from "./controller/Comment";
@@ -22,10 +22,9 @@ import UserSettingsController from "./controller/UserSettings";
 import { getCurrentUser } from "./entity/services/currentUser";
 import logger from "./logger";
 
-dotenv.config();
+const { PORT } = config;
 
 const server = express();
-const PORT = process.env.PORT!;
 
 server.use(express.json({ limit: "200mb" }));
 server.use(cors());

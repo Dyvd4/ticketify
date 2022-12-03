@@ -1,16 +1,14 @@
+import config from "@config";
+import prisma from "@prisma";
 import { User } from "@prisma/client";
-import dotenv from "dotenv";
+import { getCurrentUser, setCurrentUser } from "@services/currentUser";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import path from "path";
-import prisma from "@prisma";
-import { getCurrentUser, setCurrentUser } from "@services/currentUser";
-dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-const SECRET_KEY = process.env.JWT_SECRET_KEY!;
+const { JWT_SECRET_KEY } = config;
 
 const getUserId = (authToken: string) => {
-    const decoded = jwt.verify(authToken, SECRET_KEY) as { data: { userId: string } };
+    const decoded = jwt.verify(authToken, JWT_SECRET_KEY) as { data: { userId: string } };
     return decoded.data.userId;
 }
 

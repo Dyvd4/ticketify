@@ -1,11 +1,8 @@
-import dotenv from "dotenv";
-import express from 'express';
-import path from "path";
+import prisma from "@prisma";
 import FileSchema from "@schemas/File";
 import fileParams from "@schemas/params/File";
-import prisma from "@prisma";
 import { fileUpload, imageUpload, uploadFile, validateFiles, validateImageFiles } from "@services/file";
-dotenv.config({ path: path.join(__dirname, "../../.env") });
+import express from 'express';
 const Router = express.Router();
 
 Router.get('/files', async (req, res, next) => {

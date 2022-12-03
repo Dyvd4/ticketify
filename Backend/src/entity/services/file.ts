@@ -1,15 +1,13 @@
+import config from "@config";
 import { File } from "@prisma/client";
-import dotenv from "dotenv";
 import fsSync from "fs";
 import fs, { mkdir } from "fs/promises";
 import multer from "multer";
 import path from "path";
-dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-const FILE_IMAGE_MAX_SIZE_B = parseInt(process.env.FILE_IMAGE_MAX_SIZE_KB!) * 1000;
-const FILE_IMAGE_MAX_COUNT = parseInt(process.env.FILE_IMAGE_MAX_COUNT!);
-const FILE_MAX_SIZE_B = parseInt(process.env.FILE_MAX_SIZE_KB!) * 1000;
-const FILE_MAX_COUNT = parseInt(process.env.FILE_MAX_COUNT!);
+const { FILE_IMAGE_MAX_SIZE_KB, FILE_IMAGE_MAX_COUNT, FILE_MAX_COUNT, FILE_MAX_SIZE_KB } = config;
+const FILE_IMAGE_MAX_SIZE_B = FILE_IMAGE_MAX_SIZE_KB * 1000;
+const FILE_MAX_SIZE_B = FILE_MAX_SIZE_KB * 1000;
 
 const imageTypes = /jpeg|jpg|png/;
 const uploadPath = path.join(__dirname, "../../upload");

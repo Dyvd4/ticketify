@@ -1,14 +1,9 @@
-import { User } from "@prisma/client";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
-import path from "path";
+import config from "@config";
 import nodeMailer from "@lib/nodeMailer";
+import { User } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
-dotenv.config({ path: path.join(__dirname, "../../.env") });
-
-const URL = process.env.URL!;
-const SECRET_KEY = process.env.JWT_SECRET_KEY!;
-const fromEmail = process.env.SUPPORT_EMAIL;
+const { URL, JWT_SECRET_KEY, SUPPORT_EMAIL } = config
 
 // TODO: move out to e-mail delivery
 export const sendEmailConfirmationEmail = async (user: User) => {
@@ -16,10 +11,10 @@ export const sendEmailConfirmationEmail = async (user: User) => {
         data: {
             userId: user.id
         }
-    }, SECRET_KEY);
+    }, JWT_SECRET_KEY);
 
     return nodeMailer.sendMail({
-        from: fromEmail,
+        from: SUPPORT_EMAIL,
         to: user.email!,
         subject: "E-mail verification for ticketify",
         html: `Click <a href='${URL}/auth/confirmEmail/${redirectToken}' target="_blank">here</a> to verify yourself to ticketify`

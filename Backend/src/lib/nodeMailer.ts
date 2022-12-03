@@ -1,10 +1,8 @@
+import config from "@config";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-import path from "path";
-dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-const username = process.env.SMTP_USERNAME;
-const password = process.env.SMTP_PASSWORD;
+const username = config.SMTP_USERNAME;
+const password = config.SMTP_PASSWORD;
 
 const transporter = nodemailer.createTransport({
     host: "smtp.mailgun.org",
