@@ -1,5 +1,4 @@
-import Object from "lodash"
-import { Request } from "express";
+import Object from "lodash";
 import { ListResultPrismaArgs } from ".";
 
 type FilterItemProps = {
@@ -25,26 +24,26 @@ type OrderByQueryParams = Array<OrderByQueryParam>
 export default class List {
 
     protected prismaArgs: ListResultPrismaArgs;
-    private query: Request["query"];
+    private stringifiedPrismaFilter: string;
+    private stringifiedPrismOrderBy: string
     protected itemsPerLoad: number
 
-    constructor(query: Request["query"], prismaArgs: ListResultPrismaArgs, itemsPerLoad: number) {
-        this.query = query;
+    constructor(prismaFilter: string, prismaOrderBy: string, prismaArgs: ListResultPrismaArgs, itemsPerLoad: number) {
+        this.stringifiedPrismaFilter = prismaFilter;
+        this.stringifiedPrismOrderBy = prismaOrderBy;
         this.prismaArgs = prismaArgs;
         this.itemsPerLoad = itemsPerLoad;
     }
 
     getPrismaArgs = () => this.prismaArgs;
 
-    getPrismaFilterArgs = () => expressPrismaFilterArgs(this.query);
+    getPrismaFilterArgs = () => getParsedPrismaFilterArgs(this.stringifiedPrismaFilter);
 
-    getPrismaOrderByArgs = () => expressPrismaFilterArgs(this.query);
+    getPrismaOrderByArgs = () => getParsedPrismaOrderByArgs(this.stringifiedPrismOrderBy);
 }
 
-export const expressPrismaFilterArgs = (query: Request["query"]) => prismaFilterArgs(query.filter as string)
-
-const prismaFilterArgs = (stringifiedFilter: string) => {
-    const parseFilterValue = (value, type: FilterOperationsType) => {
+export const getParsedPrismaFilterArgs = (stringifiedFilter: string) => {
+    const getParsesFilterValue = (value, type: FilterOperationsType) => {
         switch (type) {
             case "boolean":
                 return Boolean(value)
@@ -63,16 +62,14 @@ const prismaFilterArgs = (stringifiedFilter: string) => {
         .filter(filter => !filter.disabled)
         .reduce((map, filter) => {
             if (filter.value !== null && filter.value !== "") {
-                Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, parseFilterValue(filter.value, filter.type));
+                Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, getParsesFilterValue(filter.value, filter.type));
             }
             return map;
         }, {})
     return mappedFilter;
 }
 
-export const expressPrismaOrderByArgs = (query: Request["query"]) => prismaOrderByArgs(query.orderBy as string)
-
-const prismaOrderByArgs = (stringifiedOrderBy: string) => {
+export const getParsedPrismaOrderByArgs = (stringifiedOrderBy: string) => {
     const mappedOrderBy = (orderBy) => {
         const orderByObj = {};
         Object.set(orderByObj, orderBy.property, orderBy.direction.value);
