@@ -1,11 +1,10 @@
 import config from "@config";
-import nodeMailer from "@lib/nodeMailer";
+import MailTransporter from "@lib/MailTransporter";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
 const { URL, JWT_SECRET_KEY, SUPPORT_EMAIL } = config
 
-// TODO: move out to e-mail delivery
 export const sendEmailConfirmationEmail = async (user: User) => {
     const redirectToken = jwt.sign({
         data: {
@@ -13,7 +12,7 @@ export const sendEmailConfirmationEmail = async (user: User) => {
         }
     }, JWT_SECRET_KEY);
 
-    return nodeMailer.sendMail({
+    return MailTransporter.sendMail({
         from: SUPPORT_EMAIL,
         to: user.email!,
         subject: "E-mail verification for ticketify",

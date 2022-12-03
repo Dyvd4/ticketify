@@ -5,7 +5,7 @@ import fileParams from "@schemas/params/File";
 import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@schemas/User";
 import prisma from "@prisma";
 import { getCurrentUser } from "@services/currentUser";
-import { sendEmailConfirmationEmail } from "@utils/auth";
+import { sendEmailConfirmationEmail } from "@services/auth";
 import { imageUpload, mapFile } from "@services/file";
 import { mapUser } from "@services/user";
 
