@@ -11,7 +11,7 @@ export default class InfiniteLoader<T> extends List {
             skip: parseInt(query.skip as string) || 0,
             take: itemsPerLoad
         };
-        super(prismaArgs, itemsPerLoad);
+        super(query, prismaArgs, itemsPerLoad);
     }
 
     getResult = (items: T[], itemsCount: number) => {

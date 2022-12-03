@@ -17,7 +17,7 @@ export default class Pager<T> extends List {
             take: itemsPerLoad
         }
 
-        super(prismaArgs, itemsPerLoad);
+        super(query, prismaArgs, itemsPerLoad);
         this.currentPage = currentPage;
     }
 

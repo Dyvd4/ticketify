@@ -72,14 +72,17 @@
       "@config": [
         "config.ts"
       ],
+      "@controller/*": [
+        "infrastructure/controller/*"
+      ],
       "@lib/*": [
-        "lib/*"
+        "infrastructure/lib/*"
       ],
       "@middlewares/*": [
-        "lib/middlewares/*"
+        "infrastructure/lib/middlewares/*"
       ],
       "@data/*": [
-        "lib/data/*"
+        "infrastructure/lib/data/*"
       ],
       "@services/*": [
         "entity/services/*"
@@ -88,7 +91,7 @@
         "entity/schemas/*"
       ],
       "@utils/*": [
-        "utils/*"
+        "infrastructure/utils/*"
       ],
     }
   },

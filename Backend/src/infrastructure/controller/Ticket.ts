@@ -18,8 +18,8 @@ Router.get('/tickets', async (req, res, next) => {
             include: {
                 priority: true
             },
-            orderBy: pager.getPrismaOrderByArgs(req.query),
-            where: pager.getPrismaFilterArgs(req.query)
+            orderBy: pager.getPrismaOrderByArgs(),
+            where: pager.getPrismaFilterArgs()
         });
         const ticketsCount = await prisma.ticket.count();
         res.json(pager.getResult(tickets, ticketsCount));

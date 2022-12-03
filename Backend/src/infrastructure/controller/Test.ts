@@ -1,20 +1,21 @@
 import express from "express"
 import prisma from "@prisma";
 import Pager from "@lib/list/Pager";
-import { prismaFilterArgs, prismaOrderByArgs } from "@lib/list";
+import { expressPrismaFilterArgs, expressPrismaOrderByArgs } from "@lib/list";
 const Router = express.Router();
 
 Router.get("/test", async (req, res, next) => {
     try {
         const pager = new Pager(req.query);
+
         const testItems = await prisma.test.findMany({
             ...pager.getPrismaArgs(),
-            where: pager.getPrismaFilterArgs(req.query),
-            orderBy: pager.getPrismaOrderByArgs(req.query)
+            where: pager.getPrismaFilterArgs(),
+            orderBy: pager.getPrismaOrderByArgs()
         });
         const testItemsCount = await prisma.test.count({
-            where: pager.getPrismaFilterArgs(req.query),
-            orderBy: pager.getPrismaOrderByArgs(req.query)
+            where: pager.getPrismaFilterArgs(),
+            orderBy: pager.getPrismaOrderByArgs()
         });
 
         res.json(pager.getResult(testItems, testItemsCount));
@@ -27,8 +28,8 @@ Router.get("/test", async (req, res, next) => {
 Router.get("/test/woPager", async (req, res, next) => {
     try {
         const testItems = await prisma.test.findMany({
-            where: prismaFilterArgs(req.query),
-            orderBy: prismaOrderByArgs(req.query)
+            where: expressPrismaFilterArgs(req.query),
+            orderBy: expressPrismaOrderByArgs(req.query)
         });
         res.json(testItems);
     }

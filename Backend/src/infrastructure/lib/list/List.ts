@@ -25,22 +25,25 @@ type OrderByQueryParams = Array<OrderByQueryParam>
 export default class List {
 
     protected prismaArgs: ListResultPrismaArgs;
+    private query: Request["query"];
     protected itemsPerLoad: number
 
-    constructor(prismaArgs: ListResultPrismaArgs, itemsPerLoad: number) {
+    constructor(query: Request["query"], prismaArgs: ListResultPrismaArgs, itemsPerLoad: number) {
+        this.query = query;
         this.prismaArgs = prismaArgs;
         this.itemsPerLoad = itemsPerLoad;
     }
 
     getPrismaArgs = () => this.prismaArgs;
 
-    getPrismaFilterArgs = prismaFilterArgs
+    getPrismaFilterArgs = () => expressPrismaFilterArgs(this.query);
 
-    getPrismaOrderByArgs = prismaOrderByArgs
+    getPrismaOrderByArgs = () => expressPrismaFilterArgs(this.query);
 }
 
-export const prismaFilterArgs = (query: Request["query"]) => {
+export const expressPrismaFilterArgs = (query: Request["query"]) => prismaFilterArgs(query.filter as string)
 
+const prismaFilterArgs = (stringifiedFilter: string) => {
     const parseFilterValue = (value, type: FilterOperationsType) => {
         switch (type) {
             case "boolean":
@@ -54,8 +57,8 @@ export const prismaFilterArgs = (query: Request["query"]) => {
         }
     }
 
-    if (!query.filter) return {};
-    const filter: FilterQueryParams = JSON.parse((query.filter) as string);
+    if (!stringifiedFilter) return {};
+    const filter: FilterQueryParams = JSON.parse(stringifiedFilter);
     const mappedFilter = filter
         .filter(filter => !filter.disabled)
         .reduce((map, filter) => {
@@ -67,14 +70,16 @@ export const prismaFilterArgs = (query: Request["query"]) => {
     return mappedFilter;
 }
 
-export const prismaOrderByArgs = (query: Request["query"]) => {
+export const expressPrismaOrderByArgs = (query: Request["query"]) => prismaOrderByArgs(query.orderBy as string)
+
+const prismaOrderByArgs = (stringifiedOrderBy: string) => {
     const mappedOrderBy = (orderBy) => {
         const orderByObj = {};
         Object.set(orderByObj, orderBy.property, orderBy.direction.value);
         return orderByObj;
     }
-    if (!query.orderBy) return {};
-    const orderBy: OrderByQueryParams = JSON.parse((query.orderBy) as string);
+    if (!stringifiedOrderBy) return {};
+    const orderBy: OrderByQueryParams = JSON.parse(stringifiedOrderBy);
     if (orderBy.length) {
         return orderBy
             .filter(orderBy => !orderBy.disabled)

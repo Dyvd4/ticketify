@@ -10,12 +10,12 @@ Router.get('/logs', async (req, res, next) => {
 
         const items = await prisma.log.findMany({
             ...pager.getPrismaArgs(),
-            where: pager.getPrismaFilterArgs(req.query),
-            orderBy: pager.getPrismaOrderByArgs(req.query)
+            where: pager.getPrismaFilterArgs(),
+            orderBy: pager.getPrismaOrderByArgs()
         });
         const itemsCount = await prisma.log.count({
-            where: pager.getPrismaFilterArgs(req.query),
-            orderBy: pager.getPrismaOrderByArgs(req.query)
+            where: pager.getPrismaFilterArgs(),
+            orderBy: pager.getPrismaOrderByArgs()
         });
 
         res.json(pager.getResult(items, itemsCount));

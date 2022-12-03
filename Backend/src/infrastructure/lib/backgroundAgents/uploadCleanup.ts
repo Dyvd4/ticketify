@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import logger from "../../logger";
+import logger from "@logger";
 
 const uploadPath = path.join(__dirname, "../../../upload");
 
