@@ -72,26 +72,26 @@
       "@config": [
         "config.ts"
       ],
+      "@core/*": [
+        "core/*"
+      ],
       "@controller/*": [
-        "infrastructure/controller/*"
+        "controller/*"
       ],
       "@lib/*": [
-        "infrastructure/lib/*"
-      ],
-      "@middlewares/*": [
-        "infrastructure/lib/middlewares/*"
+        "lib/*"
       ],
       "@data/*": [
-        "infrastructure/lib/data/*"
+        "lib/data/*"
       ],
       "@services/*": [
-        "entity/services/*"
+        "core/services/*"
       ],
       "@schemas/*": [
-        "entity/schemas/*"
+        "core/schemas/*"
       ],
       "@utils/*": [
-        "infrastructure/utils/*"
+        "utils/*"
       ],
     }
   },

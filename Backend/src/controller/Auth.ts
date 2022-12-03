@@ -1,8 +1,8 @@
 import config from "@config";
-import { authentication } from "@middlewares/auth";
+import { authentication } from "@services/middlewares/auth";
 import prisma from "@prisma";
 import UserSchema, { UserSignInSchema } from "@schemas/User";
-import { sendEmailConfirmationEmail } from "infrastructure/utils/auth";
+import { sendEmailConfirmationEmail } from "@utils/auth";
 import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";

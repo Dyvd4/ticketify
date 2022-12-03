@@ -1,8 +1,8 @@
 import config from "@config";
 import backgroundAgents from "@lib/backgroundAgents/index";
-import { authentication, authorization } from "@middlewares/auth";
-import { errorHandler } from "@middlewares/errorHandler";
-import { customRequest } from "@middlewares/requests";
+import { authentication, authorization } from "@services/middlewares/auth";
+import { errorHandler } from "@lib/middlewares/errorHandler";
+import { customRequest } from "@lib/middlewares/requests";
 import cors from "cors";
 import express from "express";
 import AuthController from "@controller/Auth";
@@ -19,7 +19,7 @@ import TicketPriorityController from "@controller/TicketPriority";
 import TicketStatusController from "@controller/TicketStatus";
 import UserController from "@controller/User";
 import UserSettingsController from "@controller/UserSettings";
-import { getCurrentUser } from "./entity/services/currentUser";
+import { getCurrentUser } from "@core/services/currentUser";
 import logger from "./logger";
 
 const { PORT } = config;
