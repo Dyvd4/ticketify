@@ -3,7 +3,7 @@ import { request } from "../services/request";
 
 const myRequest = request();
 
-export type FetchEntityParams = {
+export type FetchEntityArgs = {
     route: string,
     options?: AxiosRequestConfig
 } & ({
@@ -14,7 +14,7 @@ export type FetchEntityParams = {
     entityId?: never
 })
 
-export async function fetchEntity({ route, options, ...args }: FetchEntityParams) {
+export async function fetchEntity({ route, options, ...args }: FetchEntityArgs) {
     let mappedRoute = `${route}`;
     if ("entityId" in args) mappedRoute += `/${args.entityId}`;
     else if ("queryParams" in args) {
@@ -30,36 +30,36 @@ export async function fetchEntity({ route, options, ...args }: FetchEntityParams
     return response.data;
 }
 
-export interface AddEntityParams {
+export type AddEntityArgs = {
     route: string
     payload: any,
     options?: AxiosRequestConfig
 }
 
-export async function addEntity({ route, payload, options }: AddEntityParams) {
+export async function addEntity({ route, payload, options }: AddEntityArgs) {
     const response = await myRequest.post(`${route}`, payload, options);
     return response;
 }
 
-export interface UpdateEntityParams {
+export type UpdateEntityArgs = {
     route: string
     entityId?: string
     payload: any
     options?: AxiosRequestConfig
 }
 
-export async function updateEntity({ route, entityId, payload, options }: UpdateEntityParams) {
+export async function updateEntity({ route, entityId, payload, options }: UpdateEntityArgs) {
     if (entityId) return myRequest.put(`${route}/${entityId}`, payload, options);
     return myRequest.put(`${route}`, payload, options);
 }
 
-export interface RemoveEntityParams {
+export type RemoveEntityArgs = {
     route: string
     entityId?: string
     options?: AxiosRequestConfig
 }
 
-export function removeEntity({ route, entityId, options }: RemoveEntityParams) {
+export function removeEntity({ route, entityId, options }: RemoveEntityArgs) {
     if (entityId) return myRequest.delete(`${route}/${entityId}`, options);
     return myRequest.delete(`${route}`, options);
 }

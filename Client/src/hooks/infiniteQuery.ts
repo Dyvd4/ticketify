@@ -1,9 +1,9 @@
 import { QueryKey, useInfiniteQuery as reactQueryUseInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from "react-query";
-import { fetchEntity, FetchEntityParams } from "src/api/entity";
+import { fetchEntity, FetchEntityArgs } from "src/api/entity";
 
 export const useInfiniteQuery = <TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
     queryKey: TQueryKey,
-    fetchEntityArgs: Omit<FetchEntityParams, "entityId">,
+    fetchEntityArgs: Omit<FetchEntityArgs, "entityId">,
     options?: Omit<UseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey>, 'queryKey' | 'queryFn'>
 ): UseInfiniteQueryResult<TData, TError> => {
     return reactQueryUseInfiniteQuery(queryKey, ({ pageParam }) => {

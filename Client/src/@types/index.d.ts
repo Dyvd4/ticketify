@@ -1,7 +1,4 @@
 declare global {
-  interface Array<T> {
-    distinct(): Array<T>
-  }
   interface GlobalEventHandlersEventMap {
     "CustomError": CustomEvent
   }
