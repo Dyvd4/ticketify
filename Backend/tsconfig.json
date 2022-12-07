@@ -93,6 +93,9 @@
       "@utils/*": [
         "utils/*"
       ],
+      "@mail-delivery/*": [
+        "core/mail-delivery/*"
+      ]
     }
   },
   "ts-node": {

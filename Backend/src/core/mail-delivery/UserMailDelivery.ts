@@ -19,3 +19,7 @@ export const sendEmailConfirmationEmail = async (user: User) => {
         html: `Click <a href='${URL}/auth/confirmEmail/${redirectToken}' target="_blank">here</a> to verify yourself to ticketify`
     });
 }
+
+export default {
+    sendEmailConfirmationEmail
+}

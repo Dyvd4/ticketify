@@ -4,7 +4,7 @@ import { authentication } from "@core/middlewares/Auth";
 import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@core/schemas/UserSchema";
 import prisma from "@prisma";
 import { getCurrentUser } from "@core/services/CurrentUserService";
-import { sendEmailConfirmationEmail } from "@core/services/AuthService";
+import { sendEmailConfirmationEmail } from "@mail-delivery/UserMailDelivery";
 import { imageUpload } from "@lib/middlewares/FileUpload";
 import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
 import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";

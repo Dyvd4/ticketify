@@ -2,7 +2,7 @@ import config from "@config";
 import { authentication } from "@core/middlewares/Auth";
 import prisma from "@prisma";
 import UserSchema, { UserSignInSchema } from "@core/schemas/UserSchema";
-import { sendEmailConfirmationEmail } from "@core/services/AuthService";
+import { sendEmailConfirmationEmail } from "@mail-delivery/UserMailDelivery";
 import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";
