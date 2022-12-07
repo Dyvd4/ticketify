@@ -2,7 +2,6 @@ import { CommentInteraction } from '@prisma/client';
 import express from 'express';
 import CommentInteractionSchema from "@core/schemas/CommentInteractionSchema";
 import prisma from "@prisma";
-import commentInteractionParams from "@schemas/params/CommentInteraction";
 
 const Router = express.Router();
 
@@ -33,10 +32,10 @@ Router.get('/commentInteraction/:id', async (req, res, next) => {
 
 Router.post('/commentInteraction', async (req, res, next) => {
     const { UserId } = req;
-    let commentInteraction = commentInteractionParams({
+    let commentInteraction = {
         ...req.body,
         createdFromId: UserId
-    });
+    };
     try {
         const validation = CommentInteractionSchema.validate(commentInteraction);
         if (validation.error) return res.status(400).json({ validation });

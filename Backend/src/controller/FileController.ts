@@ -1,9 +1,9 @@
 import prisma from "@prisma";
 import FileSchema from "@core/schemas/FileSchema";
-import fileParams from "@schemas/params/File";
 import { uploadFile } from "@core/services/FileService";
 import { validateFiles, validateImageFiles, fileUpload, imageUpload } from "@lib/middlewares/FileUpload";
 import express from 'express';
+import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
 const Router = express.Router();
 
 Router.get('/files', async (req, res, next) => {
@@ -37,7 +37,7 @@ Router.post('/files', fileUpload, validateFiles, async (req, res, next) => {
     // no type from multer exported :(
     const files = req.files as any[];
     try {
-        const filesToInsert = files.map(file => fileParams(file));
+        const filesToInsert = files.map(file => MulterFileToFileEntityMap(file));
         const fileValidations = filesToInsert.map(file => {
             const validation = FileSchema.validate(file);
             if (validation.error) return validation;
@@ -63,7 +63,7 @@ Router.post('/images', imageUpload, validateImageFiles, async (req, res, next) =
     // no type from multer exported :(
     const files = req.files as any[];
     try {
-        const filesToInsert = files.map(file => fileParams(file));
+        const filesToInsert = files.map(file => MulterFileToFileEntityMap(file));
         const fileValidations = filesToInsert.map(file => {
             const validation = FileSchema.validate(file);
             if (validation.error) return validation;
@@ -92,7 +92,7 @@ Router.put('/file/:id', fileUpload, validateFiles, async (req, res, next) => {
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = fileParams(file);
+        const fileToUpdate = MulterFileToFileEntityMap(file);
         const validation = FileSchema.validate(fileToUpdate);
         if (validation.error) return res.status(400).json({ validation });
 
@@ -118,7 +118,7 @@ Router.put('/image/:id', imageUpload, validateImageFiles, async (req, res, next)
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = fileParams(file);
+        const fileToUpdate = MulterFileToFileEntityMap(file);
         const validation = FileSchema.validate(fileToUpdate);
         if (validation.error) return res.status(400).json({ validation });
 

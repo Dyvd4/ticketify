@@ -36,7 +36,7 @@ export default class ExpressPager<T> extends Pager<T> {
     constructor(query: Request["query"], itemsPerLoad = ITEMS_PER_PAGE) {
         super(
             query.filter as string,
-            query.filter as string,
+            query.orderBy as string,
             parseInt(query.page as string),
             itemsPerLoad
         );

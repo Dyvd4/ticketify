@@ -1,14 +1,13 @@
-import InfiniteLoader from '@lib/list/InfiniteLoader';
-import Pager from '@lib/list/Pager';
-import prisma from "@prisma";
-import fileParams from '@schemas/params/File';
-import ticketParams from '@schemas/params/Ticket';
 import TicketSchema from "@core/schemas/TicketSchema";
 import { getCurrentUser } from '@core/services/CurrentUserService';
+import InfiniteLoader from '@lib/list/InfiniteLoader';
+import Pager from '@lib/list/Pager';
 import { fileUpload, validateFiles } from '@lib/middlewares/FileUpload';
-import FileMap from '@core/client-map/FileMap';
-import express from 'express';
 import { isImageFile } from '@lib/utils/FileUtils';
+import prisma from "@prisma";
+import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
+import express from 'express';
+import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
 
 const Router = express.Router();
 
@@ -73,7 +72,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
                 status: true
             }
         });
-        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileMap(ticket.responsibleUser.avatar.file, "base64");
+        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileEntityToClientMap(ticket.responsibleUser.avatar.file, "base64");
         res.json(ticket);
     }
     catch (e) {
@@ -99,7 +98,7 @@ Router.get('/ticket/attachments/:id', async (req, res, next) => {
         const attachments = ticket?.attachments.map(attachment => attachment.file) || [];
         const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
         const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
-            .map(image => FileMap(image, "base64"));
+            .map(image => FileEntityToClientMap(image, "base64"));
         // 🥵
         (ticket as any).attachments = attachments;
         (ticket as any).files = files;
@@ -119,7 +118,7 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
         if (validation.error) return res.status(400).json({ validation });
         ticket = validation.value;
 
-        const filesToCreate = files.map(file => fileParams(file));
+        const filesToCreate = files.map(file => MulterFileToFileEntityMap(file));
         const newTicket = await prisma.ticket.create({
             data: {
                 ...ticket,
@@ -143,7 +142,7 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
 
 Router.put('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
-    let ticket = ticketParams(req.body);
+    let ticket = req.body;
     try {
         const validation = TicketSchema.validate(ticket);
         if (validation.error) return res.status(400).json({ validation });
@@ -204,7 +203,7 @@ Router.post('/ticket/file', fileUpload, async (req, res, next) => {
     const { id: ticketId } = req.body;
     const files: any = req.files || []
     try {
-        const filesToCreate = files.map(file => fileParams(file));
+        const filesToCreate = files.map(file => MulterFileToFileEntityMap(file));
         const updatedTicket = await prisma.ticket.update({
             where: {
                 id: parseInt(ticketId)

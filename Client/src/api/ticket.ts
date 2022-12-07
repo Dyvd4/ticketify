@@ -1,10 +1,22 @@
 import { addEntity, updateEntity } from "./entity";
 
+const payload = {
+    title: null,
+    responsibleUserId: null,
+    dueDate: null,
+    priorityId: null,
+    files: null,
+    description: null
+}
+
+type PayloadKeys = keyof typeof payload
+
 export const mutateTicket = async (ticket: any, variant: "add" | "edit") => {
+
     if (variant === "add") {
         const formData = new FormData();
         Object.keys(ticket || {}).forEach(key => {
-            if (key !== "files") {
+            if (key !== "files" && Object.keys(payload).includes(key)) {
                 formData.append(key, ticket[key])
             }
         });
@@ -24,6 +36,13 @@ export const mutateTicket = async (ticket: any, variant: "add" | "edit") => {
     return updateEntity({
         route: "ticket",
         entityId: ticket.id,
-        payload: ticket
+        payload: {
+            title: ticket.title,
+            responsibleUserId: ticket.responsibleUserId,
+            dueDate: ticket.dueDate,
+            priorityId: ticket.priorityId,
+            files: ticket.files,
+            description: ticket.description
+        } satisfies Record<PayloadKeys, any>
     });
 }

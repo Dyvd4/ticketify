@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import { authentication } from "@core/middlewares/Auth";
-import fileParams from "@schemas/params/File";
 import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@core/schemas/UserSchema";
 import prisma from "@prisma";
 import { getCurrentUser } from "@core/services/CurrentUserService";
 import { sendEmailConfirmationEmail } from "@core/services/AuthService";
-import FileMap from "@core/client-map/FileMap";
 import { imageUpload } from "@lib/middlewares/FileUpload";
+import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
+import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
 
 const Router = express.Router();
 
@@ -46,7 +46,7 @@ Router.get("/user/all", authentication({ half: true }), async (req, res, next) =
         });
         if (!user) return res.status(404).json(null);
         (user as any).avatar = user.avatar?.file
-            ? FileMap(user.avatar.file, "base64")
+            ? FileEntityToClientMap(user.avatar.file, "base64")
             : null;
         res.json(user);
     }
@@ -198,7 +198,7 @@ Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next)
         : null;
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToCreateOrUpdate = fileParams(file);
+        const fileToCreateOrUpdate = MulterFileToFileEntityMap(file);
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId

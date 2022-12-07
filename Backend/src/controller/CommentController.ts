@@ -1,9 +1,8 @@
 import express from 'express';
 import CommentSchema from "@core/schemas/CommentSchema";
-import commentParams from "@schemas/params/Comment";
 import prisma from "@prisma";
 import { getInteractions, prismaIncludeParams, userHasInteracted } from '@core/services/CommentService';
-import FileMap from '@core/client-map/FileMap';
+import FileEntityToClientMap from '@core/maps/FileEntityToClientMap';
 
 const Router = express.Router();
 
@@ -24,7 +23,7 @@ Router.get('/comments', async (req, res, next) => {
                 author: {
                     ...comment.author,
                     avatar: comment.author.avatar?.file
-                        ? FileMap(comment.author.avatar.file, "base64")
+                        ? FileEntityToClientMap(comment.author.avatar.file, "base64")
                         : null
                 },
                 childs: comment.childs.map(child => {
@@ -33,7 +32,7 @@ Router.get('/comments', async (req, res, next) => {
                         author: {
                             ...child.author,
                             avatar: child.author.avatar?.file
-                                ? FileMap(child.author.avatar.file, "base64")
+                                ? FileEntityToClientMap(child.author.avatar.file, "base64")
                                 : null
                         },
                         ...getInteractions(child.interactions),
@@ -90,7 +89,7 @@ Router.get('/comments/:ticketId', async (req, res, next) => {
                 author: {
                     ...comment.author,
                     avatar: comment.author.avatar?.file
-                        ? FileMap(comment.author.avatar.file, "base64")
+                        ? FileEntityToClientMap(comment.author.avatar.file, "base64")
                         : null
                 },
                 childs: comment.childs.map(child => {
@@ -99,7 +98,7 @@ Router.get('/comments/:ticketId', async (req, res, next) => {
                         author: {
                             ...child.author,
                             avatar: child.author.avatar?.file
-                                ? FileMap(child.author.avatar.file, "base64")
+                                ? FileEntityToClientMap(child.author.avatar.file, "base64")
                                 : null
                         },
                         ...getInteractions(child.interactions),
@@ -179,7 +178,7 @@ Router.get('/comment/:id', async (req, res, next) => {
 
 Router.post('/comment', async (req, res, next) => {
     const { UserId } = req;
-    let comment = commentParams(req.body);
+    let comment = req.body;
     try {
         comment.authorId = UserId!;
 
@@ -215,7 +214,7 @@ Router.post('/comment', async (req, res, next) => {
 Router.put('/comment/:id', async (req, res, next) => {
     const { UserId } = req;
     const { id } = req.params;
-    let comment = commentParams(req.body);
+    let comment = req.body;
     try {
 
         const commentDb = await prisma.comment.findFirst({

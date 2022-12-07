@@ -1,4 +1,4 @@
-const mapFile = (file) => {
+const MulterFileToFileEntityMap = (file) => {
     return {
         fileName: file.filename,
         originalFileName: file.originalname,
@@ -6,4 +6,4 @@ const mapFile = (file) => {
         content: file.buffer
     }
 }
-export default mapFile
+export default MulterFileToFileEntityMap

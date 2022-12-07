@@ -104,6 +104,7 @@ function FormWrapper(props: FormWrapperProps) {
                 "description": getEmptyState(editorState["description"])
             });
             setSuccess(true);
+            setErrorMap(null);
         },
         onError: (error) => {
             const errorMap = getValidationErrorMap(error);

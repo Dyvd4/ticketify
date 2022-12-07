@@ -29,7 +29,7 @@ export default class ExpressInfiniteLoader<T> extends InfiniteLoader<T> {
 
     constructor(query: Request["query"], itemsPerLoad = ITEMS_PER_LOAD) {
         super(query.filter as string,
-            query.filter as string,
+            query.orderBy as string,
             parseInt(query.skip as string),
             itemsPerLoad
         );
