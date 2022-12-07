@@ -99,7 +99,7 @@ class AutoCompleter extends Component<Props, State> {
         });
     }
     registerClickEvent = () => {
-        window.document.documentElement.addEventListener("click", (e) => {
+        const handleOutsideClick = (e) => {
             let target = e.target as HTMLElement;
             if (!target.closest(".autocomplete-list") && !target.closest(".autocomplete-list-wrapper")) {
                 this.setState({
@@ -108,7 +108,9 @@ class AutoCompleter extends Component<Props, State> {
                     notFound: false
                 });
             }
-        });
+        };
+        document.addEventListener("mousedown", handleOutsideClick);
+        document.addEventListener("touchstart", handleOutsideClick);
     }
     // helper
     // ------
