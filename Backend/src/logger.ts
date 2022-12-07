@@ -49,7 +49,7 @@ const logger = createLogger({
     level: "info",
     transports: [
         new transports.File({
-            filename: `${LOG_PATH}comined.json`
+            filename: `${LOG_PATH}combined.json`
         }),
         new transports.File({
             level: "error",
@@ -78,7 +78,8 @@ if (process.env.NODE_ENV !== "production") {
             winston.format.colorize(),
             winston.format.timestamp(),
             consoleFormat
-        )
+        ),
+        handleExceptions: true
     }));
 }
 
