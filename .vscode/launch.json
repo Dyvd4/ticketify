@@ -5,32 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
+            "type": "chrome",
             "request": "launch",
-            "name": "Debug CRA",
-            "url": "http://localhost:3000",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:5173",
             "webRoot": "${workspaceFolder}"
-        },
-        {
-            "name": "Debug CRA Tests",
-            "type": "node",
-            "request": "launch",
-            "runtimeExecutable": "${workspaceRoot}/Client/node_modules/.bin/react-scripts",
-            "args": [
-                "test",
-                "--transformIgnorePatterns=\"node_modules/(?!@formkit/auto-animate)/\"",
-                "--runInBand",
-                "--no-cache",
-                "--watchAll=false"
-            ],
-            "cwd": "${workspaceRoot}/Client",
-            "protocol": "inspector",
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "env": {
-                "CI": "true"
-            },
-            "disableOptimisticBPs": true
         }
     ]
 }
