@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "@prisma";
-import { getCurrentUser } from "@services/currentUser";
+import { getCurrentUser } from "@core/services/CurrentUserService";
 
 type Action = "create" | "update";
 type ActivityActionMap = {
@@ -27,7 +27,7 @@ const TicketActivityActions: Action[] = ["create", "update"];
  * @param ticketIdEvaluator if the tickedId of the entity is not named in the proper naming convention,
  * this callback can be used to return the ticketId of the entity
  */
-const ticketActivity = (entityName: Prisma.ModelName, entityNameAlias?: string, ticketIdEvaluator?: (entity: any) => string) => {
+const TicketActivity = (entityName: Prisma.ModelName, entityNameAlias?: string, ticketIdEvaluator?: (entity: any) => string) => {
     return async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
         if (params.model === entityName && (TicketActivityActions as string[]).includes(params.action)) {
             await prisma.ticketActivity.create({
@@ -45,4 +45,4 @@ const ticketActivity = (entityName: Prisma.ModelName, entityNameAlias?: string, 
     }
 }
 
-export default ticketActivity;
+export default TicketActivity;

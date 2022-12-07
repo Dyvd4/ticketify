@@ -3,10 +3,12 @@ import Pager from '@lib/list/Pager';
 import prisma from "@prisma";
 import fileParams from '@schemas/params/File';
 import ticketParams from '@schemas/params/Ticket';
-import TicketSchema from "@schemas/Ticket";
-import { getCurrentUser } from '@services/currentUser';
-import { fileUpload, isImageFile, mapFile, validateFiles } from '@services/file';
+import TicketSchema from "@core/schemas/TicketSchema";
+import { getCurrentUser } from '@core/services/CurrentUserService';
+import { fileUpload, validateFiles } from '@lib/middlewares/FileUpload';
+import FileMap from '@core/client-map/FileMap';
 import express from 'express';
+import { isImageFile } from '@lib/utils/FileUtils';
 
 const Router = express.Router();
 
@@ -71,7 +73,7 @@ Router.get('/ticket/:id', async (req, res, next) => {
                 status: true
             }
         });
-        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = mapFile(ticket.responsibleUser.avatar.file, "base64");
+        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileMap(ticket.responsibleUser.avatar.file, "base64");
         res.json(ticket);
     }
     catch (e) {
@@ -97,7 +99,7 @@ Router.get('/ticket/attachments/:id', async (req, res, next) => {
         const attachments = ticket?.attachments.map(attachment => attachment.file) || [];
         const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
         const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
-            .map(image => mapFile(image, "base64"));
+            .map(image => FileMap(image, "base64"));
         // 🥵
         (ticket as any).attachments = attachments;
         (ticket as any).files = files;

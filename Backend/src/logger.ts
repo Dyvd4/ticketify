@@ -2,7 +2,7 @@ import prisma from "@prisma";
 import { format } from "date-fns";
 import winston, { createLogger, transports } from "winston";
 import Transport from "winston-transport";
-import { LogLevelColorSchemeMap, LogLevelIconMap } from "@lib/data/maps/log";
+import { LogLevelColorSchemeMap, LogLevelIconMap } from "@lib/data/maps/LogMaps";
 import config from "@config";
 
 const { LOG_PATH } = config;

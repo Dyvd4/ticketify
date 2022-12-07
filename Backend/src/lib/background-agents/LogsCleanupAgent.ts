@@ -4,7 +4,7 @@ import logger from "@logger";
 
 const logsPath = path.join(__dirname, "../../../logs");
 
-const logsCleanupService = async () => {
+const LogsCleanupAgent = async () => {
     try {
         await fs.rm(logsPath, { recursive: true, force: true })
     }
@@ -13,4 +13,4 @@ const logsCleanupService = async () => {
     }
 }
 
-export default logsCleanupService;
+export default LogsCleanupAgent;

@@ -1,6 +1,6 @@
 import logger from "@logger";
 
-export const errorHandler = (err: Error, req, res) => {
+const ErrorHandler = (err: Error, req, res) => {
     logger.error({
         message: "Unhandled exception / rejection",
         error: {
@@ -12,3 +12,5 @@ export const errorHandler = (err: Error, req, res) => {
         error: String(err)
     });
 }
+
+export default ErrorHandler;

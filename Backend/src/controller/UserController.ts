@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import { authentication } from "@services/middlewares/auth";
+import { authentication } from "@core/middlewares/Auth";
 import fileParams from "@schemas/params/File";
-import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@schemas/User";
+import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@core/schemas/UserSchema";
 import prisma from "@prisma";
-import { getCurrentUser } from "@services/currentUser";
-import { sendEmailConfirmationEmail } from "@services/auth";
-import { imageUpload, mapFile } from "@services/file";
-import { mapUser } from "@services/user";
+import { getCurrentUser } from "@core/services/CurrentUserService";
+import { sendEmailConfirmationEmail } from "@core/services/AuthService";
+import FileMap from "@core/client-map/FileMap";
+import { imageUpload } from "@lib/middlewares/FileUpload";
 
 const Router = express.Router();
 
@@ -21,7 +21,7 @@ Router.get("/user", authentication({ half: true }), async (req, res, next) => {
             }
         });
         if (!user) return res.status(404).json(null);
-        res.json(mapUser(user));
+        res.json(user);
     }
     catch (e) {
         next(e);
@@ -46,9 +46,9 @@ Router.get("/user/all", authentication({ half: true }), async (req, res, next) =
         });
         if (!user) return res.status(404).json(null);
         (user as any).avatar = user.avatar?.file
-            ? mapFile(user.avatar.file, "base64")
+            ? FileMap(user.avatar.file, "base64")
             : null;
-        res.json(mapUser(user));
+        res.json(user);
     }
     catch (e) {
         next(e);
@@ -59,7 +59,7 @@ Router.get("/users", authentication(), async (req, res, next) => {
     try {
         const users = await prisma.user.findMany();
         res.json({
-            items: users.map(user => mapUser(user))
+            items: users
         });
     }
     catch (e) {
@@ -98,7 +98,7 @@ Router.put("/user/username", authentication(), async (req, res, next) => {
             }
         });
 
-        res.json(mapUser(updatedUser))
+        res.json(updatedUser)
     }
     catch (e) {
         next(e);
@@ -143,7 +143,7 @@ Router.put("/user/email", authentication({ half: true }), async (req, res, next)
 
         if (!isSameEmail) sendEmailConfirmationEmail(updatedUser);
 
-        res.json(mapUser(updatedUser))
+        res.json(updatedUser)
     }
     catch (e) {
         next(e);
@@ -184,7 +184,7 @@ Router.put("/user/newPassword", authentication(), async (req, res, next) => {
             }
         });
 
-        res.json(mapUser(updatedUser))
+        res.json(updatedUser)
     }
     catch (e) {
         next(e);
@@ -220,7 +220,7 @@ Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next)
                 }
             }
         });
-        res.json(mapUser(updatedUser))
+        res.json(updatedUser)
     }
     catch (e) {
         next(e);

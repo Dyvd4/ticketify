@@ -1,7 +1,8 @@
 import prisma from "@prisma";
-import FileSchema from "@schemas/File";
+import FileSchema from "@core/schemas/FileSchema";
 import fileParams from "@schemas/params/File";
-import { fileUpload, imageUpload, uploadFile, validateFiles, validateImageFiles } from "@services/file";
+import { uploadFile } from "@core/services/FileService";
+import { validateFiles, validateImageFiles, fileUpload, imageUpload } from "@lib/middlewares/FileUpload";
 import express from 'express';
 const Router = express.Router();
 

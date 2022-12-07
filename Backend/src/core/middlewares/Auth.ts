@@ -1,9 +1,10 @@
 import config from "@config";
 import prisma from "@prisma";
 import { User } from "@prisma/client";
-import { getCurrentUser, setCurrentUser } from "@services/currentUser";
+import { getCurrentUser, setCurrentUser } from "@core/services/CurrentUserService";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { isAuthenticated, isHalfAuthenticated } from "@core/services/UserService";
 
 const { JWT_SECRET_KEY } = config;
 
@@ -54,6 +55,7 @@ interface AuthenticationParams {
      */
     half: boolean
 }
+
 export const authentication = (params?: AuthenticationParams) => {
     return async (req: Request, res: Response, next: NextFunction) => {
 
@@ -88,6 +90,7 @@ export const authorization = (params?: AuthorizationParams) => {
     }
 }
 
-export const isHalfAuthenticated = (user) => !!user;
-export const isAuthenticated = (user) => !!user && user.emailConfirmed;
-export const isAuthorized = (user) => isAuthenticated(user);
+export default {
+    authentication,
+    authorization
+}

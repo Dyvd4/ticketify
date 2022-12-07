@@ -1,25 +1,25 @@
 import config from "@config";
-import backgroundAgents from "@lib/backgroundAgents/index";
-import { authentication, authorization } from "@services/middlewares/auth";
-import { errorHandler } from "@lib/middlewares/errorHandler";
-import { customRequest } from "@lib/middlewares/requests";
+import backgroundAgents from "@lib/background-agents/index";
+import { authentication, authorization } from "@core/middlewares/Auth";
+import ErrorHandler from "@lib/middlewares/ErrorHandler";
+import CustomRequest from "@lib/middlewares/CustomRequest";
 import cors from "cors";
 import express from "express";
-import AuthController from "@controller/Auth";
-import CommentController from "@controller/Comment";
-import CommentInteractionController from "@controller/CommentInteraction";
-import ErrorController from "@controller/Error";
-import FileController from "@controller/File";
-import LogController from "@controller/Log";
-import TestController from "@controller/Test";
-import TicketController from "@controller/Ticket";
-import TicketActivityController from "@controller/TicketActivity";
-import TicketDueDateController from "@controller/TicketDueDate";
-import TicketPriorityController from "@controller/TicketPriority";
-import TicketStatusController from "@controller/TicketStatus";
-import UserController from "@controller/User";
-import UserSettingsController from "@controller/UserSettings";
-import { getCurrentUser } from "@core/services/currentUser";
+import AuthController from "@controller/AuthController";
+import CommentController from "@controller/CommentController";
+import CommentInteractionController from "@controller/CommentInteractionController";
+import ErrorController from "@controller/ErrorController";
+import FileController from "@controller/FileController";
+import LogController from "@controller/LogController";
+import TestController from "@controller/TestController";
+import TicketController from "@controller/TicketController";
+import TicketActivityController from "@controller/TicketActivityController";
+import TicketDueDateController from "@controller/TicketDueDateController";
+import TicketPriorityController from "@controller/TicketPriorityController";
+import TicketStatusController from "@controller/TicketStatusController";
+import UserController from "@controller/UserController";
+import UserSettingsController from "@controller/UserSettingsController";
+import { getCurrentUser } from "@core/services/CurrentUserService";
 import logger from "./logger";
 
 const { PORT } = config;
@@ -29,7 +29,7 @@ const server = express();
 server.use(express.json({ limit: "200mb" }));
 server.use(cors());
 
-server.use(customRequest)
+server.use(CustomRequest)
 server.use("/api", ErrorController);
 server.use("/api/auth", AuthController);
 server.use("/api", UserController);
@@ -50,7 +50,7 @@ server.use("/api", authorization({
     ]
 }), UserSettingsController);
 
-server.use(errorHandler);
+server.use(ErrorHandler);
 
 server.listen(PORT, () => {
     logger.info(`Server listening on port: ${PORT}`, { private: true });

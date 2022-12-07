@@ -1,5 +1,5 @@
 import express from 'express';
-import UserSettingsUpdateSchema from "@schemas/UserSettings";
+import UserSettingsUpdateSchema from "@core/schemas/UserSettingsSchema";
 import prisma from "@prisma";
 
 const Router = express.Router();

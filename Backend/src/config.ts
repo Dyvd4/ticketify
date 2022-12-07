@@ -15,6 +15,7 @@ const config = {
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     URL: process.env.URL!,
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
-    PORT: process.env.PORT!
+    PORT: process.env.PORT!,
+    VALID_IMAGETYPES_REGEX: process.env.VALID_IMAGETYPES_REGEX!
 }
 export default config

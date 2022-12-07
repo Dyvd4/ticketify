@@ -1,6 +1,6 @@
 import { CommentInteraction } from '@prisma/client';
 import express from 'express';
-import CommentInteractionSchema from "@schemas/CommentInteraction";
+import CommentInteractionSchema from "@core/schemas/CommentInteractionSchema";
 import prisma from "@prisma";
 import commentInteractionParams from "@schemas/params/CommentInteraction";
 

@@ -14,3 +14,8 @@ export const LogLevelColorSchemeMap: LogLevelMap = {
     "error": "red",
     "warn": "orange.300",
 }
+
+export default {
+    LogLevelIconMap,
+    LogLevelColorSchemeMap
+}

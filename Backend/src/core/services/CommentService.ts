@@ -49,3 +49,9 @@ export const prismaIncludeParams = {
     },
     interactions: true
 }
+
+export default {
+    getInteractions,
+    userHasInteracted,
+    prismaIncludeParams
+}

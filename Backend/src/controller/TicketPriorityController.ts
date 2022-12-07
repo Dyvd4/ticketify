@@ -1,5 +1,5 @@
 import express from 'express';
-import TicketPrioritySchema from "@schemas/TicketPriority";
+import TicketPrioritySchema from "@core/schemas/TicketPrioritySchema";
 import prisma from "@prisma";
 
 const Router = express.Router();

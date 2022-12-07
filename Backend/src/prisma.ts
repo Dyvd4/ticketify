@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import ticketActivity from "@services/middlewares/prisma/ticketActivity";
-import userSignature from "@services/middlewares/prisma/userSignature";
+import TicketActivity from "@core/middlewares/prisma/TicketActivity";
+import UserSignature from "@core/middlewares/prisma/UserSignature";
 
 const prisma = new PrismaClient();
-prisma.$use(ticketActivity("Comment"));
-prisma.$use(userSignature);
+prisma.$use(TicketActivity("Comment"));
+prisma.$use(UserSignature);
 export default prisma;

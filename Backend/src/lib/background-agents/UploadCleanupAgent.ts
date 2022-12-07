@@ -4,7 +4,7 @@ import logger from "@logger";
 
 const uploadPath = path.join(__dirname, "../../../upload");
 
-const uploadCleanupService = async () => {
+const UploadCleanupAgent = async () => {
     try {
         await fs.rm(uploadPath, { recursive: true, force: true })
     }
@@ -13,4 +13,4 @@ const uploadCleanupService = async () => {
     }
 }
 
-export default uploadCleanupService;
+export default UploadCleanupAgent;

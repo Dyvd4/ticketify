@@ -9,8 +9,8 @@ declare global {
     }
 }
 
-
-export const customRequest = (req: Request, res: Response, next: NextFunction) => {
+const CustomRequest = (req: Request, res: Response, next: NextFunction) => {
     next();
 }
-export { }
+
+export default CustomRequest;

@@ -8,3 +8,8 @@ export const getCurrentUser = () => currentUser;
 export const setCurrentUser = (user: User) => {
     currentUser = user;
 }
+
+export default {
+    getCurrentUser,
+    setCurrentUser
+}

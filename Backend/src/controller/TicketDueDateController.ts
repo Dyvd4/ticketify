@@ -1,5 +1,5 @@
 import express from 'express';
-import TicketDueDateSchema from "@schemas/TicketDueDate";
+import TicketDueDateSchema from "@core/schemas/TicketDueDateSchema";
 import prisma from "@prisma";
 
 const Router = express.Router();
