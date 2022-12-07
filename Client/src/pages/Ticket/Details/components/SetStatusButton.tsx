@@ -75,7 +75,7 @@ function SetStatusButton(props: SetStatusButtonProps) {
                         <Button
                             isLoading={mutation.isLoading}
                             mr={3}
-                            colorScheme={"blue"}
+                            colorScheme={"cyan"}
                             onClick={() => mutation.mutate()}>
                             confirm
                         </Button>
