@@ -9,11 +9,7 @@ const UserSettingsUpdateSchema = Joi.object<UserSettings>({
     allowFilterItemsByLocalStorage: Joi
         .boolean(),
     allowSortItemsByLocalStorage: Joi
-        .boolean(),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
-    createUser: Joi.string(),
-    updateUser: Joi.string()
+        .boolean()
 });
 
 export default UserSettingsUpdateSchema;

@@ -12,11 +12,7 @@ export const TicketSchema = Joi.object<Ticket>({
         .string(),
     dueDate: Joi.date().allow(null),
     priorityId: Joi.string().required(),
-    statusId: Joi.string().allow(null),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
-    createUser: Joi.string(),
-    updateUser: Joi.string()
+    statusId: Joi.string().allow(null)
 }).options({
     abortEarly: false
 });

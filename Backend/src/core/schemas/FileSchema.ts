@@ -6,11 +6,7 @@ export const FileSchema = Joi.object<File>({
     fileName: Joi.string(),
     originalFileName: Joi.string(),
     mimeType: Joi.string().required(),
-    content: Joi.binary().required(),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
-    createUser: Joi.string(),
-    updateUser: Joi.string()
+    content: Joi.binary().required()
 }).options({
     abortEarly: false
 });

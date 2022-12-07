@@ -14,11 +14,7 @@ export const CommentSchema = Joi.object<Comment>({
         .string()
         .required(),
     parentId: Joi
-        .string(),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
-    createUser: Joi.string(),
-    updateUser: Joi.string()
+        .string()
 }).options({
     abortEarly: false
 });
