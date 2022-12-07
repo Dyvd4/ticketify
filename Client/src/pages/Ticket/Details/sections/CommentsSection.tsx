@@ -162,7 +162,7 @@ function CommentsSection(props: CommentsSectionProps) {
                     Comments ({count || 0})
                 </Heading>
                 <Menu>
-                    <MenuButton>
+                    <MenuButton height={"8"} className="text-sm">
                         Sort by
                     </MenuButton>
                     <MenuList>

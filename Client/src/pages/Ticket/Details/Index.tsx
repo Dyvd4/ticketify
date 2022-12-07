@@ -8,6 +8,8 @@ import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
 import IconButton from "src/components/Wrapper/IconButton";
+import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
+import SetStatusButton from "./components/SetStatusButton";
 import AttachmentsAddModal from "./modals/AttachmentsAddModal";
 import AttachmentsEditModal from "./modals/AttachmentsEditModal";
 import AttachmentsSection from "./sections/AttachmentsSection";
@@ -20,7 +22,7 @@ function TicketDetailsIndex() {
     const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
     const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
     const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
-   
+
     const { id } = useParams();
 
     // queries
@@ -80,6 +82,10 @@ function TicketDetailsIndex() {
             </Breadcrumb>
             <SectionBlock
                 title="Head data"
+                actions={[
+                    <SetResponsibleUserButton />,
+                    <SetStatusButton />
+                ]}
                 editButton={
                     <Tooltip
                         label={"edit"}

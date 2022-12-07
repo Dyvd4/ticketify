@@ -4,6 +4,7 @@ import BgBox from "./BgBox";
 
 type SectionBlockProps = PropsWithChildren<{
     title: string
+    actions?: React.ReactElement[]
     editButton?: React.ReactElement
     addButton?: React.ReactElement
 }> & ComponentPropsWithRef<"div">
@@ -12,7 +13,9 @@ function SectionBlock(props: SectionBlockProps) {
 
     const {
         title,
+        addButton,
         editButton,
+        actions,
         children,
         ...restProps
     } = props;
@@ -28,12 +31,21 @@ function SectionBlock(props: SectionBlockProps) {
                     </Heading>
                 </Box>
                 <Box className="flex justify-center items-center gap-2">
-                    <Box>
-                        {props.addButton}
-                    </Box>
-                    <Box>
-                        {props.editButton}
-                    </Box>
+                    {actions?.map((action, index) => (
+                        <Box key={index}>
+                            {action}
+                        </Box>
+                    ))}
+                    {addButton && <>
+                        <Box>
+                            {addButton}
+                        </Box>
+                    </>}
+                    {editButton && <>
+                        <Box>
+                            {editButton}
+                        </Box>
+                    </>}
                 </Box>
             </Flex>
             <BgBox>

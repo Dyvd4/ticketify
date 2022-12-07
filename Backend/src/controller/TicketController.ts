@@ -1,4 +1,4 @@
-import TicketSchema from "@core/schemas/TicketSchema";
+import TicketSchema, { TicketUpdateSchema } from "@core/schemas/TicketSchema";
 import { getCurrentUser } from '@core/services/CurrentUserService';
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import Pager from '@lib/list/Pager';
@@ -144,7 +144,7 @@ Router.put('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
     let ticket = req.body;
     try {
-        const validation = TicketSchema.validate(ticket);
+        const validation = TicketUpdateSchema.validate(ticket);
         if (validation.error) return res.status(400).json({ validation });
         ticket = validation.value;
 
