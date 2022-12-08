@@ -1,6 +1,9 @@
-import { Container } from "@chakra-ui/react";
+import { Container, MenuItem, Tag } from "@chakra-ui/react";
+import { faDownload, faEdit, faImage } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
+import ListItemHeading from "src/components/List/ListItemHeading";
 import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
@@ -14,7 +17,36 @@ function Index(props: IndexProps) {
                     route: "test",
                     queryKey: "test"
                 }}
-                listItemRender={(item) => <ListItem content={<ListItemContent item={item} />} />}
+                listItemRender={(item) => (
+                    <ListItem
+                        useDivider
+                        heading={
+                            <ListItemHeading>
+                                This is a fairly creative heading
+                            </ListItemHeading>
+                        }
+                        actions={<>
+                            <MenuItem
+                                icon={<FontAwesomeIcon icon={faEdit} />}>
+                                Edit
+                            </MenuItem>
+                            <MenuItem
+                                icon={<FontAwesomeIcon icon={faDownload} />}>
+                                Download
+                            </MenuItem>
+                            <MenuItem
+                                icon={<FontAwesomeIcon icon={faImage} />}>
+                                Save as image
+                            </MenuItem>
+                        </>}
+                        content={<ListItemContent item={item} />}
+                        tags={<>
+                            <Tag colorScheme={"red"}>Tag</Tag>
+                            <Tag colorScheme={"green"}>Tag</Tag>
+                            <Tag colorScheme={"cyan"}>Tag</Tag>
+                        </>}
+                    />
+                )}
                 header={{
                     title: "test",
                     showCount: true
