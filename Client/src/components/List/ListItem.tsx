@@ -11,7 +11,7 @@ type ListItemProps = {
     /** content to display */
     content?: React.ReactElement
     /** tags as tags from chakra */
-    tags?: React.ReactElement
+    tags?: React.ReactElement[]
     /** if set to true, shows divider between slots */
     useDivider?: boolean
 } & ComponentPropsWithRef<"li">
@@ -50,13 +50,13 @@ function ListItem({ heading, content, actions, tags, className, useDivider, ...p
             </Box>
             {useDivider && !!content && <Divider my="2" />}
             {!!content && <>
-                <Box>
+                <Box className={`${!useDivider ? "mt-1" : ""}`}>
                     {content}
                 </Box>
             </>}
             {useDivider && !!tags && <Divider my="2" />}
             {!!tags && <>
-                <Box className="mt-1 flex items-center gap-4">
+                <Box className={`${!useDivider ? "mt-2" : "mt-1"} flex items-center gap-4`}>
                     {tags}
                 </Box>
             </>}

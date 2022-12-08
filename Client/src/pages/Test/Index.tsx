@@ -40,11 +40,11 @@ function Index(props: IndexProps) {
                             </MenuItem>
                         </>}
                         content={<ListItemContent item={item} />}
-                        tags={<>
-                            <Tag colorScheme={"red"}>Tag</Tag>
-                            <Tag colorScheme={"green"}>Tag</Tag>
-                            <Tag colorScheme={"cyan"}>Tag</Tag>
-                        </>}
+                        tags={[
+                            <Tag colorScheme={"red"}>Tag</Tag>,
+                            <Tag colorScheme={"green"}>Tag</Tag>,
+                            <Tag colorScheme={"cyan"}>Tag</Tag>,
+                        ]}
                     />
                 )}
                 header={{
