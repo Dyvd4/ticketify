@@ -1,32 +1,43 @@
-import { Heading, LinkBox, LinkOverlay, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { format } from "date-fns";
 
 function TicketListItemContent({ item }: { item }) {
-    const title = `#${item.id} ${item.title}`;
     return (
-        <LinkBox className="flex justify-between items-center gap-4">
-            <div className="flex justify-center items-center gap-2 min-w-0">
-                <div className={`rounded-full h-4 w-4 bg-${item.priority.color} flex-shrink-0`}></div>
-                {/* 😢 */}
-                <LinkOverlay
-                    title={title}
-                    className="overflow-hidden"
-                    href={`/Ticket/Details/${item.id}`}>
-                    <Heading
-                        style={{ textOverflow: "ellipsis" }}
-                        as="h1"
-                        className="text-lg sm:text-xl
-                                   whitespace-nowrap overflow-hidden">
-                        {title}
-                    </Heading>
-                </LinkOverlay>
-            </div>
-            {item.dueDate && <>
-                <Text className="text-xs sm:text-base flex-shrink-0">
-                    {format(new Date(item.dueDate), "dd.MM.yy HH:mm:ss")}
-                </Text>
-            </>}
-        </LinkBox>
+        <Box>
+            <Box>
+                <span className="mr-2">
+                    Responsible user:
+                </span>
+                <span>
+                    {!!item.responsibleUser && <>
+                        {item.responsibleUser.username}
+                    </>}
+                    {!item.responsibleUser && "-"}
+                </span>
+            </Box>
+            <Box>
+                <span className="mr-2">
+                    Due date:
+                </span>
+                <span>
+                    {item.dueDate && <>
+                        {format(new Date(item.dueDate), "dd.MM.yy, HH:mm:ss")}
+                    </>}
+                    {!item.dueDate && "-"}
+                </span>
+            </Box>
+            <Box>
+                <span className="mr-2">
+                    Created at:
+                </span>
+                <span>
+                    {item.createdAt && <>
+                        {format(new Date(item.createdAt), "dd.MM.yy, HH:mm:ss")}
+                    </>}
+                    {!item.createdAt && "-"}
+                </span>
+            </Box>
+        </Box>
     );
 }
 

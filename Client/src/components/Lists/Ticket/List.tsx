@@ -1,9 +1,10 @@
-import { useDisclosure } from "@chakra-ui/react";
+import { Tag, useDisclosure } from "@chakra-ui/react";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
 import TicketListItemActions from "./ListItemActions";
 import TicketListItemContent from "./ListItemContent";
+import ListItemHeading from "./ListItemHeading";
 
 type TicketListProps = {}
 
@@ -21,8 +22,17 @@ function TicketList(props: TicketListProps) {
                 }}
                 listItemRender={(item) => (
                     <ListItem
+                        heading={<ListItemHeading item={item} />}
                         content={<TicketListItemContent item={item} />}
                         actions={<TicketListItemActions item={item} />}
+                        tags={[
+                            <Tag className={`bg-${item.status?.color || "bg-gray-200"}`}>
+                                Status: {item.status?.name || "none"}
+                            </Tag>,
+                            <Tag className={`bg-${item.priority.color}`}>
+                                Priority: {item.priority.name}
+                            </Tag>
+                        ]}
                     />
                 )}
                 header={{
