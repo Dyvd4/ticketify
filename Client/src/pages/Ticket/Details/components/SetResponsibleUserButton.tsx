@@ -103,6 +103,9 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
                             onClick={() => mutation.mutate()}>
                             confirm
                         </Button>
+                        <Button onClick={onClose}>
+                            cancel
+                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
