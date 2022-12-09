@@ -1,10 +1,7 @@
-import { Tag, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
-import ListItem from "src/components/List/ListItem";
-import TicketListItemActions from "./ListItemActions";
-import TicketListItemContent from "./ListItemContent";
-import ListItemHeading from "./ListItemHeading";
+import ListItem from "./ListItem";
 
 type TicketListProps = {}
 
@@ -20,21 +17,7 @@ function TicketList(props: TicketListProps) {
                     route: "tickets",
                     queryKey: "ticket"
                 }}
-                listItemRender={(item) => (
-                    <ListItem
-                        heading={<ListItemHeading item={item} />}
-                        content={<TicketListItemContent item={item} />}
-                        actions={<TicketListItemActions item={item} />}
-                        tags={[
-                            <Tag className={`bg-${item.status?.color || "bg-gray-200"}`}>
-                                Status: {item.status?.name || "none"}
-                            </Tag>,
-                            <Tag className={`bg-${item.priority.color}`}>
-                                Priority: {item.priority.name}
-                            </Tag>
-                        ]}
-                    />
-                )}
+                listItemRender={(item) => <ListItem item={item} />}
                 header={{
                     title: "pending tickets",
                     showCount: true

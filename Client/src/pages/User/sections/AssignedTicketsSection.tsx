@@ -1,9 +1,8 @@
-import { Heading, List, Text } from "@chakra-ui/react";
-import { faSmile, faTicketSimple } from "@fortawesome/free-solid-svg-icons";
+import { Heading, List } from "@chakra-ui/react";
+import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InfiniteQueryItems } from "src/components/List";
-import ListItem from "src/components/List/ListItem";
-import TicketListItemContent from "src/components/Lists/Ticket/ListItemContent";
+import { ListItem } from "src/components/Lists/Ticket";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
 import { useIsCurrentUser } from "src/hooks/user";
 
@@ -28,15 +27,9 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
                 className="flex flex-col gap-4 mt-4">
                 <InfiniteQueryItems
                     query={query}>
-                    {ticket => <ListItem content={<TicketListItemContent item={ticket} />} />}
+                    {ticket => <ListItem item={ticket} />}
                 </InfiniteQueryItems>
             </List>
-            {ticketCount === 0 && <>
-                <Text className="text-secondary">
-                    {isOwnSite ? "You don't have" : "He doesn't has"} tickets assigned &nbsp;
-                    <FontAwesomeIcon icon={faSmile} />
-                </Text>
-            </>}
         </>
     );
 }
