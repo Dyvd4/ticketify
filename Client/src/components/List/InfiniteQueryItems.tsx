@@ -14,6 +14,7 @@ type InfiniteQueryItemsProps = {
     children(item: any): JSX.Element
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
+    emptyDisplay?: JSX.Element
     fetchingNextDisplay?: JSX.Element
 }
 
@@ -50,11 +51,13 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
 
     return <>
         {data.pages.map(page => (
-            page.items.map((item: any) => (
-                <div className="infinite-query-item" key={item.id}>
-                    {props.children(item)}
-                </div>
-            ))
+            page.items.length > 0
+                ? page.items.map((item: any) => (
+                    <div className="infinite-query-item" key={item.id}>
+                        {props.children(item)}
+                    </div>
+                ))
+                : props.emptyDisplay || <div>This list seems to be empty 😴</div>
         ))}
     </>
 }
