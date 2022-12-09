@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity, updateEntity } from "src/api/entity";
+import Circle from "src/components/Circle";
 import MenuButton from "src/components/Wrapper/MenuButton";
 
 type SetStatusButtonProps = {}
@@ -38,7 +39,7 @@ function SetStatusButton(props: SetStatusButtonProps) {
     }), {
         onSuccess: async () => {
             await queryClient.invalidateQueries(["ticket", String(id)]);
-            onClose();
+            handleOnClose(true);
             toast({
                 status: "success",
                 title: "successfully changed status"
@@ -51,16 +52,23 @@ function SetStatusButton(props: SetStatusButtonProps) {
     }, [ticket]);
 
 
-    const handleMenuOptionClick = (status) => {
-        setStatus(status)
+    const handleStatusChange = (statusId) => {
+        setStatus(ticketStatusResponse.items.find(status => status.id === statusId));
         onOpen();
+    }
+
+    const handleOnClose = (isSuccess: boolean) => {
+        if (!isSuccess) setStatus(ticket.status);
+        onClose();
     }
 
     const isLoading = ticketIsLoading || ticketStatusIsLoading;
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal
+                isOpen={isOpen}
+                onClose={() => handleOnClose(false)}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>
@@ -69,7 +77,6 @@ function SetStatusButton(props: SetStatusButtonProps) {
                     <ModalCloseButton />
                     <ModalBody>
                         This will set the status to "{status?.name}".
-                        User's may be notified.
                     </ModalBody>
                     <ModalFooter>
                         <Button
@@ -78,6 +85,9 @@ function SetStatusButton(props: SetStatusButtonProps) {
                             colorScheme={"cyan"}
                             onClick={() => mutation.mutate()}>
                             confirm
+                        </Button>
+                        <Button onClick={() => handleOnClose(false)}>
+                            cancel
                         </Button>
                     </ModalFooter>
                 </ModalContent>
@@ -93,14 +103,20 @@ function SetStatusButton(props: SetStatusButtonProps) {
                 {!isLoading && <>
                     <MenuList>
                         <MenuOptionGroup
-                            defaultChecked={ticket.status === status}
-                            value={status}
+                            onChange={handleStatusChange}
+                            value={status.id}
                             type="radio">
                             {ticketStatusResponse.items.map((status) => (
                                 <MenuItemOption
                                     key={status.id}
-                                    onClick={() => handleMenuOptionClick(status)}>
-                                    {status.name}
+                                    value={status.id}>
+                                    <span className="mr-2">
+                                        {status.name}
+                                    </span>
+                                    <Circle
+                                        className="inline float-right"
+                                        bgColor={status.color}
+                                    />
                                 </MenuItemOption>
                             ))}
                         </MenuOptionGroup>
