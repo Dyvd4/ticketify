@@ -8,6 +8,7 @@ import prisma from "@prisma";
 import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
 import express from 'express';
 import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
+import { TicketStatus } from "@core/schemas/TicketStatusSchema";
 
 const Router = express.Router();
 
@@ -17,7 +18,8 @@ Router.get('/tickets', async (req, res, next) => {
         const tickets = await prisma.ticket.findMany({
             ...pager.getPrismaArgs(),
             include: {
-                priority: true
+                priority: true,
+                status: true
             },
             orderBy: pager.getPrismaOrderByArgs(),
             where: pager.getPrismaFilterArgs()
@@ -119,6 +121,12 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
         ticket = validation.value;
 
         const filesToCreate = files.map(file => MulterFileToFileEntityMap(file));
+        const openTicketStatus = await prisma.ticketStatus.findFirst({
+            where: {
+                name: TicketStatus.open
+            }
+        });
+
         const newTicket = await prisma.ticket.create({
             data: {
                 ...ticket,
@@ -130,7 +138,8 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
                             }
                         }
                     })
-                }
+                },
+                statusId: openTicketStatus?.id
             }
         });
         res.json(newTicket);

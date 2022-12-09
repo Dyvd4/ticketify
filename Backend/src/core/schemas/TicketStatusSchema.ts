@@ -1,12 +1,21 @@
 import Joi from "joi";
-import { TicketStatus } from "@prisma/client";
+import { TicketStatus as TicketStatusModel } from "@prisma/client";
 
-export const TicketStatusSchema = Joi.object<TicketStatus>({
+export const TicketStatusSchema = Joi.object<TicketStatusModel>({
     id: Joi.string(),
     color: Joi.string().required(),
     name: Joi.string().required()
 }).options({
     abortEarly: false
 });
+
+export enum TicketStatus {
+    open = "open",
+    processing = "processing",
+    solved = "solved",
+    putBack = "put back",
+    assigned = "assigned",
+    rejected = "rejected"
+}
 
 export default TicketStatusSchema;
