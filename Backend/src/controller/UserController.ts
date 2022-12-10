@@ -41,6 +41,11 @@ Router.get("/user/all", authentication({ half: true }), async (req, res, next) =
                     include: {
                         file: true
                     }
+                },
+                watchingTickets: {
+                    include: {
+                        ticket: true
+                    }
                 }
             }
         });

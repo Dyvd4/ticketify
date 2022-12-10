@@ -22,6 +22,7 @@ import UserSettingsController from "@controller/UserSettingsController";
 import { getCurrentUser } from "@core/services/CurrentUserService";
 import logger from "./logger";
 import TicketOnTicketController from "@controller/TicketOnTicketController";
+import TicketWatcherController from "@controller/TicketWatcherController";
 
 const { PORT } = config;
 
@@ -45,6 +46,7 @@ server.use("/api", authentication(), CommentInteractionController);
 server.use("/api", authentication(), TicketActivityController);
 server.use("/api", authentication(), LogController);
 server.use("/api", authentication(), TicketOnTicketController);
+server.use("/api", authentication(), TicketWatcherController);
 server.use("/api", authorization({
     strategy: (user) => [
         user.id === getCurrentUser().id,
