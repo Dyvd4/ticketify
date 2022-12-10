@@ -1,4 +1,4 @@
-import { Box, Button, Divider, LinkBox, ListItem as ChakraListItem, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import { Box, Button, Divider, LinkBox, ListItem as ChakraListItem, ListItemProps as ChakraListItemProps, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
@@ -14,18 +14,18 @@ type ListItemProps = {
     tags?: React.ReactElement[]
     /** if set to true, shows divider between slots */
     useDivider?: boolean
-} & ComponentPropsWithRef<"li">
+} & ChakraListItemProps
 
 function ListItem({ heading, content, actions, tags, className, useDivider, ...props }: ListItemProps) {
     return (
         <ChakraListItem
             data-testid="ListItem"
-            {...props}
             _light={{
                 backgroundColor: "gray.200"
             }}
             bgColor={"gray.700"}
-            className={`rounded-lg p-4 flex flex-col ${className}`}>
+            className={`rounded-lg p-4 flex flex-col ${className}`}
+            {...props}>
             <LinkBox>
                 <Box className="flex justify-between">
                     <Box>
