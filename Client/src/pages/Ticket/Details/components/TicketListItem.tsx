@@ -11,6 +11,7 @@ type TicketListItemProps = {
 function TicketListItem({ item }: TicketListItemProps) {
     return (
         <ListItem
+            key={item.id}
             className="w-full"
             _light={{
                 bgColor: VARIANT_MAP.child._light.backgroundColor
