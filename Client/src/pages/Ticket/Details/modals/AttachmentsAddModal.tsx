@@ -12,7 +12,6 @@ type AttachmentsAddProps = {
 
 function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps) {
 
-
     // state
     // -----
     const [files, setFiles] = useState<FileList | null>(null);

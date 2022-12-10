@@ -1,19 +1,24 @@
-import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
-import { faAdd, faChevronRight, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text, useDisclosure } from "@chakra-ui/react";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
+import AddButton from "src/components/Buttons/AddButton";
+import EditButton from "src/components/Buttons/EditButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
-import IconButton from "src/components/Wrapper/IconButton";
 import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
 import SetStatusButton from "./components/SetStatusButton";
+import WatchTicketButton from "./components/WatchTicketButton";
 import AttachmentsAddModal from "./modals/AttachmentsAddModal";
 import AttachmentsEditModal from "./modals/AttachmentsEditModal";
+import ConnectedTicketsAddModal from "./modals/ConnectedTicketsAddModal";
+import ConnectedTicketsEditModal from "./modals/ConnectedTicketsEditModal";
 import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
+import ConnectedTicketsSection from "./sections/ConnectedTicketsSection";
 import HeadDataSection from "./sections/HeadDataSection";
 
 function TicketDetailsIndex() {
@@ -22,6 +27,8 @@ function TicketDetailsIndex() {
     const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
     const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
     const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
+    const { isOpen: connectedTicketsAddModalIsOpen, onOpen: onConnectedTicketsAddModalOpen, onClose: onConnectedTicketsAddModalClose } = useDisclosure();
+    const { isOpen: connectedTicketsEditModalIsOpen, onOpen: onConnectedTicketsEditModalOpen, onClose: onConnectedTicketsEditModalClose } = useDisclosure();
 
     const { id } = useParams();
 
@@ -64,6 +71,10 @@ function TicketDetailsIndex() {
         attachments,
     } = ticketAttachments;
 
+    const connectedToTickets = ticket.connectedToTickets.map(connectedToTicket => connectedToTicket.connectedToTicket);
+    const connectedByTickets = ticket.connectedByTickets.map(connectedByTicket => connectedByTicket.connectedByTicket);
+    const connectedTickets = connectedToTickets.concat(connectedByTickets);
+
     return (
         <Container maxW="container.lg">
             <Breadcrumb
@@ -80,24 +91,16 @@ function TicketDetailsIndex() {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
+            {/* Head data section
+                ----------------- */}
             <SectionBlock
                 title="Head data"
                 actions={[
+                    <WatchTicketButton />,
                     <SetResponsibleUserButton />,
                     <SetStatusButton />
                 ]}
-                editButton={
-                    <Tooltip
-                        label={"edit"}
-                        placement="top">
-                        <IconButton
-                            onClick={onTicketFormModalOpen}
-                            size={"sm"}
-                            aria-label={"edit"}
-                            icon={<FontAwesomeIcon icon={faEdit} />}
-                        />
-                    </Tooltip>
-                }>
+                editButton={<EditButton onClick={onTicketFormModalOpen} />}>
                 <HeadDataSection ticket={ticket} />
                 <TicketFormModal
                     id={id}
@@ -106,34 +109,17 @@ function TicketDetailsIndex() {
                     variant="edit"
                 />
             </SectionBlock>
+            {/* Attachments section
+                ------------------- */}
             <SectionBlock
                 className="mt-4"
                 title="Attachments"
-                addButton={
-                    <Tooltip
-                        label={"add"}
-                        placement="top">
-                        <IconButton
-                            colorScheme={"cyan"}
-                            onClick={onAttachmentsAddModalOpen}
-                            size={"sm"}
-                            aria-label={"add"}
-                            icon={<FontAwesomeIcon icon={faAdd} />}
-                        />
-                    </Tooltip>
-                }
+                addButton={<AddButton onClick={onAttachmentsAddModalOpen} />}
                 editButton={
-                    <Tooltip
-                        label={"edit"}
-                        placement="top">
-                        <IconButton
-                            onClick={onAttachmentsEditModalOpen}
-                            disabled={attachments.length === 0}
-                            size={"sm"}
-                            aria-label={"edit"}
-                            icon={<FontAwesomeIcon icon={faEdit} />}
-                        />
-                    </Tooltip>
+                    <EditButton
+                        disabled={attachments.length === 0}
+                        onClick={onAttachmentsEditModalOpen}
+                    />
                 }>
                 <AttachmentsSection
                     images={images}
@@ -149,6 +135,35 @@ function TicketDetailsIndex() {
                     onClose={onAttachmentsAddModalClose}
                 />
             </SectionBlock>
+            {/* Connected tickets section
+                ------------------------- */}
+            <SectionBlock
+                title="Connected tickets"
+                className="mt-4"
+                editButton={
+                    <EditButton
+                        disabled={connectedToTickets.concat(connectedByTickets).length === 0}
+                        onClick={onConnectedTicketsEditModalOpen}
+                    />
+                }
+                addButton={<AddButton onClick={onConnectedTicketsAddModalOpen} />}>
+                <ConnectedTicketsSection
+                    connectedByTickets={connectedByTickets}
+                    connectedToTickets={connectedToTickets}
+                />
+                <ConnectedTicketsAddModal
+                    isOpen={connectedTicketsAddModalIsOpen}
+                    onClose={onConnectedTicketsAddModalClose}
+                />
+                <ConnectedTicketsEditModal
+                    connectedByTickets={connectedByTickets}
+                    connectedToTickets={connectedToTickets}
+                    isOpen={connectedTicketsEditModalIsOpen}
+                    onClose={onConnectedTicketsEditModalClose}
+                />
+            </SectionBlock>
+            {/*Comments section
+                --------------- */}
             <CommentsSection ticket={ticket} />
         </Container>
     );

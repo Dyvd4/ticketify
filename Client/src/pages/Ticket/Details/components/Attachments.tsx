@@ -31,7 +31,6 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
             </HStack>
             : <Flex
                 gap={2}
-                justifyContent={"center"}
                 alignItems={"center"}>
                 No {variant}
                 <FontAwesomeIcon icon={faFrown} />
