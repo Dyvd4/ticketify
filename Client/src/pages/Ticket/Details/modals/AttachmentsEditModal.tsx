@@ -1,12 +1,9 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
-import { faRemove } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
-import RemoveButton from "src/components/Buttons/RemoveButton";
-import IconButton from "src/components/Wrapper/IconButton";
+import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import Modal from "src/components/Wrapper/Modal";
 import Attachment from "../components/Attachment";
 
@@ -76,8 +73,9 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                                 gap={2}
                                 key={attachment.id}>
                                 <Attachment attachment={attachment} />
-                                <RemoveButton
+                                <TooltipIconButton
                                     circle
+                                    iconVariant="remove"
                                     onClick={() => handleOpen(attachment)}
                                 />
                             </Flex>

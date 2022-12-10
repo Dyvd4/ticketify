@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
-import RemoveButton from "src/components/Buttons/RemoveButton";
+import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import Modal from "src/components/Wrapper/Modal";
 import TicketListItem from "../components/TicketListItem";
 
@@ -78,8 +78,9 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
                                     gap={2}
                                     key={connectedTicket.id}>
                                     <TicketListItem item={connectedTicket} />
-                                    <RemoveButton
+                                    <TooltipIconButton
                                         circle
+                                        iconVariant="remove"
                                         onClick={() => handleOpen({
                                             ...connectedTicket,
                                             isConnectedTo: true
@@ -99,8 +100,9 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
                                     gap={2}
                                     key={connectedTicket.id}>
                                     <TicketListItem item={connectedTicket} />
-                                    <RemoveButton
+                                    <TooltipIconButton
                                         circle
+                                        iconVariant="remove"
                                         onClick={() => handleOpen({
                                             ...connectedTicket,
                                             isConnectedTo: false

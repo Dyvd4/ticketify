@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import AddButton from "src/components/Buttons/AddButton";
-import EditButton from "src/components/Buttons/EditButton";
+import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
@@ -100,7 +99,12 @@ function TicketDetailsIndex() {
                     <SetResponsibleUserButton />,
                     <SetStatusButton />
                 ]}
-                editButton={<EditButton onClick={onTicketFormModalOpen} />}>
+                editButton={
+                    <TooltipIconButton
+                        iconVariant="edit"
+                        onClick={onTicketFormModalOpen}
+                    />
+                }>
                 <HeadDataSection ticket={ticket} />
                 <TicketFormModal
                     id={id}
@@ -114,9 +118,14 @@ function TicketDetailsIndex() {
             <SectionBlock
                 className="mt-4"
                 title="Attachments"
-                addButton={<AddButton onClick={onAttachmentsAddModalOpen} />}
+                addButton={
+                    <TooltipIconButton
+                        iconVariant="add"
+                        onClick={onAttachmentsAddModalOpen}
+                    />}
                 editButton={
-                    <EditButton
+                    <TooltipIconButton
+                        iconVariant="edit"
                         disabled={attachments.length === 0}
                         onClick={onAttachmentsEditModalOpen}
                     />
@@ -141,12 +150,17 @@ function TicketDetailsIndex() {
                 title="Connected tickets"
                 className="mt-4"
                 editButton={
-                    <EditButton
+                    <TooltipIconButton
+                        iconVariant="edit"
                         disabled={connectedToTickets.concat(connectedByTickets).length === 0}
                         onClick={onConnectedTicketsEditModalOpen}
                     />
                 }
-                addButton={<AddButton onClick={onConnectedTicketsAddModalOpen} />}>
+                addButton={
+                    <TooltipIconButton
+                        iconVariant="add"
+                        onClick={onConnectedTicketsAddModalOpen}
+                    />}>
                 <ConnectedTicketsSection
                     connectedByTickets={connectedByTickets}
                     connectedToTickets={connectedToTickets}
