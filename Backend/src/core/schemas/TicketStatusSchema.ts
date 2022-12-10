@@ -4,7 +4,8 @@ import { TicketStatus as TicketStatusModel } from "@prisma/client";
 export const TicketStatusSchema = Joi.object<TicketStatusModel>({
     id: Joi.string(),
     color: Joi.string().required(),
-    name: Joi.string().required()
+    name: Joi.string().required(),
+    priority: Joi.number()
 }).options({
     abortEarly: false
 });

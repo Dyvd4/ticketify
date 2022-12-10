@@ -106,19 +106,21 @@ function SetStatusButton(props: SetStatusButtonProps) {
                             onChange={handleStatusChange}
                             value={status.id}
                             type="radio">
-                            {ticketStatusResponse.items.map((status) => (
-                                <MenuItemOption
-                                    key={status.id}
-                                    value={status.id}>
-                                    <span className="mr-2">
-                                        {status.name}
-                                    </span>
-                                    <Circle
-                                        className="inline float-right"
-                                        bgColor={status.color}
-                                    />
-                                </MenuItemOption>
-                            ))}
+                            {ticketStatusResponse.items
+                                .sort((a, b) => a.priority - b.priority)
+                                .map((status) => (
+                                    <MenuItemOption
+                                        key={status.id}
+                                        value={status.id}>
+                                        <span className="mr-2">
+                                            {status.name}
+                                        </span>
+                                        <Circle
+                                            className="inline float-right"
+                                            bgColor={status.color}
+                                        />
+                                    </MenuItemOption>
+                                ))}
                         </MenuOptionGroup>
                     </MenuList>
                 </>}
