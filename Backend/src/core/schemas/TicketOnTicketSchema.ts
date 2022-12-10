@@ -3,9 +3,11 @@ import Joi from "joi";
 
 const TicketOnTicketSchema = Joi.object<TicketOnTicket>({
     connectedByTicketId: Joi
-        .number(),
+        .number()
+        .required(),
     connectedToTicketId: Joi
-        .number(),
+        .number()
+        .required(),
 });
 
 export default TicketOnTicketSchema;

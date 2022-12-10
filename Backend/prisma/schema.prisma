@@ -26,6 +26,7 @@ model User {
   commentInteractions CommentInteraction[]
   ticketActivities    TicketActivity[]
   settings            UserSettings?
+  watchingTickets     TicketWatcher[]
 }
 
 model UserSettings {
@@ -40,6 +41,19 @@ model UserSettings {
   updatedAt                      DateTime? @updatedAt
   createUser                     String?   @db.NVarChar(100)
   updateUser                     String?   @db.NVarChar(100)
+}
+
+model TicketWatcher {
+  userId     String    @db.NVarChar(100)
+  user       User      @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  ticketId   Int       @db.Int
+  ticket     Ticket    @relation(fields: [ticketId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+
+  @@id([userId, ticketId])
 }
 
 model Ticket {
@@ -62,6 +76,7 @@ model Ticket {
   activities         TicketActivity[]
   connectedByTickets TicketOnTicket[] @relation("connectedByTickets")
   connectedToTickets TicketOnTicket[] @relation("connectedToTickets")
+  watchingUsers      TicketWatcher[]
 }
 
 model TicketOnTicket {

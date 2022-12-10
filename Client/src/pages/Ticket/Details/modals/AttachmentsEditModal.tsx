@@ -30,7 +30,6 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
     // ---------
     const mutation = useMutation(() => {
         return removeEntity({
-            // TODO: extract to separate controller
             route: `ticket/fileOnTicket/${id}/${attachmentToRemove.id}`,
         })
     }, {
