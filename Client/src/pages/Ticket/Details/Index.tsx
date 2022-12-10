@@ -72,7 +72,6 @@ function TicketDetailsIndex() {
 
     const connectedToTickets = ticket.connectedToTickets.map(connectedToTicket => connectedToTicket.connectedToTicket);
     const connectedByTickets = ticket.connectedByTickets.map(connectedByTicket => connectedByTicket.connectedByTicket);
-    const connectedTickets = connectedToTickets.concat(connectedByTickets);
 
     return (
         <Container maxW="container.lg">
@@ -166,6 +165,8 @@ function TicketDetailsIndex() {
                     connectedToTickets={connectedToTickets}
                 />
                 <ConnectedTicketsAddModal
+                    connectedByTickets={connectedByTickets}
+                    connectedToTickets={connectedToTickets}
                     isOpen={connectedTicketsAddModalIsOpen}
                     onClose={onConnectedTicketsAddModalClose}
                 />

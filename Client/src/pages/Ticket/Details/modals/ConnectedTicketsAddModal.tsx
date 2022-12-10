@@ -9,11 +9,13 @@ import Modal from "src/components/Wrapper/Modal";
 import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
 
 type ConnectedTicketsAddModalProps = {
+    connectedToTickets: any[]
+    connectedByTickets: any[]
     isOpen: boolean
     onClose(...args: any[]): void
 }
 
-function ConnectedTicketsAddModal({ isOpen, ...props }: ConnectedTicketsAddModalProps) {
+function ConnectedTicketsAddModal({ isOpen, connectedToTickets, connectedByTickets, ...props }: ConnectedTicketsAddModalProps) {
 
     // state
     // -----
@@ -33,10 +35,11 @@ function ConnectedTicketsAddModal({ isOpen, ...props }: ConnectedTicketsAddModal
         data: tickets,
         isLoading: ticketsAreLoading
     } = useQuery(["ticketsToConnect", id], async () => {
+
         const response = await fetchEntity({
             route: "tickets",
             queryParams: {
-                excludeIds: [id]
+                excludeIds: [id, ...connectedToTickets.concat(connectedByTickets).map(ticket => ticket.id)]
             }
         });
         return response.items;
