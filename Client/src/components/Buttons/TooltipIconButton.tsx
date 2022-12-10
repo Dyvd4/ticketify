@@ -1,6 +1,5 @@
 import { Tooltip } from "@chakra-ui/react";
-import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { faAdd, faRemove } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faRemove, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconButton, { IconButtonProps } from "../Wrapper/IconButton";
 
