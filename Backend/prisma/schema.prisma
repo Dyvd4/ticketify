@@ -43,23 +43,38 @@ model UserSettings {
 }
 
 model Ticket {
-  id                Int              @id @default(autoincrement()) @db.Int
-  title             String           @db.NVarChar(100)
-  responsibleUserId String?          @db.NVarChar(100)
-  responsibleUser   User?            @relation(references: [id], fields: [responsibleUserId])
-  description       String           @db.NVarChar(max)
-  dueDate           DateTime?        @db.DateTime
-  priorityId        String           @db.NVarChar(100)
-  priority          TicketPriority   @relation(references: [id], fields: [priorityId])
-  createdAt         DateTime?        @default(now())
-  updatedAt         DateTime?        @updatedAt
-  createUser        String?          @db.NVarChar(100)
-  updateUser        String?          @db.NVarChar(100)
-  statusId          String?          @db.NVarChar(100)
-  status            TicketStatus?    @relation(fields: [statusId], references: [id])
-  attachments       FileOnTicket[]
-  comments          Comment[]
-  activities        TicketActivity[]
+  id                 Int              @id @default(autoincrement()) @db.Int
+  title              String           @db.NVarChar(100)
+  responsibleUserId  String?          @db.NVarChar(100)
+  responsibleUser    User?            @relation(references: [id], fields: [responsibleUserId])
+  description        String           @db.NVarChar(max)
+  dueDate            DateTime?        @db.DateTime
+  priorityId         String           @db.NVarChar(100)
+  priority           TicketPriority   @relation(references: [id], fields: [priorityId])
+  createdAt          DateTime?        @default(now())
+  updatedAt          DateTime?        @updatedAt
+  createUser         String?          @db.NVarChar(100)
+  updateUser         String?          @db.NVarChar(100)
+  statusId           String?          @db.NVarChar(100)
+  status             TicketStatus?    @relation(fields: [statusId], references: [id])
+  attachments        FileOnTicket[]
+  comments           Comment[]
+  activities         TicketActivity[]
+  connectedByTickets TicketOnTicket[] @relation("connectedByTickets")
+  connectedToTickets TicketOnTicket[] @relation("connectedToTickets")
+}
+
+model TicketOnTicket {
+  connectedByTicketId Int       @db.Int
+  connectedByTicket   Ticket    @relation("connectedToTickets", fields: [connectedByTicketId], references: [id], onUpdate: NoAction)
+  connectedToTicketId Int       @db.Int
+  connectedToTicket   Ticket    @relation("connectedByTickets", fields: [connectedToTicketId], references: [id])
+  createdAt           DateTime? @default(now())
+  updatedAt           DateTime? @updatedAt
+  createUser          String?   @db.NVarChar(100)
+  updateUser          String?   @db.NVarChar(100)
+
+  @@unique([connectedByTicketId, connectedToTicketId])
 }
 
 model TicketPriority {
@@ -126,10 +141,13 @@ model TicketDueDate {
 }
 
 model Test {
-  id          Int      @id @default(autoincrement())
-  isAmazing   Boolean  @db.Bit
-  description String   @db.NVarChar(100)
-  createdAt   DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  isAmazing   Boolean   @db.Bit
+  description String    @db.NVarChar(100)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  createUser  String?   @db.NVarChar(100)
+  updateUser  String?   @db.NVarChar(100)
 }
 
 model File {
@@ -147,19 +165,27 @@ model File {
 }
 
 model FileOnTicket {
-  fileId   String @db.NVarChar(100)
-  file     File   @relation(fields: [fileId], references: [id])
-  ticketId Int    @db.Int
-  ticket   Ticket @relation(fields: [ticketId], references: [id])
+  fileId     String    @db.NVarChar(100)
+  file       File      @relation(fields: [fileId], references: [id])
+  ticketId   Int       @db.Int
+  ticket     Ticket    @relation(fields: [ticketId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
 
   @@id([fileId, ticketId])
 }
 
 model FileOnUser {
-  fileId String @db.NVarChar(100)
-  file   File   @relation(fields: [fileId], references: [id])
-  userId String @unique @db.NVarChar(100)
-  user   User   @relation(fields: [userId], references: [id])
+  fileId     String    @db.NVarChar(100)
+  file       File      @relation(fields: [fileId], references: [id])
+  userId     String    @unique @db.NVarChar(100)
+  user       User      @relation(fields: [userId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
 
   @@id([fileId, userId])
 }

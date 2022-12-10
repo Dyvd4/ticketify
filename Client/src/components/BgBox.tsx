@@ -2,8 +2,23 @@ import { Box } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
 
 type BgBoxProps = PropsWithChildren<{
-    variant?: "normal" | "child"
+    variant?: keyof typeof VARIANT_MAP
 }> & ComponentPropsWithRef<"div">
+
+export const VARIANT_MAP = {
+    child: {
+        _light: {
+            backgroundColor: "white"
+        },
+        backgroundColor: "gray.900"
+    },
+    normal: {
+        _light: {
+            backgroundColor: "gray.200"
+        },
+        backgroundColor: "gray.700"
+    }
+}
 
 function BgBox(props: BgBoxProps) {
 
@@ -17,9 +32,9 @@ function BgBox(props: BgBoxProps) {
     return (
         <Box
             _light={{
-                backgroundColor: variant !== "child" ? "gray.200" : "white"
+                backgroundColor: VARIANT_MAP[variant]._light.backgroundColor
             }}
-            backgroundColor={variant !== "child" ? "gray.700" : "gray.900"}
+            backgroundColor={VARIANT_MAP[variant].backgroundColor}
             className={`p-4 rounded-md ${className}`}
             {...restProps}>
             {children}

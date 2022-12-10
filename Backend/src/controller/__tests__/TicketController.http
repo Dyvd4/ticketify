@@ -1,0 +1,4 @@
+### GET Ticket
+GET {{host}}/ticket/29
+Content-Type: application/json
+auth-token: {{auth-token}}
