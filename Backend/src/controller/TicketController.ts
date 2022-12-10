@@ -1,19 +1,22 @@
+import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
+import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
 import TicketSchema, { TicketUpdateSchema } from "@core/schemas/TicketSchema";
+import { TicketStatus } from "@core/schemas/TicketStatusSchema";
 import { getCurrentUser } from '@core/services/CurrentUserService';
+import { getTicket } from "@core/services/TicketService";
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import Pager from '@lib/list/Pager';
 import { fileUpload, validateFiles } from '@lib/middlewares/FileUpload';
 import { isImageFile } from '@lib/utils/FileUtils';
 import prisma from "@prisma";
-import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
 import express from 'express';
-import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
-import { TicketStatus } from "@core/schemas/TicketStatusSchema";
 
 const Router = express.Router();
 
-Router.get('/tickets', async (req, res, next) => {
+Router.get('/tickets/:excludeIds?', async (req, res, next) => {
     try {
+        const excludeIds = JSON.parse((req.query.excludeIds || "[]") as string).map(id => parseInt(id));
+
         const pager = new Pager(req.query);
         const tickets = await prisma.ticket.findMany({
             ...pager.getPrismaArgs(),
@@ -22,7 +25,12 @@ Router.get('/tickets', async (req, res, next) => {
                 status: true
             },
             orderBy: pager.getPrismaOrderByArgs(),
-            where: pager.getPrismaFilterArgs()
+            where: {
+                ...pager.getPrismaFilterArgs(),
+                id: {
+                    notIn: excludeIds
+                }
+            }
         });
         const ticketsCount = await prisma.ticket.count();
         res.json(pager.getResult(tickets, ticketsCount));
@@ -56,25 +64,7 @@ Router.get("/tickets/assigned/:userId?", async (req, res, next) => {
 Router.get('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
-        const ticket = await prisma.ticket.findFirst({
-            where: {
-                id: parseInt(id)
-            },
-            include: {
-                priority: true,
-                responsibleUser: {
-                    include: {
-                        avatar: {
-                            include: {
-                                file: true
-                            }
-                        }
-                    }
-                },
-                status: true
-            }
-        });
-        if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileEntityToClientMap(ticket.responsibleUser.avatar.file, "base64");
+        const ticket = await getTicket(id);
         res.json(ticket);
     }
     catch (e) {
