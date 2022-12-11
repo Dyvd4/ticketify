@@ -73,9 +73,11 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
                                 key={attachment.id}>
                                 <Attachment attachment={attachment} />
                                 <TooltipIconButton
-                                    circle
-                                    iconVariant="remove"
-                                    onClick={() => handleOpen(attachment)}
+                                    variant="remove"
+                                    iconButtonProps={{
+                                        circle: true,
+                                        onClick: () => handleOpen(attachment)
+                                    }}
                                 />
                             </Flex>
                         ))}

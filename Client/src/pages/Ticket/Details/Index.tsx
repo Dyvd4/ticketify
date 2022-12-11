@@ -1,6 +1,7 @@
 import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text, useDisclosure } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
@@ -28,6 +29,7 @@ function TicketDetailsIndex() {
     const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
     const { isOpen: connectedTicketsAddModalIsOpen, onOpen: onConnectedTicketsAddModalOpen, onClose: onConnectedTicketsAddModalClose } = useDisclosure();
     const { isOpen: connectedTicketsEditModalIsOpen, onOpen: onConnectedTicketsEditModalOpen, onClose: onConnectedTicketsEditModalClose } = useDisclosure();
+    const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
 
     const { id } = useParams();
 
@@ -46,6 +48,13 @@ function TicketDetailsIndex() {
     } = useQuery(["ticket/attachments", id], () => fetchEntity({ route: `ticket/attachments/${id}` }), {
         refetchOnWindowFocus: false
     });
+
+    // event handler
+    // -------------
+    const handleOnTicketFormModalOpen = (variant) => {
+        setTicketFormModalVariant(variant);
+        onTicketFormModalOpen();
+    }
 
     const isLoading = [ticketLoading, ticketAttachmentsLoading].some(loading => loading);
     if (isLoading) {
@@ -98,19 +107,44 @@ function TicketDetailsIndex() {
                     <SetResponsibleUserButton />,
                     <SetStatusButton />
                 ]}
+                addButton={
+                    <TooltipIconButton
+                        variant="add"
+                        tooltipProps={{
+                            label: "add ticket"
+                        }}
+                        iconButtonProps={{
+                            onClick: () => handleOnTicketFormModalOpen("add")
+                        }}
+                    />
+                }
                 editButton={
                     <TooltipIconButton
-                        iconVariant="edit"
-                        onClick={onTicketFormModalOpen}
+                        variant="edit"
+                        tooltipProps={{
+                            label: "edit ticket"
+                        }}
+                        iconButtonProps={{
+                            onClick: () => handleOnTicketFormModalOpen("edit")
+                        }}
                     />
                 }>
                 <HeadDataSection ticket={ticket} />
-                <TicketFormModal
-                    id={id}
-                    isOpen={ticketFormModalIsOpen}
-                    onClose={onTicketFormModalClose}
-                    variant="edit"
-                />
+                {ticketFormModalVariant === "add" && <>
+                    <TicketFormModal
+                        isOpen={ticketFormModalIsOpen}
+                        onClose={onTicketFormModalClose}
+                        variant={ticketFormModalVariant}
+                    />
+                </>}
+                {ticketFormModalVariant === "edit" && <>
+                    <TicketFormModal
+                        id={id}
+                        isOpen={ticketFormModalIsOpen}
+                        onClose={onTicketFormModalClose}
+                        variant={ticketFormModalVariant}
+                    />
+                </>}
             </SectionBlock>
             {/* Attachments section
                 ------------------- */}
@@ -119,14 +153,24 @@ function TicketDetailsIndex() {
                 title="Attachments"
                 addButton={
                     <TooltipIconButton
-                        iconVariant="add"
-                        onClick={onAttachmentsAddModalOpen}
+                        variant="add"
+                        tooltipProps={{
+                            label: "add attachment"
+                        }}
+                        iconButtonProps={{
+                            onClick: onAttachmentsAddModalOpen
+                        }}
                     />}
                 editButton={
                     <TooltipIconButton
-                        iconVariant="edit"
-                        disabled={attachments.length === 0}
-                        onClick={onAttachmentsEditModalOpen}
+                        variant="edit"
+                        tooltipProps={{
+                            label: "edit attachments"
+                        }}
+                        iconButtonProps={{
+                            disabled: attachments.length === 0,
+                            onClick: onAttachmentsEditModalOpen
+                        }}
                     />
                 }>
                 <AttachmentsSection
@@ -148,18 +192,29 @@ function TicketDetailsIndex() {
             <SectionBlock
                 title="Connected tickets"
                 className="mt-4"
-                editButton={
-                    <TooltipIconButton
-                        iconVariant="edit"
-                        disabled={connectedToTickets.concat(connectedByTickets).length === 0}
-                        onClick={onConnectedTicketsEditModalOpen}
-                    />
-                }
                 addButton={
                     <TooltipIconButton
-                        iconVariant="add"
-                        onClick={onConnectedTicketsAddModalOpen}
-                    />}>
+                        variant="add"
+                        tooltipProps={{
+                            label: "add connection"
+                        }}
+                        iconButtonProps={{
+                            onClick: onConnectedTicketsAddModalOpen
+                        }}
+                    />
+                }
+                editButton={
+                    <TooltipIconButton
+                        variant="edit"
+                        tooltipProps={{
+                            label: "edit connections"
+                        }}
+                        iconButtonProps={{
+                            disabled: connectedToTickets.concat(connectedByTickets).length === 0,
+                            onClick: onConnectedTicketsEditModalOpen
+                        }}
+                    />
+                }>
                 <ConnectedTicketsSection
                     connectedByTickets={connectedByTickets}
                     connectedToTickets={connectedToTickets}

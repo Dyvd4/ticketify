@@ -79,12 +79,14 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
                                     key={connectedTicket.id}>
                                     <TicketListItem item={connectedTicket} />
                                     <TooltipIconButton
-                                        circle
-                                        iconVariant="remove"
-                                        onClick={() => handleOpen({
-                                            ...connectedTicket,
-                                            isConnectedTo: true
-                                        })}
+                                        variant="remove"
+                                        iconButtonProps={{
+                                            circle: true,
+                                            onClick: () => handleOpen({
+                                                ...connectedTicket,
+                                                isConnectedTo: true
+                                            })
+                                        }}
                                     />
                                 </Flex>
                             ))}
@@ -101,12 +103,14 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
                                     key={connectedTicket.id}>
                                     <TicketListItem item={connectedTicket} />
                                     <TooltipIconButton
-                                        circle
-                                        iconVariant="remove"
-                                        onClick={() => handleOpen({
-                                            ...connectedTicket,
-                                            isConnectedTo: false
-                                        })}
+                                        variant="remove"
+                                        iconButtonProps={{
+                                            circle: true,
+                                            onClick: () => handleOpen({
+                                                ...connectedTicket,
+                                                isConnectedTo: true
+                                            })
+                                        }}
                                     />
                                 </Flex>
                             ))}
