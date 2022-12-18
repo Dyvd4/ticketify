@@ -1,4 +1,5 @@
 import config from "@config";
+import MailTemplateProvider from "@lib/MailTemplateProvider";
 import MailTransporter from "@lib/MailTransporter";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
@@ -12,11 +13,13 @@ export const sendEmailConfirmationEmail = async (user: User) => {
         }
     }, JWT_SECRET_KEY);
 
+    const html = await MailTemplateProvider.getInjectedHtmlFromFile("UserEmailConfirmationTemplate", { redirectToken, URL });
+
     return MailTransporter.sendMail({
         from: SUPPORT_EMAIL,
         to: user.email!,
         subject: "E-mail verification for ticketify",
-        html: `Click <a href='${URL}/auth/confirmEmail/${redirectToken}' target="_blank">here</a> to verify yourself to ticketify`
+        html
     });
 }
 
