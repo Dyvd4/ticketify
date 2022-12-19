@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@core/services/CurrentUserService";
 import { prismaMock } from "testSetup";
-import TicketModelActivity, { TicketActivityActionColorMap, TicketActivityActionLabelMap, TicketActivityModelIconMap } from "../TicketActivity";
+import CreateTicketActivityBasedOn, { TicketActivityEventColorMap, TicketActivityEventLabelMap, TicketActivityModelIconMap } from "../TicketActivity";
 
 jest.mock("@services/CurrentUserService", () => ({
     getCurrentUser: jest.fn()
@@ -14,82 +14,84 @@ const comment = {
     description: "dummy description"
 }
 
-const commentCreatedActivityDescription = "Comment created"
+const commentCreatedActivityDescription = "Comment has been created"
+const commentUpdatedActivityDescription = "Comment has been updated"
 
 mockedGetCurrentUser.mockResolvedValue({
     id: "85bd6d9d-bce0-4628-92b6-de2c3c6d4f4e"
 });
 
 describe("optional parameters", () => {
-    describe("descriptionEvaluator", () => {
-        it("allows description evaluators per action", () => {
+    it("allows async evaluators", async () => {
 
-            const ticketModelActivityTestFn = TicketModelActivity("Comment", {
-                disableMailDelivery: true,
-                actions: ["create", "update"],
-                descriptionEvaluator: {
-                    create: () => commentCreatedActivityDescription,
-                    update: (comment) => comment.title
-                }
-            });
-
-            const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
-
-            ticketModelActivityTestFn({
-                model: "Comment",
-                action: "create",
-                args: {
-                    data: comment
-                },
-                dataPath: [],
-                runInTransaction: false
-            }, jest.fn());
-
-            ticketModelActivityTestFn({
-                model: "Comment",
-                action: "update",
-                args: {
-                    data: comment
-                },
-                dataPath: [],
-                runInTransaction: false
-            }, jest.fn());
-
-            expect(ticketActivityCreateFn).toHaveBeenNthCalledWith(1,
-                expect.objectContaining({
-                    data: expect.objectContaining({
-                        description: commentCreatedActivityDescription
-                    })
+        const CreateTicketActivityBasedOnTestFn = CreateTicketActivityBasedOn("Comment", ["create", "update"], {
+            disableMailDelivery: true,
+            descriptionEvaluator: (event) => {
+                return new Promise((resolve) => {
+                    if (event === "create") {
+                        resolve(commentCreatedActivityDescription)
+                    }
+                    if (event === "update") {
+                        resolve(comment.title)
+                    }
+                    else resolve(null);
                 })
-            )
+            }
+        });
 
-            expect(ticketActivityCreateFn).toHaveBeenNthCalledWith(2,
-                expect.objectContaining({
-                    data: expect.objectContaining({
-                        description: comment.title
-                    })
+        const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
+
+        await CreateTicketActivityBasedOnTestFn({
+            model: "Comment",
+            action: "create",
+            args: {
+                data: comment
+            },
+            dataPath: [],
+            runInTransaction: false
+        }, jest.fn());
+
+        await CreateTicketActivityBasedOnTestFn({
+            model: "Comment",
+            action: "update",
+            args: {
+                data: comment
+            },
+            dataPath: [],
+            runInTransaction: false
+        }, jest.fn());
+
+        expect(ticketActivityCreateFn).toHaveBeenNthCalledWith(1,
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    description: commentCreatedActivityDescription
                 })
-            )
+            })
+        )
 
-        })
+        expect(ticketActivityCreateFn).toHaveBeenNthCalledWith(2,
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    description: comment.title
+                })
+            })
+        )
+
     })
-    describe("actions", () => {
-        it("allows to filter out actions", () => {
+    describe("events", () => {
+        it("allows to filter out events", async () => {
 
-            const ticketModelActivityTestFn = TicketModelActivity("Comment", {
+            const CreateTicketActivityBasedOnTestFn = CreateTicketActivityBasedOn("Comment", ["update"], {
                 disableMailDelivery: true,
-                actions: ["update"],
-                descriptionEvaluator: {
-                    // "create" should be marked red,
-                    // don't know how to get that kind of compiler inference
-                    create: () => commentCreatedActivityDescription,
-                    update: (comment) => comment.title
+                descriptionEvaluator: async (event) => {
+                    if (event === "update") return commentUpdatedActivityDescription // should be
+                    else return commentCreatedActivityDescription // should not be
                 }
             });
 
             const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
 
-            ticketModelActivityTestFn({
+            await CreateTicketActivityBasedOnTestFn({
                 model: "Comment",
                 action: "create",
                 args: {
@@ -99,7 +101,7 @@ describe("optional parameters", () => {
                 runInTransaction: false
             }, jest.fn());
 
-            ticketModelActivityTestFn({
+            await CreateTicketActivityBasedOnTestFn({
                 model: "Comment",
                 action: "update",
                 args: {
@@ -113,7 +115,7 @@ describe("optional parameters", () => {
             expect(ticketActivityCreateFn).toHaveBeenCalledWith(
                 expect.objectContaining({
                     data: expect.objectContaining({
-                        description: comment.title
+                        description: commentUpdatedActivityDescription
                     })
                 })
             )
@@ -124,8 +126,8 @@ describe("optional parameters", () => {
 
 describe("when creating activity", () => {
 
-    const ticketModelActivityTrigger = () => {
-        TicketModelActivity("Comment", { disableMailDelivery: true })({
+    const CreateTicketActivityBasedOnTrigger = () => {
+        CreateTicketActivityBasedOn("Comment", ["create", "update"], { disableMailDelivery: true })({
             model: "Comment",
             action: "create",
             args: {
@@ -136,16 +138,16 @@ describe("when creating activity", () => {
         }, jest.fn());
     }
 
-    it("maps color based on action", async () => {
+    it("maps color based on event", async () => {
 
         const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
 
-        ticketModelActivityTrigger()
+        CreateTicketActivityBasedOnTrigger()
 
         expect(ticketActivityCreateFn).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: expect.objectContaining({
-                    color: TicketActivityActionColorMap.create
+                    color: TicketActivityEventColorMap.create
                 })
             })
         )
@@ -156,7 +158,7 @@ describe("when creating activity", () => {
 
         const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
 
-        ticketModelActivityTrigger()
+        CreateTicketActivityBasedOnTrigger()
 
         expect(ticketActivityCreateFn).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -167,15 +169,15 @@ describe("when creating activity", () => {
         )
     })
 
-    it("maps title based on actionLabelMap", () => {
+    it("maps title based on event label map", () => {
         const ticketActivityCreateFn = jest.spyOn(prismaMock.ticketActivity, "create")
 
-        ticketModelActivityTrigger()
+        CreateTicketActivityBasedOnTrigger()
 
         expect(ticketActivityCreateFn).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: expect.objectContaining({
-                    title: expect.stringContaining(TicketActivityActionLabelMap.create)
+                    title: expect.stringContaining(TicketActivityEventLabelMap.create)
                 })
             })
         )
