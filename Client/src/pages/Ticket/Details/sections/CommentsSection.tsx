@@ -65,20 +65,10 @@ function CommentsSection(props: CommentsSectionProps) {
 
     // mutations
     // ---------
-    const addCommentMutation = useMutation(addEntity, {
-        onSuccess: () => {
-            setCommentInputValue("");
-            toast({
-                title: "successfully added comment",
-                status: "success"
-            });
-            queryClient.invalidateQueries(["comments"])
-            queryClient.invalidateQueries(["comments/count"])
-        }
-    });
+
     const {
         addInteractionMutation,
-        addReplyMutation,
+        addCommentMutation,
         editCommentMutation,
         deleteCommentMutation
     } = useCommentMutations(ticket.id);
@@ -88,6 +78,17 @@ function CommentsSection(props: CommentsSectionProps) {
     const handleMenuButtonClick = async (selectedProperty) => {
         const selectedSortParam: any = sortParamsData.find(param => param.property === selectedProperty) || {}
         setSortParam(selectedSortParam)
+    }
+
+    const handleAddSubmit = () => {
+        setCommentInputValue("");
+        addCommentMutation.mutate({
+            route: "comment",
+            payload: {
+                ticketId: ticket.id,
+                content: commentInputValue
+            }
+        })
     }
 
     const handleInteractionSubmit = (type, comment) => {
@@ -100,7 +101,7 @@ function CommentsSection(props: CommentsSectionProps) {
         });
     }
     const handleReplySubmit = (e, comment, replyValue) => {
-        addReplyMutation.mutate({
+        addCommentMutation.mutate({
             route: "comment",
             payload: {
                 id: uuid(),
@@ -185,13 +186,7 @@ function CommentsSection(props: CommentsSectionProps) {
                     value={commentInputValue}
                     setValue={setCommentInputValue}
                     onCancel={() => setCommentInputValue("")}
-                    onSubmit={() => addCommentMutation.mutate({
-                        route: "comment",
-                        payload: {
-                            ticketId: ticket.id,
-                            content: commentInputValue
-                        }
-                    })}
+                    onSubmit={handleAddSubmit}
                 />
                 <Flex className="flex-col gap-4">
                     {(countError || isError) && <>

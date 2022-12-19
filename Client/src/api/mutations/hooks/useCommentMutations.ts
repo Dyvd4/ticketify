@@ -16,7 +16,7 @@ const useCommentMutations = (ticketId) => {
     const getComments = () => queryClient.getQueryData(["comments", sortParam, ticketId]) as any[]
     const setCommentQuery = (comments: any[]) => queryClient.setQueryData(["comments", sortParam, ticketId], comments);
 
-    const addReplyMutation = useMutation(addEntity, {
+    const addCommentMutation = useMutation(addEntity, {
         onMutate: async ({ payload: comment }) => {
             await cancelCommentQuery();
             const currentComments = getComments();
@@ -38,7 +38,7 @@ const useCommentMutations = (ticketId) => {
                 updatedAt: new Date()
             };
 
-            const { comments, oldComments } = addComment(currentComments, comment.parentId, newComment);
+            const { comments, oldComments } = addComment(currentComments, newComment, comment.parentId);
             setCommentQuery(comments);
             return { comments: oldComments, addedComment: newComment };
         },
@@ -131,7 +131,7 @@ const useCommentMutations = (ticketId) => {
     });
 
     return {
-        addReplyMutation,
+        addCommentMutation,
         editCommentMutation,
         deleteCommentMutation,
         addInteractionMutation
