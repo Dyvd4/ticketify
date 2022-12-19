@@ -2,8 +2,9 @@ import config from "@config";
 import MailTemplateProvider from "@lib/MailTemplateProvider";
 import MailTransporter from "@lib/MailTransporter";
 import prisma from "@prisma";
+import jwt from "jsonwebtoken"
 
-const { URL, SUPPORT_EMAIL } = config;
+const { URL, SUPPORT_EMAIL, JWT_SECRET_KEY } = config;
 
 export const sendTicketActivityEmailToWatchingUsers = async (ticketActivityId: string) => {
 
@@ -27,11 +28,19 @@ export const sendTicketActivityEmailToWatchingUsers = async (ticketActivityId: s
 
     return Promise.all(ticketWatcher.map(({ user, ticket }) => (
         (async () => {
+
+            const encodedUserId = jwt.sign({
+                data: {
+                    userId: user.id
+                }
+            }, JWT_SECRET_KEY)
+
             const html = await MailTemplateProvider.getInjectedHtmlFromFile("TicketActivityTemplate", {
                 URL,
                 ticket,
                 user,
-                ticketActivity
+                ticketActivity,
+                encodedUserId
             });
             return MailTransporter.sendMail({
                 from: SUPPORT_EMAIL,

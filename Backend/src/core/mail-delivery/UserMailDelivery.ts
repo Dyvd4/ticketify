@@ -7,13 +7,13 @@ import jwt from "jsonwebtoken";
 const { URL, JWT_SECRET_KEY, SUPPORT_EMAIL } = config
 
 export const sendEmailConfirmationEmail = async (user: User) => {
-    const redirectToken = jwt.sign({
+    const encodedUserId = jwt.sign({
         data: {
             userId: user.id
         }
     }, JWT_SECRET_KEY);
 
-    const html = await MailTemplateProvider.getInjectedHtmlFromFile("UserEmailConfirmationTemplate", { redirectToken, URL });
+    const html = await MailTemplateProvider.getInjectedHtmlFromFile("UserEmailConfirmationTemplate", { encodedUserId, URL });
 
     return MailTransporter.sendMail({
         from: SUPPORT_EMAIL,

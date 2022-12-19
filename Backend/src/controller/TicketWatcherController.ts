@@ -1,10 +1,15 @@
+import config from '@config';
+import { authentication } from '@core/middlewares/Auth';
 import TicketWatcherSchema from '@core/schemas/TicketWatcherSchema';
 import prisma from "@prisma";
 import express from 'express';
+import jwt from "jsonwebtoken";
 
 const Router = express.Router();
 
-Router.post('/ticketWatcher', async (req, res, next) => {
+const { CLIENT_URL, JWT_SECRET_KEY } = config;
+
+Router.post('/ticketWatcher', authentication(), async (req, res, next) => {
     let ticketWatcher = req.body;
     try {
         const validation = TicketWatcherSchema.validate(ticketWatcher);
@@ -36,7 +41,7 @@ Router.post('/ticketWatcher', async (req, res, next) => {
     }
 });
 
-Router.delete('/ticketWatcher/:userId/:ticketId', async (req, res, next) => {
+Router.delete('/ticketWatcher/:userId/:ticketId', authentication(), async (req, res, next) => {
     const { userId, ticketId } = req.params;
     try {
         const deletedTicketWatcher = await prisma.ticketWatcher.delete({
@@ -48,6 +53,28 @@ Router.delete('/ticketWatcher/:userId/:ticketId', async (req, res, next) => {
             }
         });
         res.json(deletedTicketWatcher);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.get("/ticketWatcher/unwatch/:encodedUserId/:ticketId", async (req, res, next) => {
+    const { encodedUserId, ticketId } = req.params;
+    try {
+
+        const { data: { userId } } = jwt.verify(encodedUserId, JWT_SECRET_KEY) as { data: { userId: string } };
+
+        await prisma.ticketWatcher.delete({
+            where: {
+                userId_ticketId: {
+                    userId,
+                    ticketId: parseInt(ticketId)
+                }
+            }
+        });
+
+        res.redirect(`${CLIENT_URL}/Ticket/Details/${ticketId}`);
     }
     catch (e) {
         next(e)
