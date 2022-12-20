@@ -35,18 +35,23 @@ server.use(CustomRequest)
 server.use("/api", ErrorController);
 server.use("/api/auth", AuthController);
 server.use("/api", UserController);
-server.use("/api", authentication(), TicketController);
-server.use("/api", authentication(), TicketPriorityController);
-server.use("/api", authentication(), CommentController);
-server.use("/api", authentication(), TicketDueDateController);
-server.use("/api", authentication(), TestController);
-server.use("/api", authentication(), TicketStatusController);
-server.use("/api", authentication(), FileController);
-server.use("/api", authentication(), CommentInteractionController);
-server.use("/api", authentication(), TicketActivityController);
-server.use("/api", authentication(), LogController);
-server.use("/api", authentication(), TicketOnTicketController);
-server.use("/api", authentication(), TicketWatcherController);
+server.use("/api", TicketWatcherController);
+
+// TODO: should not be application level, make router level instead
+server.use("/api", authentication())
+server.use("/api", TestController);
+server.use("/api", TicketPriorityController);
+server.use("/api", TicketController);
+server.use("/api", CommentController);
+server.use("/api", TicketDueDateController);
+server.use("/api", TicketStatusController);
+server.use("/api", FileController);
+server.use("/api", CommentInteractionController);
+server.use("/api", TicketActivityController);
+server.use("/api", LogController);
+server.use("/api", TicketOnTicketController);
+
+// TODO: should not be application level, make router level instead
 server.use("/api", authorization({
     strategy: (user) => [
         user.id === getCurrentUser().id,

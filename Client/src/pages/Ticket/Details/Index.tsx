@@ -9,6 +9,7 @@ import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
+import { useInfiniteQuery } from "src/hooks/infiniteQuery";
 import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
 import SetStatusButton from "./components/SetStatusButton";
 import WatchTicketButton from "./components/WatchTicketButton";
@@ -20,6 +21,7 @@ import AttachmentsSection from "./sections/AttachmentsSection";
 import CommentsSection from "./sections/CommentsSection";
 import ConnectedTicketsSection from "./sections/ConnectedTicketsSection";
 import HeadDataSection from "./sections/HeadDataSection";
+import TicketActivitySection from "./sections/TicketActivitySection";
 
 function TicketDetailsIndex() {
     // state
@@ -48,6 +50,8 @@ function TicketDetailsIndex() {
     } = useQuery(["ticket/attachments", id], () => fetchEntity({ route: `ticket/attachments/${id}` }), {
         refetchOnWindowFocus: false
     });
+
+    const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities"], { route: "ticketActivities" });
 
     // event handler
     // -------------
@@ -99,7 +103,7 @@ function TicketDetailsIndex() {
                 </BreadcrumbItem>
             </Breadcrumb>
             {/* Head data section
-                ----------------- */}
+                ================= */}
             <SectionBlock
                 title="Head data"
                 actions={[
@@ -147,7 +151,7 @@ function TicketDetailsIndex() {
                 </>}
             </SectionBlock>
             {/* Attachments section
-                ------------------- */}
+                =================== */}
             <SectionBlock
                 className="mt-4"
                 title="Attachments"
@@ -188,7 +192,7 @@ function TicketDetailsIndex() {
                 />
             </SectionBlock>
             {/* Connected tickets section
-                ------------------------- */}
+                ========================= */}
             <SectionBlock
                 title="Connected tickets"
                 className="mt-4"
@@ -232,8 +236,11 @@ function TicketDetailsIndex() {
                     onClose={onConnectedTicketsEditModalClose}
                 />
             </SectionBlock>
-            {/*Comments section
-                --------------- */}
+            {/* Ticket activity section
+                ======================= */}
+            <TicketActivitySection activitiesQuery={activitiesQuery} />
+            {/* Comments section
+                ================ */}
             <CommentsSection ticket={ticket} />
         </Container>
     );

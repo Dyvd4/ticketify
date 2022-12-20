@@ -35,20 +35,25 @@ export const getComment = (parentComments: any[], commentId) => {
     return comment;
 }
 
-export const addComment = (parentComments: any[], parentCommentId: string, comment) => {
+export const addComment = (parentComments: any[], comment, parentCommentId?: string) => {
     const newComments: any = [...parentComments];
     const oldComments: any = [...parentComments];
 
-    const parentCommentIndex = parentComments.findIndex(comment => comment.id === parentCommentId);
-    const parentComment = parentComments[parentCommentIndex]
-    const newParentComment = {
-        ...parentComment,
-        childs: [
-            ...parentComment.childs,
-            comment
-        ]
+    if (parentCommentId) {
+        const parentCommentIndex = parentComments.findIndex(comment => comment.id === parentCommentId);
+        const parentComment = parentComments[parentCommentIndex]
+        const newParentComment = {
+            ...parentComment,
+            childs: [
+                ...parentComment.childs,
+                comment
+            ]
+        }
+        newComments[parentCommentIndex] = newParentComment;
     }
-    newComments[parentCommentIndex] = newParentComment;
+    else {
+        newComments.push(comment);
+    }
 
     return {
         comments: newComments,

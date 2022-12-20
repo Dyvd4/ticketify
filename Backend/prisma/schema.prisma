@@ -210,8 +210,8 @@ model TicketActivity {
   id            String    @id @default(uuid()) @db.NVarChar(100)
   ticketId      Int       @db.Int
   ticket        Ticket    @relation(fields: [ticketId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  entityName    String    @db.NVarChar(100)
-  action        String    @db.NVarChar(100)
+  title         String
+  description   String?
   icon          String?   @db.NVarChar(100)
   color         String?   @db.NVarChar(100)
   createdAt     DateTime? @default(now())

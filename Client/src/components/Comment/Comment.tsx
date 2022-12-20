@@ -4,10 +4,9 @@ import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
 import { hackyCommentRefreshAtom } from "src/context/atoms";
-import useHasOverflow from "src/hooks/useHasOverflow";
 import { getDurationAgo } from "src/utils/date";
 import { getDataUrl } from "src/utils/image";
-import ShowMore from "../ShowMore";
+import ShowMoreLabel from "../ShowMoreLabel";
 import ActionMenu from "./ActionMenu";
 import ChildComments from "./ChildComments";
 import DeleteDialog from "./DeleteDialog";
@@ -98,7 +97,6 @@ function Comment(props: CommentProps) {
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
     const { isOpen: deleteDialogOpen, onOpen: onDeleteDialogOpen, onClose: onDeleteDialogClose } = useDisclosure();
     const contentRef = useRef<HTMLDivElement | null>(null);
-    const contentHasOverflow = useHasOverflow(contentRef);
     const [replyValue, setReplyValue] = useState("");
     const [editValue, setEditValue] = useState(comment.content);
 
@@ -143,7 +141,6 @@ function Comment(props: CommentProps) {
     const canEdit = canEditEvaluator && canEditEvaluator(comment)
     const canDelete = canDeleteEvaluator && canDeleteEvaluator(comment);
     const usernameTagged = usernameTaggedEvaluator && usernameTaggedEvaluator(comment);
-    const showMore = noOfContentLines === defaultNoOfContentLines;
 
     return (
         <Flex
@@ -201,12 +198,12 @@ function Comment(props: CommentProps) {
                             className={`text-sm ${usernameTagged ? "pl-1 pt-1" : ""}`}>
                             {content}
                         </Box>
-                        {contentHasOverflow && <>
-                            <ShowMore
-                                onClick={() => setNoOfContentLines(showMore ? 100000000000 : defaultNoOfContentLines)}
-                                showMore={showMore}
-                            />
-                        </>}
+                        <ShowMoreLabel
+                            contentRef={contentRef}
+                            contentNoOfLines={noOfContentLines}
+                            setContentNoOfLines={setNoOfContentLines}
+                            defaultContentNoOfLines={defaultNoOfContentLines}
+                        />
                         <Flex
                             alignItems={"center"}
                             mt={2}

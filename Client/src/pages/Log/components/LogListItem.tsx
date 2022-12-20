@@ -4,8 +4,7 @@ import { faCircleExclamation, faCircleInfo, faTriangleExclamation } from "@forta
 import { format } from "date-fns";
 import { useRef, useState } from "react";
 import ListItem from "src/components/List/ListItem";
-import ShowMore from "src/components/ShowMore";
-import useHasOverflow from "src/hooks/useHasOverflow";
+import ShowMoreLabel from "src/components/ShowMoreLabel";
 
 [faCircleExclamation, faTriangleExclamation, faCircleInfo].forEach(icon => library.add(icon))
 
@@ -16,21 +15,21 @@ function LogListItemContent({ item }: { item }) {
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
     const { level, colorScheme, message, errorMessage, errorStack, createdAt } = item;
     const contentRef = useRef<HTMLDivElement | null>(null);
-    const contentHasOverflow = useHasOverflow(contentRef, true);
-    const showMore = noOfContentLines === defaultNoOfContentLines;
 
     return (
         <ListItem
+            heading={
+                <Box className="flex items-center justify-between">
+                    <Tag colorScheme={colorScheme}>
+                        {level}
+                    </Tag>
+                    <Box>
+                        {format(new Date(createdAt), "dd.MM.yyyy HH:mm:ss")}
+                    </Box>
+                </Box>
+            }
             content={
                 <Box>
-                    <Box className="flex items-center justify-between">
-                        <Tag colorScheme={colorScheme}>
-                            {level}
-                        </Tag>
-                        <Box>
-                            {format(new Date(createdAt), "dd.MM.yyyy HH:mm:ss")}
-                        </Box>
-                    </Box>
                     <Box
                         ref={contentRef}
                         className="mt-2"
@@ -58,12 +57,12 @@ function LogListItemContent({ item }: { item }) {
                             </Box>
                         </>}
                     </Box>
-                    {contentHasOverflow && <>
-                        <ShowMore
-                            onClick={() => setNoOfContentLines(showMore ? 100000000000 : defaultNoOfContentLines)}
-                            showMore={showMore}
-                        />
-                    </>}
+                    <ShowMoreLabel
+                        contentRef={contentRef}
+                        contentNoOfLines={noOfContentLines}
+                        setContentNoOfLines={setNoOfContentLines}
+                        defaultContentNoOfLines={defaultNoOfContentLines}
+                    />
                 </Box>
             } />
     );

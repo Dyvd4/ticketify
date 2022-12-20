@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
 import { addEntity, removeEntity, updateEntity } from "src/api/entity";
@@ -6,9 +5,8 @@ import { commentSortParamAtom, hackyCommentRefreshAtom } from "src/context/atoms
 import { useCurrentUser } from "src/hooks/user";
 import { addComment, deleteComment, getComment, replaceComment } from "src/utils/comment";
 
-const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue = "") => {
+const useCommentMutations = (ticketId) => {
 
-    const toast = useToast();
     const queryClient = useQueryClient();
     const { currentUser } = useCurrentUser({ includeAllEntities: true });
     const [sortParam] = useAtom(commentSortParamAtom);
@@ -18,7 +16,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
     const getComments = () => queryClient.getQueryData(["comments", sortParam, ticketId]) as any[]
     const setCommentQuery = (comments: any[]) => queryClient.setQueryData(["comments", sortParam, ticketId], comments);
 
-    const addReplyMutation = useMutation(addEntity, {
+    const addCommentMutation = useMutation(addEntity, {
         onMutate: async ({ payload: comment }) => {
             await cancelCommentQuery();
             const currentComments = getComments();
@@ -40,8 +38,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
                 updatedAt: new Date()
             };
 
-            const { comments, oldComments } = addComment(currentComments, comment.parentId, newComment);
-            queryClient.setQueryData(["comments", sortParam], comments);
+            const { comments, oldComments } = addComment(currentComments, newComment, comment.parentId);
             setCommentQuery(comments);
             return { comments: oldComments, addedComment: newComment };
         },
@@ -49,6 +46,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
             setCommentQuery((context! as any).comments)
         },
         onSuccess: async (response, { payload: newComment }, context) => {
+            await queryClient.invalidateQueries(["comments/count"]);
             const currentComments = getComments();
             const addedComment = (context! as any).addedComment;
             const { comments } = replaceComment(currentComments, newComment.id, {
@@ -56,11 +54,6 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
                 id: response.data.id
             });
             setCommentQuery(comments);
-            await queryClient.invalidateQueries(["comments/count"]);
-            toast({
-                title: "successfully replied",
-                status: "success"
-            });
         },
     });
     const editCommentMutation = useMutation(updateEntity, {
@@ -79,12 +72,6 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
         },
         onError: (error, variables, context) => {
             setCommentQuery((context! as any).comments)
-        },
-        onSuccess: (response) => {
-            toast({
-                title: "successfully edited comment",
-                status: "success"
-            });
         }
     });
     const deleteCommentMutation = useMutation(removeEntity, {
@@ -98,12 +85,8 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
         onError: (error, variables, context) => {
             setCommentQuery((context! as any).comments)
         },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries(["comments/count"])
-            toast({
-                title: "successfully removed comment",
-                status: "success"
-            });
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments/count"])
         }
     });
     const addInteractionMutation = useMutation(addEntity, {
@@ -148,7 +131,7 @@ const useCommentMutations = (ticketId, defaultReplyValue = "", defaultEditValue 
     });
 
     return {
-        addReplyMutation,
+        addCommentMutation,
         editCommentMutation,
         deleteCommentMutation,
         addInteractionMutation

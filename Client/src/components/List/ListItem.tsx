@@ -1,7 +1,6 @@
-import { Box, Button, Divider, LinkBox, ListItem as ChakraListItem, ListItemProps as ChakraListItemProps, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import { Box, Button, ListItem as ChakraListItem, ListItemProps as ChakraListItemProps, Divider, LinkBox, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ComponentPropsWithRef } from "react";
 
 type ListItemProps = {
     /** The title to display. Will be placed on top of the content. */
@@ -28,7 +27,7 @@ function ListItem({ heading, content, actions, tags, className, useDivider, ...p
             {...props}>
             <LinkBox>
                 <Box className="flex justify-between">
-                    <Box>
+                    <Box className="flex-grow">
                         {heading}
                     </Box>
                     {!!actions && <>

@@ -1,8 +1,8 @@
-import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text, useToast } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { addEntity, fetchEntity } from "src/api/entity";
+import { useQuery } from "react-query";
+import { fetchEntity } from "src/api/entity";
 import useCommentMutations from "src/api/mutations/hooks/useCommentMutations";
 import CommentSkeleton from "src/components/Comment/CommentSkeleton";
 import Input from "src/components/Comment/Input";
@@ -40,8 +40,6 @@ function CommentsSection(props: CommentsSectionProps) {
 
     const [commentInputValue, setCommentInputValue] = useState("");
     const { currentUser } = useCurrentUser({ includeAllEntities: true });
-    const queryClient = useQueryClient();
-    const toast = useToast();
 
     const [sortParam, setSortParam] = useAtom(commentSortParamAtom);
 
@@ -65,20 +63,10 @@ function CommentsSection(props: CommentsSectionProps) {
 
     // mutations
     // ---------
-    const addCommentMutation = useMutation(addEntity, {
-        onSuccess: () => {
-            setCommentInputValue("");
-            toast({
-                title: "successfully added comment",
-                status: "success"
-            });
-            queryClient.invalidateQueries(["comments"])
-            queryClient.invalidateQueries(["comments/count"])
-        }
-    });
+
     const {
         addInteractionMutation,
-        addReplyMutation,
+        addCommentMutation,
         editCommentMutation,
         deleteCommentMutation
     } = useCommentMutations(ticket.id);
@@ -88,6 +76,17 @@ function CommentsSection(props: CommentsSectionProps) {
     const handleMenuButtonClick = async (selectedProperty) => {
         const selectedSortParam: any = sortParamsData.find(param => param.property === selectedProperty) || {}
         setSortParam(selectedSortParam)
+    }
+
+    const handleAddSubmit = () => {
+        setCommentInputValue("");
+        addCommentMutation.mutate({
+            route: "comment",
+            payload: {
+                ticketId: ticket.id,
+                content: commentInputValue
+            }
+        })
     }
 
     const handleInteractionSubmit = (type, comment) => {
@@ -100,7 +99,7 @@ function CommentsSection(props: CommentsSectionProps) {
         });
     }
     const handleReplySubmit = (e, comment, replyValue) => {
-        addReplyMutation.mutate({
+        addCommentMutation.mutate({
             route: "comment",
             payload: {
                 id: uuid(),
@@ -185,13 +184,7 @@ function CommentsSection(props: CommentsSectionProps) {
                     value={commentInputValue}
                     setValue={setCommentInputValue}
                     onCancel={() => setCommentInputValue("")}
-                    onSubmit={() => addCommentMutation.mutate({
-                        route: "comment",
-                        payload: {
-                            ticketId: ticket.id,
-                            content: commentInputValue
-                        }
-                    })}
+                    onSubmit={handleAddSubmit}
                 />
                 <Flex className="flex-col gap-4">
                     {(countError || isError) && <>
