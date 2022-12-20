@@ -1,8 +1,8 @@
-import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text, useToast } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { addEntity, fetchEntity } from "src/api/entity";
+import { useQuery } from "react-query";
+import { fetchEntity } from "src/api/entity";
 import useCommentMutations from "src/api/mutations/hooks/useCommentMutations";
 import CommentSkeleton from "src/components/Comment/CommentSkeleton";
 import Input from "src/components/Comment/Input";
@@ -40,8 +40,6 @@ function CommentsSection(props: CommentsSectionProps) {
 
     const [commentInputValue, setCommentInputValue] = useState("");
     const { currentUser } = useCurrentUser({ includeAllEntities: true });
-    const queryClient = useQueryClient();
-    const toast = useToast();
 
     const [sortParam, setSortParam] = useAtom(commentSortParamAtom);
 
