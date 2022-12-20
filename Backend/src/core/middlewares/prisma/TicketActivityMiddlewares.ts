@@ -1,6 +1,6 @@
 import prisma from "@prisma";
 import CreateTicketActivityBasedOn from "./TicketActivity";
-0
+
 export const createActivityIfDescriptionHasChanged = CreateTicketActivityBasedOn("Ticket", ["update"], {
     onlyIf: async (event, args) => {
 
@@ -12,7 +12,9 @@ export const createActivityIfDescriptionHasChanged = CreateTicketActivityBasedOn
             }
         }))!
 
-        const descriptionHasChanged = ticket.description !== newDescription
+        const descriptionHasChanged = newDescription
+            ? ticket.description !== newDescription
+            : false
         return descriptionHasChanged;
     },
     descriptionEvaluator: async () => `Description changed`,
@@ -24,13 +26,16 @@ export const createActivityIfStatusHasChanged = CreateTicketActivityBasedOn("Tic
 
         const ticketId = args.where.id;
         const newStatusId = args.data.statusId
-        const ticket = (await prisma.ticket.findUnique({
+        // TODO: provide ctx to pass it down?
+        const oldTicket = (await prisma.ticket.findUnique({
             where: {
                 id: ticketId
             }
         }))!
 
-        const statusHasChanged = ticket.statusId !== newStatusId
+        const statusHasChanged = newStatusId
+            ? oldTicket.statusId !== newStatusId
+            : false
         return statusHasChanged;
     },
     descriptionEvaluator: async (event, args) => {
@@ -38,6 +43,7 @@ export const createActivityIfStatusHasChanged = CreateTicketActivityBasedOn("Tic
         const ticketId = args.where.id;
         const newStatusId = args.data.statusId;
 
+        // TODO: get from ctx?
         const oldTicket = (await prisma.ticket.findUnique({
             where: {
                 id: ticketId
@@ -55,7 +61,7 @@ export const createActivityIfStatusHasChanged = CreateTicketActivityBasedOn("Tic
                 }
             }))!;
 
-            return `Status changed from ${oldTicket.status!.name} to ${status.name}`
+            return `Status changed from "${oldTicket.status!.name}" to "${status.name}"`
         }
 
         return null
@@ -68,13 +74,15 @@ export const createActivityIfResponsibleUserHasChanged = CreateTicketActivityBas
 
         const ticketId = args.where.id;
         const newResponsibleUserId = args.data.responsibleUserId
-        const ticket = (await prisma.ticket.findUnique({
+        const oldTicket = (await prisma.ticket.findUnique({
             where: {
                 id: ticketId
             }
         }))!
 
-        const responsibleUserHasChanged = ticket.responsibleUserId !== newResponsibleUserId
+        const responsibleUserHasChanged = newResponsibleUserId
+            ? oldTicket.responsibleUserId !== newResponsibleUserId
+            : false
         return responsibleUserHasChanged
     },
     descriptionEvaluator: async (event, args) => {
@@ -99,7 +107,7 @@ export const createActivityIfResponsibleUserHasChanged = CreateTicketActivityBas
                 }
             }))!;
 
-            return `Responsible user changed from ${oldTicket.responsibleUser?.username || "none"} to ${responsibleUser.username}`
+            return `Responsible user changed from "${oldTicket.responsibleUser?.username || "none"}" to "${responsibleUser.username}"`
         }
 
         return null
@@ -107,4 +115,38 @@ export const createActivityIfResponsibleUserHasChanged = CreateTicketActivityBas
     ticketIdEvaluator: (event, args) => args.where.id
 })
 
-export const createActivityByComment = CreateTicketActivityBasedOn("Comment", ["create", "update"]);
+export const createActivityByComment = CreateTicketActivityBasedOn("Comment", ["create", "update"], {
+    onlyIf: async (event, args) => {
+        if (event === "update") {
+
+            const newCommentContent = args.data.content;
+
+            const commentId = args.where.id;
+            const oldComment = (await prisma.comment.findUnique({
+                where: {
+                    id: commentId
+                }
+            }))!;
+
+            const commentContentHasChanged = oldComment.content !== newCommentContent;
+            return commentContentHasChanged;
+        }
+        return true;
+    },
+    descriptionEvaluator: async (event, args) => {
+        if (event === "update") {
+
+            const newCommentContent = args.data.content;
+
+            const commentId = args.where.id;
+            const oldComment = (await prisma.comment.findUnique({
+                where: {
+                    id: commentId
+                }
+            }))!;
+
+            return `Comment content changed from "${oldComment.content}" to "${newCommentContent}"`;
+        }
+        return null;
+    }
+});

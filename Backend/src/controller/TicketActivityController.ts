@@ -12,6 +12,9 @@ Router.get('/ticketActivities', async (req, res, next) => {
             include: {
                 ticket: true,
                 createdFrom: true,
+            },
+            orderBy: {
+                createdAt: "desc"
             }
         });
         const ticketActivitiesCount = await prisma.ticketActivity.count();

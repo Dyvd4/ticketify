@@ -1,49 +1,70 @@
-import { Box, Link, Text } from "@chakra-ui/react";
+import { Box, Link, Text, Tooltip } from "@chakra-ui/react";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faComment, IconName } from "@fortawesome/free-solid-svg-icons";
+import { IconName, faComment, faTicket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef, useState } from "react";
 import BgBox from "../BgBox";
+import ShowMoreLabel from "../ShowMoreLabel";
 
-library.add(faComment);
+library.add(faComment, faTicket);
 
 type ActivityProps = {
     activity: {
         ticket: any
-        entityName: string
-        action: string
+        title: string
         icon: IconName
         color: string
         createdFrom: any
+        description?: string
     }
 }
 
+const defaultNoOfContentLines = 4;
+
 function Activity({ activity }: ActivityProps) {
+
+    const contentBoxRef = useRef<HTMLDivElement | null>(null);
+    const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
+
     return (
-        <BgBox className={`flex gap-4 w-72`}>
-            <Box className="p-2 rounded-full aspect-square">
-                <FontAwesomeIcon icon={activity.icon || "pen"} size={"2x"} />
+        <BgBox className={`flex gap-2 max-w-sm overflow-hidden`}>
+            <Box className="rounded-full aspect-square">
+                <FontAwesomeIcon icon={activity.icon || "pen"} size={"lg"} />
             </Box>
-            <Box>
-                <Box noOfLines={1}>
+            <Box className="min-w-0">
+                <Box>
                     {activity.ticket && <>
-                        <Link
-                            href={`Ticket/Details/${activity.ticket.id}`}
-                            className="hover:underline text-lg">
-                            #{activity.ticket.id} {activity.ticket.title}
-                        </Link>
+                        <Tooltip label="Go to ticket" placement="top-start">
+                            <Link
+                                href={`Ticket/Details/${activity.ticket.id}`}
+                                className="hover:underline flex justify-between items-center gap-2 whitespace-nowrap">
+                                <div className="min-w-0 truncate">
+                                    #{activity.ticket.id} {activity.ticket.title}
+                                </div>
+                                <div className={`text-${activity.color} text-sm`}>
+                                    ({activity.title})
+                                </div>
+                            </Link>
+                        </Tooltip>
                     </>}
                     {!activity.ticket && <>
-                        <Text className="text-lg">
+                        <Text>
                             (deleted ticket)
                         </Text>
                     </>}
                 </Box>
-                <Box className="text-sm italic">
-                    {activity.entityName} &nbsp;
-                    <span className={`text-${activity.color}`}>
-                        {activity.action}
-                    </span>
+                <Box
+                    ref={contentBoxRef}
+                    noOfLines={noOfContentLines}
+                    className={`text-sm text-secondary ${!!activity.description ? "mt-1" : ""}`}>
+                    {activity.description}
                 </Box>
+                <ShowMoreLabel
+                    contentRef={contentBoxRef}
+                    contentNoOfLines={noOfContentLines}
+                    setContentNoOfLines={setNoOfContentLines}
+                    defaultContentNoOfLines={defaultNoOfContentLines}
+                />
             </Box>
         </BgBox>
     );
