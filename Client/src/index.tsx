@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Index from "src/pages/Index/Index";
 import AuthenticatedArea from "./auth/AuthenticatedArea";
-import Breadcrumb from "./components/Breadcrumbs";
+import Breadcrumb from "./components/Breadcrumb";
 import Navbar from "./components/Navbar";
 import LoadingRipplePortalSlot from "./components/PortalSlots/LoadingRipplePortalSlot";
 import Sidebar from "./components/Sidebar/Sidebar";
