@@ -1,9 +1,9 @@
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
 
 type BgBoxProps = PropsWithChildren<{
     variant?: keyof typeof VARIANT_MAP
-}> & ComponentPropsWithRef<"div">
+}> & BoxProps
 
 export const VARIANT_MAP = {
     child: {
