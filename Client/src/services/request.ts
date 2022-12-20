@@ -5,7 +5,7 @@ import { handleError } from "../utils/error";
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface RequestOptions extends AxiosRequestConfig {
-    /** determines wheter an error is thrown or not */
+    /** determines wether an error is thrown or not */
     dontThrowError?: boolean
 }
 
