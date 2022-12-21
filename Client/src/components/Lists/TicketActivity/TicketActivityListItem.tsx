@@ -34,7 +34,7 @@ function TicketActivityListItem({ activity, linkIsDisabled, tooltipDisabled }: T
                 <Box className="rounded-full aspect-square">
                     <FontAwesomeIcon icon={activity.icon || "pen"} size={"lg"} />
                 </Box>
-                <Box className="min-w-0">
+                <Box className="min-w-0 flex-grow">
                     <Box>
                         {activity.ticket && <>
                             <Tooltip
