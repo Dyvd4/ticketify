@@ -1,19 +1,14 @@
-import fsSync from "fs";
-import fs, { mkdir } from "fs/promises";
-import path from "path";
+import config from "@config";
+import { File } from "@prisma/client";
 
-const uploadPath = path.join(__dirname, "../../upload");
-
-const fileName = (file) => `${file.id}_${file.originalFileName || ""}`;
+const { FILE_UPLOAD_PATH } = config;
 
 /** @returns filePath */
-export const uploadFile = async (file) => {
-    if (!fsSync.existsSync(uploadPath)) await mkdir(uploadPath)
-    const filePath = path.join(uploadPath, fileName(file));
-    await fs.writeFile(filePath, file.content);
+export const getFilePath = (file: File) => {
+    const filePath = `${FILE_UPLOAD_PATH}/${file.fileName}`
     return filePath;
 }
 
 export default {
-    uploadFile
+    getFilePath
 }

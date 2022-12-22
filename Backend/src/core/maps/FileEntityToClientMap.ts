@@ -1,8 +1,12 @@
+import config from "@config";
+import { fileRoutePath } from "@controller/FileController";
 import { File } from "@prisma/client";
 
-export default function FileEntityToClientMap(file: File, contentType: BufferEncoding) {
+const { URL } = config;
+
+export default function FileEntityToClientMap(file: File) {
     return {
         ...file,
-        content: file.content.toString(contentType)
+        contentUrl: `${URL}${fileRoutePath}`.replace(":id", file.id)
     }
 }

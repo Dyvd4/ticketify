@@ -2,20 +2,26 @@ import config from "@config";
 import { isImageFile } from "@lib/utils/FileUtils";
 import multer from "multer";
 
-const { FILE_IMAGE_MAX_SIZE_KB, FILE_IMAGE_MAX_COUNT, FILE_MAX_COUNT, FILE_MAX_SIZE_KB } = config;
+const { FILE_IMAGE_MAX_SIZE_KB, FILE_IMAGE_MAX_COUNT, FILE_MAX_COUNT, FILE_MAX_SIZE_KB, FILE_UPLOAD_PATH } = config;
 const FILE_IMAGE_MAX_SIZE_B = FILE_IMAGE_MAX_SIZE_KB * 1000;
 const FILE_MAX_SIZE_B = FILE_MAX_SIZE_KB * 1000;
 
 export const imageUpload = multer({
     limits: {
         fileSize: FILE_IMAGE_MAX_SIZE_B
-    }
+    },
+    storage: multer.diskStorage({
+        destination: FILE_UPLOAD_PATH
+    })
 }).array("files", FILE_IMAGE_MAX_COUNT);
 
 export const fileUpload = multer({
     limits: {
         fileSize: FILE_MAX_SIZE_B
-    }
+    },
+    storage: multer.diskStorage({
+        destination: FILE_UPLOAD_PATH
+    })
 }).array("files", FILE_MAX_COUNT);
 
 export const validateFiles = (req, res, next) => {
