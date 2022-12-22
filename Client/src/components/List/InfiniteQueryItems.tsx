@@ -17,7 +17,7 @@ type InfiniteQueryItemsProps = {
     emptyDisplay?: JSX.Element
     fetchingNextDisplay?: JSX.Element
 }
-
+// TODO: options for show-more button
 function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
 
     const {
