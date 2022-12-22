@@ -44,7 +44,7 @@ export const getTicket = async (ticketId: string) => {
         }
     });
 
-    if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileEntityToClientMap(ticket.responsibleUser.avatar.file, "base64");
+    if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileEntityToClientMap(ticket.responsibleUser.avatar.file);
 
     return ticket;
 }
