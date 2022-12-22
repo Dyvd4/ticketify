@@ -5,6 +5,7 @@ import express from 'express';
 const Router = express.Router();
 
 Router.get('/ticketActivities', async (req, res, next) => {
+    const { ticketId } = req.query;
     try {
         const infiniteLoader = new InfiniteLoader(req.query);
         const ticketActivities = await prisma.ticketActivity.findMany({
@@ -15,6 +16,11 @@ Router.get('/ticketActivities', async (req, res, next) => {
             },
             orderBy: {
                 createdAt: "desc"
+            },
+            where: {
+                ticketId: ticketId
+                    ? parseInt(ticketId as string)
+                    : undefined
             }
         });
         const ticketActivitiesCount = await prisma.ticketActivity.count();

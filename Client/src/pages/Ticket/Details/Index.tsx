@@ -51,7 +51,12 @@ function TicketDetailsIndex() {
         refetchOnWindowFocus: false
     });
 
-    const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities"], { route: "ticketActivities" });
+    const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities", id], {
+        route: "ticketActivities",
+        queryParams: {
+            ticketId: id
+        }
+    });
 
     // event handler
     // -------------
