@@ -171,7 +171,7 @@ model File {
   fileName         String?        @db.NVarChar(100)
   originalFileName String?        @db.NVarChar(100)
   mimeType         String         @db.NVarChar(20)
-  content          Bytes
+  contentUrlPath   String
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt
   createUser       String?        @db.NVarChar(100)
