@@ -26,7 +26,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const mutation = useMutation(() => {
         const formData = new FormData();
-        formData.append("files", avatar || "");
+        formData.append("file", avatar || "");
         return request().put("user/avatar", formData);
     }, {
         onSuccess: async () => {

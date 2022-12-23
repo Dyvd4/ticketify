@@ -30,7 +30,7 @@ function AttachmentsEditModal({ attachments, isOpen, onClose, ...props }: Attach
     // ---------
     const mutation = useMutation(() => {
         return removeEntity({
-            route: `ticket/fileOnTicket/${id}/${attachmentToRemove.id}`,
+            route: `file/${attachmentToRemove.id}`,
         })
     }, {
         onSuccess: async () => {
