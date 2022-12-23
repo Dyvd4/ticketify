@@ -1,22 +1,24 @@
-import prisma from "@prisma";
-import FileSchema from "@core/schemas/FileSchema";
-import { uploadFile } from "@core/services/FileService";
-import { validateFiles, validateImageFiles, fileUpload, imageUpload } from "@lib/middlewares/FileUpload";
-import express from 'express';
+import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
 import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
+import FileService, { getFilePath } from "@core/services/FileService";
+import { multipleFileUpload, multipleImageUpload, singleFileUpload, singleImageUpload } from "@lib/middlewares/FileUpload";
+import prisma from "@prisma";
+import express from 'express';
+
 const Router = express.Router();
 
 Router.get('/files', async (req, res, next) => {
     try {
         const files = await prisma.file.findMany();
-        res.json({ items: files });
+        res.json({ items: files.map(file => FileEntityToClientMap(file)) });
     }
     catch (e) {
         next(e)
     }
 });
 
-Router.get('/file/:id', async (req, res, next) => {
+export const fileRoutePath = "/file/:id"
+Router.get(fileRoutePath, async (req, res, next) => {
     const { id } = req.params;
     try {
         const file = await prisma.file.findFirst({
@@ -25,7 +27,7 @@ Router.get('/file/:id', async (req, res, next) => {
             }
         });
         if (!file) return res.status(404);
-        const filePath = await uploadFile(file);
+        const filePath = getFilePath(file);
         res.download(filePath);
     }
     catch (e) {
@@ -33,77 +35,53 @@ Router.get('/file/:id', async (req, res, next) => {
     }
 });
 
-Router.post('/files', fileUpload, validateFiles, async (req, res, next) => {
-    // no type from multer exported :(
-    const files = req.files as any[];
+Router.post('/files', multipleFileUpload, async (req, res, next) => {
+    const files = req.files as Express.Multer.File[];
     try {
-        const filesToInsert = files.map(file => MulterFileToFileEntityMap(file));
-        const fileValidations = filesToInsert.map(file => {
-            const validation = FileSchema.validate(file);
-            if (validation.error) return validation;
-        });
+        const validationsOrNewFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
 
-        if (fileValidations.some(validation => validation)) {
-            return res.status(400).json({ validations: fileValidations });
+        if ("validations" in validationsOrNewFiles) {
+            return res.status(400).json(validationsOrNewFiles);
         }
 
-        const newFiles = await Promise.all(filesToInsert.map(file => {
-            return prisma.file.create({
-                data: file
-            });
-        }));
-        res.json({ items: newFiles });
+        res.json({ items: validationsOrNewFiles });
     }
     catch (e) {
         next(e)
     }
 });
 
-Router.post('/images', imageUpload, validateImageFiles, async (req, res, next) => {
-    // no type from multer exported :(
-    const files = req.files as any[];
+Router.post('/images', multipleImageUpload, async (req, res, next) => {
+    const files = req.files as Express.Multer.File[];
     try {
-        const filesToInsert = files.map(file => MulterFileToFileEntityMap(file));
-        const fileValidations = filesToInsert.map(file => {
-            const validation = FileSchema.validate(file);
-            if (validation.error) return validation;
-        });
+        const validationsOrNewFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
 
-        if (fileValidations.some(validation => validation)) {
-            return res.status(400).json({ validations: fileValidations });
+        if ("validations" in validationsOrNewFiles) {
+            return res.status(400).json(validationsOrNewFiles);
         }
 
-        const newFiles = await Promise.all(filesToInsert.map(file => {
-            return prisma.file.create({
-                data: file
-            });
-        }));
-        res.json({ items: newFiles });
+        res.json({ items: validationsOrNewFiles });
     }
     catch (e) {
         next(e)
     }
 });
 
-Router.put('/file/:id', fileUpload, validateFiles, async (req, res, next) => {
+Router.put('/file/:id', singleFileUpload, async (req, res, next) => {
     const { id } = req.params;
-    const file = req.files
-        ? req.files[0]
-        : null;
+    const file = req.file
+
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = MulterFileToFileEntityMap(file);
-        const validation = FileSchema.validate(fileToUpdate);
-        if (validation.error) return res.status(400).json({ validation });
 
-        const updatedItem = await prisma.file.update({
-            where: {
-                id
-            },
-            data: fileToUpdate
-        });
-        if (!updatedItem) return res.status(404);
-        const filePath = await uploadFile(file);
+        const fileToUpdate = MulterFileToFileEntityMap(file);
+        const validationOrUpdatedFile = await FileService.validateAndUpdateFile(id, fileToUpdate);
+
+        if ("validation" in validationOrUpdatedFile) {
+            return res.status(400).json(validationOrUpdatedFile);
+        }
+
+        const filePath = getFilePath(validationOrUpdatedFile);
         res.download(filePath);
     }
     catch (e) {
@@ -111,24 +89,21 @@ Router.put('/file/:id', fileUpload, validateFiles, async (req, res, next) => {
     }
 });
 
-Router.put('/image/:id', imageUpload, validateImageFiles, async (req, res, next) => {
+Router.put('/image/:id', singleImageUpload, async (req, res, next) => {
     const { id } = req.params;
-    const file = req.files
-        ? req.files[0]
-        : null;
+    const file = req.file
     try {
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToUpdate = MulterFileToFileEntityMap(file);
-        const validation = FileSchema.validate(fileToUpdate);
-        if (validation.error) return res.status(400).json({ validation });
 
-        const updatedItem = await prisma.file.update({
-            where: {
-                id
-            },
-            data: fileToUpdate
-        })
-        res.json(updatedItem);
+        const fileToUpdate = MulterFileToFileEntityMap(file);
+        const validationOrUpdatedFile = await FileService.validateAndUpdateFile(id, fileToUpdate);
+
+        if ("validation" in validationOrUpdatedFile) {
+            return res.status(400).json(validationOrUpdatedFile);
+        }
+
+        const filePath = getFilePath(validationOrUpdatedFile);
+        res.download(filePath);
     }
     catch (e) {
         next(e)
@@ -138,12 +113,14 @@ Router.put('/image/:id', imageUpload, validateImageFiles, async (req, res, next)
 Router.delete('/file/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
-        const deletedItem = await prisma.file.delete({
-            where: {
-                id
-            }
-        });
-        res.json(deletedItem);
+
+        const validationOrDeletedFile = await FileService.validateAndDeleteFile(id);
+        
+        if ("validation" in validationOrDeletedFile) {
+            return res.json(400).json(validationOrDeletedFile);
+        }
+
+        res.json(validationOrDeletedFile);
     }
     catch (e) {
         next(e)
