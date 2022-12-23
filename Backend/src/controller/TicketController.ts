@@ -3,10 +3,11 @@ import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
 import TicketSchema, { TicketUpdateSchema } from "@core/schemas/TicketSchema";
 import { TicketStatus } from "@core/schemas/TicketStatusSchema";
 import { getCurrentUser } from '@core/services/CurrentUserService';
+import FileService from "@core/services/FileService";
 import { getTicket } from "@core/services/TicketService";
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import Pager from '@lib/list/Pager';
-import { fileUpload, validateFiles } from '@lib/middlewares/FileUpload';
+import { multipleFileUpload } from '@lib/middlewares/FileUpload';
 import { isImageFile } from '@lib/utils/FileUtils';
 import prisma from "@prisma";
 import express from 'express';
@@ -87,10 +88,9 @@ Router.get('/ticket/attachments/:id', async (req, res, next) => {
                 }
             }
         });
-        const attachments = ticket?.attachments.map(attachment => attachment.file) || [];
-        const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
-        const images = (attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [])
-            .map(image => FileEntityToClientMap(image, "base64"));
+        const attachments = ticket?.attachments.map(attachment => FileEntityToClientMap(attachment.file)) || [];
+        const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || []
+        const images = attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
         // 🥵
         (ticket as any).attachments = attachments;
         (ticket as any).files = files;
@@ -102,15 +102,20 @@ Router.get('/ticket/attachments/:id', async (req, res, next) => {
     }
 });
 
-Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
+Router.post('/ticket', multipleFileUpload, async (req, res, next) => {
     let ticket = req.body;
-    const files: any = req.files || [];
+    const files = req.files as Express.Multer.File[];
     try {
         const validation = TicketSchema.validate(ticket);
         if (validation.error) return res.status(400).json({ validation });
         ticket = validation.value;
 
-        const filesToCreate = files.map(file => MulterFileToFileEntityMap(file));
+        const validationOrCreatedFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
+
+        if ("validations" in validationOrCreatedFiles) {
+            return res.status(400).json(validationOrCreatedFiles);
+        }
+
         const openTicketStatus = await prisma.ticketStatus.findFirst({
             where: {
                 name: TicketStatus.open
@@ -121,17 +126,14 @@ Router.post('/ticket', fileUpload, validateFiles, async (req, res, next) => {
             data: {
                 ...ticket,
                 attachments: {
-                    create: filesToCreate.map(file => {
-                        return {
-                            file: {
-                                create: file
-                            }
-                        }
-                    })
+                    create: validationOrCreatedFiles.map(file => ({
+                        fileId: file.id
+                    }))
                 },
                 statusId: openTicketStatus?.id
             }
         });
+
         res.json(newTicket);
     }
     catch (e) {
@@ -163,62 +165,44 @@ Router.put('/ticket/:id', async (req, res, next) => {
 Router.delete('/ticket/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
-        const deletedticket = await prisma.ticket.delete({
+        const deletedTicket = await prisma.ticket.delete({
             where: {
                 id: parseInt(id)
             }
         });
-        res.json(deletedticket);
+        res.json(deletedTicket);
     }
     catch (e) {
         next(e)
     }
 });
 
-Router.delete('/ticket/fileOnTicket/:ticketId/:fileId', async (req, res, next) => {
-    const { ticketId, fileId } = req.params;
-    try {
-        const deletedFileOnTicket = await prisma.fileOnTicket.delete({
-            where: {
-                fileId_ticketId: {
-                    fileId,
-                    ticketId: parseInt(ticketId)
-                }
-            }
-        });
-        await prisma.file.delete({
-            where: {
-                id: fileId
-            }
-        })
-        res.json(deletedFileOnTicket);
-    }
-    catch (e) {
-        next(e)
-    }
-});
-
-Router.post('/ticket/file', fileUpload, async (req, res, next) => {
+Router.post('/ticket/file', multipleFileUpload, async (req, res, next) => {
     const { id: ticketId } = req.body;
-    const files: any = req.files || []
+    const files = req.files as Express.Multer.File[]
     try {
-        const filesToCreate = files.map(file => MulterFileToFileEntityMap(file));
+
+        const validationOrCreatedFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
+
+        if ("validations" in validationOrCreatedFiles) {
+            return res.status(400).json(validationOrCreatedFiles);
+        }
+
         const updatedTicket = await prisma.ticket.update({
             where: {
                 id: parseInt(ticketId)
             },
             data: {
                 attachments: {
-                    create: filesToCreate.map(file => {
+                    create: validationOrCreatedFiles.map(file => {
                         return {
-                            file: {
-                                create: file
-                            }
+                            fileId: file.id
                         }
                     })
                 }
             }
         });
+
         res.json(updatedTicket)
     }
     catch (e) {

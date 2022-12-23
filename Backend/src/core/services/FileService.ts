@@ -9,20 +9,21 @@ const { FILE_UPLOAD_PATH } = config;
 
 type MappedMulterFile = ReturnType<typeof MulterFileToFileEntityMap>
 
+const validateFile = async (file: MappedMulterFile) => {
+    const validation = FileSchema.validate(file);
+    if (validation.error) {
+        await fs.rm(getFilePath(file)); // remove already created file from multer
+        return validation
+    }
+    return null
+}
+
 export const validateAndCreateFiles = async (filesToCreate: MappedMulterFile[]) => {
 
-    const failedFileValidations = filesToCreate.map(file => {
-        const validation = FileSchema.validate(file);
-        if (validation.error) return { file, validation };
-    }).filter(Boolean)
+    const erroredFileValidations = (await Promise.all(filesToCreate.map(file => validateFile(file)))).filter(Boolean)
 
-    if (failedFileValidations.length > 0) {
-        await Promise.all(failedFileValidations.map((validation) => (async () => {
-            return fs.rm(getFilePath(validation!.file)); // remove already created file
-        })()));
-        return {
-            validations: failedFileValidations.map(validation => validation!.validation)
-        };
+    if (erroredFileValidations.length > 0) {
+        return { validations: erroredFileValidations };
     }
 
     const newFiles = await Promise.all(filesToCreate.map(file => {
@@ -34,13 +35,27 @@ export const validateAndCreateFiles = async (filesToCreate: MappedMulterFile[]) 
     return newFiles;
 }
 
+export const validateAndCreateFile = async (fileToCreate: MappedMulterFile) => {
+
+    const erroredValidation = await validateFile(fileToCreate)
+
+    if (erroredValidation) {
+        return { validation: erroredValidation }
+    }
+
+    const newFile = await prisma.file.create({
+        data: fileToCreate
+    });
+
+    return newFile;
+}
+
 export const validateAndUpdateFile = async (id: string, fileToUpdate: MappedMulterFile) => {
 
-    const validation = FileSchema.validate(fileToUpdate);
+    const erroredValidation = await validateFile(fileToUpdate)
 
-    if (validation.error) {
-        await fs.rm(getFilePath(fileToUpdate)); // remove already created file
-        return { validation }
+    if (erroredValidation) {
+        return { validation: erroredValidation }
     }
 
     const fileDb = await prisma.file.findUnique({
@@ -106,6 +121,7 @@ export const getFilePath = (file: Pick<File, "fileName">) => {
 export default {
     getFilePath,
     validateAndCreateFiles,
+    validateAndCreateFile,
     validateAndUpdateFile,
     validateAndDeleteFile
 }
