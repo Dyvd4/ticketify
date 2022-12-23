@@ -50,7 +50,7 @@ export const validateAndCreateFile = async (fileToCreate: MappedMulterFile) => {
     return newFile;
 }
 
-export const validateAndUpdateFile = async (id: string, fileToUpdate: MappedMulterFile) => {
+export const validateAndUpdateFile = async (id: string | undefined, fileToUpdate: MappedMulterFile, options?: { upsert: boolean }) => {
 
     const erroredValidation = await validateFile(fileToUpdate)
 
@@ -60,11 +60,11 @@ export const validateAndUpdateFile = async (id: string, fileToUpdate: MappedMult
 
     const fileDb = await prisma.file.findUnique({
         where: {
-            id
+            id: id || ""
         }
     });
 
-    if (!fileDb) {
+    if (!fileDb && !options?.upsert) {
         await fs.rm(getFilePath(fileToUpdate)); // remove already created file
         return {
             validation: {
@@ -72,8 +72,13 @@ export const validateAndUpdateFile = async (id: string, fileToUpdate: MappedMult
             }
         };
     }
+    else if (!fileDb && options?.upsert) {
+        return prisma.file.create({
+            data: fileToUpdate
+        });
+    }
 
-    await fs.rm(getFilePath(fileDb));
+    await fs.rm(getFilePath(fileDb!));
 
     const updatedFile = await prisma.file.update({
         where: {
