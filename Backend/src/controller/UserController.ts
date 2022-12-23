@@ -1,13 +1,14 @@
-import bcrypt from "bcrypt";
-import express from "express";
+import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
+import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
 import { authentication } from "@core/middlewares/Auth";
 import { email as EmailSchema, NewPasswordSchema, username as UsernameSchema } from "@core/schemas/UserSchema";
-import prisma from "@prisma";
 import { getCurrentUser } from "@core/services/CurrentUserService";
+import FileService from "@core/services/FileService";
+import { singleImageUpload } from "@lib/middlewares/FileUpload";
 import { sendEmailConfirmationEmail } from "@mail-delivery/UserMailDelivery";
-import { imageUpload } from "@lib/middlewares/FileUpload";
-import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
-import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
+import prisma from "@prisma";
+import bcrypt from "bcrypt";
+import express from "express";
 
 const Router = express.Router();
 
@@ -51,7 +52,7 @@ Router.get("/user/all", authentication({ half: true }), async (req, res, next) =
         });
         if (!user) return res.status(404).json(null);
         (user as any).avatar = user.avatar?.file
-            ? FileEntityToClientMap(user.avatar.file, "base64")
+            ? FileEntityToClientMap(user.avatar.file)
             : null;
         res.json(user);
     }
@@ -196,14 +197,32 @@ Router.put("/user/newPassword", authentication(), async (req, res, next) => {
     }
 });
 
-Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next) => {
+Router.put("/user/avatar", authentication(), singleImageUpload, async (req, res, next) => {
     const { UserId } = req;
-    const file = req.files
-        ? req.files[0]
-        : null;
+    const file = req.file;
     try {
+
         if (!file) return res.status(400).json({ validation: { message: "You have to provide a file" } });
-        const fileToCreateOrUpdate = MulterFileToFileEntityMap(file);
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: UserId
+            },
+            select: {
+                avatar: true
+            }
+        });
+
+        const validationOrCreatedFile = await FileService.validateAndUpdateFile(
+            user!.avatar?.fileId,
+            MulterFileToFileEntityMap(file),
+            { upsert: true }
+        );
+
+        if ("validation" in validationOrCreatedFile) {
+            return res.status(400).json(validationOrCreatedFile)
+        }
+
         const updatedUser = await prisma.user.update({
             where: {
                 id: UserId
@@ -212,19 +231,16 @@ Router.put("/user/avatar", authentication(), imageUpload, async (req, res, next)
                 avatar: {
                     upsert: {
                         create: {
-                            file: {
-                                create: fileToCreateOrUpdate
-                            }
+                            fileId: validationOrCreatedFile.id
                         },
                         update: {
-                            file: {
-                                update: fileToCreateOrUpdate
-                            }
+                            fileId: validationOrCreatedFile.id
                         }
                     }
                 }
             }
         });
+
         res.json(updatedUser)
     }
     catch (e) {
