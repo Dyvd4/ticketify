@@ -10,7 +10,8 @@ const config = {
     CLIENT_URL: process.env.CLIENT_URL!,
     // file
     // ====
-    FILE_UPLOAD_PATH: path.join(__dirname, "../file-upload", "/"),
+    FILE_UPLOAD_PATH: path.join(__dirname, "../file-upload"),
+    FILE_UPLOAD_ROUTE_NAME: "file-upload",
     FILE_IMAGE_MAX_SIZE_KB: parseInt(process.env.FILE_IMAGE_MAX_SIZE_KB!),
     FILE_IMAGE_MAX_COUNT: parseInt(process.env.FILE_IMAGE_MAX_COUNT!),
     FILE_MAX_SIZE_KB: parseInt(process.env.FILE_MAX_SIZE_KB!),

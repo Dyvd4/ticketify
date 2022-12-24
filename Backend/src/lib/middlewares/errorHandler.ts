@@ -1,5 +1,6 @@
 import logger from "@logger";
 
+// TODO: check
 const ErrorHandler = (err: Error, req, res) => {
     logger.error({
         message: "Unhandled exception / rejection",

@@ -17,8 +17,7 @@ Router.get('/files', async (req, res, next) => {
     }
 });
 
-export const fileRoutePath = "/file/:id"
-Router.get(fileRoutePath, async (req, res, next) => {
+Router.get("/file/:id", async (req, res, next) => {
     const { id } = req.params;
     try {
         const file = await prisma.file.findFirst({
@@ -115,7 +114,7 @@ Router.delete('/file/:id', async (req, res, next) => {
     try {
 
         const validationOrDeletedFile = await FileService.validateAndDeleteFile(id);
-        
+
         if ("validation" in validationOrDeletedFile) {
             return res.json(400).json(validationOrDeletedFile);
         }

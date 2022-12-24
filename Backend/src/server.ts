@@ -1,10 +1,4 @@
 import config from "@config";
-import backgroundAgents from "@lib/background-agents/index";
-import { authentication, authorization } from "@core/middlewares/Auth";
-import ErrorHandler from "@lib/middlewares/ErrorHandler";
-import CustomRequest from "@lib/middlewares/CustomRequest";
-import cors from "cors";
-import express from "express";
 import AuthController from "@controller/AuthController";
 import CommentController from "@controller/CommentController";
 import CommentInteractionController from "@controller/CommentInteractionController";
@@ -12,18 +6,25 @@ import ErrorController from "@controller/ErrorController";
 import FileController from "@controller/FileController";
 import LogController from "@controller/LogController";
 import TestController from "@controller/TestController";
-import TicketController from "@controller/TicketController";
 import TicketActivityController from "@controller/TicketActivityController";
+import TicketController from "@controller/TicketController";
 import TicketDueDateController from "@controller/TicketDueDateController";
+import TicketOnTicketController from "@controller/TicketOnTicketController";
 import TicketPriorityController from "@controller/TicketPriorityController";
 import TicketStatusController from "@controller/TicketStatusController";
+import TicketWatcherController from "@controller/TicketWatcherController";
 import UserController from "@controller/UserController";
 import UserSettingsController from "@controller/UserSettingsController";
+import { authentication, authorization } from "@core/middlewares/Auth";
 import { getCurrentUser } from "@core/services/CurrentUserService";
+import backgroundAgents from "@lib/background-agents/index";
+import CustomRequest from "@lib/middlewares/CustomRequest";
+import ErrorHandler from "@lib/middlewares/ErrorHandler";
+import cors from "cors";
+import express from "express";
 import logger from "./logger";
-import TicketOnTicketController from "@controller/TicketOnTicketController";
-import TicketWatcherController from "@controller/TicketWatcherController";
 
+const { FILE_UPLOAD_PATH, FILE_UPLOAD_ROUTE_NAME } = config;
 const { PORT } = config;
 
 const server = express();
@@ -39,6 +40,7 @@ server.use("/api", TicketWatcherController);
 
 // TODO: should not be application level, make router level instead
 server.use("/api", authentication())
+server.use(`/api/${FILE_UPLOAD_ROUTE_NAME}`, express.static(FILE_UPLOAD_PATH))
 server.use("/api", TestController);
 server.use("/api", TicketPriorityController);
 server.use("/api", TicketController);
