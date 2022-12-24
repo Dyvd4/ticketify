@@ -7,7 +7,7 @@ import { request } from "src/services/request";
  * */
 const useGetProtectedImageUrl = (imageRequestRoute: string, disable?: boolean) => {
 
-    const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
+    const [imageObjectUrl, setImageObjectUrl] = useState<string | undefined>();
 
     useEffect(() => {
         if (disable) return;
@@ -18,7 +18,7 @@ const useGetProtectedImageUrl = (imageRequestRoute: string, disable?: boolean) =
         })()
     }, [disable]);
 
-    return [imageObjectUrl, setImageObjectUrl]
+    return [imageObjectUrl, setImageObjectUrl] as const
 }
 
 export default useGetProtectedImageUrl;
