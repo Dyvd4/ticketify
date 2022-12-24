@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useIsCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
 import { createDataUrl } from "src/utils/image";

@@ -1,5 +1,5 @@
 import { Image } from "@chakra-ui/react";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 
 function ImageWrapper({ attachment }) {
 

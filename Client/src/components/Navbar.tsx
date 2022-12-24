@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { signOut } from "src/auth/auth";
 import { sidebarAtom } from "src/context/atoms";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";

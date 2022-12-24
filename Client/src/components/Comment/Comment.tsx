@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
 import { hackyCommentRefreshAtom } from "src/context/atoms";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { getDurationAgo } from "src/utils/date";
 import ShowMoreLabel from "../ShowMoreLabel";
 import ActionMenu from "./ActionMenu";

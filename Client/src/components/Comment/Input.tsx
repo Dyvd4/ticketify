@@ -1,6 +1,6 @@
 import { Avatar, Button, ButtonGroup, Flex, Textarea } from "@chakra-ui/react";
 import { ComponentPropsWithRef, useState } from "react";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { AvatarType } from "./Comment";
 
 type InputVariant = "add" | "reply" | "edit";

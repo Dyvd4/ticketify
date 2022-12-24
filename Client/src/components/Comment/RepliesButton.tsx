@@ -2,7 +2,7 @@ import { Avatar, Box, Flex } from "@chakra-ui/react";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
-import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { AvatarType } from "./Comment";
 
 type RepliesButtonProps = {
