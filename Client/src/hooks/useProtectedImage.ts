@@ -16,7 +16,7 @@ const useGetProtectedImageUrl = (imageRequestRoute: string, disable?: boolean) =
             const imageObjectUrl = URL.createObjectURL(response.data);
             setImageObjectUrl(imageObjectUrl)
         })()
-    }, [disable]);
+    }, [disable, imageRequestRoute]);
 
     return [imageObjectUrl, setImageObjectUrl] as const
 }
