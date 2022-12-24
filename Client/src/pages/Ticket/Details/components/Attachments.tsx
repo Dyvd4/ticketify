@@ -3,7 +3,7 @@ import { faFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
-import File from "./File";
+import Attachment from "./Attachment";
 import ImageWrapper from "./ImageWrapper";
 
 type AttachmentsProps = {
@@ -22,7 +22,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
                         ? <Zoom key={attachment.id}>
                             <ImageWrapper attachment={attachment} />
                         </Zoom>
-                        : <File key={attachment.id} file={attachment} />
+                        : <Attachment key={attachment.id} file={attachment} />
                 })}
             </HStack>
             : <Flex

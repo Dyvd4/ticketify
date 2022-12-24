@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { removeEntity } from "src/api/entity";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import Modal from "src/components/Wrapper/Modal";
-import Attachment from "../components/Attachment";
+import Attachment from "./components/Attachment";
 
 type AttachmentsEditProps = {
     attachments: any[]
