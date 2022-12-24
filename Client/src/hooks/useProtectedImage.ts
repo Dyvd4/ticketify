@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { request } from "src/services/request";
 
 /** 
- * uses `imageUrl` to request api with authentication
+ * uses `imageRequestRoute` to optimistically request api with authentication in order to get the image and parse it
  * @returns image's object url
  * */
 const useGetProtectedImageUrl = (imageRequestRoute: string, disable?: boolean) => {
