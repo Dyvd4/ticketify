@@ -8,7 +8,7 @@ import ImageWrapper from "./ImageWrapper";
 
 type AttachmentsProps = {
     attachments: any[]
-    variant: "images" | "files"
+    variant: "images" | "files" | "all"
 }
 
 function Attachments({ attachments, variant }: AttachmentsProps) {
@@ -28,7 +28,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
             : <Flex
                 gap={2}
                 alignItems={"center"}>
-                No {variant}
+                No {variant === "all" ? "attachments" : variant}
                 <FontAwesomeIcon icon={faFrown} />
             </Flex>
     );
