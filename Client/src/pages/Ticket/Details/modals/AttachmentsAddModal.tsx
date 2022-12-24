@@ -1,9 +1,11 @@
-import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
+
+const VALID_IMAGETYPES_REGEX = import.meta.env.VITE_VALID_IMAGETYPES_REGEX;
 
 type AttachmentsAddProps = {
     isOpen: boolean
@@ -77,6 +79,10 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                             </div>
                         </>}
                     </Box>
+                    <Alert status="info" className="mt-4 rounded-md">
+                        <AlertIcon />
+                        Attachments whose file extension match the following regex will be considered as images: {VALID_IMAGETYPES_REGEX}
+                    </Alert>
                 </ModalBody>
                 <ModalFooter>
                     <Button
