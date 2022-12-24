@@ -15,11 +15,11 @@ const ignoreErrorCodes = [
 
 export const request = (options?: RequestOptions) => {
     options = {
-        ...options,
         baseURL: API_URL,
         headers: {
             "auth-token": Cookies.get("auth-token") || ""
-        }
+        },
+        ...options,
     }
     if (options.dontThrowError) options.validateStatus = () => true;
     const instance = axios.create(options);
