@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { signOut } from "src/auth/auth";
 import { sidebarAtom } from "src/context/atoms";
+import useGetProtectedImageUrl from "src/hooks/useProtectedImage";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
-import { getDataUrl } from "src/utils/image";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
 
@@ -14,6 +14,7 @@ type NavbarProps = {}
 function Navbar(props: NavbarProps) {
 
     const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
+    const [avatarImgUrl] = useGetProtectedImageUrl(currentUser?.avatar?.contentRoute, !currentUser?.avatar);
     const [sidebarActive, setSidebarActive] = useAtom(sidebarAtom);
 
     if (!isAuthenticated) return null;
@@ -38,9 +39,7 @@ function Navbar(props: NavbarProps) {
                                 className="ring-2 ring-sky-500"
                                 size={"sm"}
                                 name={currentUser?.username}
-                                src={currentUser.avatar
-                                    ? getDataUrl(currentUser.avatar.content, currentUser.avatar.mimeType)
-                                    : undefined}
+                                src={avatarImgUrl}
                             />
                         </Flex>
                     </MenuButton>
