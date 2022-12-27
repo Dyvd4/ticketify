@@ -1,10 +1,13 @@
 import express from 'express';
 import TicketDueDateSchema from "@core/schemas/TicketDueDateSchema";
 import prisma from "@prisma";
+import { authentication } from '@core/middlewares/Auth';
 
 const Router = express.Router();
+Router.use("/ticketDueDate", authentication())
+Router.use('/ticketDueDates', authentication())
 
-Router.get('/ticketDueDates', async (req, res, next) => {
+Router.get('/ticketDueDates', authentication(), async (req, res, next) => {
     try {
         const ticketDueDates = await prisma.ticketDueDate.findMany();
         res.json({ items: ticketDueDates });

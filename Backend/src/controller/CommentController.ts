@@ -3,8 +3,11 @@ import CommentSchema from "@core/schemas/CommentSchema";
 import prisma from "@prisma";
 import { getInteractions, prismaIncludeParams, userHasInteracted } from '@core/services/CommentService';
 import FileEntityToClientMap from '@core/maps/FileEntityToClientMap';
+import { authentication } from '@core/middlewares/Auth';
 
 const Router = express.Router();
+Router.use("/comment", authentication())
+Router.use("/comments", authentication())
 
 Router.get('/comments', async (req, res, next) => {
     const { UserId } = req;

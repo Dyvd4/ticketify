@@ -1,11 +1,16 @@
 import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
 import MulterFileToFileEntityMap from "@core/maps/MulterFileToFileEntityMap";
+import { authentication } from "@core/middlewares/Auth";
 import FileService, { getFilePath } from "@core/services/FileService";
 import { multipleFileUpload, multipleImageUpload, singleFileUpload, singleImageUpload } from "@lib/middlewares/FileUpload";
 import prisma from "@prisma";
 import express from 'express';
 
 const Router = express.Router();
+Router.use("/file", authentication());
+Router.use("/files", authentication());
+Router.use("/images", authentication());
+Router.use("/image", authentication());
 
 Router.get('/files', async (req, res, next) => {
     try {

@@ -1,8 +1,10 @@
+import { authentication } from '@core/middlewares/Auth';
 import TicketOnTicketSchema from '@core/schemas/TicketOnTicketSchema';
 import prisma from "@prisma";
 import express from 'express';
 
 const Router = express.Router();
+Router.use("/ticketOnTicket", authentication())
 
 Router.post('/ticketOnTicket', async (req, res, next) => {
     let ticketOnTicket = req.body;

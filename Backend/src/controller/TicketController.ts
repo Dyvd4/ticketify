@@ -1,5 +1,6 @@
 import FileEntityToClientMap from "@core/maps/FileEntityToClientMap";
 import MulterFileToFileEntityMap from '@core/maps/MulterFileToFileEntityMap';
+import { authentication } from "@core/middlewares/Auth";
 import TicketSchema, { TicketUpdateSchema } from "@core/schemas/TicketSchema";
 import { TicketStatus } from "@core/schemas/TicketStatusSchema";
 import { getCurrentUser } from '@core/services/CurrentUserService';
@@ -13,6 +14,8 @@ import prisma from "@prisma";
 import express from 'express';
 
 const Router = express.Router();
+Router.use("/ticket", authentication())
+Router.use("/tickets", authentication())
 
 Router.get('/tickets/:excludeIds?', async (req, res, next) => {
     try {

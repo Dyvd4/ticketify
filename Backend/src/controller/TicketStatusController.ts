@@ -1,8 +1,11 @@
 import express from 'express';
 import TicketStatusSchema from "@core/schemas/TicketStatusSchema"
 import prisma from "@prisma";
+import { authentication } from '@core/middlewares/Auth';
 
 const Router = express.Router();
+Router.use("/ticketStatus", authentication());
+Router.use('/ticketStatuses', authentication())
 
 Router.get('/ticketStatuses', async (req, res, next) => {
     try {

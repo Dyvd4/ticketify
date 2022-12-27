@@ -2,8 +2,10 @@ import { CommentInteraction } from '@prisma/client';
 import express from 'express';
 import CommentInteractionSchema from "@core/schemas/CommentInteractionSchema";
 import prisma from "@prisma";
+import { authentication } from '@core/middlewares/Auth';
 
 const Router = express.Router();
+Router.use("/commentInteraction", authentication());
 
 Router.get('/commentInteraction', async (req, res, next) => {
     try {

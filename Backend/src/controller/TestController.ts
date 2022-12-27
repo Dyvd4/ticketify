@@ -1,8 +1,11 @@
+import { authentication } from "@core/middlewares/Auth";
 import { getParsedPrismaFilterArgs, getParsedPrismaOrderByArgs } from "@lib/list";
 import Pager from "@lib/list/Pager";
 import prisma from "@prisma";
 import express from "express";
+
 const Router = express.Router();
+Router.use("/test", authentication());
 
 Router.get("/test", async (req, res, next) => {
     try {

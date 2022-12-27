@@ -1,8 +1,11 @@
+import { authentication } from '@core/middlewares/Auth';
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import prisma from "@prisma";
 import express from 'express';
 
 const Router = express.Router();
+Router.use("/ticketActivities", authentication())
+Router.use("/ticketActivity", authentication());
 
 Router.get('/ticketActivities', async (req, res, next) => {
     const { ticketId } = req.query;

@@ -1,8 +1,11 @@
 import express from 'express';
 import TicketPrioritySchema from "@core/schemas/TicketPrioritySchema";
 import prisma from "@prisma";
+import { authentication } from '@core/middlewares/Auth';
 
 const Router = express.Router();
+Router.use("/ticketPriority", authentication())
+Router.use("/ticketPriorities", authentication())
 
 Router.get('/ticketPriorities', async (req, res, next) => {
     try {

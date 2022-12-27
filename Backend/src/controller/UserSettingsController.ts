@@ -1,8 +1,10 @@
-import express from 'express';
+import { authentication } from "@core/middlewares/Auth";
 import UserSettingsUpdateSchema from "@core/schemas/UserSettingsSchema";
 import prisma from "@prisma";
+import express from 'express';
 
 const Router = express.Router();
+Router.use("/userSettings", authentication())
 
 Router.get('/userSettings', async (req, res, next) => {
     const { UserId } = req;
