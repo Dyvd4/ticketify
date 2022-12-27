@@ -138,7 +138,7 @@ const listRenderer = () => (
             route: "test",
             queryKey: "test"
         }}
-        listItemRender={(item) => <ListItem content={<ListItemContent item={item} />} />}
+        listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
         header={{
             title: "test",
             showCount: true
@@ -225,7 +225,7 @@ describe("filter", () => {
                     route: "test",
                     queryKey: "test"
                 }}
-                listItemRender={(item) => <ListItem content={<ListItemContent item={item} />} />}
+                listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
                 header={{
                     title: "test",
                     showCount: true
@@ -385,7 +385,7 @@ describe("sort", () => {
                 route: "test",
                 queryKey: "test"
             }}
-            listItemRender={(item) => <ListItem content={<ListItemContent item={item} />} />}
+            listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
             header={{
                 title: "test",
                 showCount: true
