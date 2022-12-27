@@ -7,7 +7,7 @@ import FileService from "@core/services/FileService";
 import { getTicket } from "@core/services/TicketService";
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import Pager from '@lib/list/Pager';
-import { multipleFileUpload } from '@lib/middlewares/FileUpload';
+import { multipleFileUpload, withErrorHandling } from '@lib/middlewares/FileUpload';
 import { isImageFile } from '@lib/utils/FileUtils';
 import prisma from "@prisma";
 import express from 'express';
@@ -177,37 +177,39 @@ Router.delete('/ticket/:id', async (req, res, next) => {
     }
 });
 
-Router.post('/ticket/file', multipleFileUpload, async (req, res, next) => {
-    const { id: ticketId } = req.body;
-    const files = req.files as Express.Multer.File[]
-    try {
+Router.post('/ticket/file', async (req, res, next) => {
+    multipleFileUpload(...withErrorHandling(req, res, async () => {
+        const { id: ticketId } = req.body;
+        const files = req.files as Express.Multer.File[]
+        try {
 
-        const validationOrCreatedFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
+            const validationOrCreatedFiles = await FileService.validateAndCreateFiles(files.map(file => MulterFileToFileEntityMap(file)));
 
-        if ("validations" in validationOrCreatedFiles) {
-            return res.status(400).json(validationOrCreatedFiles);
-        }
-
-        const updatedTicket = await prisma.ticket.update({
-            where: {
-                id: parseInt(ticketId)
-            },
-            data: {
-                attachments: {
-                    create: validationOrCreatedFiles.map(file => {
-                        return {
-                            fileId: file.id
-                        }
-                    })
-                }
+            if ("validations" in validationOrCreatedFiles) {
+                return res.status(400).json(validationOrCreatedFiles);
             }
-        });
 
-        res.json(updatedTicket)
-    }
-    catch (e) {
-        next(e)
-    }
+            const updatedTicket = await prisma.ticket.update({
+                where: {
+                    id: parseInt(ticketId)
+                },
+                data: {
+                    attachments: {
+                        create: validationOrCreatedFiles.map(file => {
+                            return {
+                                fileId: file.id
+                            }
+                        })
+                    }
+                }
+            });
+
+            res.json(updatedTicket)
+        }
+        catch (e) {
+            next(e)
+        }
+    }))
 });
 
 export default Router;
