@@ -23,7 +23,7 @@ Router.get('/comments', async (req, res, next) => {
                 author: {
                     ...comment.author,
                     avatar: comment.author.avatar?.file
-                        ? FileEntityToClientMap(comment.author.avatar.file, "base64")
+                        ? FileEntityToClientMap(comment.author.avatar.file)
                         : null
                 },
                 childs: comment.childs.map(child => {
@@ -32,7 +32,7 @@ Router.get('/comments', async (req, res, next) => {
                         author: {
                             ...child.author,
                             avatar: child.author.avatar?.file
-                                ? FileEntityToClientMap(child.author.avatar.file, "base64")
+                                ? FileEntityToClientMap(child.author.avatar.file)
                                 : null
                         },
                         ...getInteractions(child.interactions),
@@ -89,7 +89,7 @@ Router.get('/comments/:ticketId', async (req, res, next) => {
                 author: {
                     ...comment.author,
                     avatar: comment.author.avatar?.file
-                        ? FileEntityToClientMap(comment.author.avatar.file, "base64")
+                        ? FileEntityToClientMap(comment.author.avatar.file)
                         : null
                 },
                 childs: comment.childs.map(child => {
@@ -98,7 +98,7 @@ Router.get('/comments/:ticketId', async (req, res, next) => {
                         author: {
                             ...child.author,
                             avatar: child.author.avatar?.file
-                                ? FileEntityToClientMap(child.author.avatar.file, "base64")
+                                ? FileEntityToClientMap(child.author.avatar.file)
                                 : null
                         },
                         ...getInteractions(child.interactions),

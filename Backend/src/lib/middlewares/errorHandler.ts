@@ -1,6 +1,6 @@
 import logger from "@logger";
 
-const ErrorHandler = (err: Error, req, res) => {
+const ErrorHandler = (err: Error, req, res, next) => {
     logger.error({
         message: "Unhandled exception / rejection",
         error: {

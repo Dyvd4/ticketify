@@ -1,9 +1,13 @@
-import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
+import FormControl from "src/components/Wrapper/FormControl";
+import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
+
+const VALID_IMAGETYPES_REGEX = import.meta.env.VITE_VALID_IMAGETYPES_REGEX;
 
 type AttachmentsAddProps = {
     isOpen: boolean
@@ -16,6 +20,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
     // -----
     const [files, setFiles] = useState<FileList | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
+    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
 
     const { id } = useParams();
     const queryClient = useQueryClient();
@@ -40,6 +45,10 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                 title: "successfully added attachment",
                 status: "success"
             });
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
+            setErrorMap(errorMap);
         }
     });
 
@@ -67,16 +76,22 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                 </ModalHeader>
                 <ModalBody>
                     <Box className="mt-2">
-                        <FileInput
-                            multiple
-                            onChange={setFiles}
-                        />
-                        {errorMessage && <>
-                            <div className="text-red-500 m-1">
-                                {errorMessage}
-                            </div>
-                        </>}
+                        <FormControl errorMessage={errorMap?.files}>
+                            <FileInput
+                                multiple
+                                onChange={setFiles}
+                            />
+                            {errorMessage && <>
+                                <div className="text-red-500 m-1">
+                                    {errorMessage}
+                                </div>
+                            </>}
+                        </FormControl>
                     </Box>
+                    <Alert status="info" className="mt-4 rounded-md">
+                        <AlertIcon />
+                        Attachments whose file extension match the following regex will be considered as images: {VALID_IMAGETYPES_REGEX}
+                    </Alert>
                 </ModalBody>
                 <ModalFooter>
                     <Button

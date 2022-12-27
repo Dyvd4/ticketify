@@ -183,6 +183,7 @@ function TicketDetailsIndex() {
                     />
                 }>
                 <AttachmentsSection
+                    attachments={attachments}
                     images={images}
                     files={files}
                 />

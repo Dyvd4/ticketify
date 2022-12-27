@@ -10,7 +10,7 @@ type ChildCommentsProps = {
     canDelete?(comment): boolean
     onInteractionSubmit?(type: Interaction, comment): void
     onReplySubmit?(e, comment, replyValue: string): void
-    onEditSubmit?(e, comment, editvalue: string): void
+    onEditSubmit?(e, comment, editValue: string): void
     onDeleteSubmit?(e, comment): void
 }
 

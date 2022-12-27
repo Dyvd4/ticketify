@@ -1,6 +1,6 @@
 import { Avatar, Button, ButtonGroup, Flex, Textarea } from "@chakra-ui/react";
 import { ComponentPropsWithRef, useState } from "react";
-import { getDataUrl } from "src/utils/image";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { AvatarType } from "./Comment";
 
 type InputVariant = "add" | "reply" | "edit";
@@ -37,6 +37,7 @@ function Input(props: InputProps) {
     } = props;
 
     const [buttonsActive, setButtonsActive] = useState(variant !== "add");
+    const [avatarImgUrl] = useGetProtectedImageUrl(avatar?.contentRoute as any, !avatar?.contentRoute);
 
     const handleOnCancel = (e) => {
         setButtonsActive(false);
@@ -56,7 +57,7 @@ function Input(props: InputProps) {
             {variant !== "edit" && avatar && <>
                 <Avatar
                     name={avatar.username}
-                    src={getDataUrl(avatar.content, avatar.mimeType)}
+                    src={avatarImgUrl}
                     size={variant === "add" ? "md" : "sm"}
                 />
             </>}

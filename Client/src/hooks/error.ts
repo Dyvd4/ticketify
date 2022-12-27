@@ -19,7 +19,7 @@ export function useErrorHandler() {
         if (options.postError) request().post("Error", { error });
         if (error instanceof AxiosError && error.response?.status !== 500) return
         toast({
-            title: "An unkown error occurred",
+            title: "An unknown error occurred",
             description: getErrorMessage(error),
             status: "error",
             duration: 6000

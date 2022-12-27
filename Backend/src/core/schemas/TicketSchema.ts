@@ -9,7 +9,8 @@ export const TicketSchema = Joi.object<Ticket>({
         .max(100),
     responsibleUserId: Joi.string().allow(null),
     description: Joi
-        .string(),
+        .string()
+        .required(),
     dueDate: Joi.date().allow(null),
     priorityId: Joi.string().required(),
     statusId: Joi.string().allow(null)

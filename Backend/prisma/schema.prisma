@@ -168,10 +168,9 @@ model Test {
 
 model File {
   id               String         @id @default(uuid()) @db.NVarChar(100)
-  fileName         String?        @db.NVarChar(100)
-  originalFileName String?        @db.NVarChar(100)
-  mimeType         String         @db.NVarChar(20)
-  content          Bytes
+  fileName         String         @db.NVarChar(100)
+  originalFileName String         @db.NVarChar(100)
+  mimeType         String         @db.NVarChar(100)
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt
   createUser       String?        @db.NVarChar(100)
@@ -182,7 +181,7 @@ model File {
 
 model FileOnTicket {
   fileId     String    @db.NVarChar(100)
-  file       File      @relation(fields: [fileId], references: [id])
+  file       File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
   ticketId   Int       @db.Int
   ticket     Ticket    @relation(fields: [ticketId], references: [id])
   createdAt  DateTime? @default(now())
@@ -195,7 +194,7 @@ model FileOnTicket {
 
 model FileOnUser {
   fileId     String    @db.NVarChar(100)
-  file       File      @relation(fields: [fileId], references: [id])
+  file       File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
   userId     String    @unique @db.NVarChar(100)
   user       User      @relation(fields: [userId], references: [id])
   createdAt  DateTime? @default(now())

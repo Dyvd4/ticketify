@@ -7,7 +7,7 @@ type AvatarInputProps = {
     imageSrc?: any
     onChange(file: File | null): void
     disabled?: boolean
-} & ComponentPropsWithRef<"div">
+} & Omit<ComponentPropsWithRef<"div">, "onChange">
 
 function AvatarInput({ imageSrc, username, disabled, onChange, ...props }: AvatarInputProps) {
 

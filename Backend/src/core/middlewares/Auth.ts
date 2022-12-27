@@ -72,7 +72,7 @@ interface AuthorizationParams {
      * - true as first tuple item if user should pass the authorization
      * - response message as second tuple item that is sent if the authorization fails
      * */
-    strategy: (user: User) => [boolean, string]
+    strategy: (user: User) => [shouldPass: boolean, errorMessage:string]
 }
 export const authorization = (params?: AuthorizationParams) => {
 

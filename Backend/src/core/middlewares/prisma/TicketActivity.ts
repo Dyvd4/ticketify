@@ -30,25 +30,25 @@ interface TicketActivityOptions {
     /** 
      * return false if a ticket activity should not be created 
      * @param args
-     * Arguments that were passed into the query - for example, where, data, or orderBy
+     * Arguments that were passed into the query - for example: where, data, or orderBy
      */
     onlyIf?: (event: Event, args: any) => Promise<boolean>
     /**
      * evaluator to get the ticketId for ticket activity via the args
      * @param args
-     * Arguments that were passed into the query - for example, where, data, or orderBy
+     * Arguments that were passed into the query - for example: where, data, or orderBy
      */
     ticketIdEvaluator?: (event: Event, args: any) => Promise<string>
     /**
      * evaluator to create a custom title for ticket activity via the args
      * @param args
-     * Arguments that were passed into the query - for example, where, data, or orderBy
+     * Arguments that were passed into the query - for example: where, data, or orderBy
      */
     titleEvaluator?: (event: Event, args: any) => Promise<string>
     /** 
      * evaluator to create a custom description for ticket activity via the args
      * @param args
-     * Arguments that were passed into the query - for example, where, data, or orderBy
+     * Arguments that were passed into the query - for example: where, data, or orderBy
      */
     descriptionEvaluator?: (event: Event, args: any) => Promise<string | null>
 }

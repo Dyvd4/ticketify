@@ -3,10 +3,15 @@ import { File } from "@prisma/client";
 
 export const FileSchema = Joi.object<File>({
     id: Joi.string(),
-    fileName: Joi.string(),
-    originalFileName: Joi.string(),
-    mimeType: Joi.string().required(),
-    content: Joi.binary().required()
+    fileName: Joi
+        .string()
+        .required(),
+    originalFileName: Joi
+        .string()
+        .required(),
+    mimeType: Joi
+        .string()
+        .required()
 }).options({
     abortEarly: false
 });

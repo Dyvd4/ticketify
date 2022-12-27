@@ -1,11 +1,13 @@
-import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, ButtonGroup, Heading, useToast } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
+import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useIsCurrentUser } from "src/hooks/user";
-import AvatarInput from "src/pages/User/components/AvatarInput";
 import { request } from "src/services/request";
-import { createDataUrl, getDataUrl } from "src/utils/image";
+import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
+import { createDataUrl } from "src/utils/image";
+import AvatarInput from "../components/AvatarInput";
 
 type AvatarSectionProps = {
     user: any
@@ -14,68 +16,83 @@ type AvatarSectionProps = {
 function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const isOwnSite = useIsCurrentUser(user);
-    const userAvatarAsDataUrl = user.avatar
-        ? getDataUrl(user.avatar.content, user.avatar.mimeType)
-        : undefined;
 
+    const [userAvatarImgUrl] = useGetProtectedImageUrl(user.avatar?.contentRoute, !user.avatar)
+    const [newAvatarAsDataUrl, setNewAvatarAsDataUrl] = useState<string | undefined>();
     const [avatar, setAvatar] = useState<File | null>(null);
-    const [avatarAsDataUrl, setAvatarAsDataUrl] = useState<string | undefined>(userAvatarAsDataUrl);
+    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
+
+    const avatarContainerRef = useRef<HTMLDivElement | null>(null);
 
     const queryClient = useQueryClient();
     const toast = useToast();
 
     const mutation = useMutation(() => {
         const formData = new FormData();
-        formData.append("files", avatar || "");
+        formData.append("file", avatar || "");
         return request().put("user/avatar", formData);
     }, {
         onSuccess: async () => {
             await queryClient.invalidateQueries(["user/all"]);
+            resetAll();
             toast({
                 title: "successfully saved avatar",
                 status: "success"
             });
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
+            setErrorMap(errorMap);
         }
     });
 
-
-    const handleChange = async (file: File | null) => {
-        setAvatar(file);
-        if (!file) return setAvatarAsDataUrl(userAvatarAsDataUrl);
-        const avatarAsDataUrl = await createDataUrl(file!);
-        if (!avatarAsDataUrl) return;
-        setAvatarAsDataUrl(avatarAsDataUrl);
+    // dirty but works
+    const resetInput = () => {
+        avatarContainerRef.current!.querySelector("input")!.type = "text"
+        avatarContainerRef.current!.querySelector("input")!.type = "file"
     }
 
-    const hasSelectedNewAvatar = avatarAsDataUrl !== userAvatarAsDataUrl;
+    const resetAll = () => {
+        resetInput();
+        setErrorMap(null)
+        setNewAvatarAsDataUrl(undefined);
+    }
+
+    const handleDiscard = resetAll;
+
+    const handleChange = async (file: File | null) => {
+        if (!file) return;
+        setAvatar(file);
+        const avatarAsDataUrl = await createDataUrl(file!);
+        if (!avatarAsDataUrl) return;
+        setNewAvatarAsDataUrl(avatarAsDataUrl);
+    }
 
     return (
         <>
             <Heading as="h1" className="font-bold text-2xl">
                 Avatar
             </Heading>
-            <FormControl>
-                <Flex
-                    gap={2}
-                    className="my-4"
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    flexDirection={"column"}>
+            <Box ref={avatarContainerRef}>
+                <FormControl
+                    className="flex justify-center items-center flex-col my-4"
+                    errorMessage={errorMap?.files}>
                     <AvatarInput
                         disabled={!isOwnSite}
                         username={user.username}
-                        imageSrc={avatarAsDataUrl}
-                        onChange={(file) => handleChange(file)}
+                        imageSrc={newAvatarAsDataUrl || userAvatarImgUrl}
+                        onChange={handleChange}
                     />
-                    {hasSelectedNewAvatar && <>
-                        <ButtonGroup>
+                    {!!newAvatarAsDataUrl && <>
+                        <ButtonGroup className="mt-2">
                             <Button
                                 size={"sm"}
-                                onClick={() => setAvatarAsDataUrl(userAvatarAsDataUrl)}
+                                onClick={handleDiscard}
                                 colorScheme={"red"}>
                                 Discard
                             </Button>
                             <Button
+                                isLoading={mutation.isLoading}
                                 size={"sm"}
                                 onClick={() => mutation.mutate()}
                                 colorScheme={"blue"}>
@@ -83,8 +100,8 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                             </Button>
                         </ButtonGroup>
                     </>}
-                </Flex>
-            </FormControl>
+                </FormControl>
+            </Box>
         </>
     );
 }

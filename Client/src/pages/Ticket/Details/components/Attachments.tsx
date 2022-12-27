@@ -1,13 +1,14 @@
-import { Flex, HStack, Image } from "@chakra-ui/react";
+import { Flex, HStack } from "@chakra-ui/react";
 import { faFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import File from "./File";
-import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
+import Attachment from "./Attachment";
+import ImageWrapper from "./ImageWrapper";
 
 type AttachmentsProps = {
     attachments: any[]
-    variant: "images" | "files"
+    variant: "images" | "files" | "all"
 }
 
 function Attachments({ attachments, variant }: AttachmentsProps) {
@@ -19,20 +20,15 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
                 {attachments.map(attachment => {
                     return variant === "images"
                         ? <Zoom key={attachment.id}>
-                            <Image
-                                className={`w-20 h-20 rounded-md m-0`}
-                                objectFit="cover"
-                                alt={attachment.originalFileName}
-                                src={`data:${attachment.mimeType};base64,${attachment.content}`}
-                            />
+                            <ImageWrapper attachment={attachment} />
                         </Zoom>
-                        : <File key={attachment.id} file={attachment} />
+                        : <Attachment key={attachment.id} file={attachment} />
                 })}
             </HStack>
             : <Flex
                 gap={2}
                 alignItems={"center"}>
-                No {variant}
+                No {variant === "all" ? "attachments" : variant}
                 <FontAwesomeIcon icon={faFrown} />
             </Flex>
     );

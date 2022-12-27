@@ -1,8 +1,11 @@
+import config from "@config";
 import { File } from "@prisma/client";
 
-export default function FileEntityToClientMap(file: File, contentType: BufferEncoding) {
+const { FILE_UPLOAD_ROUTE_NAME } = config;
+
+export default function FileEntityToClientMap(file: File) {
     return {
         ...file,
-        content: file.content.toString(contentType)
+        contentRoute: `${FILE_UPLOAD_ROUTE_NAME}/${file.fileName}`
     }
 }
