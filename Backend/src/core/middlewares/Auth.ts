@@ -1,10 +1,10 @@
 import config from "@config";
+import { getCurrentUser, setCurrentUser } from "@core/services/CurrentUserService";
+import { isAuthenticated, isHalfAuthenticated } from "@core/services/UserService";
 import prisma from "@prisma";
 import { User } from "@prisma/client";
-import { getCurrentUser, setCurrentUser } from "@core/services/CurrentUserService";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { isAuthenticated, isHalfAuthenticated } from "@core/services/UserService";
 
 const { JWT_SECRET_KEY } = config;
 
@@ -58,11 +58,15 @@ interface AuthenticationParams {
 
 export const authentication = (params?: AuthenticationParams) => {
     return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const passes = await _authentication(params?.half, req, res);
+            if (!passes) return;
 
-        const passes = await _authentication(params?.half, req, res);
-        if (!passes) return;
-
-        next();
+            next();
+        }
+        catch (e) {
+            next(e)
+        }
     }
 }
 
@@ -72,21 +76,25 @@ interface AuthorizationParams {
      * - true as first tuple item if user should pass the authorization
      * - response message as second tuple item that is sent if the authorization fails
      * */
-    strategy: (user: User) => [shouldPass: boolean, errorMessage:string]
+    strategy: (user: User) => [shouldPass: boolean, errorMessage: string]
 }
 export const authorization = (params?: AuthorizationParams) => {
 
     const authorizationStrategy = params?.strategy || (() => [true, ""]);
 
     return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const passes = await _authentication(false, req, res);
+            if (!passes) return;
 
-        const passes = await _authentication(false, req, res);
-        if (!passes) return;
+            const [isAuthorized, authorizationFailedMessage] = authorizationStrategy(getCurrentUser());
+            if (!isAuthorized) return res.status(401).json(authorizationFailedMessage);
 
-        const [isAuthorized, authorizationFailedMessage] = authorizationStrategy(getCurrentUser());
-        if (!isAuthorized) return res.status(401).json(authorizationFailedMessage);
-
-        next();
+            next();
+        }
+        catch (e) {
+            next(e)
+        }
     }
 }
 
