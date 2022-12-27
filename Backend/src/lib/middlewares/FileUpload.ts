@@ -39,7 +39,7 @@ export const withErrorHandling = (
                 let mappedErrorMessage: string | undefined;
 
                 if (error.code === "LIMIT_FILE_SIZE") {
-                    mappedErrorMessage = `${multerErrorMessageMap.LIMIT_FILE_SIZE}. Maximum of ${type === "file-upload" ? FILE_MAX_SIZE_KB : FILE_IMAGE_MAX_SIZE_KB} KB expected`;
+                    mappedErrorMessage = `${multerErrorMessageMap.LIMIT_FILE_SIZE}. Maximum of ${type === "file-upload" ? FILE_MAX_SIZE_KB : FILE_IMAGE_MAX_SIZE_KB} KB expected.`;
                 }
                 else if (error.code === "LIMIT_UNEXPECTED_FILE") {
                     mappedErrorMessage = `${multerErrorMessageMap.LIMIT_UNEXPECTED_FILE}. Maximum of ${type === "file-upload" ? `${FILE_MAX_COUNT} files` : `${FILE_IMAGE_MAX_COUNT} images`} expected.`
@@ -48,7 +48,7 @@ export const withErrorHandling = (
                     mappedErrorMessage = multerErrorMessageMap[error.code]
                 }
 
-                return res.status(400).json(new FailedValidationResponse(mappedErrorMessage || "Unknown file-upload error"))
+                return res.status(400).json(new FailedValidationResponse({ files: mappedErrorMessage || "Unknown file-upload error" }))
             }
             else {
                 cb();

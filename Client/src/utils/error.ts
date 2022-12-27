@@ -25,7 +25,7 @@ type MulterErrorMessageMap = {
 
 const multerErrorMessageMap: MulterErrorMessageMap = {
     "File too large": "File too large",
-    "Unexpected field": "Too many pictures",
+    "Unexpected field": "Too many files",
 }
 
 export function getMulterErrorMessage(error: AxiosError) {
@@ -40,9 +40,11 @@ export function getMulterErrorMessage(error: AxiosError) {
         : unmappedErrorMessage.replace("MulterError:", "") as string;
 }
 
-export type ValidationErrorMap = {
+export type ValidationErrorMap = Partial<{
     [key: string]: string
-}
+    files: string
+    Fieldless: string
+}>
 
 /** @param key - the name of the field (for single field validations) */
 export function getValidationErrorMap(error, key?: string): ValidationErrorMap | null {
@@ -64,7 +66,18 @@ export function getValidationErrorMap(error, key?: string): ValidationErrorMap |
         map[key || detail.context.key] = detail.message
         return map;
     }, {});
-    if (validation?.message) validationErrorMap["Fieldless"] = validation.message;
+
+    const fieldLessValidationMessage = validation?.message || validation?.arbitrary?.message
+    if (fieldLessValidationMessage) validationErrorMap["Fieldless"] = fieldLessValidationMessage;
+
+    if (validation?.arbitrary) {
+        Object.keys(validation.arbitrary)
+            .filter(key => key !== "message")
+            .forEach((key) => {
+                validationErrorMap[key] = validation.arbitrary[key];
+            });
+    }
+
     return Object.keys(validationErrorMap).length > 0
         ? validationErrorMap
         : null;

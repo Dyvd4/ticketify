@@ -1,10 +1,11 @@
-import { Button, ButtonGroup, Flex, Heading, useToast } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Heading, useToast } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
 import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useIsCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
+import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
 import { createDataUrl } from "src/utils/image";
 import AvatarInput from "../components/AvatarInput";
 
@@ -19,6 +20,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
     const [userAvatarImgUrl] = useGetProtectedImageUrl(user.avatar?.contentRoute, !user.avatar)
     const [newAvatarAsDataUrl, setNewAvatarAsDataUrl] = useState<string | undefined>();
     const [avatar, setAvatar] = useState<File | null>(null);
+    const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
 
     const avatarContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,6 +39,10 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                 title: "successfully saved avatar",
                 status: "success"
             });
+        },
+        onError: (error) => {
+            const errorMap = getValidationErrorMap(error);
+            setErrorMap(errorMap);
         }
     });
 
@@ -48,6 +54,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const resetAll = () => {
         resetInput();
+        setErrorMap(null)
         setNewAvatarAsDataUrl(undefined);
     }
 
@@ -66,14 +73,10 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
             <Heading as="h1" className="font-bold text-2xl">
                 Avatar
             </Heading>
-            <FormControl>
-                <Flex
-                    ref={avatarContainerRef}
-                    gap={2}
-                    className="my-4"
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    flexDirection={"column"}>
+            <Box ref={avatarContainerRef}>
+                <FormControl
+                    className="flex justify-center items-center flex-col my-4"
+                    errorMessage={errorMap?.files}>
                     <AvatarInput
                         disabled={!isOwnSite}
                         username={user.username}
@@ -81,7 +84,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                         onChange={handleChange}
                     />
                     {!!newAvatarAsDataUrl && <>
-                        <ButtonGroup>
+                        <ButtonGroup className="mt-2">
                             <Button
                                 size={"sm"}
                                 onClick={handleDiscard}
@@ -97,8 +100,8 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                             </Button>
                         </ButtonGroup>
                     </>}
-                </Flex>
-            </FormControl>
+                </FormControl>
+            </Box>
         </>
     );
 }
