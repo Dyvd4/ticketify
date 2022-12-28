@@ -26,7 +26,13 @@ Router.get('/ticketActivities', async (req, res, next) => {
                     : undefined
             }
         });
-        const ticketActivitiesCount = await prisma.ticketActivity.count();
+        const ticketActivitiesCount = await prisma.ticketActivity.count({
+            where: {
+                ticketId: ticketId
+                    ? parseInt(ticketId as string)
+                    : undefined
+            }
+        });
         res.json(infiniteLoader.getResult(ticketActivities, ticketActivitiesCount));
     }
     catch (e) {
