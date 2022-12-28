@@ -23,6 +23,7 @@ function TicketActivitySection({ activitiesQuery }: TicketActivitySectionProps) 
                     </AccordionButton>
                     <AccordionPanel>
                         <TicketActivityList
+                            variant={"load-more-button"}
                             activitiesQuery={activitiesQuery}
                             ticketActivityListItemProps={{
                                 linkIsDisabled: true,

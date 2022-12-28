@@ -210,6 +210,8 @@ function List(props: ListProps) {
             />
             <ChakraList className="p-4 flex flex-col gap-4" ref={(listRef) => listRef && autoAnimate(listRef)}>
                 <InfiniteQueryItems
+                    // TODO: add option for "load-more-button"- variant in backend?
+                    variant="intersection-observer"
                     query={query}
                     loadingDisplay={props.loadingDisplay ||
                         <div className="flex justify-center items-center">

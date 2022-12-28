@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, ButtonProps, Text } from "@chakra-ui/react";
 import { UseInfiniteQueryResult } from "react-query";
 import useIntersectionObserver from "src/hooks/useIntersectionObserver";
 import LoadingRipple from "../Loading/LoadingRipple";
@@ -15,16 +15,32 @@ type InfiniteQueryItemsProps = {
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
     emptyDisplay?: JSX.Element
-    fetchingNextDisplay?: JSX.Element
-}
-// TODO: options for show-more button
-function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
+} & ({
+    /** 
+     * this option uses a `"load more"-button` that can be clicked in order to
+     * load more items
+     */
+    variant: "load-more-button"
+    loadMoreButtonProps?: Omit<ButtonProps, "onClick" | "isLoading">
+
+} | {
+    /** 
+     * this option uses an `IntersectionObserver` that observes the list-items and
+     * loads more items when they hit the viewport threshold
+     */
+    variant: "intersection-observer"
+})
+
+export type Variant = InfiniteQueryItemsProps["variant"]
+
+function InfiniteQueryItems({ query, variant = "intersection-observer", ...props }: InfiniteQueryItemsProps) {
 
     const {
         isError,
         isLoading,
         data,
         hasNextPage,
+        isFetchingNextPage,
         fetchNextPage
     } = query;
 
@@ -32,7 +48,7 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
         selector: ".infinite-query-item",
         events: {
             lastItemIntersecting: () => {
-                if (hasNextPage) fetchNextPage();
+                if (hasNextPage && variant === "intersection-observer") fetchNextPage();
             }
         }
     });
@@ -59,6 +75,16 @@ function InfiniteQueryItems({ query, ...props }: InfiniteQueryItemsProps) {
                 ))
                 : props.emptyDisplay || <div>This list seems to be empty 😴</div>
         ))}
+        {hasNextPage && variant === "load-more-button" && <>
+            <div className="infinite-query-item" key="random-key">
+                <Button
+                    isLoading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                    {...("loadMoreButtonProps" in props ? props.loadMoreButtonProps : {} as any)}>
+                    Load more
+                </Button>
+            </div>
+        </>}
     </>
 }
 

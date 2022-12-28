@@ -20,7 +20,7 @@ function Index(props: IndexProps) {
       <Heading className="my-4 text-2xl" as="h1">
         Recent activity
       </Heading>
-      <TicketActivityList activitiesQuery={activitiesQuery} />
+      <TicketActivityList variant="intersection-observer" activitiesQuery={activitiesQuery} />
     </Container>
   )
 }

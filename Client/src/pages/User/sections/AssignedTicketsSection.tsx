@@ -26,6 +26,7 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
                 id="9151947b-ad33-44cd-bbcc-7e8316ba1439"
                 className="flex flex-col gap-4 mt-4">
                 <InfiniteQueryItems
+                    variant="intersection-observer"
                     query={query}>
                     {ticket => <ListItem item={ticket} />}
                 </InfiniteQueryItems>
