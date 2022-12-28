@@ -1,4 +1,3 @@
-
 import ListResult from "./ListResult";
 
 export default class PagerResult<T> extends ListResult<T>{
