@@ -56,6 +56,8 @@ function TicketDetailsIndex() {
         queryParams: {
             ticketId: id
         }
+    }, {
+        refetchInterval: 60000
     });
 
     // event handler
