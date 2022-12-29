@@ -228,9 +228,14 @@ function List(props: ListProps) {
                 onApply={() => handleDrawerApply("filter")}
                 onReset={() => handleDrawerReset("filter")}
             />
-            <ChakraList className="p-4 flex flex-col gap-4" ref={(listRef) => listRef && autoAnimate(listRef)}>
+            <ChakraList
+                className="p-4 flex flex-col gap-4"
+                ref={(listRef) => listRef && autoAnimate(listRef)}>
                 <InfiniteQueryItems
                     variant={infiniteLoaderResultVariantName}
+                    loadMoreButtonProps={{
+                        className: "mx-auto flex"
+                    }}
                     query={query}
                     loadingDisplay={props.loadingDisplay ||
                         <div className="flex justify-center items-center">
