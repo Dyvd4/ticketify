@@ -8,7 +8,7 @@ export default class PagerResult<T> extends ListResult<T>{
     pageIsFull: boolean
 
     constructor(items: T[], totalItemsCount: number, itemsPerPage: number, currentPage: number) {
-        super(items, "pagination");
+        super(items, { name: "pagination" });
 
         this.pageIsFull = this.items.length === itemsPerPage;
 

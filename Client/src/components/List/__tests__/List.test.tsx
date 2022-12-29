@@ -123,7 +123,9 @@ const pages = [
                 }
             }
         ],
-        "type": "pagination",
+        "variant": {
+            "name": "pagination"
+        },
         "currentPage": 1,
         "pagesCount": 2,
         "pagesCountShrunk": false

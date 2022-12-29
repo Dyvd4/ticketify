@@ -1,6 +1,6 @@
 import { authentication } from "@core/middlewares/Auth";
 import { getParsedPrismaFilterArgs, getParsedPrismaOrderByArgs } from "@lib/list";
-import Pager from "@lib/list/Pager";
+import InfiniteLoader from "@lib/list/InfiniteLoader";
 import prisma from "@prisma";
 import express from "express";
 
@@ -9,7 +9,7 @@ Router.use("/test", authentication());
 
 Router.get("/test", async (req, res, next) => {
     try {
-        const pager = new Pager(req.query);
+        const pager = new InfiniteLoader(req.query, 5);
 
         const testItems = await prisma.test.findMany({
             ...pager.getPrismaArgs(),
@@ -21,7 +21,7 @@ Router.get("/test", async (req, res, next) => {
             orderBy: pager.getPrismaOrderByArgs()
         });
 
-        res.json(pager.getResult(testItems, testItemsCount));
+        res.json(pager.getResult(testItems, testItemsCount, "load-more-button"));
     }
     catch (e) {
         next(e)

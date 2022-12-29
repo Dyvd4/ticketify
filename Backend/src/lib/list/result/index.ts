@@ -1,3 +1,3 @@
-import InfiniteLoadingResult from "./InfiniteLoaderResult";
+import InfiniteLoaderResult from "./InfiniteLoaderResult";
 import PagerResult from "./PagerResult";
-export { InfiniteLoadingResult, PagerResult }
+export { InfiniteLoaderResult, PagerResult }

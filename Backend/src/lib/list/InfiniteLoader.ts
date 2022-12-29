@@ -1,6 +1,7 @@
 import { Request } from "express";
 import List from "./List";
-import { InfiniteLoadingResult } from "./result";
+import { InfiniteLoaderResult } from "./result";
+import { InfiniteLoadingVariantVariantNames } from "./result/ListResult";
 
 const ITEMS_PER_LOAD = 10;
 
@@ -10,7 +11,7 @@ class InfiniteLoader<T> extends List {
         prismaFilter: string,
         prismaOrderBy: string,
         skip: number,
-        itemsPerLoad = ITEMS_PER_LOAD
+        itemsPerLoad = ITEMS_PER_LOAD,
     ) {
         const prismaArgs = {
             skip: skip || 0,
@@ -19,8 +20,17 @@ class InfiniteLoader<T> extends List {
         super(prismaFilter, prismaOrderBy, prismaArgs, itemsPerLoad);
     }
 
-    getResult = (items: T[], itemsCount: number) => {
-        return new InfiniteLoadingResult(items, itemsCount, this.prismaArgs, this.itemsPerLoad);
+    /** @param variantName the variant for the infinite-loading result
+     * - is currently being picked up by the `List` component and passed down to the `InfiniteQueryItems` component in the client
+     * */
+    getResult = (items: T[], itemsCount: number, variantName?: InfiniteLoadingVariantVariantNames) => {
+        return new InfiniteLoaderResult(
+            items,
+            itemsCount,
+            this.prismaArgs,
+            this.itemsPerLoad,
+            { name: variantName! }
+        );
     }
 }
 

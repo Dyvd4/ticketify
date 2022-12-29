@@ -1,4 +1,4 @@
-import { Divider, List as ChakraList } from "@chakra-ui/react";
+import { List as ChakraList, Divider } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
@@ -9,8 +9,8 @@ import { filterItemsAtom } from "src/context/stores/filter";
 import { searchItemAtom } from "src/context/stores/search";
 import { sortItemsAtom } from "src/context/stores/sort";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
-import { useCurrentUserSettings } from "src/hooks/user";
 import { useUrlParams } from "src/hooks/useUrlParams";
+import { useCurrentUserSettings } from "src/hooks/user";
 import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
@@ -37,8 +37,8 @@ type ListProps = {
         showCount?: boolean
     }
     /**
-     * - unique id for the list
-     * - the id is used to create a relation between the filter and sort items in the local storage and the list
+     * - unique `id` for the list
+     * - the `id` is used to create a relation between the filter and sort items in the local storage and the list
      */
     id: string
     sort: TSortItem[]
@@ -48,16 +48,25 @@ type ListProps = {
 }
 
 function List(props: ListProps) {
-    const { listItemRender, fetch: { queryKey, route }, header } = props;
+
+    const {
+        listItemRender,
+        fetch: { queryKey, route },
+        header
+    } = props;
 
     const drawerRef = useRef<HTMLDivElement | null>(null);
-    // sort, filter, page
+
+    // sort, filter, page state 
+    // ------------------------
     const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
     const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1, { jsonParse: true });
 
+    // hooks
+    // -----
     const { currentUserSettings } = useCurrentUserSettings();
 
     useFilterItemsInit({
@@ -71,6 +80,7 @@ function List(props: ListProps) {
             }
         });
     });
+
     useSortItemsInit({
         defaultSortItems: props.sort,
         listId: props.id
@@ -82,6 +92,7 @@ function List(props: ListProps) {
             }
         });
     });
+
     useSearchItemInit(props.search);
 
     const query = useInfiniteQuery([queryKey, page, queryParams], {
@@ -91,26 +102,15 @@ function List(props: ListProps) {
             page
         }
     }, {
-        getNextPageParam: (lastPage: any) => lastPage.type !== "pagination"
+        getNextPageParam: (lastPage: any) => lastPage.variant.name !== "pagination"
             ? lastPage.nextSkip
             : undefined
     });
 
     const count = useInfiniteQueryCount(query);
 
-    // 🥵
-    const pagingResult = query.data?.pages[0]?.type === "pagination"
-        ? query.data?.pages[0]
-        : null;
-    const pagingInfo = pagingResult
-        ? {
-            pagesCount: pagingResult.pagesCount,
-            currentPage: pagingResult.currentPage,
-            pagesCountShrunk: pagingResult.pagesCountShrunk
-        }
-        : null;
-
     // useEffect
+    // ---------
     useEffect(() => {
         if (query.data && query.data.pages && props.fetch.onResult) {
             const allListItems = query.data.pages.reduce((allItems, nextPage) => {
@@ -138,6 +138,8 @@ function List(props: ListProps) {
         });
     }, [searchItem]);
 
+    // Event handler
+    // -------------
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);
     }
@@ -161,6 +163,7 @@ function List(props: ListProps) {
             [type]: itemsToSet
         });
     }
+
     const handleDrawerReset = (type: TDrawer) => {
         if (type === "filter") {
             const newFilterItems = [...filterItems];
@@ -181,6 +184,23 @@ function List(props: ListProps) {
         delete newQueryParams[type];
         setQueryParams(newQueryParams);
     }
+
+    // 🥵
+    const pagingResult = query.data?.pages[0]?.variant?.name === "pagination"
+        ? query.data?.pages[0]
+        : null;
+
+    const pagingInfo = pagingResult
+        ? {
+            pagesCount: pagingResult.pagesCount,
+            currentPage: pagingResult.currentPage,
+            pagesCountShrunk: pagingResult.pagesCountShrunk
+        }
+        : null;
+
+    const infiniteLoaderResultVariantName = query.data?.pages[0]?.variant?.name === "infiniteLoading"
+        ? query.data?.pages[0]?.variant?.variant.name
+        : "intersection-observer";
 
     return (
         <>
@@ -210,8 +230,7 @@ function List(props: ListProps) {
             />
             <ChakraList className="p-4 flex flex-col gap-4" ref={(listRef) => listRef && autoAnimate(listRef)}>
                 <InfiniteQueryItems
-                    // TODO: add option for "load-more-button"- variant in backend?
-                    variant="intersection-observer"
+                    variant={infiniteLoaderResultVariantName}
                     query={query}
                     loadingDisplay={props.loadingDisplay ||
                         <div className="flex justify-center items-center">
