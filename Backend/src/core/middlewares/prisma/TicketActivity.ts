@@ -86,7 +86,7 @@ const CreateTicketActivityBasedOn = (
             });
 
             if (!options?.disableMailDelivery) {
-                await sendTicketActivityEmailToWatchingUsers(createdTicketActivity.id);
+                sendTicketActivityEmailToWatchingUsers(createdTicketActivity.id);
             }
 
         }
