@@ -1,19 +1,19 @@
-// TODO: construct fancy mapped type for variant 
+type Variant<VariantName, PropertyObj> = PropertyObj extends object
+    ? ({
+        [K in keyof PropertyObj]: PropertyObj[K]
+    } & {
+        name: VariantName
+    })
+    : {
+        name: VariantName
+    }
 
-type ListResultVariant = {
-    name: "pagination"
-} | {
-    name: "infiniteLoading"
-    variant: InfiniteLoadingVariantVariants
-} | {
-    name: "normal"
-}
+type ListResultVariant = Variant<"pagination", null> |
+    Variant<"infiniteLoading", { variant: InfiniteLoadingVariantVariants }> |
+    Variant<"normal", null>
 
-export type InfiniteLoadingVariantVariants = {
-    name: "load-more-button"
-} | {
-    name: "intersection-observer"
-}
+export type InfiniteLoadingVariantVariants = Variant<"load-more-button", null> |
+    Variant<"intersection-observer", null>
 
 export type ListResultVariantNames = ListResultVariant["name"]
 export type InfiniteLoadingVariantVariantNames = InfiniteLoadingVariantVariants["name"];
