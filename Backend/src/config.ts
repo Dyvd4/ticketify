@@ -6,7 +6,6 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 const config = {
     LOG_PATH: path.join(__dirname, "../logs", "/"),
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY!,
-    // TODO: rename to domain
     CLIENT_URL: process.env.CLIENT_URL!,
     // file
     // ====
@@ -19,7 +18,6 @@ const config = {
     // ====
     SMTP_USERNAME: process.env.SMTP_USERNAME,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-    // TODO: rename to domain
     URL: process.env.URL!,
     SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
     PORT: process.env.PORT!,

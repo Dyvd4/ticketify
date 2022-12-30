@@ -24,7 +24,6 @@ export const TicketActivityModelIconMap: ActivityModelIconMap = {
     "Ticket": "ticket"
 }
 
-// TODO: add generic to get better type inference
 interface TicketActivityOptions {
     disableMailDelivery?: boolean,
     /** 
@@ -32,25 +31,25 @@ interface TicketActivityOptions {
      * @param args
      * Arguments that were passed into the query - for example: where, data, or orderBy
      */
-    onlyIf?: (event: Event, args: any) => Promise<boolean>
+    onlyIf?: (event: Event, args: any) => Promise<[onlyIf: boolean, context: any]>
     /**
      * evaluator to get the ticketId for ticket activity via the args
      * @param args
      * Arguments that were passed into the query - for example: where, data, or orderBy
      */
-    ticketIdEvaluator?: (event: Event, args: any) => Promise<string>
+    ticketIdEvaluator?: (event: Event, args: any, context?: any) => Promise<string>
     /**
      * evaluator to create a custom title for ticket activity via the args
      * @param args
      * Arguments that were passed into the query - for example: where, data, or orderBy
      */
-    titleEvaluator?: (event: Event, args: any) => Promise<string>
+    titleEvaluator?: (event: Event, args: any, context?: any) => Promise<string>
     /** 
      * evaluator to create a custom description for ticket activity via the args
      * @param args
      * Arguments that were passed into the query - for example: where, data, or orderBy
      */
-    descriptionEvaluator?: (event: Event, args: any) => Promise<string | null>
+    descriptionEvaluator?: (event: Event, args: any, context?: any) => Promise<string | null>
 }
 /** creates a ticket activity based on changed entities related to ticket
  * @param ticketIdEvaluator if the tickedId of the entity is not named in the proper naming convention,
@@ -61,22 +60,29 @@ const CreateTicketActivityBasedOn = (
     events: Event[],
     options?: TicketActivityOptions) => {
     return async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
-        if (params.model === entityName &&
-            (events as string[]).includes(params.action) &&
-            (!options?.onlyIf || (await options.onlyIf(params.action as Event, params.args)))) {
+
+        if (params.model === entityName && (events as string[]).includes(params.action)) {
+
+            let context;
+
+            if (options?.onlyIf) {
+                const [shouldPass, ctx] = await options.onlyIf(params.action as Event, params.args)
+                if (!shouldPass) return (await next(params));
+                context = ctx;
+            }
 
             const event = params.action as Event;
             const entity = params.args.data;
 
-            const title = options?.titleEvaluator && (await options.titleEvaluator(event, params.args)) ||
+            const title = options?.titleEvaluator && (await options.titleEvaluator(event, params.args, context)) ||
                 `${entityName} ${TicketActivityEventLabelMap[event]}`
 
             const description = options?.descriptionEvaluator &&
-                (await options.descriptionEvaluator(event, params.args))
+                (await options.descriptionEvaluator(event, params.args, context))
 
             const createdTicketActivity = await prisma.ticketActivity.create({
                 data: {
-                    ticketId: entity.ticketId || options?.ticketIdEvaluator && (await options.ticketIdEvaluator(event, params.args)),
+                    ticketId: entity.ticketId || options?.ticketIdEvaluator && (await options.ticketIdEvaluator(event, params.args, context)),
                     title,
                     createdFromId: getCurrentUser().id,
                     icon: TicketActivityModelIconMap[entityName],
@@ -88,8 +94,8 @@ const CreateTicketActivityBasedOn = (
             if (!options?.disableMailDelivery) {
                 sendTicketActivityEmailToWatchingUsers(createdTicketActivity.id);
             }
-
         }
+
         return (await next(params));
     }
 }
