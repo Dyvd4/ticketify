@@ -1,6 +1,5 @@
 import { TFilterItem, TFilterOperation } from "./Filter/FilterItems";
 import Header from "./Header";
-import InfiniteQueryItems from "./InfiniteQueryItems";
 import List from "./List";
 import ListItem from "./ListItem";
 import ListItemHeading from "./ListItemHeading";
@@ -11,5 +10,5 @@ export type TSearchItem = Omit<TFilterItem, "operation"> & {
 
 export type TDrawer = "filter" | "orderBy"
 
-export { InfiniteQueryItems, Header, ListItem, ListItemHeading };
+export { Header, ListItem, ListItemHeading };
 export default List

@@ -1,16 +1,16 @@
-import { Alert, AlertIcon, Button, ButtonProps, Text } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import { UseInfiniteQueryResult } from "react-query";
 import useIntersectionObserver from "src/hooks/useIntersectionObserver";
-import LoadingRipple from "../Loading/LoadingRipple";
+import LoadingRipple from "../../Loading/LoadingRipple";
+import ListResultErrorDisplay from "./ListResultErrorDisplay";
+import ListResultItems, { ListResult } from "./ListResultItems";
 
-type InfiniteLoadingResult = {
-    type: "infiniteLoading"
-    items: any
+type InfiniteLoaderResult = {
     nextSkip: number
-}
+} & ListResult
 
-type InfiniteQueryItemsProps = {
-    query: UseInfiniteQueryResult<InfiniteLoadingResult>
+type InfiniteLoaderResultItemsProps = {
+    query: UseInfiniteQueryResult<InfiniteLoaderResult>
     children(item: any): JSX.Element
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
@@ -31,9 +31,9 @@ type InfiniteQueryItemsProps = {
     variant: "intersection-observer"
 })
 
-export type Variant = InfiniteQueryItemsProps["variant"]
+export type Variant = InfiniteLoaderResultItemsProps["variant"]
 
-function InfiniteQueryItems({ query, variant = "intersection-observer", ...props }: InfiniteQueryItemsProps) {
+function InfiniteLoaderResultItems({ query, variant = "intersection-observer", ...props }: InfiniteLoaderResultItemsProps) {
 
     const {
         isError,
@@ -55,26 +55,14 @@ function InfiniteQueryItems({ query, variant = "intersection-observer", ...props
 
     if (isLoading) return props.loadingDisplay || <LoadingRipple centered />;
 
-    if (isError) {
-        return props.errorDisplay ||
-            <Alert className="rounded-md" status="error" variant="top-accent">
-                <AlertIcon />
-                <Text>
-                    There was an error processing your request
-                </Text>
-            </Alert>;
-    }
+    if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 
     return <>
-        {data.pages.map(page => (
-            page.items.length > 0
-                ? page.items.map((item: any) => (
-                    <div className="infinite-query-item" key={item.id}>
-                        {props.children(item)}
-                    </div>
-                ))
-                : props.emptyDisplay || <div>This list seems to be empty 😴</div>
-        ))}
+        <ListResultItems
+            data={data}
+            emptyDisplay={props.emptyDisplay}>
+            {item => props.children(item)}
+        </ListResultItems>
         {hasNextPage && variant === "load-more-button" && <>
             <div className="infinite-query-item" key="random-key">
                 <Button
@@ -88,4 +76,4 @@ function InfiniteQueryItems({ query, variant = "intersection-observer", ...props
     </>
 }
 
-export default InfiniteQueryItems;
+export { InfiniteLoaderResultItems };

@@ -21,7 +21,7 @@ class InfiniteLoader<T> extends List {
     }
 
     /** @param variantName the variant for the infinite-loading result
-     * - is currently being picked up by the `List` component and passed down to the `InfiniteQueryItems` component in the client
+     * - is currently being picked up by the `List` component and passed down to the `InfiniteLoaderResultItems` component in the client
      * */
     getResult = (items: T[], itemsCount: number, variantName?: InfiniteLoadingVariantVariantNames) => {
         return new InfiniteLoaderResult(

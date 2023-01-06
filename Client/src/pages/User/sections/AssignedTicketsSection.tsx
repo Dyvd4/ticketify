@@ -1,7 +1,7 @@
 import { Heading, List } from "@chakra-ui/react";
 import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InfiniteQueryItems } from "src/components/List";
+import { InfiniteLoaderResultItems } from "src/components/List/Result";
 import { ListItem } from "src/components/Lists/Ticket";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
 import { useIsCurrentUser } from "src/hooks/user";
@@ -25,11 +25,11 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
             <List
                 id="9151947b-ad33-44cd-bbcc-7e8316ba1439"
                 className="flex flex-col gap-4 mt-4">
-                <InfiniteQueryItems
+                <InfiniteLoaderResultItems
                     variant="intersection-observer"
                     query={query}>
                     {ticket => <ListItem item={ticket} />}
-                </InfiniteQueryItems>
+                </InfiniteLoaderResultItems>
             </List>
         </>
     );

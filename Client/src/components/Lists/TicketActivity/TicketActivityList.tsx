@@ -1,8 +1,8 @@
 import { List } from "@chakra-ui/react";
 import { UseInfiniteQueryResult } from "react-query";
-import { InfiniteQueryItems } from "src/components/List";
+import { InfiniteLoaderResultItems } from "src/components/List/Result";
 import TicketActivityListItem, { TicketActivityListItemProps } from "./TicketActivityListItem";
-import { Variant } from "src/components/List/InfiniteQueryItems";
+import { Variant } from "src/components/List/Result/InfiniteLoaderResultItems";
 
 type TicketActivityListProps = {
     activitiesQuery: UseInfiniteQueryResult<any>
@@ -14,7 +14,7 @@ function TicketActivityList({ activitiesQuery, ticketActivityListItemProps, vari
 
     return (
         <List className="flex flex-col gap-4">
-            <InfiniteQueryItems
+            <InfiniteLoaderResultItems
                 variant={variant}
                 query={activitiesQuery}>
                 {activity => (
@@ -24,7 +24,7 @@ function TicketActivityList({ activitiesQuery, ticketActivityListItemProps, vari
                         {...ticketActivityListItemProps}
                     />
                 )}
-            </InfiniteQueryItems>
+            </InfiniteLoaderResultItems>
         </List>
     );
 }
