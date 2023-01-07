@@ -12,6 +12,9 @@ function TicketList(props: TicketListProps) {
     return (
         <>
             <List
+                variant={{
+                    name: "pagination"
+                }}
                 id="e72e4f55-d438-4f30-aaf6-a5c872f61e19"
                 fetch={{
                     route: "tickets",
