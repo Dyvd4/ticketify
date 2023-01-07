@@ -13,14 +13,14 @@ const defaultNoOfContentLines = 3;
 function LogListItemContent({ item }: { item }) {
 
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
-    const { level, colorScheme, message, errorMessage, errorStack, createdAt } = item;
+    const { level, color, message, errorMessage, errorStack, createdAt } = item;
     const contentRef = useRef<HTMLDivElement | null>(null);
 
     return (
         <ListItem
             heading={
                 <Box className="flex items-center justify-between">
-                    <Tag colorScheme={colorScheme}>
+                    <Tag colorScheme={color}>
                         {level}
                     </Tag>
                     <Box>

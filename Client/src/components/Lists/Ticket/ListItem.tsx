@@ -11,10 +11,10 @@ function ListItem({ item }: { item }) {
             content={<TicketListItemContent item={item} />}
             actions={<TicketListItemActions item={item} />}
             tags={[
-                <Tag className={`bg-${item.status?.color || "bg-gray-200"}`}>
-                    Status: {item.status?.name || "none"}
+                <Tag colorScheme={item.status.color}>
+                    Status: {item.status.name}
                 </Tag>,
-                <Tag className={`bg-${item.priority.color}`}>
+                <Tag colorScheme={item.priority.color}>
                     Priority: {item.priority.name}
                 </Tag>
             ]}

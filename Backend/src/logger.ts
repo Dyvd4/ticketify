@@ -25,7 +25,7 @@ class DbTransport extends Transport {
                 errorMessage: info?.error?.message,
                 errorStack: info?.error?.stack,
                 icon: LogLevelIconMap[info.level],
-                colorScheme: LogLevelColorSchemeMap[info.level]
+                color: LogLevelColorSchemeMap[info.level]
             }
         });
         next();

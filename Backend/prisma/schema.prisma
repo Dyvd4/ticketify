@@ -69,8 +69,8 @@ model Ticket {
   updatedAt          DateTime?        @updatedAt
   createUser         String?          @db.NVarChar(100)
   updateUser         String?          @db.NVarChar(100)
-  statusId           String?          @db.NVarChar(100)
-  status             TicketStatus?    @relation(fields: [statusId], references: [id])
+  statusId           String           @db.NVarChar(100)
+  status             TicketStatus     @relation(fields: [statusId], references: [id])
   attachments        FileOnTicket[]
   comments           Comment[]
   activities         TicketActivity[]
@@ -231,6 +231,6 @@ model Log {
   message      String    @db.NVarChar(255)
   errorMessage String?   @db.NVarChar(max)
   errorStack   String?   @db.NVarChar(max)
-  colorScheme  String?   @db.NVarChar(50)
+  color        String?   @db.NVarChar(50)
   icon         String?   @db.NVarChar(50)
 }
