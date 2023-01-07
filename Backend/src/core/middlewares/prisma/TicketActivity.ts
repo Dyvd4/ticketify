@@ -8,8 +8,8 @@ type ActivityEventMap = Record<Event, string>
 
 export const TicketActivityEvents: Event[] = ["create", "update"];
 export const TicketActivityEventColorMap: ActivityEventMap = {
-    "update": "yellow-500",
-    "create": "green-500",
+    "update": "yellow.500",
+    "create": "green.500",
 }
 export const TicketActivityEventLabelMap: ActivityEventMap = {
     "update": "updated",

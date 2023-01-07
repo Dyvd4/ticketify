@@ -46,9 +46,11 @@ function TicketActivityListItem({ activity, linkIsDisabled, tooltipDisabled }: T
                                     <div className="min-w-0 truncate">
                                         #{activity.ticket.id} {activity.ticket.title}
                                     </div>
-                                    <div className={`text-${activity.color} text-sm`}>
+                                    <Box
+                                        color={activity.color}
+                                        className={`text-sm`}>
                                         ({activity.title})
-                                    </div>
+                                    </Box>
                                 </Link>
                             </Tooltip>
                         </>}
