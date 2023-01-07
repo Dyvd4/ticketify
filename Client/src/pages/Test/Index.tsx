@@ -12,6 +12,12 @@ function Index(props: IndexProps) {
     return (
         <Container>
             <List
+                variant={{
+                    name: "infiniteLoading",
+                    variant: {
+                        name: "load-more-button"
+                    }
+                }}
                 id="6ed914af-4959-4920-8327-1bec3dccebc7"
                 fetch={{
                     route: "test",

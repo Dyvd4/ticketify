@@ -2,13 +2,14 @@ import ListResult from "./ListResult";
 
 export default class PagerResult<T> extends ListResult<T>{
 
-    currentPage: number
+    prevPage: number
+    nextPage: number
     pagesCount: number
     pagesCountShrunk: boolean
     pageIsFull: boolean
 
     constructor(items: T[], totalItemsCount: number, itemsPerPage: number, currentPage: number) {
-        super(items, { name: "pagination" });
+        super(items);
 
         this.pageIsFull = this.items.length === itemsPerPage;
 
@@ -16,8 +17,16 @@ export default class PagerResult<T> extends ListResult<T>{
         this.pagesCount += totalItemsCount % itemsPerPage > 0 ? 1 : 0
         this.pagesCountShrunk = !!currentPage && currentPage > this.pagesCount;
 
-        if (!currentPage) this.currentPage = 1;
-        else if (this.pagesCountShrunk) this.currentPage = this.pagesCount; // nearest possible
-        else this.currentPage = currentPage;
+        const sanitizedCurrentPage = this.pagesCountShrunk
+            ? this.pagesCount
+            : currentPage;
+
+        this.prevPage = sanitizedCurrentPage !== 1
+            ? sanitizedCurrentPage - 1
+            : 1;
+
+        this.nextPage = sanitizedCurrentPage < this.pagesCount
+            ? sanitizedCurrentPage + 1
+            : this.pagesCount;
     }
 }

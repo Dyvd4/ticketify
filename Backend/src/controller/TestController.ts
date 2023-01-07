@@ -21,7 +21,7 @@ Router.get("/test", async (req, res, next) => {
             orderBy: pager.getPrismaOrderByArgs()
         });
 
-        res.json(pager.getResult(testItems, testItemsCount, "load-more-button"));
+        res.json(pager.getResult(testItems, testItemsCount));
     }
     catch (e) {
         next(e)

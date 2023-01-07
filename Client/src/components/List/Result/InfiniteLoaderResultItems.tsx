@@ -5,7 +5,7 @@ import LoadingRipple from "../../Loading/LoadingRipple";
 import ListResultErrorDisplay from "./ListResultErrorDisplay";
 import ListResultItems, { ListResult } from "./ListResultItems";
 
-type InfiniteLoaderResult = {
+export type InfiniteLoaderResult = {
     nextSkip: number
 } & ListResult
 
@@ -33,7 +33,7 @@ type InfiniteLoaderResultItemsProps = {
 
 export type Variant = InfiniteLoaderResultItemsProps["variant"]
 
-function InfiniteLoaderResultItems({ query, variant = "intersection-observer", ...props }: InfiniteLoaderResultItemsProps) {
+function InfiniteLoaderResultItems({ query, variant, ...props }: InfiniteLoaderResultItemsProps) {
 
     const {
         isError,
@@ -59,6 +59,7 @@ function InfiniteLoaderResultItems({ query, variant = "intersection-observer", .
 
     return <>
         <ListResultItems
+            variant={"infiniteLoading"}
             data={data}
             emptyDisplay={props.emptyDisplay}>
             {item => props.children(item)}
