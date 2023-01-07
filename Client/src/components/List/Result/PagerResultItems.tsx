@@ -1,6 +1,7 @@
 import { Divider } from "@chakra-ui/react";
 import LoadingRipple from "components/Loading/LoadingRipple";
 import Pager from "components/Pager";
+import { useEffect } from "react";
 import { UseQueryResult } from "react-query";
 import ListResultErrorDisplay from "./ListResultErrorDisplay";
 import ListResultItems, { ListResult } from "./ListResultItems";
@@ -23,7 +24,7 @@ type PageQueryItemsProps = {
     emptyDisplay?: JSX.Element
 }
 
-function PagerResultItems({ query, page, ...props }: PageQueryItemsProps) {
+function PagerResultItems({ query, ...props }: PageQueryItemsProps) {
 
     const {
         isError,
@@ -35,24 +36,25 @@ function PagerResultItems({ query, page, ...props }: PageQueryItemsProps) {
 
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 
+
     const handlePageChange = (pageNumber: number) => {
-        if (pageNumber === page) return;
+        if (pageNumber === props.page) return;
         props.setPage(pageNumber)
     }
 
-    const pagingResult = query.data.items.length > 0
-        ? query.data.items[0]
-        : null;
-
     const pagingInfo = {
-        pagesCount: pagingResult?.pagesCount || 0,
-        pagesCountShrunk: pagingResult?.pagesCountShrunk || false,
-        prevPage: pagingResult?.prevPage || 0,
-        nextPage: pagingResult?.nextPage || 0,
-        currentPage: pagingResult?.nextPage && pagingResult.nextPage > 0
-            ? pagingResult.nextPage - 1
-            : 0
+        pagesCount: query.data.pagesCount,
+        pagesCountShrunk: query.data.pagesCountShrunk,
+        prevPage: query.data.prevPage,
+        nextPage: query.data.nextPage,
+        currentPage: query.data.nextPage - 1
     }
+
+    useEffect(() => {
+        if (pagingInfo.pagesCountShrunk) {
+            props.setPage(pagingInfo.nextPage); // nearest possible page
+        }
+    }, [pagingInfo.pagesCountShrunk]);
 
     return <>
         <ListResultItems
@@ -65,8 +67,8 @@ function PagerResultItems({ query, page, ...props }: PageQueryItemsProps) {
         <Pager
             centered
             onChange={handlePageChange}
-            pagesCount={pagingInfo.pagesCount} // server state
-            currentPage={page} // client state
+            pagesCount={pagingInfo.pagesCount}
+            currentPage={props.page}
         />
     </>
 }

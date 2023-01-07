@@ -8,17 +8,19 @@ import useSortItemsInit from "src/context/hooks/useSortItemsInit";
 import { filterItemsAtom } from "src/context/stores/filter";
 import { searchItemAtom } from "src/context/stores/search";
 import { sortItemsAtom } from "src/context/stores/sort";
-import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { useCurrentUserSettings } from "src/hooks/user";
 import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
-import Pager from "../Pager/Pager";
 import FilterDrawer from "./Filter/FilterDrawer";
 import FilterItems, { TFilterItem } from "./Filter/FilterItems";
 import Header from "./Header";
-import InfiniteQueryItems from "./InfiniteQueryItems";
+import { InfiniteLoaderResultItems, PagerResultItems } from "./Result";
+import { InfiniteLoaderResult } from "./Result/InfiniteLoaderResultItems";
+import { ListResultVariant } from "./Result/ListResultItems";
+import { PagerResult } from "./Result/PagerResultItems";
 import SortDrawer from "./Sort/SortDrawer";
 import SortItems, { TSortItem } from "./Sort/SortItems";
 
@@ -28,7 +30,6 @@ type ListProps = {
         queryKey: string
         /** the url path to fetch the entity from */
         route: string
-        onResult?(listItems)
     }
     listItemRender(listItem): React.ReactElement
     loadingDisplay?: JSX.Element
@@ -45,6 +46,7 @@ type ListProps = {
     filter: TFilterItem[]
     search?: TSearchItem
     onAdd?(...args: any[]): void
+    variant: ListResultVariant
 }
 
 function List(props: ListProps) {
@@ -52,7 +54,8 @@ function List(props: ListProps) {
     const {
         listItemRender,
         fetch: { queryKey, route },
-        header
+        header,
+        variant
     } = props;
 
     const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -95,38 +98,30 @@ function List(props: ListProps) {
 
     useSearchItemInit(props.search);
 
-    const query = useInfiniteQuery([queryKey, page, queryParams], {
+    const infiniteLoadingQuery = useInfiniteQuery<InfiniteLoaderResult>([queryKey, queryParams], {
+        route,
+        queryParams
+    }, {
+        enabled: variant.name === "infiniteLoading"
+    });
+
+    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, page], {
         route,
         queryParams: {
             ...queryParams,
             page
         }
     }, {
-        getNextPageParam: (lastPage: any) => lastPage.variant.name !== "pagination"
-            ? lastPage.nextSkip
-            : undefined
+        enabled: variant.name === "pagination"
     });
 
-    const count = useInfiniteQueryCount(query);
+    const infiniteLoadingQueryCount = useInfiniteQueryCount(infiniteLoadingQuery);
+    const paginationQueryCount = paginationQuery.data?.items
+        ? paginationQuery.data.items.length
+        : 0
 
     // useEffect
     // ---------
-    useEffect(() => {
-        if (query.data && query.data.pages && props.fetch.onResult) {
-            const allListItems = query.data.pages.reduce((allItems, nextPage) => {
-                allItems = allItems.concat(nextPage.items);
-                return allItems;
-            }, []);
-            props.fetch.onResult(allListItems);
-        }
-    }, [query, props])
-
-    useEffect(() => {
-        if (pagingInfo?.pagesCountShrunk) {
-            setPage(pagingInfo.currentPage);
-        }
-    });
-
     useEffect(() => {
         if (!searchItem) return;
         const oldFilterParams = [...queryParams.filter || []].filter((filterItem: TFilterItem) => {
@@ -137,12 +132,6 @@ function List(props: ListProps) {
             filter: [...oldFilterParams, searchItem]
         });
     }, [searchItem]);
-
-    // Event handler
-    // -------------
-    const handlePageChange = (pageNumber) => {
-        setPage(pageNumber);
-    }
 
     const handleDrawerApply = (type: TDrawer) => {
         const itemsToSet = type === "filter"
@@ -185,21 +174,8 @@ function List(props: ListProps) {
         setQueryParams(newQueryParams);
     }
 
-    // 🥵
-    const pagingResult = query.data?.pages[0]?.variant?.name === "pagination"
-        ? query.data?.pages[0]
-        : null;
-
-    const pagingInfo = pagingResult
-        ? {
-            pagesCount: pagingResult.pagesCount,
-            currentPage: pagingResult.currentPage,
-            pagesCountShrunk: pagingResult.pagesCountShrunk
-        }
-        : null;
-
-    const infiniteLoaderResultVariantName = query.data?.pages[0]?.variant?.name === "infiniteLoading"
-        ? query.data?.pages[0]?.variant?.variant.name
+    const infiniteLoaderResultVariantName = variant.name === "infiniteLoading"
+        ? variant.variant.name
         : "intersection-observer";
 
     return (
@@ -207,7 +183,7 @@ function List(props: ListProps) {
             {header && <>
                 <Header
                     title={header.title}
-                    count={count}
+                    count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
                     showCount={header?.showCount}
                     useSearch={!!searchItem}
                     useSort={props.sort.length > 0}
@@ -231,30 +207,35 @@ function List(props: ListProps) {
             <ChakraList
                 className="p-4 flex flex-col gap-4"
                 ref={(listRef) => listRef && autoAnimate(listRef)}>
-                <InfiniteQueryItems
-                    variant={infiniteLoaderResultVariantName}
-                    loadMoreButtonProps={{
-                        className: "mx-auto flex"
-                    }}
-                    query={query}
-                    loadingDisplay={props.loadingDisplay ||
-                        <div className="flex justify-center items-center">
-                            <LoadingRipple />
-                        </div>
-                    }>
-                    {listItem => listItemRender(listItem)}
-                </InfiniteQueryItems>
+                {variant.name === "pagination" && <>
+                    <PagerResultItems
+                        page={page}
+                        setPage={setPage}
+                        query={paginationQuery}
+                        loadingDisplay={props.loadingDisplay ||
+                            <div className="flex justify-center items-center">
+                                <LoadingRipple />
+                            </div>
+                        }>
+                        {listItem => listItemRender(listItem)}
+                    </PagerResultItems>
+                </>}
+                {variant.name === "infiniteLoading" && <>
+                    <InfiniteLoaderResultItems
+                        variant={infiniteLoaderResultVariantName}
+                        loadMoreButtonProps={{
+                            className: "mx-auto flex"
+                        }}
+                        query={infiniteLoadingQuery}
+                        loadingDisplay={props.loadingDisplay ||
+                            <div className="flex justify-center items-center">
+                                <LoadingRipple />
+                            </div>
+                        }>
+                        {listItem => listItemRender(listItem)}
+                    </InfiniteLoaderResultItems>
+                </>}
             </ChakraList>
-            {!!pagingInfo && <>
-                <Divider />
-                <Pager
-                    centered
-                    onChange={handlePageChange}
-                    pagesCount={pagingInfo.pagesCount}
-                    currentPage={pagingInfo.currentPage}
-                />
-            </>
-            }
         </>
     );
 }
