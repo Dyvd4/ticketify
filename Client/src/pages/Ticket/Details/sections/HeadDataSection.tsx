@@ -29,17 +29,13 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
                 className="my-2 text-secondary">
                 <Flex justifyContent="space-between">
                     <div>priority</div>
-                    <Tag
-                        className={`bg-${priority.color || "slate-500"}`}
-                        variant="solid">
+                    <Tag colorScheme={priority.color || "gray"}>
                         {priority.name}
                     </Tag>
                 </Flex>
                 <Flex justifyContent="space-between">
                     <div>status</div>
-                    <Tag
-                        className={`bg-${status?.color || "slate-500"}`}
-                        variant="solid">
+                    <Tag colorScheme={status?.color || "gray"}>
                         {status?.name || "none"}
                     </Tag>
                 </Flex>

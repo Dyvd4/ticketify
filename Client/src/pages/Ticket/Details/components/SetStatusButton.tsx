@@ -1,11 +1,10 @@
-import { Button, Menu, MenuItemOption, MenuList, MenuOptionGroup, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
+import { Button, Menu, MenuItemOption, MenuList, MenuOptionGroup, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tag, useDisclosure, useToast } from "@chakra-ui/react";
 import { faSignal } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity, updateEntity } from "src/api/entity";
-import Circle from "src/components/Circle";
 import MenuButton from "src/components/Wrapper/MenuButton";
 
 type SetStatusButtonProps = {}
@@ -112,13 +111,9 @@ function SetStatusButton(props: SetStatusButtonProps) {
                                     <MenuItemOption
                                         key={status.id}
                                         value={status.id}>
-                                        <span className="mr-2">
+                                        <Tag colorScheme={status.color}>
                                             {status.name}
-                                        </span>
-                                        <Circle
-                                            className="inline float-right"
-                                            bgColor={status.color}
-                                        />
+                                        </Tag>
                                     </MenuItemOption>
                                 ))}
                         </MenuOptionGroup>
