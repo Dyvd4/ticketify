@@ -3,7 +3,7 @@ import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InfiniteLoaderResultItems } from "src/components/List/Result";
 import { ListItem } from "src/components/Lists/Ticket";
-import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
 import { useIsCurrentUser } from "src/hooks/user";
 
 type AssignedTicketsSectionsProps = {
