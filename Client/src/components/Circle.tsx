@@ -1,21 +1,19 @@
+import { BackgroundProps, Box } from "@chakra-ui/react";
 import { ComponentPropsWithRef } from "react";
 
 type CircleProps = {
     /** the size from tailwind's width or height sizes */
     size?: number
-    /** 
-     * The bg-color from tailwind's color palette. 
-     * Will be string-interpolated like bg-${bgColor}.
-     * */
-    bgColor?: string
-} & ComponentPropsWithRef<"div">
+    bgColor?: BackgroundProps["bgColor"]
+} & Omit<ComponentPropsWithRef<"div">, "children">
 
 function Circle({ size = 4, bgColor = "green-500", className, ...props }: CircleProps) {
     return (
-        <div className={`rounded-full w-${size} h-${size} 
-                         bg-${bgColor} ${className}`}
+        <Box
+            bgColor={bgColor}
+            className={`rounded-full w-${size} h-${size} ${className}`}
             {...props}>
-        </div>
+        </Box>
     );
 }
 
