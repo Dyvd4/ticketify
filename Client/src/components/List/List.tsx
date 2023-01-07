@@ -160,14 +160,14 @@ function List(props: ListProps) {
                 filterItem.value = undefined;
             });
             setFilterItems(newFilterItems);
-            localStorage.removeItem("filter");
-            deleteUrlParam("filter");
+            localStorage.removeItem(`filter-${props.id}`);
+            deleteUrlParam(`filter-${props.id}`);
         }
         else {
             const newFilterItems = [...sortItems];
             setSortItems(newFilterItems);
-            localStorage.removeItem("orderBy");
-            deleteUrlParam("orderBy");
+            localStorage.removeItem(`orderBy-${props.id}`);
+            deleteUrlParam(`orderBy-${props.id}`);
         }
         const newQueryParams = { ...queryParams };
         delete newQueryParams[type];
