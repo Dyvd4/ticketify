@@ -1,5 +1,5 @@
 import { ListResultPrismaArgs } from "..";
-import ListResult, { InfiniteLoadingVariantVariants } from "./ListResult";
+import ListResult from "./ListResult";
 
 export default class InfiniteLoaderResult<T> extends ListResult<T>{
 
@@ -10,9 +10,8 @@ export default class InfiniteLoaderResult<T> extends ListResult<T>{
         itemsCount: number,
         { skip }: ListResultPrismaArgs,
         itemsPerLoad: number,
-        variant: InfiniteLoadingVariantVariants = { name: "intersection-observer" }
     ) {
-        super(items, { name: "infiniteLoading", variant });
+        super(items);
         const newNextSkip = skip + itemsPerLoad;
         this.nextSkip = newNextSkip < itemsCount
             ? newNextSkip

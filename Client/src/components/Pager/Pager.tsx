@@ -8,7 +8,7 @@ type PagerProps = {
     pagesCount: number
     onChange?(page: number)
     centered?: boolean
-} & React.ComponentPropsWithRef<"div">
+} & Omit<React.ComponentPropsWithRef<"div">, "onChange">
 
 function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerProps) {
     const isLargePager = pagesCount > 7;

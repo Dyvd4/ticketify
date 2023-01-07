@@ -1,6 +1,6 @@
 import { Container, Flex, Heading } from "@chakra-ui/react";
 import TicketActivityList from "src/components/Lists/TicketActivity/TicketActivityList";
-import { useInfiniteQuery } from "src/hooks/infiniteQuery";
+import { useInfiniteQuery } from "src/hooks/query";
 
 interface IndexProps { }
 

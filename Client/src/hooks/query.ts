@@ -1,4 +1,4 @@
-import { QueryKey, useInfiniteQuery as reactQueryUseInfiniteQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult } from "react-query";
+import { QueryKey, useInfiniteQuery as reactQueryUseInfiniteQuery, useQuery as reactQueryUseQuery, UseInfiniteQueryOptions, UseInfiniteQueryResult, UseQueryOptions, UseQueryResult } from "react-query";
 import { fetchEntity, FetchEntityArgs } from "src/api/entity";
 
 export const useInfiniteQuery = <TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
@@ -27,4 +27,14 @@ export const useInfiniteQueryCount = (infiniteQuery: UseInfiniteQueryResult): nu
             pageCount += nextPage.items.length;
             return pageCount;
         }, 0)
+}
+
+export const useQuery = <TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
+    queryKey: TQueryKey,
+    fetchEntityArgs: FetchEntityArgs,
+    options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>
+): UseQueryResult<TData, TError> => {
+    return reactQueryUseQuery(queryKey, () => {
+        return fetchEntity(fetchEntityArgs);
+    }, options);
 }

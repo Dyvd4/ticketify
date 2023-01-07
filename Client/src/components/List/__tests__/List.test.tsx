@@ -1,15 +1,16 @@
 import autoAnimate from "@formkit/auto-animate";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { createRef } from "react";
-import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/infiniteQuery";
+import { useQuery } from "src/hooks/query";
 import { useCurrentUserSettings } from "src/hooks/user";
 import ListItemContent from "src/pages/Test/ListItemContent";
 import { getUrlParam, setUrlParam } from "src/utils/url";
+import { Mock, vi } from "vitest";
 import List from "..";
 import ListItem from "../ListItem";
-import { Mock, vi } from "vitest"
 
-vi.mock("../../../hooks/infiniteQuery", () => ({
+vi.mock("../../../hooks/query", () => ({
+    useQuery: vi.fn(),
     useInfiniteQuery: vi.fn(),
     useInfiniteQueryCount: vi.fn()
 }));
@@ -18,123 +19,119 @@ vi.mock("../../../hooks/user", () => ({
     useCurrentUserSettings: vi.fn()
 }));
 
-const mockedUseInfiniteQuery = useInfiniteQuery as Mock<any>
-const mockedUseInfiniteQueryCount = useInfiniteQueryCount as Mock<any>
+const mockedUseQuery = useQuery as Mock<any>
 const mockedAutoAnimate = autoAnimate as Mock<any>
 const mockedUseCurrentUserSettings = useCurrentUserSettings as Mock<any>
 
-const pages = [
-    {
-
-        "items": [
-            {
-                "id": 1,
-                "title": "react console errors",
-                "description": "<p>testestststs</p>",
-                "dueDate": "2022-09-04T17:36:00.000Z",
-                "createdAt": "2022-08-31T14:21:33.861Z",
-                "updatedAt": "2022-11-11T22:01:21.277Z",
+const pagerResult = {
+    "items": [
+        {
+            "id": 1,
+            "title": "react console errors",
+            "description": "<p>testestststs</p>",
+            "dueDate": "2022-09-04T17:36:00.000Z",
+            "createdAt": "2022-08-31T14:21:33.861Z",
+            "updatedAt": "2022-11-11T22:01:21.277Z",
+            "createUser": "test",
+            "updateUser": "test",
+            "statusId": null,
+            "priority": {
+                "color": "slate-500",
+                "name": "Low",
+                "createdAt": "2022-08-16T23:00:32.037Z",
+                "updatedAt": "2022-08-18T08:41:34.420Z",
                 "createUser": "test",
-                "updateUser": "test",
-                "statusId": null,
-                "priority": {
-                    "color": "slate-500",
-                    "name": "Low",
-                    "createdAt": "2022-08-16T23:00:32.037Z",
-                    "updatedAt": "2022-08-18T08:41:34.420Z",
-                    "createUser": "test",
-                    "updateUser": "test"
-                }
-            },
-            {
-                "id": 7,
-                "title": "test hahah niiice",
-                "description": "<p><br></p>",
-                "dueDate": "2022-10-09T13:26:00.000Z",
-                "createdAt": "2022-10-09T13:36:07.078Z",
-                "updatedAt": "2022-11-18T16:34:31.226Z",
-                "createUser": "test",
-                "updateUser": "test",
-                "statusId": null,
-                "priority": {
-                    "color": "red-500",
-                    "name": "High",
-                    "createdAt": "2022-08-18T08:39:51.514Z",
-                    "updatedAt": "2022-08-18T08:39:51.514Z",
-                    "createUser": "test",
-                    "updateUser": "test"
-                }
-            },
-            {
-                "id": 8,
-                "title": "testdd",
-                "description": "<p><br></p>",
-                "dueDate": "2022-10-22T12:13:00.000Z",
-                "createdAt": "2022-10-22T12:13:24.423Z",
-                "updatedAt": "2022-11-11T23:47:01.451Z",
-                "createUser": "test",
-                "updateUser": "test",
-                "statusId": null,
-                "priority": {
-                    "color": "slate-500",
-                    "name": "Low",
-                    "createdAt": "2022-08-16T23:00:32.037Z",
-                    "updatedAt": "2022-08-18T08:41:34.420Z",
-                    "createUser": "test",
-                    "updateUser": "test"
-                }
-            },
-            {
-                "id": 17,
-                "title": "4rty",
-                "description": "<p>yrdy</p>",
-                "dueDate": "2022-11-11T22:56:00.000Z",
-                "createdAt": "2022-11-11T22:56:26.214Z",
-                "updatedAt": "2022-11-11T22:56:26.214Z",
-                "createUser": "test",
-                "updateUser": "test",
-                "statusId": null,
-                "priority": {
-                    "color": "yellow-500",
-                    "name": "Middle",
-                    "createdAt": "2022-08-25T14:57:58.946Z",
-                    "updatedAt": null,
-                    "createUser": "test",
-                    "updateUser": "test"
-                }
-            },
-            {
-                "id": 18,
-                "title": "testtestesteststestest",
-                "description": "<p><br></p>",
-                "dueDate": "2022-11-11T22:58:00.000Z",
-                "createdAt": "2022-11-11T22:58:41.928Z",
-                "updatedAt": "2022-11-11T22:58:54.839Z",
-                "createUser": "test",
-                "updateUser": "test",
-                "statusId": null,
-                "priority": {
-                    "color": "red-500",
-                    "name": "High",
-                    "createdAt": "2022-08-18T08:39:51.514Z",
-                    "updatedAt": "2022-08-18T08:39:51.514Z",
-                    "createUser": "test",
-                    "updateUser": "test"
-                }
+                "updateUser": "test"
             }
-        ],
-        "variant": {
-            "name": "pagination"
         },
-        "currentPage": 1,
-        "pagesCount": 2,
-        "pagesCountShrunk": false
-    }
-]
+        {
+            "id": 7,
+            "title": "test hahah niiice",
+            "description": "<p><br></p>",
+            "dueDate": "2022-10-09T13:26:00.000Z",
+            "createdAt": "2022-10-09T13:36:07.078Z",
+            "updatedAt": "2022-11-18T16:34:31.226Z",
+            "createUser": "test",
+            "updateUser": "test",
+            "statusId": null,
+            "priority": {
+                "color": "red-500",
+                "name": "High",
+                "createdAt": "2022-08-18T08:39:51.514Z",
+                "updatedAt": "2022-08-18T08:39:51.514Z",
+                "createUser": "test",
+                "updateUser": "test"
+            }
+        },
+        {
+            "id": 8,
+            "title": "testdd",
+            "description": "<p><br></p>",
+            "dueDate": "2022-10-22T12:13:00.000Z",
+            "createdAt": "2022-10-22T12:13:24.423Z",
+            "updatedAt": "2022-11-11T23:47:01.451Z",
+            "createUser": "test",
+            "updateUser": "test",
+            "statusId": null,
+            "priority": {
+                "color": "slate-500",
+                "name": "Low",
+                "createdAt": "2022-08-16T23:00:32.037Z",
+                "updatedAt": "2022-08-18T08:41:34.420Z",
+                "createUser": "test",
+                "updateUser": "test"
+            }
+        },
+        {
+            "id": 17,
+            "title": "4rty",
+            "description": "<p>yrdy</p>",
+            "dueDate": "2022-11-11T22:56:00.000Z",
+            "createdAt": "2022-11-11T22:56:26.214Z",
+            "updatedAt": "2022-11-11T22:56:26.214Z",
+            "createUser": "test",
+            "updateUser": "test",
+            "statusId": null,
+            "priority": {
+                "color": "yellow-500",
+                "name": "Middle",
+                "createdAt": "2022-08-25T14:57:58.946Z",
+                "updatedAt": null,
+                "createUser": "test",
+                "updateUser": "test"
+            }
+        },
+        {
+            "id": 18,
+            "title": "testtestesteststestest",
+            "description": "<p><br></p>",
+            "dueDate": "2022-11-11T22:58:00.000Z",
+            "createdAt": "2022-11-11T22:58:41.928Z",
+            "updatedAt": "2022-11-11T22:58:54.839Z",
+            "createUser": "test",
+            "updateUser": "test",
+            "statusId": null,
+            "priority": {
+                "color": "red-500",
+                "name": "High",
+                "createdAt": "2022-08-18T08:39:51.514Z",
+                "updatedAt": "2022-08-18T08:39:51.514Z",
+                "createUser": "test",
+                "updateUser": "test"
+            }
+        }
+    ],
+    "currentPage": 1,
+    "pagesCount": 2,
+    "pagesCountShrunk": false
+}
 
 const listId = "372fdeec-9638-41ef-a073-12c4b6ec397c";
 const listRenderer = () => (
     render(<List
+        variant={{
+            name: "pagination"
+        }}
         id={listId}
         fetch={{
             route: "test",
@@ -167,17 +164,11 @@ beforeEach(() => {
         observe: () => null
     }));
     window.IntersectionObserver = mockIntersectionObserver
-    mockedUseInfiniteQuery.mockImplementation(() => ({
-        data: {
-            pages
-        },
+    mockedUseQuery.mockImplementation(() => ({
+        data: pagerResult,
         isLoading: false,
-        isError: false,
-        isFetchingNextPage: false,
-        hasNextPage: false,
-        fetchNextPage: () => { }
+        isError: false
     }));
-    mockedUseInfiniteQueryCount.mockImplementation(() => (5));
     mockedAutoAnimate.mockReturnValue(createRef());
     mockedUseCurrentUserSettings.mockReturnValue({
         currentUserSettings: {
@@ -222,6 +213,9 @@ describe("filter", () => {
     const listRenderer = () => (
         render(
             <List
+                variant={{
+                    name: "pagination"
+                }}
                 id={listId}
                 fetch={{
                     route: "test",
@@ -382,6 +376,9 @@ describe("sort", () => {
 
     const listRenderer = () => (
         render(<List
+            variant={{
+                name: "pagination"
+            }}
             id={listId}
             fetch={{
                 route: "test",

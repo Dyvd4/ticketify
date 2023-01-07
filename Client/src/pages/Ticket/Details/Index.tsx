@@ -9,7 +9,7 @@ import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
-import { useInfiniteQuery } from "src/hooks/infiniteQuery";
+import { useInfiniteQuery } from "src/hooks/query";
 import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
 import SetStatusButton from "./components/SetStatusButton";
 import WatchTicketButton from "./components/WatchTicketButton";
