@@ -33,6 +33,7 @@ type InfiniteLoaderResultItemsProps = {
 
 export type Variant = InfiniteLoaderResultItemsProps["variant"]
 
+/** expects a query with InfiniteLoaderResult */
 function InfiniteLoaderResultItems({ query, variant, ...props }: InfiniteLoaderResultItemsProps) {
 
     const {

@@ -24,6 +24,7 @@ type PageQueryItemsProps = {
     emptyDisplay?: JSX.Element
 }
 
+/** expects a query with PagerResult */
 function PagerResultItems({ query, ...props }: PageQueryItemsProps) {
 
     const {
@@ -35,7 +36,6 @@ function PagerResultItems({ query, ...props }: PageQueryItemsProps) {
     if (isLoading) return props.loadingDisplay || <LoadingRipple centered />;
 
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
-
 
     const handlePageChange = (pageNumber: number) => {
         if (pageNumber === props.page) return;
