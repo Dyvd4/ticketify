@@ -9,11 +9,12 @@ describe("pagerResult", () => {
         expect(result.pagesCountShrunk).toBe(true);
     });
 
-    it("sets currentPage to nearest possible page if pagesCount shrunk", () => {
+    it("sets nextPage to nearest possible page if pagesCount shrunk", () => {
         const pager = new Pager({ page: "5" }, 3);
         const result = pager.getResult(testItems.slice(0, 3), testItems.length);
 
-        expect(result.currentPage).toBe(4);
+        expect(result.pagesCountShrunk).toBe(true);
+        expect(result.nextPage).toBe(4);
     });
 
     it("calculates pagesCount", () => {
