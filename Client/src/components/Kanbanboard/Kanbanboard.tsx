@@ -80,7 +80,7 @@ function Kanbanboard<T extends { id: any }>({ className, groups, groupItemsRende
 
 	return (
 		<ul
-			className={`${className} flex flex-wrap items-start gap-4 list-none`}
+			className={`${className} flex flex-wrap gap-4 list-none`}
 			{...props}>
 			{groups.map(group => (
 				<li
