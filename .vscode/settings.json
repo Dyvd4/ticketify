@@ -1,8 +1,9 @@
 {
-    "rest-client.environmentVariables": {
-        "$shared": {
-            "auth-token": "",
-            "host": "http://localhost:8080/api"
-        }
-    }
+	"cSpell.words": [
+		"Kanbanboard"
+	],
+	"editor.renderWhitespace": "all",
+	"editor.useTabStops": true,
+	"editor.detectIndentation": true,
+	"editor.insertSpaces": true
 }

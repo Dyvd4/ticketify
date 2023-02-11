@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 
-type LoadingRippleProps = (
+type _LoadingRippleProps = (
     | {
         /** position `absolute` is used to center the element */
         centered?: boolean
@@ -10,7 +10,10 @@ type LoadingRippleProps = (
         centered?: never
         usePortal?: boolean
     }
-) & React.ComponentPropsWithRef<"div">
+)
+
+type LoadingRippleProps = _LoadingRippleProps &
+    Omit<React.ComponentPropsWithRef<"div">, keyof _LoadingRippleProps>
 
 function LoadingRipple(props: LoadingRippleProps) {
     return "usePortal" in props && props.usePortal
