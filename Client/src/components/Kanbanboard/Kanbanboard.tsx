@@ -1,9 +1,12 @@
 
+import { Box } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import classNames from "classnames";
 import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import BgBox from '../BgBox';
 import { ListResultEmptyDisplay } from "../List/Result";
+import LoadingRipple from "../Loading/LoadingRipple";
+import KanbanBoardSkeleton from "./KanbanboardSkeleton";
 
 type CompareFn<T> = Parameters<Array<T>["sort"]>[0]
 
@@ -30,6 +33,13 @@ type _KanbanboardProps<T extends { id: any }> = {
 	 * Triggered initially and before setting state
 	 */
 	orderByEvaluator?: CompareFn<T>
+	/**
+	 * loading indicator for group where the drop event ocurred
+	 */
+	recentDroppedGroupIsLoading?: boolean
+	/**
+	 * loading indicator for whole board (displays skeleton)
+	 */
 	isLoading?: boolean
 }
 
@@ -44,6 +54,7 @@ function Kanbanboard<T extends { id: any }>({
 	onDrop,
 	onBeforeDrop,
 	orderByEvaluator,
+	recentDroppedGroupIsLoading,
 	isLoading,
 	...props }: KanbanboardProps<T>) {
 
@@ -132,48 +143,54 @@ function Kanbanboard<T extends { id: any }>({
 		setIsDragging(false);
 	}
 
-	return (
-		<ul
-			className={`${className} flex flex-wrap gap-4 list-none relative p-4`}
-			{...props}>
-			{groups.map(group => (
-				<li
-					onDrop={(e) => handleOnDrop(e, group.name)}
-					onDragEnter={e => handleOnDragEnter(e, group.name)}
-					onDragOver={e => handleOnDragOver(e, group.name)}
-					key={group.name}
-					className={classNames("transform transition-all flex-1 border-cyan-500 rounded-md", {
-						"border-2 border-cyan-500 border-dashed": recentDraggedOverGroupName === group.name && isDragging,
-						"border-2 ": recentDraggedOverGroupName === group.name && isLoading, // TODO: fancy border animation
-					})}>
-					<BgBox className="rounded-b-none border-b text-center">
-						{group.name}
-					</BgBox>
-					<BgBox className="rounded-t-none">
-						<ul
-							ref={(listRef) => listRef && autoAnimate(listRef)}
-							className='list-none flex flex-col gap-4'>
-							{group.items.map(item => (
-								<li
-									draggable
-									key={item.id}
-									onDragStart={(e) => handleDragStart(e, item)}
-									onDragEnd={handleDragEnd}
-									className="cursor-pointer">
-									<BgBox variant="child">
-										{groupItemsRenderer(item)}
-									</BgBox>
-								</li>
-							))}
-							{group.items.length === 0 && <>
-								<ListResultEmptyDisplay className="text-center" />
-							</>}
-						</ul>
-					</BgBox>
-				</li>
-			))}
-		</ul>
-	);
+	return !isLoading
+		? (
+			<ul
+				className={`${className} grid grid-cols-3 gap-4 list-none p-4`}
+				{...props}>
+				{groups.map(group => (
+					<li
+						onDrop={(e) => handleOnDrop(e, group.name)}
+						onDragEnter={e => handleOnDragEnter(e, group.name)}
+						onDragOver={e => handleOnDragOver(e, group.name)}
+						key={group.name}
+						className={"transform transition-all border-cyan-500 rounded-md"}>
+						<BgBox className="rounded-b-none border-b text-center">
+							{group.name}
+						</BgBox>
+						<BgBox className={classNames("rounded-t-none relative", {
+							"border-2 border-cyan-500 border-dashed": recentDraggedOverGroupName === group.name && isDragging
+						})}>
+							{recentDraggedOverGroupName === group.name && recentDroppedGroupIsLoading &&
+								<Box className="rounded-b-md bg-black opacity-60 absolute inset-0 z-10">
+									<LoadingRipple centered />
+								</Box>
+							}
+							<ul
+								ref={(listRef) => listRef && autoAnimate(listRef)}
+								className='list-none flex flex-col gap-4'>
+								{group.items.map(item => (
+									<li
+										draggable
+										key={item.id}
+										onDragStart={(e) => handleDragStart(e, item)}
+										onDragEnd={handleDragEnd}
+										className="cursor-pointer">
+										<BgBox variant="child">
+											{groupItemsRenderer(item)}
+										</BgBox>
+									</li>
+								))}
+								{group.items.length === 0 && <>
+									<ListResultEmptyDisplay className="text-center" />
+								</>}
+							</ul>
+						</BgBox>
+					</li>
+				))}
+			</ul>
+		)
+		: <KanbanBoardSkeleton />
 }
 
 export default Kanbanboard;
