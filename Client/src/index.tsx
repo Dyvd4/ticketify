@@ -25,7 +25,7 @@ import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
 import UserSettingsIndex from "./pages/UserSettings/Index";
 import "./styles/index.scss";
-import "./styles/tailwind.output.css";
+import "./styles/tailwind.scss";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
