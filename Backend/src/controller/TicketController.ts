@@ -8,10 +8,13 @@ import FileService from "@core/services/FileService";
 import { getTicket } from "@core/services/TicketService";
 import InfiniteLoader from '@lib/list/InfiniteLoader';
 import Pager from '@lib/list/Pager';
+import ListResult from "@lib/list/result/ListResult";
 import { multipleFileUpload, withErrorHandling } from '@lib/middlewares/FileUpload';
 import { isImageFile } from '@lib/utils/FileUtils';
 import prisma from "@prisma";
+import { Ticket } from "@prisma/client";
 import express from 'express';
+import Joi from "joi";
 
 const Router = express.Router();
 Router.use("/ticket", authentication())
@@ -38,6 +41,31 @@ Router.get('/tickets/:excludeIds?', async (req, res, next) => {
         });
         const ticketsCount = await prisma.ticket.count();
         res.json(pager.getResult(tickets, ticketsCount));
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.get("/tickets/assigned/groupedByStatus", async (req, res, next) => {
+    try {
+        const tickets = await prisma.ticket.findMany({
+            include: {
+                priority: true
+            },
+            where: {
+                responsibleUserId: getCurrentUser().id
+            }
+        });
+
+        const ticketStatuses = (await prisma.ticketStatus.findMany())
+
+        res.json(new ListResult(ticketStatuses.map(status => {
+            return {
+                name: status.name,
+                items: tickets.filter(ticket => ticket.statusId === status.id)
+            }
+        })));
     }
     catch (e) {
         next(e)
@@ -138,6 +166,31 @@ Router.post('/ticket', multipleFileUpload, async (req, res, next) => {
         });
 
         res.json(newTicket);
+    }
+    catch (e) {
+        next(e)
+    }
+});
+
+Router.put('/ticket/status/:id', async (req, res, next) => {
+    const { id } = req.params;
+    let payload = req.body;
+    
+    try {
+        const validation = Joi.object<Ticket>({
+            statusId: Joi.string().required()
+        }).validate(payload);
+
+        if (validation.error) return res.status(400).json({ validation });
+        payload = validation.value;
+
+        const updatedTicket = await prisma.ticket.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: payload
+        })
+        res.json(updatedTicket);
     }
     catch (e) {
         next(e)
