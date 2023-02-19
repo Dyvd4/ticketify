@@ -28,7 +28,7 @@ type _KanbanboardProps<T extends { id: any }> = {
 	 * @param item
 	 * the dropped item
 	 */
-	onDrop?(item: T): void
+	onDrop?(groupName: string, item: T): void
 	/**
 	 * Triggered initially and before setting state
 	 */
@@ -136,7 +136,7 @@ function Kanbanboard<T extends { id: any }>({
 			groupsCopy[groupsCopy.findIndex(group => group.name === groupName)].items.push(droppedGroupItem)
 
 			setGroups(getSortedGroups(groupsCopy));
-			onDrop?.(droppedGroupItem)
+			onDrop?.(groupName, droppedGroupItem)
 
 		}
 
@@ -146,7 +146,7 @@ function Kanbanboard<T extends { id: any }>({
 	return !isLoading
 		? (
 			<ul
-				className={`${className} grid grid-cols-3 gap-4 list-none p-4`}
+				className={`grid grid-cols-3 gap-4 list-none ${className}`}
 				{...props}>
 				{groups.map(group => (
 					<li
