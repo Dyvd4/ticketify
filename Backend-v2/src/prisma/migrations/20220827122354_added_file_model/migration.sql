@@ -1,0 +1,30 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- CreateTable
+CREATE TABLE [dbo].[File] (
+    [id] NVARCHAR(100) NOT NULL,
+    [fileName] NVARCHAR(100) NOT NULL,
+    [originalFilename] NVARCHAR(100) NOT NULL,
+    [mimeType] NVARCHAR(20) NOT NULL,
+    [content] VARBINARY(max) NOT NULL,
+    [createdAt] DATETIME2 CONSTRAINT [File_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2,
+    [createUser] NVARCHAR(100),
+    [updateUser] NVARCHAR(100),
+    CONSTRAINT [File_pkey] PRIMARY KEY CLUSTERED ([id])
+);
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH
