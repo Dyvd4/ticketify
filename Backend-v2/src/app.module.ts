@@ -9,7 +9,7 @@ import { GlobalModule } from './global/global.module';
 			isGlobal: true,
 			load: [config]
 		}),
-		GlobalModule
+		GlobalModule,
 	],
 	controllers: [],
 	providers: [],
