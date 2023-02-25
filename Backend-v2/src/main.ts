@@ -17,8 +17,11 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("api/swagger", app, document)
 
-	// Validation pipe
-	app.useGlobalPipes(new ValidationPipe())
+	// Validation pipes
+	app.useGlobalPipes(new ValidationPipe({
+		whitelist: true,
+		transform: true
+	}));
 
 	// start
 	await app.listen(8080);
