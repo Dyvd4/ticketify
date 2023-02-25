@@ -19,7 +19,8 @@ const config = {
 	SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
 	PORT: process.env.PORT!,
 	VALID_IMAGETYPES_REGEX: process.env.VALID_IMAGETYPES_REGEX!,
-	HTML_EMAIL_TEMPLATES_PATH: path.join(__dirname, "./core/mail-delivery/html-templates")
+	ASSETS_PATH: path.join(__dirname, "assets"),
+	HTML_EMAIL_TEMPLATES_PATH: path.join(__dirname, "assets/html-templates")
 }
 
 export type Config = typeof config;
