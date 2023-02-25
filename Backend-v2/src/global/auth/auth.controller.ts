@@ -100,9 +100,7 @@ export class AuthController {
 			}
 		}, this.JWT_SECRET_KEY);
 
-		// FIXME: TypeError: Class constructor URL cannot be invoked without 'new'
-		// this is bc babel compiles into es5 which has problems with es6 classes?
-		// this.authMailDeliveryService.sendEmailConfirmationEmail(user);
+		this.authMailDeliveryService.sendEmailConfirmationEmail(user);
 
 		return {
 			message: "Successfully created user",

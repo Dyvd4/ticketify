@@ -4,7 +4,6 @@ import fs from "fs/promises";
 import Handlebars from "handlebars";
 import { Config } from "src/config";
 
-// FIXME: handlebars compilation
 @Injectable()
 export class MailTemplateProvider {
 
