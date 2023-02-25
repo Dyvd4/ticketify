@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { MailModule } from 'src/mail/mail.module';
+import { MailModule } from '@mail/mail.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';

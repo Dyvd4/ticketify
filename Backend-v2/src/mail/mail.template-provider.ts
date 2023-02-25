@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import fs from "fs/promises";
 import Handlebars from "handlebars";
-import { Config } from "src/config";
+import { Config } from "@config";
 
 @Injectable()
 export class MailTemplateProvider {

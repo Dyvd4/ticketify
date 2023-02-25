@@ -2,8 +2,8 @@ import { HttpException, Injectable, NotFoundException, UnauthorizedException } f
 import { ConfigService } from "@nestjs/config";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { Config } from "src/config";
-import { PrismaService } from "src/global/database/database.prisma.service";
+import { Config } from "@config";
+import { PrismaService } from "@database/database.prisma.service";
 
 export interface AuthenticationParams {
 	/** If set to true, checks if user is half authenticated instead of full.

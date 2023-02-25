@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Config } from 'src/config';
-import { PrismaService } from '../database/database.prisma.service';
+import { PrismaService } from '@database/database.prisma.service';
 import { Auth } from './auth.decorator';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';
 import { UserSignInDto, UserSignUpDto } from './auth.user.dtos';

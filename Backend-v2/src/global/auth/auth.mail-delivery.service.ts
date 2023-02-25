@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { Config } from "src/config";
-import { MailTemplateProvider } from "src/mail/mail.template-provider";
-import MailTransporter from "src/mail/mail.transporter";
+import { Config } from "@config";
+import { MailTemplateProvider } from "@mail/mail.template-provider";
+import MailTransporter from "@mail/mail.transporter";
 
 @Injectable()
 export class AuthMailDeliveryService {
