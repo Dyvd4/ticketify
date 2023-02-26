@@ -1,19 +1,16 @@
 import config from "@config";
-import { DatabaseModule } from "@database/database.module";
 import { PrismaService } from "@database/database.prisma.service";
 import { PrismaService as MockPrismaService } from "@database/__mocks__/database.prisma.service";
-import { MailModule } from "@mail/mail.module";
+import { MailTemplateProvider } from "@mail/mail.template-provider";
 import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
-import { PrismaClient, User } from "@prisma/client";
-import { DeepMockProxy } from "jest-mock-extended";
+import { User } from "@prisma/client";
+import bcrypt from "bcrypt";
 import request from "supertest";
 import { AuthController } from "./auth.controller";
 import { AuthMailDeliveryService } from "./auth.mail-delivery.service";
-import { AuthModule } from "./auth.module";
 import { UserSignInDto, UserSignUpDto } from "./auth.user.dtos";
-import bcrypt from "bcrypt";
 
 const dummyUser: User = {
 	id: "12345",
@@ -30,32 +27,25 @@ const dummyUser: User = {
 describe("AuthController", () => {
 
 	let app: INestApplication
-	let prismaServiceMock: DeepMockProxy<PrismaClient>;
+	const prismaServiceMock = MockPrismaService;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [
 				ConfigModule.forRoot({
 					isGlobal: true,
 					load: [config]
-				}),
-				AuthModule,
-				DatabaseModule,
-				MailModule
+				})
 			],
+			providers: [PrismaService, AuthMailDeliveryService, MailTemplateProvider],
 			controllers: [AuthController],
-			providers: [AuthMailDeliveryService],
-		}).useMocker((token) => {
-			if (token === PrismaService) {
-				prismaServiceMock = MockPrismaService
-				return prismaServiceMock;
-			}
-			if (token === AuthMailDeliveryService) {
-				return {
-					sendEmailConfirmationEmail: jest.fn()
-				}
-			}
-		}).compile();
+		})
+			.overrideProvider(PrismaService)
+			.useValue(prismaServiceMock)
+			.overrideProvider(AuthMailDeliveryService)
+			.useValue({
+				sendEmailConfirmationEmail: jest.fn()
+			}).compile();
 
 		app = moduleRef.createNestApplication();
 		await app.init();
@@ -122,6 +112,7 @@ describe("AuthController", () => {
 	})
 
 	describe("/POST signUp", () => {
+
 		it("checks for existing user", () => {
 
 			prismaServiceMock.user.findFirst.mockResolvedValue(dummyUser);
@@ -166,4 +157,5 @@ describe("AuthController", () => {
 	afterAll(async () => {
 		await app.close();
 	});
+
 });
