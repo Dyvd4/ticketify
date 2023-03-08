@@ -10,11 +10,17 @@ services:
       - rest-sql-server-data:/var/opt/mssql/data
     user: root
   rest-api:
+    build: 
+      target: dev 
+      dockerfile: Dockerfile
     image: ticketify
     ports:
       - 8080:8080
     env_file:
-      - ../.env
+      - .env
+    volumes:
+      - .:/api
+      - /api/node_modules
     depends_on:
       - rest-sql-server
 volumes:
