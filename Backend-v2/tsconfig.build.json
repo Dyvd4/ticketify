@@ -2,6 +2,7 @@
 	"extends": "./tsconfig.json",
 	"exclude": [
 		"**/*spec.ts",
-		"**/__mocks__/*"
+		"**/__mocks__/*",
+		"./dist"
 	]
 }
