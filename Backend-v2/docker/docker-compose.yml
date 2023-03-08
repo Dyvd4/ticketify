@@ -1,0 +1,21 @@
+version: '1'
+services:
+  rest-sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1234:1234
+    env_file:
+      - docker.rest-sql-server.env
+    volumes:
+      - rest-sql-server-data:/var/opt/mssql/data
+    user: root
+  rest-api:
+    image: ticketify
+    ports:
+      - 8080:8080
+    env_file:
+      - ../.env
+    depends_on:
+      - rest-sql-server
+volumes:
+  rest-sql-server-data:
