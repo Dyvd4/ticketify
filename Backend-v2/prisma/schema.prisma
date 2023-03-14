@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String               @id @default(uuid()) @db.NVarChar(100)
+  username            String               @unique @db.NVarChar(100)
+  password            String               @db.NVarChar(100)
+  email               String?              @unique @db.NVarChar(100)
+  emailConfirmed      Boolean              @default(false)
+  createdAt           DateTime?            @default(now())
+  updatedAt           DateTime?            @updatedAt
+  createUser          String?              @db.NVarChar(100)
+  updateUser          String?              @db.NVarChar(100)
+  tickets             Ticket[]
+  avatar              FileOnUser?
+  comments            Comment[]
+  commentInteractions CommentInteraction[]
+  ticketActivities    TicketActivity[]
+  settings            UserSettings?
+  watchingTickets     TicketWatcher[]
+}
+
+model UserSettings {
+  id                             String    @id @default(uuid()) @db.NVarChar(100)
+  userId                         String    @unique() @db.NVarChar(100)
+  user                           User      @relation(fields: [userId], references: [id])
+  allowSortItemsByUrl            Boolean   @default(false)
+  allowFilterItemsByUrl          Boolean   @default(false)
+  allowSortItemsByLocalStorage   Boolean   @default(false)
+  allowFilterItemsByLocalStorage Boolean   @default(false)
+  createdAt                      DateTime? @default(now())
+  updatedAt                      DateTime? @updatedAt
+  createUser                     String?   @db.NVarChar(100)
+  updateUser                     String?   @db.NVarChar(100)
+}
+
+model TicketWatcher {
+  userId     String    @db.NVarChar(100)
+  user       User      @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  ticketId   Int       @db.Int
+  ticket     Ticket    @relation(fields: [ticketId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+
+  @@id([userId, ticketId])
+}
+
+model Ticket {
+  id                 Int              @id @default(autoincrement()) @db.Int
+  title              String           @db.NVarChar(100)
+  responsibleUserId  String?          @db.NVarChar(100)
+  responsibleUser    User?            @relation(references: [id], fields: [responsibleUserId])
+  description        String           @db.NVarChar(max)
+  dueDate            DateTime?        @db.DateTime
+  priorityId         String           @db.NVarChar(100)
+  priority           TicketPriority   @relation(references: [id], fields: [priorityId])
+  createdAt          DateTime?        @default(now())
+  updatedAt          DateTime?        @updatedAt
+  createUser         String?          @db.NVarChar(100)
+  updateUser         String?          @db.NVarChar(100)
+  statusId           String           @db.NVarChar(100)
+  status             TicketStatus     @relation(fields: [statusId], references: [id])
+  attachments        FileOnTicket[]
+  comments           Comment[]
+  activities         TicketActivity[]
+  connectedByTickets TicketOnTicket[] @relation("connectedByTickets")
+  connectedToTickets TicketOnTicket[] @relation("connectedToTickets")
+  watchingUsers      TicketWatcher[]
+}
+
+model TicketOnTicket {
+  connectedByTicketId Int       @db.Int
+  connectedByTicket   Ticket    @relation("connectedToTickets", fields: [connectedByTicketId], references: [id], onUpdate: NoAction)
+  connectedToTicketId Int       @db.Int
+  connectedToTicket   Ticket    @relation("connectedByTickets", fields: [connectedToTicketId], references: [id])
+  createdAt           DateTime? @default(now())
+  updatedAt           DateTime? @updatedAt
+  createUser          String?   @db.NVarChar(100)
+  updateUser          String?   @db.NVarChar(100)
+
+  @@unique([connectedByTicketId, connectedToTicketId])
+}
+
+model TicketPriority {
+  id         String    @id @default(uuid()) @db.NVarChar(100)
+  color      String    @db.NVarChar(50)
+  name       String    @db.NVarChar(50)
+  tickets    Ticket[]
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+}
+
+model TicketStatus {
+  id         String    @id @default(uuid()) @db.NVarChar(100)
+  color      String    @db.NVarChar(50)
+  name       String    @db.NVarChar(50)
+  priority   Int?      @default(0) @db.Int
+  tickets    Ticket[]
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+}
+
+model Comment {
+  id           String               @id @default(uuid()) @db.NVarChar(100)
+  ticketId     Int                  @db.Int
+  ticket       Ticket               @relation(fields: [ticketId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  content      String               @db.NVarChar(1000)
+  authorId     String               @db.NVarChar(100)
+  author       User                 @relation(fields: [authorId], references: [id])
+  createdAt    DateTime?            @default(now())
+  updatedAt    DateTime?            @updatedAt
+  createUser   String?              @db.NVarChar(100)
+  updateUser   String?              @db.NVarChar(100)
+  parentId     String?              @db.NVarChar(100)
+  parent       Comment?             @relation("childs", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childs       Comment[]            @relation("childs")
+  interactions CommentInteraction[]
+}
+
+model CommentInteraction {
+  id            String    @id @default(uuid()) @db.NVarChar(100)
+  type          String    @db.NVarChar(100)
+  createdFromId String    @db.NVarChar(100)
+  createdFrom   User      @relation(fields: [createdFromId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  commentId     String    @db.NVarChar(100)
+  comment       Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  createUser    String?   @db.NVarChar(100)
+  updateUser    String?   @db.NVarChar(100)
+
+  @@unique([type, createdFromId, commentId])
+}
+
+model TicketDueDate {
+  durationInMinutes Int       @unique @db.Int
+  color             String    @db.NVarChar(50)
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+  createUser        String?   @db.NVarChar(100)
+  updateUser        String?   @db.NVarChar(100)
+}
+
+model Test {
+  id          Int       @id @default(autoincrement())
+  isAmazing   Boolean   @db.Bit
+  description String    @db.NVarChar(100)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  createUser  String?   @db.NVarChar(100)
+  updateUser  String?   @db.NVarChar(100)
+}
+
+model File {
+  id               String         @id @default(uuid()) @db.NVarChar(100)
+  fileName         String         @db.NVarChar(100)
+  originalFileName String         @db.NVarChar(100)
+  mimeType         String         @db.NVarChar(100)
+  createdAt        DateTime?      @default(now())
+  updatedAt        DateTime?      @updatedAt
+  createUser       String?        @db.NVarChar(100)
+  updateUser       String?        @db.NVarChar(100)
+  tickets          FileOnTicket[]
+  avatars          FileOnUser[]
+}
+
+model FileOnTicket {
+  fileId     String    @db.NVarChar(100)
+  file       File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  ticketId   Int       @db.Int
+  ticket     Ticket    @relation(fields: [ticketId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+
+  @@id([fileId, ticketId])
+}
+
+model FileOnUser {
+  fileId     String    @db.NVarChar(100)
+  file       File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  userId     String    @unique @db.NVarChar(100)
+  user       User      @relation(fields: [userId], references: [id])
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  createUser String?   @db.NVarChar(100)
+  updateUser String?   @db.NVarChar(100)
+
+  @@id([fileId, userId])
+}
+
+model TicketActivity {
+  id            String    @id @default(uuid()) @db.NVarChar(100)
+  ticketId      Int       @db.Int
+  ticket        Ticket    @relation(fields: [ticketId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  title         String
+  description   String?
+  icon          String?   @db.NVarChar(100)
+  color         String?   @db.NVarChar(100)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  createdFromId String    @db.NVarChar(100)
+  createdFrom   User      @relation(fields: [createdFromId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createUser    String?   @db.NVarChar(100)
+  updateUser    String?   @db.NVarChar(100)
+}
+
+model Log {
+  id           String    @id @default(uuid()) @db.NVarChar(100)
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
+  createUser   String?   @db.NVarChar(100)
+  updateUser   String?   @db.NVarChar(100)
+  level        String    @db.NVarChar(20)
+  message      String    @db.NVarChar(255)
+  errorMessage String?   @db.NVarChar(max)
+  errorStack   String?   @db.NVarChar(max)
+  color        String?   @db.NVarChar(50)
+  icon         String?   @db.NVarChar(50)
+}
