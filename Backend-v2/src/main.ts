@@ -12,11 +12,7 @@ async function bootstrap() {
 		.setTitle("Ticketify api")
 		.setDescription("This is the api of ticketify")
 		.setVersion("1.0")
-		.addBearerAuth({
-			type: "apiKey",
-			name: "Authorization",
-			in: "header"
-		})
+		.addCookieAuth("auth-token")
 		.build()
 
 	const document = SwaggerModule.createDocument(app, config);

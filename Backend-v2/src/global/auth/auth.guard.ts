@@ -30,10 +30,10 @@ export class AuthGuard implements CanActivate {
 			context.getHandler(),
 			context.getClass()
 		]);
-		
+
 		if (args?.disable) return true;
-		
-		const encodedAuthToken = request.header("Authorization")?.split("Bearer ")[1];
+
+		const encodedAuthToken = request.header("Cookie")?.split("auth-token=")[1];
 
 		if (!encodedAuthToken) {
 			throw new UnauthorizedException("Authorization token using the Bearer syntax has to be provided");

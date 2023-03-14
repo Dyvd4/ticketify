@@ -7,6 +7,9 @@ import { PrismaService } from '@database/database.prisma.service';
 import { Auth } from './auth.decorator';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';
 import { UserSignInDto, UserSignUpDto } from './auth.user.dtos';
+import { Res } from '@nestjs/common';
+import { Response } from 'express';
+import dayjs from 'dayjs';
 
 @Auth({
 	disable: true
@@ -27,6 +30,7 @@ export class AuthController {
 	@Post('signIn')
 	async signIn(
 		@Body() { username, password }: UserSignInDto,
+		@Res() response: Response
 	) {
 		const { prisma } = this;
 
@@ -50,10 +54,12 @@ export class AuthController {
 			}
 		}, this.JWT_SECRET_KEY);
 
-		return {
-			message: "Successfully signed in user",
-			authToken
-		};
+		return response
+			.status(201)
+			.cookie("auth-token", authToken, {
+				expires: dayjs().add(7, "day").toDate()
+			})
+			.send();
 	}
 
 	@Post('signUp')
