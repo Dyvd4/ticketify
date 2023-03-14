@@ -9,19 +9,22 @@ services:
     volumes:
       - rest-sql-server-data:/var/opt/mssql/data
     user: root
-  rest-api:
-    build: 
-      target: dev 
-      dockerfile: Dockerfile
-    image: ticketify
-    ports:
-      - 8080:8080
-    env_file:
-      - .env
-    volumes:
-      - .:/api
-      - /api/node_modules
-    depends_on:
-      - rest-sql-server
+  # FIXME: bind mount not detecting file changes
+  # run sql server in container and rest api locally instead
+  
+  # rest-api:
+  #   build: 
+  #     target: dev 
+  #     dockerfile: Dockerfile
+  #   image: ticketify
+  #   ports:
+  #     - 8080:8080
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/api
+  #     - /api/node_modules
+  #   depends_on:
+  #     - rest-sql-server
 volumes:
   rest-sql-server-data:
