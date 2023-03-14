@@ -1,23 +1,22 @@
-import { BadRequestException, Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { PrismaService } from '@database/database.prisma.service';
+import { BadRequestException, Body, Controller, Get, Param, Post, Res, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { User as TUser } from '@prisma/client';
 import bcrypt from "bcrypt";
+import dayjs from 'dayjs';
+import { Response } from 'express';
 import jwt from "jsonwebtoken";
 import { Config } from 'src/config';
-import { PrismaService } from '@database/database.prisma.service';
 import { Auth } from './auth.decorator';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';
+import { User } from './auth.user.decorator';
 import { UserSignInDto, UserSignUpDto } from './auth.user.dtos';
-import { Res } from '@nestjs/common';
-import { Response } from 'express';
-import dayjs from 'dayjs';
 
-@Auth({
-	disable: true
-})
 @Controller('auth')
 export class AuthController {
 
 	private JWT_SECRET_KEY: string
+	private CLIENT_URL: string
 
 	constructor(
 		private prisma: PrismaService,
@@ -25,8 +24,12 @@ export class AuthController {
 		configService: ConfigService
 	) {
 		this.JWT_SECRET_KEY = configService.get<Config>("JWT_SECRET_KEY", { infer: true })
+		this.CLIENT_URL = configService.get<Config>("CLIENT_URL", { infer: true })
 	}
 
+	@Auth({
+		disable: true
+	})
 	@Post('signIn')
 	async signIn(
 		@Body() { username, password }: UserSignInDto,
@@ -62,6 +65,9 @@ export class AuthController {
 			.send();
 	}
 
+	@Auth({
+		disable: true
+	})
 	@Post('signUp')
 	async signUp(
 		@Body() { username, password, email }: UserSignUpDto,
@@ -112,5 +118,48 @@ export class AuthController {
 			message: "Successfully created user",
 			authToken
 		};
+	}
+
+	@Auth({
+		ignoreEmailConfirmation: true
+	})
+	@Post('confirmEmail')
+	async createConfirmationEmail(
+		@User() requestUser: TUser
+	) {
+		const { prisma } = this;
+
+		const user = await prisma.user.findFirst({
+			where: {
+				id: requestUser.id
+			}
+		});
+
+		await this.authMailDeliveryService.sendEmailConfirmationEmail(user!);
+
+		return "Successfully sent e-mail";
+	}
+
+	@Auth({
+		ignoreEmailConfirmation: true
+	})
+	@Get('confirmEmail/:redirectToken')
+	async confirmConfirmationEmail(
+		@Param("redirectToken") redirectToken: string,
+		@Res() res: Response
+	) {
+		const { prisma, JWT_SECRET_KEY, CLIENT_URL } = this;
+		const { data: { userId } } = jwt.verify(redirectToken, JWT_SECRET_KEY) as { data: { userId: string } };
+
+		await prisma.user.update({
+			where: {
+				id: userId
+			},
+			data: {
+				emailConfirmed: true
+			}
+		});
+
+		return res.redirect(`${CLIENT_URL}/Auth/EmailConfirmed`);
 	}
 }

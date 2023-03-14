@@ -20,6 +20,7 @@ import { AuthService } from './auth.service';
 	controllers: [AuthController],
 	exports: [
 		AuthService,
+		AuthMailDeliveryService
 	]
 })
 export class AuthModule { }
