@@ -3,6 +3,6 @@
 	"exclude": [
 		"**/*spec.ts",
 		"**/__mocks__/*",
-		"./dist"
+		"dist/**/*"
 	]
 }

@@ -22,7 +22,7 @@
 		"resolveJsonModule": true,
 		"paths": {
 			"@config": [
-				"src/config.ts"
+				"src/config"
 			],
 			"@mail/*": [
 				"src/mail/*"
