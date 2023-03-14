@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
 		const encodedAuthToken = request.header("Cookie")?.split("auth-token=")[1];
 
 		if (!encodedAuthToken) {
-			throw new UnauthorizedException("Authorization token using the Bearer syntax has to be provided");
+			throw new UnauthorizedException("auth-token in the cookie header has to be provided. This normally happens automatically when receiving the response from the sign in route due to the Set-Cookie header.");
 		}
 
 		const encodedUserIdOrError = await this.authService.authorize(encodedAuthToken, args);

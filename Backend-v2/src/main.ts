@@ -6,7 +6,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-
+	app.setGlobalPrefix("api")
+	
 	// Swagger
 	const config = new DocumentBuilder()
 		.setTitle("Ticketify api")
@@ -18,7 +19,7 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("api/swagger", app, document)
 
-	// Validation pipes
+	// Validation pipe
 	app.useGlobalPipes(new ValidationPipe({
 		whitelist: true,
 		transform: true
