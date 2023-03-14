@@ -20,7 +20,7 @@ const config = {
 	PORT: process.env.PORT!,
 	VALID_IMAGETYPES_REGEX: process.env.VALID_IMAGETYPES_REGEX!,
 	ASSETS_PATH: path.join(__dirname, "assets"),
-	HTML_EMAIL_TEMPLATES_PATH: path.join(__dirname, "assets/html-templates")
+	HTML_EMAIL_TEMPLATES_PATH: path.join(__dirname, "..", "assets/html-templates")
 }
 
 export type Config = typeof config;
