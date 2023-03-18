@@ -21,6 +21,9 @@
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"paths": {
+			"@src/*": [
+				"src/*"
+			],
 			"@config": [
 				"src/config"
 			],
