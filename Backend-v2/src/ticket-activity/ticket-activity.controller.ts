@@ -1,17 +1,22 @@
 import { PrismaService } from '@database/database.prisma.service';
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiParam } from '@nestjs/swagger';
 import { InfiniteLoader } from "@src/lib/list";
-import { FindAllQueryDto } from './ticket-activity.dtos';
+import { InfiniteLoaderQueryDto } from '@src/lib/list/list.dtos';
 
 @Controller()
 export class TicketActivityController {
 
 	constructor(private readonly prisma: PrismaService) { }
 
-	@Get('ticketActivities')
+	@ApiParam({
+		name: "ticketId",
+		required: false
+	})
+	@Get('ticketActivities/:ticketId?')
 	async findAll(
-		// TODO: test query with client
-		@Query() { ticketId, ...query }: FindAllQueryDto,
+		@Param('ticketId') ticketId: number,
+		@Query() query: InfiniteLoaderQueryDto
 	) {
 
 		const { prisma } = this;
