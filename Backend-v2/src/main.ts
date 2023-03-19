@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
+import { ParseParamPipe } from './global/global.parse-param.pipe';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -20,13 +21,16 @@ async function bootstrap() {
 	SwaggerModule.setup("api/swagger", app, document)
 
 	// Validation pipe
-	app.useGlobalPipes(new ValidationPipe({
-		whitelist: true,
-		transform: true,
-		transformOptions: {
-			enableImplicitConversion: true
-		},
-	}));
+	app.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true,
+			transform: true,
+			transformOptions: {
+				enableImplicitConversion: true
+			},
+		}),
+		new ParseParamPipe()
+	);
 
 	// start
 	await app.listen(8080);
