@@ -8,6 +8,7 @@ import { TicketActivityModule } from './ticket-activity/ticket-activity.module';
 import { TicketModule } from './ticket/ticket.module';
 import { TicketDueDateModule } from './ticket-due-date/ticket-due-date.module';
 import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module';
+import { TicketPriorityModule } from './ticket-priority/ticket-priority.module';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module
 		TicketActivityModule,
 		TicketModule,
 		TicketDueDateModule,
-		TicketOnTicketModule
+		TicketOnTicketModule,
+		TicketPriorityModule
 	],
 	controllers: [TestController],
 	providers: [],
