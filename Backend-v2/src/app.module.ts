@@ -7,6 +7,7 @@ import { CommentInteractionModule } from './comment-interaction/comment-interact
 import { TicketActivityModule } from './ticket-activity/ticket-activity.module';
 import { TicketModule } from './ticket/ticket.module';
 import { TicketDueDateModule } from './ticket-due-date/ticket-due-date.module';
+import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module';
 
 @Module({
 	imports: [
@@ -16,7 +17,8 @@ import { TicketDueDateModule } from './ticket-due-date/ticket-due-date.module';
 		CommentInteractionModule,
 		TicketActivityModule,
 		TicketModule,
-		TicketDueDateModule
+		TicketDueDateModule,
+		TicketOnTicketModule
 	],
 	controllers: [TestController],
 	providers: [],
