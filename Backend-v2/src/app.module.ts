@@ -11,6 +11,7 @@ import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module
 import { TicketPriorityModule } from './ticket-priority/ticket-priority.module';
 import { TicketStatusModule } from './ticket-status/ticket-status.module';
 import { TicketWatcherModule } from './ticket-watcher/ticket-watcher.module';
+import { UserSettingsModule } from './user-settings/user-settings.module';
 
 @Module({
 	imports: [
@@ -24,7 +25,8 @@ import { TicketWatcherModule } from './ticket-watcher/ticket-watcher.module';
 		TicketOnTicketModule,
 		TicketPriorityModule,
 		TicketStatusModule,
-		TicketWatcherModule
+		TicketWatcherModule,
+		UserSettingsModule
 	],
 	controllers: [TestController],
 	providers: [],
