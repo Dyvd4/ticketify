@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
 import { CommentModule } from './comment/comment.module';
 import { GlobalModule } from './global/global.module';
-import { TestController } from './test/test.controller';
-import { UserModule } from './user/user.module';
+import { DummyModule } from './dummy/dummy.module';
 import { TicketModule } from './ticket/ticket.module';
+import { UserModule } from './user/user.module';
 
 @Module({
 	imports: [
 		GlobalModule,
 		UserModule,
 		CommentModule,
-		TicketModule
+		TicketModule,
+		DummyModule
 	],
-	controllers: [TestController],
+	controllers: [],
 	providers: [],
 })
 export class AppModule { }
