@@ -1,5 +1,7 @@
 import path from "path";
 
+const NODE_ENV = process.env.NODE_ENV!;
+
 const config = {
 	LOG_PATH: path.join(__dirname, "../logs", "/"),
 	JWT_SECRET_KEY: process.env.JWT_SECRET_KEY!,
@@ -19,8 +21,14 @@ const config = {
 	SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
 	PORT: process.env.PORT!,
 	VALID_IMAGETYPES_REGEX: process.env.VALID_IMAGETYPES_REGEX!,
-	ASSETS_PATH: path.join(__dirname, "assets"),
-	HTML_EMAIL_TEMPLATES_PATH: path.join(__dirname, "assets/html-templates"),
+	get ASSETS_PATH() {
+		return NODE_ENV === "test"
+			? path.join(__dirname, "assets")
+			: path.join(__dirname, "../", "assets")
+	},
+	get HTML_EMAIL_TEMPLATES_PATH() {
+		return path.join(this.ASSETS_PATH, "html-templates");
+	},
 }
 
 export type Config = typeof config;
