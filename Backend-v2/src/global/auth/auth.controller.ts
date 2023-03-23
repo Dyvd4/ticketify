@@ -60,9 +60,14 @@ export class AuthController {
 		return response
 			.status(201)
 			.cookie("auth-token", authToken, {
-				expires: dayjs().add(7, "day").toDate()
+				expires: dayjs().add(7, "day").toDate(),
+				sameSite: "none",
+				secure: true
 			})
-			.send();
+			.json({
+				message: "Successfully signed in",
+				authToken
+			})
 	}
 
 	@Auth({
@@ -71,6 +76,7 @@ export class AuthController {
 	@Post('signUp')
 	async signUp(
 		@Body() { username, password, email }: UserSignUpDto,
+		@Res() response: Response
 	) {
 		const { prisma } = this;
 
@@ -114,10 +120,31 @@ export class AuthController {
 
 		this.authMailDeliveryService.sendEmailConfirmationEmail(user);
 
-		return {
-			message: "Successfully created user",
-			authToken
-		};
+		return response
+			.status(201)
+			.cookie("auth-token", authToken, {
+				expires: dayjs().add(7, "day").toDate(),
+				sameSite: "none",
+				secure: true
+			})
+			.json({
+				message: "Successfully created user",
+				authToken
+			});
+	}
+
+	@Auth({
+		disable: true
+	})
+	@Post('signOut')
+	async signOut(@Res() res: Response) {
+		return res
+			.status(201)
+			.clearCookie("auth-token", {
+				sameSite: "none",
+				secure: true
+			})
+			.json("Sent cookie header that expires instantly in order to sign out")
 	}
 
 	@Auth({
