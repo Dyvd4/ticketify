@@ -13,7 +13,7 @@ class InfiniteLoader<T> extends List {
 		itemsPerLoad = ITEMS_PER_LOAD,
 	) {
 		const prismaArgs = {
-			skip: skip || 0,
+			skip,
 			take: itemsPerLoad
 		};
 		super(prismaFilter, prismaOrderBy, prismaArgs, itemsPerLoad);

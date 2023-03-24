@@ -11,7 +11,7 @@ export const useInfiniteQuery = <TQueryFnData = unknown, TError = unknown, TData
             ...fetchEntityArgs,
             queryParams: {
                 ...fetchEntityArgs.queryParams,
-                skip: pageParam
+                skip: pageParam || 0
             }
         });
     }, {
