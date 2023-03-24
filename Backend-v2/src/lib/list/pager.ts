@@ -11,10 +11,10 @@ class Pager<T> extends List {
 	constructor(
 		prismaFilter: string,
 		prismaOrderBy: string,
-		page: number,
+		currentPage: number,
 		itemsPerLoad = ITEMS_PER_PAGE
 	) {
-		const currentPage = page || 1;
+
 		const skip = (currentPage - 1) * itemsPerLoad;
 
 		const prismaArgs = {
