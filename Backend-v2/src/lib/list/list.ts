@@ -1,20 +1,20 @@
 import Object from "lodash";
 import { ListResultPrismaArgs } from ".";
 
-type FilterItemProps = {
+export type FilterQueryParam = {
 	type: FilterOperationsType
 	property: string
 	value?: string
 	operation?: Omit<FilterOperation, "label">
 	disabled?: boolean
 }
-type FilterOperationsType = "string" | "number" | "date" | "boolean"
-type FilterOperation = {
+export type FilterOperationsType = "string" | "number" | "date" | "boolean"
+export type FilterOperation = {
 	label: string
 	value: string
 }
-type FilterQueryParams = Array<FilterItemProps>
-type OrderByQueryParam = {
+export type FilterQueryParams = Array<FilterQueryParam>
+export type OrderByQueryParam = {
 	property: string
 	direction: {
 		label: string
@@ -22,31 +22,32 @@ type OrderByQueryParam = {
 	},
 	disabled: boolean
 }
-type OrderByQueryParams = Array<OrderByQueryParam>
+export type OrderByQueryParams = Array<OrderByQueryParam>
 
 export default class List {
 
 	protected prismaArgs: ListResultPrismaArgs;
-	private stringifiedPrismaFilter: string;
-	private stringifiedPrismOrderBy: string
 	protected itemsPerLoad: number
 
-	constructor(prismaFilter: string, prismaOrderBy: string, prismaArgs: ListResultPrismaArgs, itemsPerLoad: number) {
-		this.stringifiedPrismaFilter = prismaFilter;
-		this.stringifiedPrismOrderBy = prismaOrderBy;
+	constructor(
+		private prismaFilter: FilterQueryParams,
+		private prismaOrderBy: OrderByQueryParams | OrderByQueryParam,
+		prismaArgs: ListResultPrismaArgs,
+		itemsPerLoad: number
+	) {
 		this.prismaArgs = prismaArgs;
 		this.itemsPerLoad = itemsPerLoad;
 	}
 
 	getPrismaArgs = () => this.prismaArgs;
 
-	getPrismaFilterArgs = () => getParsedPrismaFilterArgs(this.stringifiedPrismaFilter);
+	getPrismaFilterArgs = () => getMappedPrismaFilterArgs(this.prismaFilter);
 
-	getPrismaOrderByArgs = () => getParsedPrismaOrderByArgs(this.stringifiedPrismOrderBy);
+	getPrismaOrderByArgs = () => getMappedPrismaOrderByArgs(this.prismaOrderBy);
 }
 
-export const getParsedPrismaFilterArgs = (stringifiedFilter: string) => {
-	const getParsesFilterValue = (value, type: FilterOperationsType) => {
+export const getMappedPrismaFilterArgs = (prismaFilter: FilterQueryParams) => {
+	const getParsedFilterValue = (value, type: FilterOperationsType) => {
 		switch (type) {
 			case "boolean":
 				return Boolean(value)
@@ -59,32 +60,29 @@ export const getParsedPrismaFilterArgs = (stringifiedFilter: string) => {
 		}
 	}
 
-	const filter: FilterQueryParams = JSON.parse(stringifiedFilter);
-	const mappedFilter = filter
+	const mappedFilter = prismaFilter
 		.filter(filter => !filter.disabled)
 		.reduce((map, filter) => {
 			if (filter.value !== null && filter.value !== "") {
-				Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, getParsesFilterValue(filter.value, filter.type));
+				Object.set(map, `AND.${filter.property}.${filter.operation?.value}`, getParsedFilterValue(filter.value, filter.type));
 			}
 			return map;
 		}, {})
 	return mappedFilter;
 }
 
-export const getParsedPrismaOrderByArgs = (stringifiedOrderBy: string) => {
+export const getMappedPrismaOrderByArgs = (prismaOrderBy: OrderByQueryParams | OrderByQueryParam) => {
 	const mappedOrderBy = (orderBy: OrderByQueryParam) => {
 		const orderByObj = {};
 		Object.set(orderByObj, orderBy.property, orderBy.direction.value);
 		return orderByObj;
 	}
 
-	const orderBy: OrderByQueryParams | OrderByQueryParam = JSON.parse(stringifiedOrderBy);
-
-	if ("length" in orderBy) {
-		return orderBy
+	if ("length" in prismaOrderBy) {
+		return prismaOrderBy
 			.filter(orderBy => !orderBy.disabled)
 			.map(mappedOrderBy);
 	}
 
-	return [mappedOrderBy(orderBy)];
+	return [mappedOrderBy(prismaOrderBy)];
 }

@@ -1,4 +1,4 @@
-import List from "./list";
+import List, { FilterQueryParams, OrderByQueryParams } from "./list";
 import { PagerQueryDto } from "./list.dtos";
 import { PagerResult } from "./result";
 
@@ -9,8 +9,8 @@ class Pager<T> extends List {
 	private currentPage: number;
 
 	constructor(
-		prismaFilter: string,
-		prismaOrderBy: string,
+		prismaFilter: FilterQueryParams,
+		prismaOrderBy: OrderByQueryParams,
 		currentPage: number,
 		itemsPerLoad = ITEMS_PER_PAGE
 	) {
@@ -35,8 +35,8 @@ class Pager<T> extends List {
 export default class NestJsPager<T> extends Pager<T> {
 	constructor(queryDto: PagerQueryDto, itemsPerLoad = ITEMS_PER_PAGE) {
 		super(
-			queryDto.filter || "[]",
-			queryDto.orderBy || "[]",
+			queryDto.filter || [],
+			queryDto.orderBy || [],
 			queryDto.page,
 			itemsPerLoad
 		);
