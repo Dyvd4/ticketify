@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import qs from "qs";
 import { request } from "../services/request";
 
 const myRequest = request();
@@ -16,15 +17,11 @@ export type FetchEntityArgs = {
 
 export async function fetchEntity({ route, options, ...args }: FetchEntityArgs) {
 	let mappedRoute = `${route}`;
-	if ("entityId" in args) mappedRoute += `/${args.entityId}`;
+	if ("entityId" in args) {
+		mappedRoute += `/${args.entityId}`;
+	}
 	else if ("queryParams" in args) {
-		const tempURL = new URL(window.location.origin);
-		Object.keys(args.queryParams).forEach(key => {
-			tempURL.searchParams.set(key, typeof args.queryParams[key] === "object"
-				? JSON.stringify(args.queryParams[key])
-				: args.queryParams[key]);
-		});
-		mappedRoute += `/?${tempURL.searchParams.toString()}`;
+		mappedRoute += `/?${qs.stringify(args.queryParams)}`;
 	}
 	const response = await myRequest.get(mappedRoute, options);
 	return response.data;
@@ -49,8 +46,8 @@ export type UpdateEntityArgs = {
 }
 
 export async function updateEntity({ route, entityId, payload, options }: UpdateEntityArgs) {
-	if (entityId) return myRequest.put(`${route}/${entityId}`, payload, options);
-	return myRequest.put(`${route}`, payload, options);
+	if (entityId) return myRequest.patch(`${route}/${entityId}`, payload, options);
+	return myRequest.patch(`${route}`, payload, options);
 }
 
 export type RemoveEntityArgs = {
