@@ -66,7 +66,7 @@ function List(props: ListProps) {
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
     const [queryParams, setQueryParams] = useState<any>({});
-    const [page, setPage] = useUrlParams("page", 1, { jsonParse: true });
+    const [page, setPage] = useUrlParams("page", 1);
 
     // hooks
     // -----
@@ -138,6 +138,7 @@ function List(props: ListProps) {
             ? filterItems
             : sortItems;
 
+        // MayBe: provide a utility for this
         if ((type === "filter" && currentUserSettings.allowFilterItemsByUrl) ||
             (type === "orderBy" && currentUserSettings.allowSortItemsByUrl)) {
             setUrlParam(`${type}-${props.id}`, itemsToSet);
