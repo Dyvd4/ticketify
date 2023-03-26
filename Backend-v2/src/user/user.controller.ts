@@ -10,7 +10,7 @@ import bcrypt from "bcrypt";
 import FileEntityToClientDto from "src/file/file.dtos";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
 
-@Controller("user")
+@Controller()
 @ApiCookieAuth()
 export class UserController {
 
@@ -39,7 +39,7 @@ export class UserController {
 		name: "id",
 		required: false
 	})
-	@Get(":id?/all")
+	@Get("user/:id?/all")
 	async getUserWithAllIncluded(
 		@User() requestUser: TUser,
 		@Param("id") id?: string
@@ -83,7 +83,7 @@ export class UserController {
 		name: "id",
 		required: false
 	})
-	@Get(':id?')
+	@Get('user/:id?')
 	async getUser(
 		@User() requestUser: TUser,
 		@Param("id") id?: string
@@ -103,7 +103,7 @@ export class UserController {
 		return user;
 	}
 
-	@Put('username')
+	@Put('user/username')
 	async updateUsername(
 		@User() requestUser: TUser,
 		@Body() { username }: UpdateUsernameDto
@@ -140,7 +140,7 @@ export class UserController {
 	@Auth({
 		ignoreEmailConfirmation: true
 	})
-	@Put('email')
+	@Put('user/email')
 	async updateEmail(
 		@User() requestUser: TUser,
 		@Body() { email }: UpdateEmailDto
@@ -181,7 +181,7 @@ export class UserController {
 		return updatedUser;
 	}
 
-	@Put('newPassword')
+	@Put('user/newPassword')
 	async updatePassword(
 		@User() requestUser: TUser,
 		@Body() passwordData: NewPasswordDto
@@ -219,7 +219,7 @@ export class UserController {
 	}
 
 	// TODO: s3 upload
-	@Put('avatar')
+	@Put('user/avatar')
 	async updateAvatar(
 		@User() requestUser: TUser
 	) {

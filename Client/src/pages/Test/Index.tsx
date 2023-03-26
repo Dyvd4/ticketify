@@ -1,6 +1,7 @@
-import { Container, MenuItem, Tag } from "@chakra-ui/react";
+import { Button, Container, MenuItem, Tag } from "@chakra-ui/react";
 import { faDownload, faEdit, faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { fetchEntity } from "src/api/entity";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
 import ListItemHeading from "src/components/List/ListItemHeading";
@@ -9,6 +10,23 @@ import ListItemContent from "./ListItemContent";
 interface IndexProps { }
 
 function Index(props: IndexProps) {
+
+    const makeRequest = async () => {
+        const objWithNested = {
+            randomProp: "haha",
+            anotherProp: "hehe",
+            nestedObj: {
+                someNestedProp: "fhdsjkfhs",
+                someNestedArrProp: ["fdsfds", "fhdjskhfjk"]
+            }
+        };
+        await fetchEntity({
+            route: "dummy/getWithObjectUrlParams",
+            queryParams: objWithNested
+
+        });
+    }
+
     return (
         <Container>
             <List
@@ -20,7 +38,7 @@ function Index(props: IndexProps) {
                 }}
                 id="6ed914af-4959-4920-8327-1bec3dccebc7"
                 fetch={{
-                    route: "test",
+                    route: "dummy/test",
                     queryKey: "test"
                 }}
                 listItemRender={(item) => (
@@ -95,6 +113,9 @@ function Index(props: IndexProps) {
                     }
                 ]}
             />
+            <Button onClick={makeRequest}>
+                Make Request
+            </Button>
         </Container>
     )
 }

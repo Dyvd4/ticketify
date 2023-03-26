@@ -22,8 +22,8 @@ export class TicketController {
 		name: "excludeIds",
 		required: false
 	})
-	@Get("tickets/:excludeIds?")
-	async getTickets(
+	@Get("tickets/pager/:excludeIds?")
+	async getTicketsWithPager(
 		@Query() query: PagerQueryDto,
 		@Param("excludeIds", new ParseArrayPipe({ separator: ",", items: Number, optional: true })) excludeIds: number[] = []
 	) {
@@ -49,9 +49,34 @@ export class TicketController {
 		return pager.getResult(tickets, ticketsCount);
 	}
 
+	@ApiParam({
+		name: "excludeIds",
+		required: false
+	})
+	@Get("tickets/:excludeIds?")
+	async getTickets(
+		@Param("excludeIds", new ParseArrayPipe({ separator: ",", items: Number, optional: true })) excludeIds: number[] = []
+	) {
+		const { prisma } = this;
+
+		const tickets = await prisma.ticket.findMany({
+			include: {
+				priority: true,
+				status: true
+			},
+			where: {
+				id: {
+					notIn: excludeIds
+				}
+			}
+		});
+
+		return new ListResult(tickets);
+	}
+
 	// TODO: rename to pascal-case or at least do not use sub routes
 	// as sub routes should contain resources
-	@Get('ticket/assigned/groupedByStatus')
+	@Get('tickets/assigned/groupedByStatus')
 	async getTicketsAssignedByUserAndGroupedByStatus(
 		@User() requestUser: TUser
 	) {

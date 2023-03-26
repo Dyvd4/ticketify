@@ -1,13 +1,18 @@
-import { Controller, Get, Param, ParseArrayPipe, Query } from "@nestjs/common";
-import { Auth } from "@src/global/auth/auth.decorator";
+import { Controller, Get, ParseArrayPipe, Query, Req } from "@nestjs/common";
+import { PrismaService } from "@src/global/database/database.prisma.service";
+import { InfiniteLoader } from "@src/lib/list";
+import { FilterQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs, OrderByQueryParams } from "@src/lib/list/list";
+import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
 import { MailTemplateProvider } from "@src/mail/mail.template-provider";
 import { SomeObjDto } from "./dummy.dtos";
 
-@Auth({ disable: true })
 @Controller('dummy')
 export class DummyController {
 
-	constructor(private mailTemplateProvider: MailTemplateProvider) { }
+	constructor(
+		private mailTemplateProvider: MailTemplateProvider,
+		private prisma: PrismaService
+	) { }
 
 	@Get('getTiddies')
 	tiddies() {
@@ -36,5 +41,38 @@ export class DummyController {
 		@Query("excludeIds", new ParseArrayPipe({ items: Number, optional: true })) excludeIds: number[] = []
 	) {
 		return excludeIds;
+	}
+
+	@Get("test")
+	async getTestEntities(
+		@Query() query: InfiniteLoaderQueryDto
+	) {
+		const { prisma } = this;
+		const pager = new InfiniteLoader(query, 5);
+
+		const testItems = await prisma.test.findMany({
+			...pager.getPrismaArgs(),
+			where: pager.getPrismaFilterArgs(),
+			orderBy: pager.getPrismaOrderByArgs()
+		});
+		const testItemsCount = await prisma.test.count({
+			where: pager.getPrismaFilterArgs(),
+			orderBy: pager.getPrismaOrderByArgs()
+		});
+
+		return pager.getResult(testItems, testItemsCount);
+	}
+
+	@Get('test/woPager')
+	async getTestEntitiesWithoutPager(@Req() req: any) {
+
+		const { prisma } = this;
+
+		const testItems = await prisma.test.findMany({
+			where: getMappedPrismaFilterArgs(req.query.filter as FilterQueryParams),
+			orderBy: getMappedPrismaOrderByArgs(req.query.orderBy as OrderByQueryParams)
+		});
+
+		return testItems;
 	}
 }
