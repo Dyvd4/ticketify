@@ -4,14 +4,11 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
 import { ParseParamPipe } from './global/global.parse-param.pipe';
-import config from '@config';
-
-const { CLIENT_URL } = config();
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.enableCors({
-		origin: CLIENT_URL,
+		origin: process.env.CLIENT_URL,
 		credentials: true
 	})
 	app.setGlobalPrefix("api")
