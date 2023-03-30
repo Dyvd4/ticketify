@@ -196,7 +196,7 @@ export class CommentController {
 				}
 			});
 			if (parentComment?.parentId) {
-				return new ValidationException("Parent is not allowed to have a parent");
+				throw new ValidationException("Parent is not allowed to have a parent");
 			}
 		}
 

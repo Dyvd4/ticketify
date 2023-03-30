@@ -55,7 +55,7 @@ export class TicketWatcherController {
 		});
 
 		if (ticketWatcherExisting) {
-			return new ValidationException("ticket watcher already existing");
+			throw new ValidationException("ticket watcher already existing");
 		}
 
 		const newTicketWatcher = await prisma.ticketWatcher.create({
