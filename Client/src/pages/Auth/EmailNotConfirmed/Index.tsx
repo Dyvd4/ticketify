@@ -120,7 +120,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
                         <div>
                             If you provided the wrong e-mail, we give you the opportunity to change it.
                         </div>
-                        <FormControl className="mt-2" errorMessage={errorMap?.Fieldless}>
+                        <FormControl className="mt-2" errorMessage={errorMap?.message}>
                             <FormControl errorMessage={errorMap?.email}>
                                 <Input
                                     type="email"

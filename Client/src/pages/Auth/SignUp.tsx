@@ -31,7 +31,7 @@ function SignUp() {
                 Sign up
             </Heading>
             <VStack>
-                <FormControl errorMessage={errorMap?.Fieldless}>
+                <FormControl errorMessage={errorMap?.message}>
                     <FormControl errorMessage={errorMap?.username}>
                         <FormLabel>
                             Username

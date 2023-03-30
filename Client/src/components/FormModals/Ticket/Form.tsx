@@ -60,7 +60,7 @@ function TicketForm(props: TicketFormProps) {
                     {props.variant.toUpperCase()} ticket
                 </ModalHeader>
                 <ModalBody>
-                    <FormControl errorMessage={errorMap?.Fieldless}>
+                    <FormControl errorMessage={errorMap?.message}>
                         <VStack gap={2}>
                             <FormControl errorMessage={errorMap?.title}>
                                 <FormLabel>

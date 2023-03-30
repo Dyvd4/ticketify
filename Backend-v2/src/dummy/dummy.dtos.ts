@@ -12,6 +12,11 @@ export class SomeObjDto {
 	randomProp!: string
 	@IsString()
 	anotherProp!: string
-	@IsObject()@ValidateNested()
+	@IsObject() @ValidateNested()
 	nestedObj!: NestedObj
+}
+
+export class DummyDto {
+	@IsString()
+	oneProp!: string
 }

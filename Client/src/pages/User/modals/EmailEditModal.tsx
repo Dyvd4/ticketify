@@ -47,7 +47,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
                     Edit email
                 </ModalHeader>
                 <ModalBody>
-                    <FormControl errorMessage={errorMap?.Fieldless}>
+                    <FormControl errorMessage={errorMap?.message}>
                         <FormControl errorMessage={errorMap?.email}>
                             <Input
                                 name="email"

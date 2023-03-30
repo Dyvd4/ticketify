@@ -1,10 +1,12 @@
-import { Controller, Get, ParseArrayPipe, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, Options, ParseArrayPipe, Post, Put, Query, Req } from "@nestjs/common";
+import { BadRequestException } from "@nestjs/common/exceptions";
 import { PrismaService } from "@src/global/database/database.prisma.service";
+import { ValidationException } from "@src/global/global.validation.exception";
 import { InfiniteLoader } from "@src/lib/list";
 import { FilterQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs, OrderByQueryParams } from "@src/lib/list/list";
 import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
 import { MailTemplateProvider } from "@src/mail/mail.template-provider";
-import { SomeObjDto } from "./dummy.dtos";
+import { DummyDto, SomeObjDto } from "./dummy.dtos";
 
 @Controller('dummy')
 export class DummyController {
@@ -74,5 +76,21 @@ export class DummyController {
 		});
 
 		return testItems;
+	}
+
+
+	@Get("error")
+	getError() {
+		throw new BadRequestException();
+	}
+
+	@Post("error")
+	postError(@Body() dummyDto: DummyDto) {
+		return new ValidationException("some dumb error");
+	}
+
+	@Put("dumbShit")
+	someDumbShit() {
+		return "Hello"
 	}
 }

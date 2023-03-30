@@ -4,6 +4,7 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
 import { ParseParamPipe } from './global/global.parse-param.pipe';
+import { ValidationException } from './global/global.validation.exception';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -31,6 +32,9 @@ async function bootstrap() {
 			transform: true,
 			transformOptions: {
 				enableImplicitConversion: true
+			},
+			exceptionFactory(errors) {
+				return new ValidationException(errors)
 			},
 		}),
 		new ParseParamPipe()

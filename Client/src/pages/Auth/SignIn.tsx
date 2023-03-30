@@ -30,7 +30,7 @@ function SignIn() {
 				Sign in
 			</Heading>
 			<VStack>
-				<FormControl errorMessage={errorMap?.Fieldless}>
+				<FormControl errorMessage={errorMap?.message}>
 					<FormControl errorMessage={errorMap?.username}>
 						<FormLabel>
 							Username

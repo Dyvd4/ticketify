@@ -107,7 +107,7 @@ function ConnectedTicketsAddModal({ isOpen, connectedToTickets, connectedByTicke
                 </ModalHeader>
                 <ModalBody>
                     {!isLoading && <>
-                        <FormControl errorMessage={errorMap?.Fieldless}>
+                        <FormControl errorMessage={errorMap?.message}>
                             <AutoCompleter
                                 items={tickets}
                                 listItemRender={ticket => `#${ticket.id} ${ticket.title}`}

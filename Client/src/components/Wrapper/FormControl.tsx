@@ -1,7 +1,7 @@
 import { FormControl as ChakraFormControl, FormControlProps as ChakraFormControlProps, FormErrorMessage } from "@chakra-ui/react";
 
 type FormControlProps = {
-    errorMessage?: string
+    errorMessage?: string | string[]
 } & ChakraFormControlProps
 
 function FormControl({ errorMessage, children, ...props }: FormControlProps) {

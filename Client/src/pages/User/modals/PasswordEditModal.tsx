@@ -56,7 +56,7 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                     Edit password
                 </ModalHeader>
                 <ModalBody>
-                    <FormControl errorMessage={errorMap?.Fieldless}>
+                    <FormControl errorMessage={errorMap?.message}>
                         <FormControl errorMessage={errorMap?.currentPassword}>
                             <FormLabel>
                                 Current password
