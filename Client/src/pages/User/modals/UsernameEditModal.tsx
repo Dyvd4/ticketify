@@ -1,9 +1,10 @@
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { AxiosError } from "axios"
 import { useState } from "react"
 import { useMutation } from "react-query"
 import FormControl from "src/components/Wrapper/FormControl"
 import { request } from "src/services/request"
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error"
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error"
 
 type UsernameEditModalProps = {
     user: any
@@ -27,7 +28,7 @@ function UsernameEditModal({ user, isOpen, ...props }: UsernameEditModalProps) {
             if (props.onSuccess) props.onSuccess();
             handleClose(response);
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error, "username");
             setErrorMap(errorMap);
         }

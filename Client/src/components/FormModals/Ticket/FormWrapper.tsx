@@ -1,4 +1,5 @@
 import { ContainerProps, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { useState } from "react";
@@ -6,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { mutateTicket } from "src/api/ticket";
 import { getEmptyState } from "src/utils/draftJs";
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 import Form from "./Form";
 
 type FormWrapperProps = ({
@@ -106,7 +107,7 @@ function FormWrapper(props: FormWrapperProps) {
             setSuccess(true);
             setErrorMap(null);
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }

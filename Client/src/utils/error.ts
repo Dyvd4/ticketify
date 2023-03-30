@@ -84,7 +84,7 @@ interface ValidationError {
     };
 }
 
-type ValidationErrorResponse = {
+export type ValidationErrorResponse = {
     message: string
     statusCode: number
     error: {
