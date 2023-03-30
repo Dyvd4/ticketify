@@ -1,7 +1,7 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateTicketDueDateDto {
-	@IsString()
+	@IsString() @IsNotEmpty()
 	color!: string
 	@IsNumber()
 	durationInMinutes!: number

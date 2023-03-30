@@ -1,11 +1,11 @@
 import { PartialType } from "@nestjs/swagger";
 import { TicketPriority } from "@prisma/client";
-import { IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateTicketPriorityDto implements Pick<TicketPriority, "color" | "name"> {
-	@IsString()
+	@IsString() @IsNotEmpty()
 	color!: string;
-	@IsString()
+	@IsString() @IsNotEmpty()
 	name!: string
 }
 
