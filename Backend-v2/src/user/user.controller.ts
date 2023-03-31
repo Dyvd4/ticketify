@@ -2,10 +2,11 @@ import { Auth } from "@auth/auth.decorator";
 import { AuthMailDeliveryService } from "@auth/auth.mail-delivery.service";
 import { User } from "@auth/auth.user.decorator";
 import { PrismaService } from "@database/database.prisma.service";
-import { BadRequestException, Controller, Get, NotFoundException, NotImplementedException, Param } from "@nestjs/common";
+import { Controller, Get, NotFoundException, NotImplementedException, Param } from "@nestjs/common";
 import { Body, Put } from "@nestjs/common/decorators";
 import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { User as TUser } from "@prisma/client";
+import { ValidationException } from "@src/global/global.validation.exception";
 import bcrypt from "bcrypt";
 import FileEntityToClientDto from "src/file/file.dtos";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
@@ -118,11 +119,7 @@ export class UserController {
 		});
 
 		if (existingUsername && username !== requestUser.username) {
-			throw new BadRequestException({
-				validation: {
-					message: `User with name: ${username} already existing`
-				}
-			});
+			throw new ValidationException(`User with name: ${username} already existing`);
 		}
 
 		const updatedUser = await prisma.user.update({
@@ -157,11 +154,7 @@ export class UserController {
 		const isSameEmail = email === requestUser.email;
 
 		if (existingEmail && !isSameEmail) {
-			throw new BadRequestException({
-				validation: {
-					message: `E-mail: ${email} already existing`
-				}
-			});
+			throw new ValidationException(`E-mail: ${email} already existing`);
 		}
 
 		if (isSameEmail) return "Your e-mail is already equal to the provided value";
@@ -190,19 +183,11 @@ export class UserController {
 		const { prisma } = this;
 
 		if (!(await bcrypt.compare(passwordData.currentPassword, requestUser.password))) {
-			throw new BadRequestException({
-				validation: {
-					message: "Current password is not valid"
-				}
-			})
+			throw new ValidationException("Current password is not valid")
 		}
 
 		if (passwordData.newPassword !== passwordData.repeatedNewPassword) {
-			throw new BadRequestException({
-				validation: {
-					message: "passwords are not equal"
-				}
-			})
+			throw new ValidationException("passwords are not equal")
 		}
 
 		const newPassword = await bcrypt.hash(passwordData.newPassword, 10);

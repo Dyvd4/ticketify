@@ -1,5 +1,5 @@
 import { PrismaService } from '@database/database.prisma.service';
-import { BadRequestException, Body, Controller, Get, Param, Post, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User as TUser } from '@prisma/client';
 import bcrypt from "bcrypt";
@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { Response } from 'express';
 import jwt from "jsonwebtoken";
 import { Config } from 'src/config';
+import { ValidationException } from '../global.validation.exception';
 import { Auth } from './auth.decorator';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';
 import { User } from './auth.user.decorator';
@@ -44,11 +45,11 @@ export class AuthController {
 		});
 
 		if (!user) {
-			throw new BadRequestException(`User with name: ${username} not existing`);
+			throw new ValidationException(`User with name: ${username} not existing`);
 		}
 
 		if (!(await bcrypt.compare(password, user.password))) {
-			throw new UnauthorizedException(`Password or username is invalid`);
+			throw new ValidationException(`Password or username is invalid`);
 		}
 
 		const authToken = jwt.sign({
@@ -87,7 +88,7 @@ export class AuthController {
 		});
 
 		if (existingUsername) {
-			throw new BadRequestException(`User with name: ${username} already existing`)
+			throw new ValidationException(`User with name: ${username} already existing`)
 		}
 
 		const existingEmail = await prisma.user.findFirst({
@@ -97,7 +98,7 @@ export class AuthController {
 		});
 
 		if (existingEmail) {
-			throw new BadRequestException(`Email: ${email} already existing`);
+			throw new ValidationException(`Email: ${email} already existing`);
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10);

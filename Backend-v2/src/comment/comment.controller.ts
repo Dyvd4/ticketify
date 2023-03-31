@@ -1,7 +1,8 @@
 import { User } from '@auth/auth.user.decorator';
 import { PrismaService } from '@database/database.prisma.service';
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UnauthorizedException } from '@nestjs/common';
 import { User as TUser } from "@prisma/client";
+import { ValidationException } from '@src/global/global.validation.exception';
 import FileEntityToClientDto from 'src/file/file.dtos';
 import { CreateCommentDto, GetCommentsQueryDto, UpdateCommentDto } from './comment.dtos';
 import { getInteractions, prismaIncludeParams, userHasInteracted } from './comment.service';
@@ -195,11 +196,7 @@ export class CommentController {
 				}
 			});
 			if (parentComment?.parentId) {
-				return new BadRequestException({
-					validation: {
-						message: "Parent is not allowed to have a parent"
-					}
-				});
+				throw new ValidationException("Parent is not allowed to have a parent");
 			}
 		}
 

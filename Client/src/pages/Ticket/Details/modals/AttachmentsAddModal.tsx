@@ -1,11 +1,12 @@
 import { Alert, AlertIcon, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
 import FormControl from "src/components/Wrapper/FormControl";
-import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
+import { ValidationErrorMap, getValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 
 const VALID_IMAGETYPES_REGEX = import.meta.env.VITE_VALID_IMAGETYPES_REGEX;
 
@@ -46,7 +47,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                 status: "success"
             });
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }

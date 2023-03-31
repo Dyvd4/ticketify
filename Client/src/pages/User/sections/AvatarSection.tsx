@@ -1,11 +1,12 @@
 import { Box, Button, ButtonGroup, Heading, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
 import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useIsCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
-import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
+import { ValidationErrorMap, getValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 import { createDataUrl } from "src/utils/image";
 import AvatarInput from "../components/AvatarInput";
 
@@ -40,7 +41,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                 status: "success"
             });
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }

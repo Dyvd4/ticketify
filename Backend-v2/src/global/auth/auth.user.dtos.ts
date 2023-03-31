@@ -1,10 +1,10 @@
 import { User } from "@prisma/client";
-import { IsEmail, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 export class UserSignInDto implements Pick<User, "username" | "password">{
-	@IsString()
+	@IsString() @IsNotEmpty()
 	username!: string;
-	@IsString()
+	@IsString() @IsNotEmpty()
 	password!: string
 }
 

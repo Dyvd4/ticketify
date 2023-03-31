@@ -1,10 +1,11 @@
 import { Button, FormLabel, Heading, Input, Link, VStack } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useMutation } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
 import { signIn } from "../../auth/auth";
 import Card from "../../components/Card";
-import { getValidationErrorMap, ValidationErrorMap } from "../../utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "../../utils/error";
 
 function SignIn() {
 	const { prevRoute } = window.history.state.usr ?? {};
@@ -18,7 +19,7 @@ function SignIn() {
 		onSuccess: () => {
 			window.location.href = prevRoute || "/";
 		},
-		onError: (error) => {
+		onError: (error: AxiosError<ValidationErrorResponse>) => {
 			const errorMap = getValidationErrorMap(error);
 			setErrorMap(errorMap);
 		}
@@ -30,7 +31,7 @@ function SignIn() {
 				Sign in
 			</Heading>
 			<VStack>
-				<FormControl errorMessage={errorMap?.Fieldless}>
+				<FormControl errorMessage={errorMap?.message}>
 					<FormControl errorMessage={errorMap?.username}>
 						<FormLabel>
 							Username

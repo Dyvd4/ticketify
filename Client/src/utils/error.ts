@@ -41,43 +41,78 @@ export function getMulterErrorMessage(error: AxiosError) {
 }
 
 export type ValidationErrorMap = Partial<{
-    [key: string]: string
+    [key: string]: string | string[]
     files: string
-    Fieldless: string
+    message: string
 }>
 
-/** @param key - the name of the field (for single field validations) */
-export function getValidationErrorMap(error, key?: string): ValidationErrorMap | null {
-    const { response: { data: { validation, validations } } } = error;
-    let errorDetails: any[] = [];
-    const validationsToMap = validation
-        ? [validation || {}]
-        : validations || [];
+// Copied from @nest/common
+// don't want to install the whole package for the client
+// only to get this type
+interface ValidationError {
+    /**
+     * Object that was validated.
+     *
+     * OPTIONAL - configurable via the ValidatorOptions.validationError.target option
+     */
+    target?: Record<string, any>;
+    /**
+     * Object's property that hasn't passed validation.
+     */
+    property: string;
+    /**
+     * Value that haven't pass a validation.
+     *
+     * OPTIONAL - configurable via the ValidatorOptions.validationError.value option
+     */
+    value?: any;
+    /**
+     * Constraints that failed validation with error messages.
+     */
+    constraints?: {
+        [type: string]: string;
+    };
+    /**
+     * Contains all nested validation errors of the property.
+     */
+    children?: ValidationError[];
+    /**
+     * A transient set of data passed through to the validation result for response mapping
+     */
+    contexts?: {
+        [type: string]: any;
+    };
+}
 
-    validationsToMap.forEach(validation => {
-        if (validation?.error?.details) {
-            errorDetails = errorDetails.concat(validation.error.details);
+export type ValidationErrorResponse = {
+    message: string
+    statusCode: number
+    error: {
+        validation: {
+            message: string
+            items: ValidationError[]
         }
-    });
-    const validationErrorMap = errorDetails.reduce((map, detail, index) => {
+    }
+}
+
+/** @param key - the name of the field (for single field validations) */
+export function getValidationErrorMap(error: AxiosError<ValidationErrorResponse>, key?: string): ValidationErrorMap | null {
+
+    const validationErrorsToMap = error.response?.data.error.validation.items || [];
+    const validationErrorMap = validationErrorsToMap.reduce((map, validationError, index) => {
         if (index === 0) {
             map = {}
         }
-        map[key || detail.context.key] = detail.message
+        map[key || validationError.property] = Object.keys(validationError.constraints || {}).map(key => {
+            return validationError.constraints![key]
+        })
         return map;
-    }, {});
+    }, {} as ValidationErrorMap);
 
-    const fieldLessValidationMessage = validation?.message || validation?.arbitrary?.message
-    if (fieldLessValidationMessage) validationErrorMap["Fieldless"] = fieldLessValidationMessage;
+    const validationMessage = error.response?.data.error.validation.message;
+    if (validationMessage) validationErrorMap.message = validationMessage;
 
-    if (validation?.arbitrary) {
-        Object.keys(validation.arbitrary)
-            .filter(key => key !== "message")
-            .forEach((key) => {
-                validationErrorMap[key] = validation.arbitrary[key];
-            });
-    }
-
+    console.debug(validationErrorsToMap)
     return Object.keys(validationErrorMap).length > 0
         ? validationErrorMap
         : null;

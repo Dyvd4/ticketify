@@ -1,7 +1,8 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '@src/config';
 import { PrismaService } from '@src/global/database/database.prisma.service';
+import { ValidationException } from '@src/global/global.validation.exception';
 import { Response } from 'express';
 import jwt from "jsonwebtoken";
 import { CreateTicketWatcherDto } from './ticket-watcher.dtos';
@@ -54,11 +55,7 @@ export class TicketWatcherController {
 		});
 
 		if (ticketWatcherExisting) {
-			return new BadRequestException({
-				validation: {
-					message: "ticketWatcher already existing"
-				}
-			});
+			throw new ValidationException("ticket watcher already existing");
 		}
 
 		const newTicketWatcher = await prisma.ticketWatcher.create({

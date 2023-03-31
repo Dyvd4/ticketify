@@ -1,5 +1,6 @@
-import { BadRequestException, Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { PrismaService } from '@src/global/database/database.prisma.service';
+import { ValidationException } from '@src/global/global.validation.exception';
 import { CreateTicketOnTicketDto } from './ticket-on-ticket.dtos';
 
 @Controller('ticketOnTicket')
@@ -17,11 +18,7 @@ export class TicketOnTicketController {
 		const { connectedByTicketId, connectedToTicketId } = createTicketOnTicketDto;
 
 		if (connectedByTicketId === connectedToTicketId) {
-			return new BadRequestException({
-				validation: {
-					message: "Can't connect to own ticket"
-				}
-			});
+			throw new ValidationException("Can't connect to own ticket");
 		}
 
 		const connectionExisting = await prisma.ticketOnTicket.findUnique({
@@ -34,11 +31,7 @@ export class TicketOnTicketController {
 		});
 
 		if (connectionExisting) {
-			return new BadRequestException({
-				validation: {
-					message: "Connection to that ticket already existing"
-				}
-			});
+			throw new ValidationException("Connection to that ticket already existing");
 		}
 
 		const newTicketOnTicket = await prisma.ticketOnTicket.create({
@@ -48,7 +41,7 @@ export class TicketOnTicketController {
 		return newTicketOnTicket;
 	}
 
-	@Delete('ticketOnTicket/:connectedByTicketId/:connectedToTicketId')
+	@Delete(':connectedByTicketId/:connectedToTicketId')
 	async remove(
 		@Param('connectedByTicketId') connectedByTicketId: number,
 		@Param('connectedToTicketId') connectedToTicketId: number
