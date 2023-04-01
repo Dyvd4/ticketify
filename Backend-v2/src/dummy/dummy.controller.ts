@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { Config } from "@src/config";
-import { FileUploadDto } from "@src/file/file.dtos";
+import { UploadFileDto } from "@src/file/file.dtos";
 import { parseImageFilePipe } from "@src/file/file.pipes";
 import { FileService } from "@src/file/file.service";
 import { PrismaService } from "@src/global/database/database.prisma.service";
@@ -112,7 +112,7 @@ export class DummyController {
 
 	@ApiConsumes("multipart/form-data")
 	@ApiBody({
-		type: FileUploadDto
+		type: UploadFileDto
 	})
 	@Post('uploadFile')
 	@UseInterceptors(FileInterceptor("file"))
