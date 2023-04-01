@@ -3,15 +3,15 @@ import { ComponentPropsWithRef, PropsWithChildren } from 'react';
 type _ListResultEmptyDisplayProps = {}
 
 export type ListResultEmptyDisplayProps = PropsWithChildren<_ListResultEmptyDisplayProps> &
-    Omit<ComponentPropsWithRef<'div'>, keyof _ListResultEmptyDisplayProps>
+    Omit<ComponentPropsWithRef<'li'>, keyof _ListResultEmptyDisplayProps>
 
 function ListResultEmptyDisplay({ className, ...props }: ListResultEmptyDisplayProps) {
     return (
-        <div
+        <li
             className={`${className}`}
             {...props}>
             This list seems to be empty 😴
-        </div>
+        </li>
     );
 }
 

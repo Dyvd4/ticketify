@@ -47,7 +47,7 @@ function ListResultItems({ data, variant, ...props }: ListResultItemsProps) {
                         {props.children(item)}
                     </div>
                 ))
-                : props.emptyDisplay || <ListResultEmptyDisplay />}
+                : props.emptyDisplay || <ListResultEmptyDisplay key={1} />}
         </>}
         {variant === "infiniteLoading" && <>
             {data.pages.map(page => (
@@ -57,7 +57,7 @@ function ListResultItems({ data, variant, ...props }: ListResultItemsProps) {
                             {props.children(item)}
                         </div>
                     ))
-                    : props.emptyDisplay || <ListResultEmptyDisplay />
+                    : props.emptyDisplay || <ListResultEmptyDisplay key={1} />
             ))}
         </>}
     </>

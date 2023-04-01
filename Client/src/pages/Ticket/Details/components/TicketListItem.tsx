@@ -20,10 +20,10 @@ function TicketListItem({ item }: TicketListItemProps) {
             heading={<ListItemHeading item={item} />}
             content={<TicketListItemContent item={item} />}
             tags={[
-                <Tag colorScheme={item.status.color}>
+                <Tag colorScheme={item.status.color} key={1}>
                     Status: {item.status.name}
                 </Tag>,
-                <Tag colorScheme={item.priority.color}>
+                <Tag colorScheme={item.priority.color} key={2}>
                     Priority: {item.priority.name}
                 </Tag>
             ]}

@@ -207,7 +207,6 @@ export class UserController {
 		return updatedUser;
 	}
 
-	// TODO: s3 upload
 	@ApiConsumes("multipart/form-data")
 	@ApiBody({
 		type: UploadFileDto

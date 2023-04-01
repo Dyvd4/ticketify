@@ -15,8 +15,8 @@ type _LoadingRippleProps = (
 type LoadingRippleProps = _LoadingRippleProps &
     Omit<React.ComponentPropsWithRef<"div">, keyof _LoadingRippleProps>
 
-function LoadingRipple(props: LoadingRippleProps) {
-    return "usePortal" in props && props.usePortal
+function LoadingRipple({ centered, usePortal, ...props }: LoadingRippleProps) {
+    return usePortal
         ? ReactDOM.createPortal(
             <div
                 data-testid="LoadingRipple"
@@ -30,7 +30,7 @@ function LoadingRipple(props: LoadingRippleProps) {
         : <div
             data-testid="LoadingRipple"
             className={`lds-ripple
-                ${"centered" in props && props.centered ? `absolute top-1/2 left-1/2 
+                ${centered ? `absolute top-1/2 left-1/2 
                 transform -translate-x-1/2 -translate-y-1/2` : ``}`}
             {...props}>
             <div className="border-gray-800 dark:border-white"></div>
