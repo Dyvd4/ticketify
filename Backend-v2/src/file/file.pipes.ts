@@ -1,20 +1,8 @@
 import { ParseFilePipeBuilder } from "@nestjs/common";
-import config from "@src/config";
-import multer from "multer";
-import crypto from "crypto"
-import { Request } from "express";
 
-const { FILE_IMAGE_MAX_SIZE_KB, FILE_MAX_SIZE_KB, FILE_UPLOAD_PATH, VALID_IMAGETYPES_REGEX } = config();
-const FILE_IMAGE_MAX_SIZE_B = FILE_IMAGE_MAX_SIZE_KB * 1000;
-const FILE_MAX_SIZE_B = FILE_MAX_SIZE_KB * 1000;
-
-// TODO: replace with s3
-export const diskStorage = multer.diskStorage({
-	destination: FILE_UPLOAD_PATH,
-	filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-		cb(null, `${crypto.randomUUID()}_${file.originalname}`)
-	}
-})
+const { FILE_IMAGE_MAX_SIZE_KB, FILE_MAX_SIZE_KB, VALID_IMAGETYPES_REGEX } = process.env;
+const FILE_IMAGE_MAX_SIZE_B = parseInt(FILE_IMAGE_MAX_SIZE_KB!) * 1000;
+const FILE_MAX_SIZE_B = parseInt(FILE_MAX_SIZE_KB!) * 1000;
 
 export const parseFilePipe = new ParseFilePipeBuilder()
 	.addMaxSizeValidator({
@@ -27,6 +15,6 @@ export const parseImageFilePipe = new ParseFilePipeBuilder()
 		maxSize: FILE_IMAGE_MAX_SIZE_B
 	})
 	.addFileTypeValidator({
-		fileType: new RegExp(VALID_IMAGETYPES_REGEX)
+		fileType: new RegExp(VALID_IMAGETYPES_REGEX!)
 	})
 	.build()

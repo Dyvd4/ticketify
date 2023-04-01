@@ -3,7 +3,7 @@ import { PrismaService } from '@database/database.prisma.service';
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UnauthorizedException } from '@nestjs/common';
 import { User as TUser } from "@prisma/client";
 import { ValidationException } from '@src/global/global.validation.exception';
-import FileEntityToClientDto from 'src/file/file.dtos';
+import { PrismaFileToClientFileMap } from '@src/file/maps/file.prisma-file-to-client.map'
 import { CreateCommentDto, GetCommentsQueryDto, UpdateCommentDto } from './comment.dtos';
 import { getInteractions, prismaIncludeParams, userHasInteracted } from './comment.service';
 
@@ -33,7 +33,7 @@ export class CommentController {
 				author: {
 					...comment.author,
 					avatar: comment.author.avatar?.file
-						? FileEntityToClientDto(comment.author.avatar.file)
+						? PrismaFileToClientFileMap(comment.author.avatar.file)
 						: null
 				},
 				childs: comment.childs.map(child => {
@@ -42,7 +42,7 @@ export class CommentController {
 						author: {
 							...child.author,
 							avatar: child.author.avatar?.file
-								? FileEntityToClientDto(child.author.avatar.file)
+								? PrismaFileToClientFileMap(child.author.avatar.file)
 								: null
 						},
 						...getInteractions(child.interactions),
@@ -123,7 +123,7 @@ export class CommentController {
 				author: {
 					...comment.author,
 					avatar: comment.author.avatar?.file
-						? FileEntityToClientDto(comment.author.avatar.file)
+						? PrismaFileToClientFileMap(comment.author.avatar.file)
 						: null
 				},
 				childs: comment.childs.map(child => {
@@ -132,7 +132,7 @@ export class CommentController {
 						author: {
 							...child.author,
 							avatar: child.author.avatar?.file
-								? FileEntityToClientDto(child.author.avatar.file)
+								? PrismaFileToClientFileMap(child.author.avatar.file)
 								: null
 						},
 						...getInteractions(child.interactions),

@@ -8,7 +8,7 @@ import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { User as TUser } from "@prisma/client";
 import { ValidationException } from "@src/global/global.validation.exception";
 import bcrypt from "bcrypt";
-import FileEntityToClientDto from "src/file/file.dtos";
+import { PrismaFileToClientFileMap } from "@src/file/maps/file.prisma-file-to-client.map";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
 
 @Controller()
@@ -71,7 +71,7 @@ export class UserController {
 		}
 
 		(user as any).avatar = user.avatar?.file
-			? FileEntityToClientDto(user.avatar.file)
+			? PrismaFileToClientFileMap(user.avatar.file)
 			: null;
 
 		return user;

@@ -2,7 +2,7 @@ import { PrismaService } from '@database/database.prisma.service';
 import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 import { User as TUser } from "@prisma/client";
-import FileEntityToClientDto from '@src/file/file.dtos';
+import { PrismaFileToClientFileMap } from '@src/file/maps/file.prisma-file-to-client.map';
 import { User } from '@src/global/auth/auth.user.decorator';
 import { InfiniteLoaderQueryDto, PagerQueryDto } from '@src/lib/list/list.dtos';
 import ListResult from '@src/lib/list/result/list-result';
@@ -155,7 +155,7 @@ export class TicketController {
 				}
 			}
 		});
-		const attachments = ticket?.attachments.map(attachment => FileEntityToClientDto(attachment.file)) || [];
+		const attachments = ticket?.attachments.map(attachment => PrismaFileToClientFileMap(attachment.file)) || [];
 		// TODO: rethink about image business logic
 		// const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || []
 		// const images = attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import FileEntityToClientDto from '@src/file/file.dtos';
+import { PrismaFileToClientFileMap } from '@src/file/maps/file.prisma-file-to-client.map';
 import { PrismaService } from '@src/global/database/database.prisma.service';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class TicketService {
 			}
 		});
 
-		if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = FileEntityToClientDto(ticket.responsibleUser.avatar.file);
+		if (ticket?.responsibleUser?.avatar) (ticket.responsibleUser.avatar as any) = PrismaFileToClientFileMap(ticket.responsibleUser.avatar.file);
 
 		return ticket;
 	}
