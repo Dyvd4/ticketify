@@ -2,13 +2,16 @@ import { Auth } from "@auth/auth.decorator";
 import { AuthMailDeliveryService } from "@auth/auth.mail-delivery.service";
 import { User } from "@auth/auth.user.decorator";
 import { PrismaService } from "@database/database.prisma.service";
-import { Controller, Get, NotFoundException, NotImplementedException, Param } from "@nestjs/common";
-import { Body, Put } from "@nestjs/common/decorators";
-import { ApiCookieAuth, ApiParam } from "@nestjs/swagger";
+import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import { Body, Put, UploadedFile, UseInterceptors } from "@nestjs/common/decorators";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBody, ApiConsumes, ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { User as TUser } from "@prisma/client";
+import { UploadFileDto } from "@src/file/file.dtos";
+import { parseImageFilePipe } from "@src/file/file.pipes";
+import { FileService } from "@src/file/file.service";
 import { ValidationException } from "@src/global/global.validation.exception";
 import bcrypt from "bcrypt";
-import { PrismaFileToClientFileMap } from "@src/file/maps/file.prisma-file-to-client.map";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
 
 @Controller()
@@ -17,7 +20,8 @@ export class UserController {
 
 	constructor(
 		private prisma: PrismaService,
-		private authMailDeliveryService: AuthMailDeliveryService
+		private authMailDeliveryService: AuthMailDeliveryService,
+		private fileService: FileService
 	) { }
 
 	@Get('users')
@@ -71,7 +75,7 @@ export class UserController {
 		}
 
 		(user as any).avatar = user.avatar?.file
-			? PrismaFileToClientFileMap(user.avatar.file)
+			? await this.fileService.getFileWithSignedUrl(user.avatar.file)
 			: null;
 
 		return user;
@@ -204,10 +208,36 @@ export class UserController {
 	}
 
 	// TODO: s3 upload
+	@ApiConsumes("multipart/form-data")
+	@ApiBody({
+		type: UploadFileDto
+	})
 	@Put('user/avatar')
+	@UseInterceptors(FileInterceptor("file"))
 	async updateAvatar(
-		@User() requestUser: TUser
+		@User() requestUser: TUser,
+		@UploadedFile(parseImageFilePipe) file: Express.Multer.File
 	) {
-		throw new NotImplementedException();
+		const createdOrUpdatedFile = await this.fileService.createOrUpdateFile(file);
+
+		const updatedUser = await this.prisma.user.update({
+			where: {
+				id: requestUser.id
+			},
+			data: {
+				avatar: {
+					upsert: {
+						create: {
+							fileId: createdOrUpdatedFile.id
+						},
+						update: {
+							fileId: createdOrUpdatedFile.id
+						}
+					}
+				}
+			}
+		});
+
+		return updatedUser;
 	}
 }

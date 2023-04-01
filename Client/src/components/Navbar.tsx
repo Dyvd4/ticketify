@@ -5,7 +5,6 @@ import { useAtom } from "jotai";
 import { useMutation } from "react-query";
 import { signOut } from "src/auth/auth";
 import { sidebarAtom } from "src/context/atoms";
-import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
@@ -15,7 +14,6 @@ type NavbarProps = {}
 function Navbar(props: NavbarProps) {
 
 	const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
-	const [avatarImgUrl] = useGetProtectedImageUrl(currentUser?.avatar?.contentRoute, !currentUser?.avatar);
 	const [sidebarActive, setSidebarActive] = useAtom(sidebarAtom);
 
 	const signOutMutation = useMutation(signOut, {
@@ -46,7 +44,7 @@ function Navbar(props: NavbarProps) {
 								className="ring-2 ring-sky-500"
 								size={"sm"}
 								name={currentUser?.username}
-								src={avatarImgUrl}
+								src={currentUser?.avatar?.url}
 							/>
 						</Flex>
 					</MenuButton>

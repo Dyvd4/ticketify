@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { addEntity } from "src/api/entity";
 import FileInput from "src/components/FileInput";
 import FormControl from "src/components/Wrapper/FormControl";
-import { ValidationErrorMap, getValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 
 const VALID_IMAGETYPES_REGEX = import.meta.env.VITE_VALID_IMAGETYPES_REGEX;
 
@@ -29,13 +29,12 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
 
     const mutation = useMutation(() => {
         const formData = new FormData();
-        formData.append("id", String(id));
         if (!files) return Promise.reject("");
         Array.from(files).forEach(file => {
             formData.append("files", file);
         });
         return addEntity({
-            route: "ticket/file",
+            route: `ticket/${String(id)}/file`,
             payload: formData
         });
     }, {

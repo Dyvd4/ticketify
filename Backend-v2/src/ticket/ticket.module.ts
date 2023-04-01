@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TicketController } from './ticket.controller';
-import { TicketService } from './ticket.service';
+import { FileModule } from '@src/file/file.module';
 import { TicketActivityModule } from './ticket-activity/ticket-activity.module';
 import { TicketDueDateModule } from './ticket-due-date/ticket-due-date.module';
 import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module';
 import { TicketPriorityModule } from './ticket-priority/ticket-priority.module';
 import { TicketStatusModule } from './ticket-status/ticket-status.module';
 import { TicketWatcherModule } from './ticket-watcher/ticket-watcher.module';
+import { TicketController } from './ticket.controller';
+import { TicketService } from './ticket.service';
 
 @Module({
 	imports: [
@@ -15,7 +16,8 @@ import { TicketWatcherModule } from './ticket-watcher/ticket-watcher.module';
 		TicketOnTicketModule,
 		TicketPriorityModule,
 		TicketStatusModule,
-		TicketWatcherModule
+		TicketWatcherModule,
+		FileModule
 	],
 	controllers: [TicketController],
 	providers: [TicketService]

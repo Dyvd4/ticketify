@@ -2,7 +2,6 @@ import { Avatar, Box, Flex } from "@chakra-ui/react";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentPropsWithRef } from "react";
-import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { AvatarType } from "./Comment";
 
 type RepliesButtonProps = {
@@ -15,7 +14,6 @@ type RepliesButtonProps = {
 function RepliesButton(props: RepliesButtonProps) {
 
     const { avatar, repliesCount, active, setActive, ...restProps } = props;
-    const [avatarImgUrl] = useGetProtectedImageUrl(avatar?.contentRoute as any, !avatar?.contentRoute);
 
     return (
         <Box
@@ -31,7 +29,7 @@ function RepliesButton(props: RepliesButtonProps) {
                     <Avatar
                         className="ml-2"
                         name={avatar.username}
-                        src={avatarImgUrl}
+                        src={avatar.url}
                         size={"2xs"}
                     />
                 </>}

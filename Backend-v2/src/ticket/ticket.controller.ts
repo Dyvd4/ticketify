@@ -1,8 +1,11 @@
 import { PrismaService } from '@database/database.prisma.service';
-import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
 import { User as TUser } from "@prisma/client";
-import { PrismaFileToClientFileMap } from '@src/file/maps/file.prisma-file-to-client.map';
+import { parseFilePipe } from '@src/file/file.pipes';
+import { FileService } from '@src/file/file.service';
+import { isImageFile } from '@src/file/file.utils';
 import { User } from '@src/global/auth/auth.user.decorator';
 import { InfiniteLoaderQueryDto, PagerQueryDto } from '@src/lib/list/list.dtos';
 import ListResult from '@src/lib/list/result/list-result';
@@ -15,7 +18,8 @@ export class TicketController {
 
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly ticketService: TicketService
+		private readonly ticketService: TicketService,
+		private readonly fileService: FileService
 	) { }
 
 	@ApiParam({
@@ -155,14 +159,15 @@ export class TicketController {
 				}
 			}
 		});
-		const attachments = ticket?.attachments.map(attachment => PrismaFileToClientFileMap(attachment.file)) || [];
-		// TODO: rethink about image business logic
-		// const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || []
-		// const images = attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
+		const attachments = ticket?.attachments
+			? await Promise.all(ticket.attachments.map(attachment => this.fileService.getFileWithSignedUrl(attachment.file)))
+			: [];
+		const files = attachments?.filter(attachment => !isImageFile({ ...attachment, originalname: attachment.originalFileName })) || []
+		const images = attachments?.filter(attachment => isImageFile({ ...attachment, originalname: attachment.originalFileName })) || [];
 		// 🥵
 		(ticket as any).attachments = attachments;
-		(ticket as any).files = [] as any[] // files;
-		(ticket as any).images = [] as any[] // images;
+		(ticket as any).files = files;
+		(ticket as any).images = images;
 
 		return ticket;
 	}
@@ -172,9 +177,30 @@ export class TicketController {
 		throw new NotImplementedException();
 	}
 
-	@Post('ticket/file')
-	async createTicketFile() {
-		throw new NotImplementedException();
+	@Post('ticket/:id/file')
+	@UseInterceptors(FilesInterceptor("files"))
+	async createTicketFile(
+		@Param("id") ticketId: string,
+		@UploadedFiles(parseFilePipe) files: Express.Multer.File[]
+	) {
+		const createdOrUpdatedFiles = await this.fileService.createOrUpdateFiles(files);
+
+		const updatedTicket = await this.prisma.ticket.update({
+			where: {
+				id: parseInt(ticketId)
+			},
+			data: {
+				attachments: {
+					create: createdOrUpdatedFiles.map(file => {
+						return {
+							fileId: file.id
+						}
+					})
+				}
+			}
+		});
+
+		return updatedTicket;
 	}
 
 	@Patch('ticket/status/:id')
