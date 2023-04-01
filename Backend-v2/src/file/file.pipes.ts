@@ -1,4 +1,5 @@
-import { ParseFilePipeBuilder } from "@nestjs/common";
+import { HttpStatus, ParseFilePipeBuilder } from "@nestjs/common";
+import { ValidationException } from "@src/global/global.validation.exception";
 
 // FIXME: should be gathered from env file
 // but env variables cannot be loaded safely without config service
@@ -15,7 +16,12 @@ export const parseFilePipe = new ParseFilePipeBuilder()
 	.addMaxSizeValidator({
 		maxSize: FILE_MAX_SIZE_B
 	})
-	.build()
+	.build({
+		errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+		exceptionFactory(error) {
+			return new ValidationException(error);
+		}
+	})
 
 export const parseImageFilePipe = new ParseFilePipeBuilder()
 	.addMaxSizeValidator({
@@ -24,4 +30,9 @@ export const parseImageFilePipe = new ParseFilePipeBuilder()
 	.addFileTypeValidator({
 		fileType: new RegExp(VALID_IMAGETYPES_REGEX!)
 	})
-	.build()
+	.build({
+		errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+		exceptionFactory(error) {
+			return new ValidationException(error);
+		}
+	})

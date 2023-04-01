@@ -76,7 +76,7 @@ function AttachmentsAddModal({ isOpen, onClose, ...props }: AttachmentsAddProps)
                 </ModalHeader>
                 <ModalBody>
                     <Box className="mt-2">
-                        <FormControl errorMessage={errorMap?.files}>
+                        <FormControl errorMessage={errorMap?.message}>
                             <FileInput
                                 multiple
                                 onChange={setFiles}
