@@ -1,12 +1,12 @@
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PrismaService } from '@database/database.prisma.service';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { File, Prisma } from "@prisma/client";
 import { Config } from "@src/config";
 import { MulterFileToPrismaFileMap } from "./maps/file.multer-file-to-prisma-file.map";
-import { PrismaFileToClientFileMap } from "./maps/file.prisma-file-to-client.map";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { ClientFile, PrismaFileToClientFileMap } from "./maps/file.prisma-file-to-client.map";
 
 @Injectable()
 export class FileService {
@@ -50,27 +50,36 @@ export class FileService {
 		return this.s3Client.send(command);
 	}
 
-	async createOrUpdateFiles(filesToCreate: Express.Multer.File[]) {
+	async createOrUpdateFiles(filesToCreate: Express.Multer.File[], id?: string): Promise<File[]> {
 		const { prisma } = this;
 
 		await Promise.all(filesToCreate.map(file => this.createOrUpdateFileInS3(file)));
 
-		return prisma.file.createMany({
-			data: filesToCreate.map(file => MulterFileToPrismaFileMap(file))
-		});
-
+		return prisma.$transaction(filesToCreate.map(file => {
+			return prisma.file.upsert({
+				where: {
+					id: id || ""
+				},
+				create: MulterFileToPrismaFileMap(file),
+				update: MulterFileToPrismaFileMap(file)
+			});
+		}));
 	}
 
-	async createOrUpdateFile(fileToCreate: Express.Multer.File): Promise<File> {
+	async createOrUpdateFile(fileToCreate: Express.Multer.File, id?: string): Promise<File> {
 		const { prisma } = this;
 
 		await this.createOrUpdateFileInS3(fileToCreate)
 
-		const newFile = await prisma.file.create({
-			data: MulterFileToPrismaFileMap(fileToCreate)
+		const createdOrUpdatedFile = await prisma.file.upsert({
+			where: {
+				id: id || ""
+			},
+			create: MulterFileToPrismaFileMap(fileToCreate),
+			update: MulterFileToPrismaFileMap(fileToCreate)
 		});
 
-		return newFile;
+		return createdOrUpdatedFile;
 	}
 
 	async deleteOne(fileId: string): Promise<File> {
@@ -81,7 +90,7 @@ export class FileService {
 				id: fileId
 			}
 		})
-		
+
 		if (!fileToDelete) {
 			throw new NotFoundException(`File with id ${fileId} not found`)
 		}
@@ -106,12 +115,9 @@ export class FileService {
 			throw new NotFoundException("File not found");
 		}
 
-		const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand({
-			Bucket: this.S3_BUCKET_NAME,
-			Key: file.originalFileName
-		}), { expiresIn: 3600 });
-
-		return PrismaFileToClientFileMap(file, signedUrl);
+		const clientFile = await this.getFileWithSignedUrl(file);
+		
+		return clientFile;
 	}
 
 	async findMany(args?: Prisma.FileFindManyArgs) {
@@ -120,15 +126,17 @@ export class FileService {
 		const files = await prisma.file.findMany(args);
 
 		const clientFiles = await Promise.all(files.map(file => {
-			return (async () => {
-				const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand({
-					Bucket: this.S3_BUCKET_NAME,
-					Key: file.originalFileName
-				}), { expiresIn: 3600 });
-				return PrismaFileToClientFileMap(file, signedUrl);
-			})()
+			return this.getFileWithSignedUrl(file);
 		}));
 
 		return clientFiles;
+	}
+
+	async getFileWithSignedUrl(file: File): Promise<ClientFile> {
+		const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand({
+			Bucket: this.S3_BUCKET_NAME,
+			Key: file.originalFileName
+		}), { expiresIn: 3600 });
+		return PrismaFileToClientFileMap(file, signedUrl);
 	}
 }
