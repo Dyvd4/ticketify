@@ -4,6 +4,7 @@ import { GlobalModule } from './global/global.module';
 import { DummyModule } from './dummy/dummy.module';
 import { TicketModule } from './ticket/ticket.module';
 import { UserModule } from './user/user.module';
+import { FileModule } from './file/file.module';
 
 @Module({
 	imports: [
@@ -11,7 +12,8 @@ import { UserModule } from './user/user.module';
 		UserModule,
 		CommentModule,
 		TicketModule,
-		DummyModule
+		DummyModule,
+		FileModule
 	],
 	controllers: [],
 	providers: [],

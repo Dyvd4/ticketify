@@ -1,20 +1,41 @@
-import { Body, Controller, Get, Options, ParseArrayPipe, Post, Put, Query, Req } from "@nestjs/common";
+import { S3Client } from "@aws-sdk/client-s3";
+import { Controller, Delete, Get, Param, ParseArrayPipe, Post, Put, Query, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { BadRequestException } from "@nestjs/common/exceptions";
+import { ConfigService } from "@nestjs/config";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { Config } from "@src/config";
+import { UploadFileDto } from "@src/file/file.dtos";
+import { parseImageFilePipe } from "@src/file/file.pipes";
+import { FileService } from "@src/file/file.service";
 import { PrismaService } from "@src/global/database/database.prisma.service";
-import { ValidationException } from "@src/global/global.validation.exception";
 import { InfiniteLoader } from "@src/lib/list";
-import { FilterQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs, OrderByQueryParams } from "@src/lib/list/list";
+import { FilterQueryParams, OrderByQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "@src/lib/list/list";
 import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
 import { MailTemplateProvider } from "@src/mail/mail.template-provider";
-import { DummyDto, SomeObjDto } from "./dummy.dtos";
+import { SomeObjDto } from "./dummy.dtos";
 
 @Controller('dummy')
 export class DummyController {
 
+	private client: S3Client
+
 	constructor(
 		private mailTemplateProvider: MailTemplateProvider,
-		private prisma: PrismaService
-	) { }
+		private configService: ConfigService,
+		private prisma: PrismaService,
+		private fileService: FileService
+	) {
+		const S3_PUBLIC_KEY = configService.get<Config>("S3_PUBLIC_KEY", { infer: true });
+		const S3_PRIVATE_KEY = configService.get<Config>("S3_PRIVATE_KEY", { infer: true });
+		this.client = new S3Client({
+			credentials: {
+				accessKeyId: S3_PUBLIC_KEY,
+				secretAccessKey: S3_PRIVATE_KEY
+			},
+			region: "eu-central-1"
+		});
+	}
 
 	@Get('getTiddies')
 	tiddies() {
@@ -84,13 +105,38 @@ export class DummyController {
 		throw new BadRequestException();
 	}
 
-	@Post("error")
-	postError(@Body() dummyDto: DummyDto) {
-		return new ValidationException("some dumb error");
-	}
-
 	@Put("dumbShit")
 	someDumbShit() {
 		return "Hello"
 	}
+
+	@ApiConsumes("multipart/form-data")
+	@ApiBody({
+		type: UploadFileDto
+	})
+	@Post('uploadFile')
+	@UseInterceptors(FileInterceptor("file"))
+	async uploadFile(@UploadedFile(parseImageFilePipe) file: Express.Multer.File) {
+		const uploadedFile = await this.fileService.createOrUpdateFile(file);
+		return uploadedFile;
+	}
+
+	@Get('file/:id')
+	async getFile(@Param("id") id: string) {
+		const file = await this.fileService.findFirst({ where: { id } })
+		return file;
+	}
+
+	@Get("files")
+	async getFiles() {
+		const files = await this.fileService.findMany()
+		return files;
+	}
+
+	@Delete("file/:id")
+	async deleteFile(@Param("id") id: string) {
+		const deletedFile = await this.fileService.deleteOne(id)
+		return deletedFile;
+	}
+
 }

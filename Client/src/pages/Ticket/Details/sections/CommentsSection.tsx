@@ -50,7 +50,7 @@ function CommentsSection(props: CommentsSectionProps) {
         isError,
         data: comments = []
     } = useQuery(["comments", sortParam, ticket.id], () => {
-        return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${JSON.stringify(sortParam)}` });
+        return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${sortParam.property}` });
     }, {
         refetchOnWindowFocus: false
     });

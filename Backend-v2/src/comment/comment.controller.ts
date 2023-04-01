@@ -2,8 +2,8 @@ import { User } from '@auth/auth.user.decorator';
 import { PrismaService } from '@database/database.prisma.service';
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UnauthorizedException } from '@nestjs/common';
 import { User as TUser } from "@prisma/client";
+import { FileService } from '@src/file/file.service';
 import { ValidationException } from '@src/global/global.validation.exception';
-import FileEntityToClientDto from 'src/file/file.dtos';
 import { CreateCommentDto, GetCommentsQueryDto, UpdateCommentDto } from './comment.dtos';
 import { getInteractions, prismaIncludeParams, userHasInteracted } from './comment.service';
 
@@ -11,7 +11,8 @@ import { getInteractions, prismaIncludeParams, userHasInteracted } from './comme
 export class CommentController {
 
 	constructor(
-		private readonly prisma: PrismaService
+		private readonly prisma: PrismaService,
+		private readonly fileService: FileService
 	) { }
 
 	@Get('comments')
@@ -20,43 +21,48 @@ export class CommentController {
 		@Query() { orderBy }: GetCommentsQueryDto,
 	) {
 		const { prisma } = this;
-		let comments = await prisma.comment.findMany({
+		const comments = await prisma.comment.findMany({
 			where: {
 				parentId: null
 			},
 			include: prismaIncludeParams as any
 		});
 
-		(comments as any[]) = (comments as any[]).map(comment => {
-			return {
-				...comment,
-				author: {
-					...comment.author,
-					avatar: comment.author.avatar?.file
-						? FileEntityToClientDto(comment.author.avatar.file)
-						: null
-				},
-				childs: comment.childs.map(child => {
-					return {
-						...child,
-						author: {
-							...child.author,
-							avatar: child.author.avatar?.file
-								? FileEntityToClientDto(child.author.avatar.file)
-								: null
-						},
-						...getInteractions(child.interactions),
-						liked: userHasInteracted(child.interactions, "like", UserId!),
-						disliked: userHasInteracted(child.interactions, "dislike", UserId!),
-						hearted: userHasInteracted(child.interactions, "heart", UserId!)
-					}
-				}),
-				...getInteractions(comment.interactions),
-				liked: userHasInteracted(comment.interactions, "like", UserId!),
-				disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
-				hearted: userHasInteracted(comment.interactions, "heart", UserId!)
-			}
-		}).sort((a, b) => {
+		const mappedComments = (await Promise.all((comments as any[]).map(comment => {
+			return (async () => {
+				const childComments = await Promise.all(comment.childs.map(child => {
+					return (async () => {
+						return {
+							...child,
+							author: {
+								...child.author,
+								avatar: child.author.avatar?.file
+									? await this.fileService.getFileWithSignedUrl(child.author.avatar.file)
+									: null
+							},
+							...getInteractions(child.interactions),
+							liked: userHasInteracted(child.interactions, "like", UserId!),
+							disliked: userHasInteracted(child.interactions, "dislike", UserId!),
+							hearted: userHasInteracted(child.interactions, "heart", UserId!)
+						}
+					})()
+				}))
+				return {
+					...comment,
+					author: {
+						...comment.author,
+						avatar: comment.author.avatar?.file
+							? await this.fileService.getFileWithSignedUrl(comment.author.avatar.file)
+							: null
+					},
+					childs: childComments,
+					...getInteractions(comment.interactions),
+					liked: userHasInteracted(comment.interactions, "like", UserId!),
+					disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
+					hearted: userHasInteracted(comment.interactions, "heart", UserId!)
+				}
+			})()
+		}))).sort((a, b) => {
 			if (orderBy === "newestFirst") {
 				return new Date(b.createdAt).getUTCMilliseconds() - new Date(a.createdAt).getUTCMilliseconds();
 			}
@@ -73,7 +79,7 @@ export class CommentController {
 			return 0;
 		})
 
-		return comments;
+		return mappedComments;
 	}
 
 	@Get("comments/count/:ticketId")
@@ -102,12 +108,12 @@ export class CommentController {
 	@Get('comments/:ticketId')
 	async getCommentsByTicketId(
 		@User() { id: UserId }: TUser,
-		@Query("orderBy") orderByParams: unknown,
+		@Query() { orderBy }: GetCommentsQueryDto,
 		@Param("ticketId") ticketId: number
 	) {
 		const { prisma } = this;
 
-		let comments = await prisma.comment.findMany({
+		const comments = await prisma.comment.findMany({
 			where: {
 				parentId: null,
 				ticketId
@@ -115,47 +121,50 @@ export class CommentController {
 			include: prismaIncludeParams as any
 		});
 
-		const orderBy: any = JSON.parse((orderByParams || "{}") as string);
-
-		(comments as any[]) = (comments as any[]).map(comment => {
-			return {
-				...comment,
-				author: {
-					...comment.author,
-					avatar: comment.author.avatar?.file
-						? FileEntityToClientDto(comment.author.avatar.file)
-						: null
-				},
-				childs: comment.childs.map(child => {
-					return {
-						...child,
-						author: {
-							...child.author,
-							avatar: child.author.avatar?.file
-								? FileEntityToClientDto(child.author.avatar.file)
-								: null
-						},
-						...getInteractions(child.interactions),
-						liked: userHasInteracted(child.interactions, "like", UserId!),
-						disliked: userHasInteracted(child.interactions, "dislike", UserId!),
-						hearted: userHasInteracted(child.interactions, "heart", UserId!)
-					}
-				}),
-				...getInteractions(comment.interactions),
-				liked: userHasInteracted(comment.interactions, "like", UserId!),
-				disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
-				hearted: userHasInteracted(comment.interactions, "heart", UserId!)
-			}
-		}).sort((a, b) => {
-			if (orderBy.property === "newestFirst") {
+		const mappedComments = (await Promise.all((comments as any[]).map(comment => {
+			return (async () => {
+				const childComments = await Promise.all(comment.childs.map(child => {
+					return (async () => {
+						return {
+							...child,
+							author: {
+								...child.author,
+								avatar: child.author.avatar?.file
+									? await this.fileService.getFileWithSignedUrl(child.author.avatar.file)
+									: null
+							},
+							...getInteractions(child.interactions),
+							liked: userHasInteracted(child.interactions, "like", UserId!),
+							disliked: userHasInteracted(child.interactions, "dislike", UserId!),
+							hearted: userHasInteracted(child.interactions, "heart", UserId!)
+						}
+					})()
+				}))
+				return {
+					...comment,
+					author: {
+						...comment.author,
+						avatar: comment.author.avatar?.file
+							? await this.fileService.getFileWithSignedUrl(comment.author.avatar.file)
+							: null
+					},
+					childs: childComments,
+					...getInteractions(comment.interactions),
+					liked: userHasInteracted(comment.interactions, "like", UserId!),
+					disliked: userHasInteracted(comment.interactions, "dislike", UserId!),
+					hearted: userHasInteracted(comment.interactions, "heart", UserId!)
+				}
+			})()
+		}))).sort((a, b) => {
+			if (orderBy === "newestFirst") {
 				return new Date(b.createdAt).getUTCMilliseconds() - new Date(a.createdAt).getUTCMilliseconds();
 			}
-			if (orderBy.property === "mostLikes") {
+			if (orderBy === "mostLikes") {
 				const aLikesLength = a.interactions.filter(interaction => interaction.type === "like").length;
 				const bLikesLength = b.interactions.filter(interaction => interaction.type === "like").length;
 				return bLikesLength - aLikesLength;
 			}
-			if (orderBy.property === "mostHearts") {
+			if (orderBy === "mostHearts") {
 				const aHeartsLength = a.interactions.filter(interaction => interaction.type === "heart").length;
 				const bHeartsLength = b.interactions.filter(interaction => interaction.type === "heart").length;
 				return bHeartsLength - aHeartsLength;
@@ -163,7 +172,7 @@ export class CommentController {
 			return 0;
 		})
 
-		return comments;
+		return mappedComments;
 	}
 
 	@Get('comment/:id')

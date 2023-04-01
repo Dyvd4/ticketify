@@ -1,10 +1,9 @@
-import { Flex, HStack } from "@chakra-ui/react";
+import { Flex, HStack, Image } from "@chakra-ui/react";
 import { faFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import Attachment from "./Attachment";
-import ImageWrapper from "./ImageWrapper";
 
 type AttachmentsProps = {
     attachments: any[]
@@ -20,7 +19,12 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
                 {attachments.map(attachment => {
                     return variant === "images"
                         ? <Zoom key={attachment.id}>
-                            <ImageWrapper attachment={attachment} />
+                            <Image
+                                className={`w-20 h-20 rounded-md m-0`}
+                                objectFit="cover"
+                                alt={attachment.originalFileName}
+                                src={attachment.url}
+                            />
                         </Zoom>
                         : <Attachment key={attachment.id} file={attachment} />
                 })}

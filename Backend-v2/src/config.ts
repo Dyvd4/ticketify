@@ -8,7 +8,6 @@ const config = {
 	CLIENT_URL: process.env.CLIENT_URL!,
 	// file
 	// ====
-	FILE_UPLOAD_PATH: path.join(__dirname, "../file-upload"),
 	FILE_UPLOAD_ROUTE_NAME: "file-upload",
 	FILE_IMAGE_MAX_SIZE_KB: parseInt(process.env.FILE_IMAGE_MAX_SIZE_KB!),
 	FILE_IMAGE_MAX_COUNT: parseInt(process.env.FILE_IMAGE_MAX_COUNT!),
@@ -29,6 +28,10 @@ const config = {
 	get HTML_EMAIL_TEMPLATES_PATH() {
 		return path.join(this.ASSETS_PATH, "html-templates");
 	},
+	S3_PUBLIC_KEY: process.env.S3_PUBLIC_KEY!,
+	S3_PRIVATE_KEY: process.env.S3_PRIVATE_KEY!,
+	S3_BUCKET_NAME: process.env.S3_BUCKET_NAME!,
+	S3_REGION: process.env.S3_REGION!
 }
 
 export type Config = typeof config;
