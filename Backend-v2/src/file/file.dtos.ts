@@ -1,13 +1,11 @@
-import config from "@config";
-import { File } from "@prisma/client";
+import { ApiProperty } from "@nestjs/swagger";
 
-const { FILE_UPLOAD_ROUTE_NAME } = config();
+export class FileUploadDto {
+	@ApiProperty({ type: "string", format: "binary" })
+	file!: Express.Multer.File
+}
 
-// TODO: think about creating a class for it in order to be visible at swagger schema
-// (currently only being used internally)
-export default function FileEntityToClientDto(file: File) {
-	return {
-		...file,
-		contentRoute: `${FILE_UPLOAD_ROUTE_NAME}/${file.fileName}`
-	}
+export class FilesUploadDto {
+	@ApiProperty({ type: "array", items: { type: "string", format: "binary" } })
+	files!: Express.Multer.File[]
 }
