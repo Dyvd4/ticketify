@@ -1,4 +1,4 @@
-import { HttpStatus, ParseFilePipe, ParseFilePipeBuilder } from "@nestjs/common";
+import { FileTypeValidator, HttpStatus, ParseFilePipe } from "@nestjs/common";
 import { ValidationException } from "@src/global/global.validation.exception";
 import { CustomMaxFileSizeValidator } from "./file.custom-max-file-size.validator";
 
@@ -21,16 +21,13 @@ export const parseFilePipe = new ParseFilePipe({
 	}
 });
 
-export const parseImageFilePipe = new ParseFilePipeBuilder()
-	.addMaxSizeValidator({
-		maxSize: FILE_IMAGE_MAX_SIZE_B
-	})
-	.addFileTypeValidator({
-		fileType: new RegExp(VALID_IMAGETYPES_REGEX!)
-	})
-	.build({
-		errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-		exceptionFactory(error) {
-			return new ValidationException(error);
-		}
-	})
+export const parseImageFilePipe = new ParseFilePipe({
+	validators: [
+		new CustomMaxFileSizeValidator({ maxSize: FILE_IMAGE_MAX_SIZE_B }),
+		new FileTypeValidator({ fileType: new RegExp(VALID_IMAGETYPES_REGEX!) })
+	],
+	errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+	exceptionFactory(error) {
+		return new ValidationException(error);
+	}
+})
