@@ -13,33 +13,6 @@ export function handleError(error, options?: HandleErrorOptions) {
     }));
 }
 
-export const getErrorMessage = (error) => {
-    return getMulterErrorMessage(error) || error.message;;
-}
-
-type MulterErrorMessage = "File too large" | "Unexpected field"
-
-type MulterErrorMessageMap = {
-    [key in MulterErrorMessage]: string
-}
-
-const multerErrorMessageMap: MulterErrorMessageMap = {
-    "File too large": "File too large",
-    "Unexpected field": "Too many files",
-}
-
-export function getMulterErrorMessage(error: AxiosError) {
-    const unmappedErrorMessage = (error.response?.data as any)?.error || "" as string;
-    if (!unmappedErrorMessage.includes("MulterError")) return "";
-    const multerErrorMessage = Object.keys(multerErrorMessageMap)
-        .find(multerErrorMessage => {
-            return unmappedErrorMessage.includes(multerErrorMessage);
-        })
-    return multerErrorMessage
-        ? multerErrorMessageMap[multerErrorMessage]
-        : unmappedErrorMessage.replace("MulterError:", "") as string;
-}
-
 export type ValidationErrorMap = Partial<{
     [key: string]: string | string[]
     message: string
