@@ -74,7 +74,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
             <Box ref={avatarContainerRef}>
                 <FormControl
                     className="flex justify-center items-center flex-col my-4"
-                    errorMessage={errorMap?.files}>
+                    errorMessage={errorMap?.message}>
                     <AvatarInput
                         disabled={!isOwnSite}
                         username={user.username}

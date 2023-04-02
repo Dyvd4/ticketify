@@ -42,7 +42,6 @@ export function getMulterErrorMessage(error: AxiosError) {
 
 export type ValidationErrorMap = Partial<{
     [key: string]: string | string[]
-    files: string
     message: string
 }>
 
@@ -116,21 +115,4 @@ export function getValidationErrorMap(error: AxiosError<ValidationErrorResponse>
     return Object.keys(validationErrorMap).length > 0
         ? validationErrorMap
         : null;
-}
-
-export function getValidationErrorMessages(error) {
-    const { response: { data: { validation, validations } } } = error;
-    const mapErrorMessages = (validation) => validation.error.details.map(detail => detail.message)
-    let errorMessages: any[] = [];
-    const validationsToMap = validation
-        ? [validation || {}]
-        : validations || [];
-
-    validationsToMap.forEach(validation => {
-        if (validation?.message) errorMessages.push(validation.message);
-        if (validation?.error?.details) {
-            errorMessages = errorMessages.concat(mapErrorMessages(validation));
-        }
-    });
-    return errorMessages;
 }
