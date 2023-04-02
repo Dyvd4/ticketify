@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, HttpException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { User } from "@prisma/client";
+import { UserService } from "@src/user/user.service";
 import { Request } from "express";
 import { AuthDecoratorParams } from "./auth.decorator";
 import { AuthService } from "./auth.service";
@@ -20,6 +21,7 @@ export class AuthGuard implements CanActivate {
 	constructor(
 		private reflector: Reflector,
 		private authService: AuthService,
+		private userService: UserService
 	) { }
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -46,6 +48,8 @@ export class AuthGuard implements CanActivate {
 		}
 
 		request.User = encodedUserIdOrError;
+		this.userService.setCurrentUser(encodedUserIdOrError);
+		
 		return true;
 	}
 }
