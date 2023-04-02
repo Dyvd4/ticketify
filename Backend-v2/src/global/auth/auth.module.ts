@@ -5,6 +5,7 @@ import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthMailDeliveryService } from './auth.mail-delivery.service';
 import { AuthService } from './auth.service';
+import { UserModule } from '@src/user/user.module';
 
 @Module({
 	providers: [
@@ -16,7 +17,7 @@ import { AuthService } from './auth.service';
 		AuthService,
 		AuthMailDeliveryService,
 	],
-	imports: [MailModule],
+	imports: [MailModule, UserModule],
 	controllers: [AuthController],
 	exports: [
 		AuthService,
