@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CommentModule } from './comment/comment.module';
-import { GlobalModule } from './global/global.module';
-import { DummyModule } from './dummy/dummy.module';
-import { TicketModule } from './ticket/ticket.module';
-import { UserModule } from './user/user.module';
-import { FileModule } from './file/file.module';
+import { CommentModule } from './modules/comment/comment.module';
+import { GlobalModule } from './modules/global/global.module';
+import { DummyModule } from './modules/dummy/dummy.module';
+import { TicketModule } from './modules/ticket/ticket.module';
+import { UserModule } from './modules/user/user.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
 	imports: [
