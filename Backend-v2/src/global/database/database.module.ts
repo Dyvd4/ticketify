@@ -2,10 +2,15 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { TicketActivityPrismaMiddleWareProvider } from '@src/ticket/ticket-activity/ticket-activity-prisma-middleware.provider';
 import { TicketActivityModule } from '@src/ticket/ticket-activity/ticket-activity.module';
+import { UserModule } from '@src/user/user.module';
+import { UserPrismaMiddleWareProvider } from '@src/user/user.prisma-middleware.provider';
 import { PrismaService } from './database.prisma.service';
 
 @Module({
-	imports: [TicketActivityModule],
+	imports: [
+		TicketActivityModule,
+		UserModule
+	],
 	providers: [PrismaService],
 	controllers: [],
 	exports: [PrismaService]
@@ -13,7 +18,8 @@ import { PrismaService } from './database.prisma.service';
 export class DatabaseModule implements OnModuleInit {
 	constructor(
 		private moduleRef: ModuleRef,
-		private ticketActivityMiddleWareProvider: TicketActivityPrismaMiddleWareProvider
+		private ticketActivityMiddleWareProvider: TicketActivityPrismaMiddleWareProvider,
+		private userMiddlewareProvider: UserPrismaMiddleWareProvider
 	) { }
 	onModuleInit() {
 		const prismaService = this.moduleRef.get(PrismaService);
@@ -25,9 +31,14 @@ export class DatabaseModule implements OnModuleInit {
 			createActivityIfResponsibleUserHasChanged
 		} = this.ticketActivityMiddleWareProvider;
 
+		const {
+			userSignature
+		} = this.userMiddlewareProvider
+
 		prismaService.$use(createActivityByComment);
 		prismaService.$use(createActivityIfDescriptionHasChanged);
 		prismaService.$use(createActivityIfStatusHasChanged);
 		prismaService.$use(createActivityIfResponsibleUserHasChanged);
+		prismaService.$use(userSignature)
 	}
 }

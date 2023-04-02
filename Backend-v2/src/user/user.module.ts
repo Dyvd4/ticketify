@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common/decorators";
 import { FileModule } from "@src/file/file.module";
 import { UserSettingsModule } from "./user-settings/user-settings.module";
 import { UserController } from "./user.controller";
+import { UserPrismaMiddleWareProvider } from "./user.prisma-middleware.provider";
 import { UserService } from "./user.service";
 
 @Module({
@@ -9,8 +10,14 @@ import { UserService } from "./user.service";
 		UserSettingsModule,
 		FileModule
 	],
-	providers: [UserService],
+	providers: [
+		UserService,
+		UserPrismaMiddleWareProvider
+	],
 	controllers: [UserController],
-	exports: [UserService]
+	exports: [
+		UserService,
+		UserPrismaMiddleWareProvider
+	]
 })
 export class UserModule { }
