@@ -14,7 +14,7 @@ const FILE_IMAGE_MAX_SIZE_B = FILE_IMAGE_MAX_SIZE_KB * 1000;
 const FILE_MAX_SIZE_B = FILE_MAX_SIZE_KB * 1000;
 
 export const parseFilePipe = new ParseFilePipe({
-	validators: [new CustomMaxFileSizeValidator({ maxSize: FILE_MAX_SIZE_B })],
+	validators: [new CustomMaxFileSizeValidator({ maxSize: FILE_MAX_SIZE_B, format: "megabyte" })],
 	errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
 	exceptionFactory(error) {
 		return new ValidationException(error);
@@ -23,7 +23,7 @@ export const parseFilePipe = new ParseFilePipe({
 
 export const parseImageFilePipe = new ParseFilePipe({
 	validators: [
-		new CustomMaxFileSizeValidator({ maxSize: FILE_IMAGE_MAX_SIZE_B }),
+		new CustomMaxFileSizeValidator({ maxSize: FILE_IMAGE_MAX_SIZE_B, format: "megabyte" }),
 		new FileTypeValidator({ fileType: new RegExp(VALID_IMAGETYPES_REGEX!) })
 	],
 	errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
