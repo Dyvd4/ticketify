@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { TicketActivityMiddleWareProvider } from '@src/ticket/ticket-activity/ticket-activity-middleware.provider';
+import { TicketActivityPrismaMiddleWareProvider } from '@src/ticket/ticket-activity/ticket-activity-prisma-middleware.provider';
 import { TicketActivityModule } from '@src/ticket/ticket-activity/ticket-activity.module';
 import { PrismaService } from './database.prisma.service';
 
@@ -13,7 +13,7 @@ import { PrismaService } from './database.prisma.service';
 export class DatabaseModule implements OnModuleInit {
 	constructor(
 		private moduleRef: ModuleRef,
-		private ticketActivityMiddleWareProvider: TicketActivityMiddleWareProvider
+		private ticketActivityMiddleWareProvider: TicketActivityPrismaMiddleWareProvider
 	) { }
 	onModuleInit() {
 		const prismaService = this.moduleRef.get(PrismaService);

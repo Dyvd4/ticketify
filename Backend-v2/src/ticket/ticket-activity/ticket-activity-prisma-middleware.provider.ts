@@ -58,7 +58,7 @@ interface TicketActivityOptions {
  */
 
 @Injectable()
-export class TicketActivityMiddleWareProvider {
+export class TicketActivityPrismaMiddleWareProvider {
 
 	constructor(
 		private readonly prisma: PrismaService,

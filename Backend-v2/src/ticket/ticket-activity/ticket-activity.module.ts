@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailModule } from '@src/mail/mail.module';
 import { UserModule } from '@src/user/user.module';
 import { TicketActivityMailProvider } from './ticket-activity-mail.provider';
-import { TicketActivityMiddleWareProvider } from './ticket-activity-middleware.provider';
+import { TicketActivityPrismaMiddleWareProvider } from './ticket-activity-prisma-middleware.provider';
 import { TicketActivityController } from './ticket-activity.controller';
 
 @Module({
@@ -12,9 +12,9 @@ import { TicketActivityController } from './ticket-activity.controller';
 	],
 	providers: [
 		TicketActivityMailProvider,
-		TicketActivityMiddleWareProvider
+		TicketActivityPrismaMiddleWareProvider
 	],
 	controllers: [TicketActivityController],
-	exports: [TicketActivityMiddleWareProvider]
+	exports: [TicketActivityPrismaMiddleWareProvider]
 })
 export class TicketActivityModule { }
