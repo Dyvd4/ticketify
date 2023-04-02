@@ -2,8 +2,8 @@ import MailTransporter from "@src/modules/mail/mail.transporter";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Config } from "@src/config";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
-import { MailTemplateProvider } from "@src/modules/mail/mail.template-provider";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import jwt from "jsonwebtoken";
 
 @Injectable()

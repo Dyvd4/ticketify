@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { UserService } from "@src/modules/user/user.service";
 import { TicketActivityMailProvider } from "./ticket-activity-mail.provider";
 
@@ -24,7 +24,7 @@ export const TicketActivityModelIconMap: ActivityModelIconMap = {
 	"Ticket": "ticket"
 }
 
-interface TicketActivityOptions {
+interface BaseTicketActivityPrismaMiddlewareProviderOptions {
 	disableMailDelivery?: boolean,
 	/** 
 	 * return false if a ticket activity should not be created 
@@ -63,7 +63,7 @@ export abstract class BaseTicketActivityPrismaMiddlewareProvider {
 	protected create(
 		entityName: ActivityModels,
 		events: Event[],
-		options?: TicketActivityOptions) {
+		options?: BaseTicketActivityPrismaMiddlewareProviderOptions) {
 		return async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
 
 			if (params.model === entityName && (events as string[]).includes(params.action)) {

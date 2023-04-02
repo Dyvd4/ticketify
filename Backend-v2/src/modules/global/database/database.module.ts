@@ -3,8 +3,8 @@ import { ModuleRef } from '@nestjs/core';
 import { TicketActivityPrismaMiddleWareProvider } from '@src/modules/ticket/ticket-activity/ticket-activity-prisma-middleware.provider';
 import { TicketActivityModule } from '@src/modules/ticket/ticket-activity/ticket-activity.module';
 import { UserModule } from '@src/modules/user/user.module';
-import { UserPrismaMiddleWareProvider } from '@src/modules/user/user.prisma-middleware.provider';
-import { PrismaService } from './database.prisma.service';
+import { UserPrismaMiddleWareProvider } from '@src/modules/user/user-prisma-middleware.provider';
+import { PrismaService } from './prisma.service';
 
 @Module({
 	imports: [

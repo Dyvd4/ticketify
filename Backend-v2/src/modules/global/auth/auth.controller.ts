@@ -1,4 +1,4 @@
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User as TUser } from '@prisma/client';
@@ -7,11 +7,11 @@ import dayjs from 'dayjs';
 import { Response } from 'express';
 import jwt from "jsonwebtoken";
 import { Config } from 'src/config';
-import { ValidationException } from '../global.validation.exception';
+import { ValidationException } from '../validation.exception';
 import { Auth } from './auth.decorator';
-import { AuthMailDeliveryService } from './auth.mail-delivery.service';
-import { User } from './auth.user.decorator';
-import { UserSignInDto, UserSignUpDto } from './auth.user.dtos';
+import { AuthMailDeliveryService } from './auth-mail-delivery.service';
+import { User } from './user.decorator';
+import { UserSignInDto, UserSignUpDto } from './user.dtos';
 
 @Controller('auth')
 export class AuthController {

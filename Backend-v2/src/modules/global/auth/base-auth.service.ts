@@ -3,9 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { Config } from "@config";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 
-export interface AuthenticationParams {
+export interface BaseAuthParams {
 	/** If set to true, checks if user is half authenticated instead of full.
 		 * Half authenticated means that the e-mail is not confirmed yet.
 		 */
@@ -13,7 +13,7 @@ export interface AuthenticationParams {
 }
 
 @Injectable()
-export abstract class AuthenticationService {
+export abstract class BaseAuthService {
 
 	private JWT_SECRET_KEY: string
 
@@ -34,7 +34,7 @@ export abstract class AuthenticationService {
 	* - User is authentication passes
 	* - HttpException if authentication fails
 	* */
-	protected authenticate = async (encodedAuthToken: string, authArgs?: AuthenticationParams): Promise<User | HttpException> => {
+	protected authenticate = async (encodedAuthToken: string, authArgs?: BaseAuthParams): Promise<User | HttpException> => {
 		const { prisma } = this;
 
 		if (!encodedAuthToken) {

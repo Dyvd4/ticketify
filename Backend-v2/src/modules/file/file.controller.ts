@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, NotFoundException, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import ListResult from '@src/lib/list/result/list-result';
 import { parseFilePipe, parseImageFilePipe } from './file.pipes';
 import { FileService } from './file.service';

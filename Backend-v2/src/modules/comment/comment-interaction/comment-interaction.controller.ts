@@ -1,5 +1,5 @@
-import { User } from '@src/modules/global/auth/auth.user.decorator';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { User } from '@src/modules/global/auth/user.decorator';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CommentInteraction, User as TUser } from "@prisma/client";
 import { CreateCommentInteractionDto, UpdateCommentInteractionDto } from './comment-interaction.dtos';

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { User as TUser } from '@prisma/client';
-import { User } from '@src/modules/global/auth/auth.user.decorator';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
-import { UpdateUserSettingsDto } from "./user-setting.dtos";
+import { User } from '@src/modules/global/auth/user.decorator';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
+import { UpdateUserSettingsDto } from "./user-settings.dtos";
 
 @Controller('userSettings')
 export class UserSettingsController {

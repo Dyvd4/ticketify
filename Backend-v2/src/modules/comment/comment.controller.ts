@@ -1,9 +1,9 @@
-import { User } from '@src/modules/global/auth/auth.user.decorator';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { User } from '@src/modules/global/auth/user.decorator';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UnauthorizedException } from '@nestjs/common';
 import { User as TUser } from "@prisma/client";
 import { FileService } from '@src/modules/file/file.service';
-import { ValidationException } from '@src/modules/global/global.validation.exception';
+import { ValidationException } from '@src/modules/global/validation.exception';
 import { CreateCommentDto, GetCommentsQueryDto, UpdateCommentDto } from './comment.dtos';
 import { getInteractions, prismaIncludeParams, userHasInteracted } from './comment.service';
 

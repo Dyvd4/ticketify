@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { UserService } from "@src/modules/user/user.service";
 import { BaseTicketActivityPrismaMiddlewareProvider } from "./base-ticket-activity-prisma-middleware.provider";
 import { TicketActivityMailProvider } from "./ticket-activity-mail.provider";

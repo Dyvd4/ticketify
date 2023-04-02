@@ -1,7 +1,7 @@
 import { Auth } from "@src/modules/global/auth/auth.decorator";
-import { AuthMailDeliveryService } from "@src/modules/global/auth/auth.mail-delivery.service";
-import { User } from "@src/modules/global/auth/auth.user.decorator";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { AuthMailDeliveryService } from "@src/modules/global/auth/auth-mail-delivery.service";
+import { User } from "@src/modules/global/auth/user.decorator";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { Body, Put, UploadedFile, UseInterceptors } from "@nestjs/common/decorators";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -10,7 +10,7 @@ import { User as TUser } from "@prisma/client";
 import { UploadFileDto } from "@src/modules/file/file.dtos";
 import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
-import { ValidationException } from "@src/modules/global/global.validation.exception";
+import { ValidationException } from "@src/modules/global/validation.exception";
 import bcrypt from "bcrypt";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
 

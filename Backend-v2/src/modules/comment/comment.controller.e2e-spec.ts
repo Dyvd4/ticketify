@@ -1,8 +1,8 @@
 import { AuthService } from '@src/modules/global/auth/auth.service';
 import { AuthGuard as MockAuthGuard } from '@src/modules/global/auth/__mocks__/auth.guard';
 import config from '@config';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
-import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/database.prisma.service";
+import { PrismaService } from '@src/modules/global/database/prisma.service';
+import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/prisma.service";
 import { INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';

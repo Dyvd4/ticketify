@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { AuthenticationParams, AuthenticationService } from "./auth.authentication.service";
+import { BaseAuthParams, BaseAuthService } from "./base-auth.service";
 
-export interface AuthParams extends AuthenticationParams {
+export interface AuthParams extends BaseAuthParams {
 	/**
 	 * @returns 
 	 * - true as first tuple item if user should pass the authorization
@@ -12,11 +12,11 @@ export interface AuthParams extends AuthenticationParams {
 }
 
 @Injectable()
-export class AuthService extends AuthenticationService {
+export class AuthService extends BaseAuthService {
 
 	/**
 	* @returns 
-	* - User is authorization passes
+	* - User if authorization passes
 	* - HttpException if authentication fails
 	* */
 	public authorize = async (encodedAuthToken: string, authArgs?: AuthParams): Promise<User | HttpException> => {
@@ -26,6 +26,7 @@ export class AuthService extends AuthenticationService {
 		if (userOrException instanceof HttpException) {
 			return userOrException;
 		}
+
 		if (!!authArgs?.strategy) {
 			userOrException = authArgs.strategy(userOrException);
 		}

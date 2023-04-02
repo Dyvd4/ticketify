@@ -1,6 +1,6 @@
 import { FileTypeValidator, HttpStatus, ParseFilePipe } from "@nestjs/common";
-import { ValidationException } from "@src/modules/global/global.validation.exception";
-import { CustomMaxFileSizeValidator } from "./file.custom-max-file-size.validator";
+import { ValidationException } from "@src/modules/global/validation.exception";
+import { CustomMaxFileSizeValidator } from "./custom-max-file-size.validator";
 
 // FIXME: should be gathered from env file
 // but env variables cannot be loaded safely without config service

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import ListResult from '@src/lib/list/result/list-result';
 import { CreateTicketPriorityDto, UpdateTicketPriorityDto } from './ticket-priority.dtos';
 

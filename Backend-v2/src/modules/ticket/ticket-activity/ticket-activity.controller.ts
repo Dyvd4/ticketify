@@ -1,4 +1,4 @@
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 import { InfiniteLoader } from "@src/lib/list";

@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { Config } from "@config";
-import { MailTemplateProvider } from "@src/modules/mail/mail.template-provider";
+import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import MailTransporter from "@src/modules/mail/mail.transporter";
 
 @Injectable()

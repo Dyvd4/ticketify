@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '@src/config';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
-import { ValidationException } from '@src/modules/global/global.validation.exception';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
+import { ValidationException } from '@src/modules/global/validation.exception';
 import { Response } from 'express';
 import jwt from "jsonwebtoken";
 import { CreateTicketWatcherDto } from './ticket-watcher.dtos';

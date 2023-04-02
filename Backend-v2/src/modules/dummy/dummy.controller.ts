@@ -8,11 +8,11 @@ import { Config } from "@src/config";
 import { UploadFileDto } from "@src/modules/file/file.dtos";
 import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { InfiniteLoader } from "@src/lib/list";
 import { FilterQueryParams, OrderByQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "@src/lib/list/list";
 import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
-import { MailTemplateProvider } from "@src/modules/mail/mail.template-provider";
+import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import { SomeObjDto } from "./dummy.dtos";
 
 @Controller('dummy')

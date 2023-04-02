@@ -3,7 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { MailModule } from '@src/modules/mail/mail.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
-import { AuthMailDeliveryService } from './auth.mail-delivery.service';
+import { AuthMailDeliveryService } from './auth-mail-delivery.service';
 import { AuthService } from './auth.service';
 import { UserModule } from '@src/modules/user/user.module';
 

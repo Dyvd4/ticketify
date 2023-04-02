@@ -1,4 +1,4 @@
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
@@ -6,7 +6,7 @@ import { User as TUser } from "@prisma/client";
 import { parseFilePipe } from '@src/modules/file/file.pipes';
 import { FileService } from '@src/modules/file/file.service';
 import { isImageFile } from '@src/modules/file/file.utils';
-import { User } from '@src/modules/global/auth/auth.user.decorator';
+import { User } from '@src/modules/global/auth/user.decorator';
 import { InfiniteLoaderQueryDto, PagerQueryDto } from '@src/lib/list/list.dtos';
 import ListResult from '@src/lib/list/result/list-result';
 import { InfiniteLoader, Pager } from 'src/lib/list';

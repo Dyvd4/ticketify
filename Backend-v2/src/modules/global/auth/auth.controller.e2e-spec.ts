@@ -1,7 +1,7 @@
 import config from "@config";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
-import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/database.prisma.service";
-import { MailTemplateProvider } from "@src/modules/mail/mail.template-provider";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/prisma.service";
+import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import { INestApplication } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
@@ -9,8 +9,8 @@ import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import request from "supertest";
 import { AuthController } from "./auth.controller";
-import { AuthMailDeliveryService } from "./auth.mail-delivery.service";
-import { UserSignInDto, UserSignUpDto } from "./auth.user.dtos";
+import { AuthMailDeliveryService } from "./auth-mail-delivery.service";
+import { UserSignInDto, UserSignUpDto } from "./user.dtos";
 
 const dummyUser: User = {
 	id: "12345",

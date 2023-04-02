@@ -1,12 +1,12 @@
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { File, Prisma } from "@prisma/client";
 import { Config } from "@src/config";
-import { MulterFileToPrismaFileMap } from "./maps/file.multer-file-to-prisma-file.map";
-import { ClientFile, PrismaFileToClientFileMap } from "./maps/file.prisma-file-to-client.map";
+import { MulterFileToPrismaFileMap } from "./maps/multer-file-to-prisma-file.map";
+import { ClientFile, PrismaFileToClientFileMap } from "./maps/prisma-file-to-client.map";
 
 @Injectable()
 export class FileService {

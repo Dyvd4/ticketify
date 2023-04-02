@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
-import { ValidationException } from '@src/modules/global/global.validation.exception';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
+import { ValidationException } from '@src/modules/global/validation.exception';
 import { CreateTicketOnTicketDto } from './ticket-on-ticket.dtos';
 
 @Controller('ticketOnTicket')

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaFileToClientFileMap } from '@src/modules/file/maps/file.prisma-file-to-client.map';
-import { PrismaService } from '@src/modules/global/database/database.prisma.service';
+import { PrismaFileToClientFileMap } from '@src/modules/file/maps/prisma-file-to-client.map';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 
 @Injectable()
 export class TicketService {

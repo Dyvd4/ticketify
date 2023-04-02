@@ -1,11 +1,11 @@
 import { AuthGuard as MockAuthGuard } from '@src/modules/global/auth/__mocks__/auth.guard';
-import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/database.prisma.service";
+import { PrismaService as MockPrismaService } from "@src/modules/global/database/__mocks__/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { Test } from "@nestjs/testing";
 import config from "@src/config";
-import { PrismaService } from "@src/modules/global/database/database.prisma.service";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { UserService } from "@src/modules/user/user.service";
 import { BaseTicketActivityPrismaMiddlewareProvider, TicketActivityEventColorMap, TicketActivityEventLabelMap, TicketActivityModelIconMap } from "./base-ticket-activity-prisma-middleware.provider";
 import { TicketActivityMailProvider } from "./ticket-activity-mail.provider";

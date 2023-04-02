@@ -3,8 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
-import { ParseParamPipe } from './modules/global/global.parse-param.pipe';
-import { ValidationException } from './modules/global/global.validation.exception';
+import { ParseParamPipe } from './modules/global/parse-param.pipe';
+import { ValidationException } from './modules/global/validation.exception';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);

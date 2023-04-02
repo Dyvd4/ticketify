@@ -1,7 +1,7 @@
 import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import config from "@config";
-import { MailTemplateProvider } from "./mail.template-provider";
+import { MailTemplateProvider } from "./mail-template.provider";
 
 const htmlTemplate = `
 <p>
