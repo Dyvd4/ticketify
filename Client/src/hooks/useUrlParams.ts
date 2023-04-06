@@ -20,7 +20,7 @@ export const useUrlParams = (name: string, fallBackValue?, options?: UseUrlParam
     const setUrlParams = (params) => {
         if (!options?.dontSetUrl) {
             const newUrl = new URL(window.location.href);
-            const isPrimitive = typeof params !== "object"; // qs.stringify only stringifies objects, now primitives
+            const isPrimitive = typeof params !== "object"; // qs.stringify only stringifies objects, no primitives
             newUrl.searchParams.set(name, isPrimitive ? params : qs.stringify(params));
             window.history.pushState(null, "", newUrl);
         }

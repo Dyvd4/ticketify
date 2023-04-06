@@ -1,6 +1,11 @@
+import { HandleErrorOptions } from "src/utils/error";
+
 declare global {
   interface GlobalEventHandlersEventMap {
-    "CustomError": CustomEvent
+    "CustomError": CustomEvent<{
+      error: Error,
+      options?: HandleErrorOptions
+    }>
   }
   namespace Tailwind {
     interface Color {

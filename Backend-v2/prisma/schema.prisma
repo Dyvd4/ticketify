@@ -228,9 +228,9 @@ model Log {
   createUser   String?   @db.NVarChar(100)
   updateUser   String?   @db.NVarChar(100)
   level        String    @db.NVarChar(20)
-  message      String    @db.NVarChar(255)
-  errorMessage String?   @db.NVarChar(max)
-  errorStack   String?   @db.NVarChar(max)
+  message      String    @db.NVarChar(max)
+  context      String?   @db.NVarChar(max)
+  stack        String?   @db.NVarChar(max)
   color        String?   @db.NVarChar(50)
   icon         String?   @db.NVarChar(50)
 }
