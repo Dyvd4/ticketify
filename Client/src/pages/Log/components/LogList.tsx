@@ -14,8 +14,8 @@ function LogList(props: LogListProps) {
                     route: "logs",
                     queryKey: "logs"
                 }}
-                listItemRender={(item) => <LogListItem item={item} />}
-                loadingDisplay={<>{new Array(3).fill(undefined).map(() => <LogListItemSkeleton />)}</>}
+                listItemRender={(item) => <LogListItem item={item} key={item.id} />}
+                loadingDisplay={<>{new Array(3).fill(undefined).map((num, i) => <LogListItemSkeleton key={i} />)}</>}
                 header={{
                     title: "Logs",
                     showCount: true
