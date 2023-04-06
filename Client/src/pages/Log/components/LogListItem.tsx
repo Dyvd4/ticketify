@@ -13,7 +13,7 @@ const defaultNoOfContentLines = 3;
 function LogListItemContent({ item }: { item }) {
 
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
-    const { level, color, message, errorMessage, errorStack, createdAt } = item;
+    const { level, color, message, stack, createdAt } = item;
     const contentRef = useRef<HTMLDivElement | null>(null);
 
     return (
@@ -38,22 +38,14 @@ function LogListItemContent({ item }: { item }) {
                             <b>Message: </b>
                             <span className="text-secondary">{message}</span>
                         </Box>
-                        {errorMessage && <>
-                            <Box>
-                                <div className="mt-1 mb-2">
-                                    <b>Error message: </b>
-                                </div>
-                                <span className="text-secondary">{errorMessage}</span>
-                            </Box>
-                        </>}
-                        {errorStack && <>
+                        {stack && <>
                             <Box>
                                 <div className="mt-1 mb-2">
                                     <b>
                                         Error stack:
                                     </b>
                                 </div>
-                                <div className="text-secondary">{errorStack}</div>
+                                <div className="text-secondary">{stack}</div>
                             </Box>
                         </>}
                     </Box>

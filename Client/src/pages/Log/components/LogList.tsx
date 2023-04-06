@@ -37,12 +37,7 @@ function LogList(props: LogListProps) {
                         type: "string"
                     },
                     {
-                        property: "errorMessage",
-                        label: "error message",
-                        type: "string"
-                    },
-                    {
-                        property: "errorStack",
+                        property: "stack",
                         label: "error stack",
                         type: "string"
                     },

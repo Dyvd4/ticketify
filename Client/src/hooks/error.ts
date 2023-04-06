@@ -8,15 +8,13 @@ export function useErrorHandler() {
     const toast = useToast();
 
     window.onerror = (e, source, lineNo, colNo, error) => {
-        handleError({
-            message: error?.message,
-            stack: error?.stack
-        }, { postError: true });
+        if (!error) return;
+        handleError(error, { postError: true });
     }
 
     window.addEventListener("CustomError", e => {
         const { error, options } = e.detail;
-        if (options.postError) request().post("log", { error });
+        if (options?.postError) request().post("log/error", { error });
         if (error instanceof AxiosError && error.response?.status !== 500) return
         toast({
             title: "An unknown error occurred",

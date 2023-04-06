@@ -1,13 +1,13 @@
 import { AxiosError } from "axios";
 
-interface HandleErrorOptions {
+export interface HandleErrorOptions {
     postError?: boolean
 }
 
-export function handleError(error, options?: HandleErrorOptions) {
+export function handleError(error: Error, options?: HandleErrorOptions) {
     window.dispatchEvent(new CustomEvent("CustomError", {
         detail: {
-            options: options || {},
+            options,
             error
         }
     }));

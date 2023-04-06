@@ -3,7 +3,6 @@ import path from "path";
 const NODE_ENV = process.env.NODE_ENV!;
 
 const config = {
-	LOG_PATH: path.join(__dirname, "../logs", "/"),
 	JWT_SECRET_KEY: process.env.JWT_SECRET_KEY!,
 	CLIENT_URL: process.env.CLIENT_URL!,
 	// file
