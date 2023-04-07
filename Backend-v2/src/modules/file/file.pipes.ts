@@ -1,15 +1,12 @@
 import { FileTypeValidator, HttpStatus, ParseFilePipe } from "@nestjs/common";
 import { ValidationException } from "@src/modules/global/validation.exception";
 import { CustomMaxFileSizeValidator } from "./custom-max-file-size.validator";
+import dotenv from "dotenv";
+dotenv.config()
 
-// FIXME: should be gathered from env file
-// but env variables cannot be loaded safely without config service
-// as the config module is sometimes being loaded slightly later as this file
-// and thus the variables are undefined sometimes
-// so hardcoded it for now
-const FILE_IMAGE_MAX_SIZE_KB = 1000;
-const FILE_MAX_SIZE_KB = 2000;
-const VALID_IMAGETYPES_REGEX = /jpeg|jpg|png/;
+const { VALID_IMAGETYPES_REGEX } = process.env;
+const FILE_IMAGE_MAX_SIZE_KB = parseInt(process.env.FILE_IMAGE_MAX_SIZE_KB!);
+const FILE_MAX_SIZE_KB = parseInt(process.env.FILE_MAX_SIZE_KB!);
 const FILE_IMAGE_MAX_SIZE_B = FILE_IMAGE_MAX_SIZE_KB * 1000;
 const FILE_MAX_SIZE_B = FILE_MAX_SIZE_KB * 1000;
 
