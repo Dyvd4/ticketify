@@ -1,4 +1,4 @@
-import { CommentInteraction } from "@prisma/client";
+import { CommentInteraction, Prisma } from "@prisma/client";
 
 type CommentInteractionType = "like" | "dislike" | "heart";
 
@@ -19,7 +19,8 @@ export const userHasInteracted = (interactions: CommentInteraction[], type: Comm
 	return !!interactions.find(interaction => interaction.type === type && interaction.createdFromId === userId);
 }
 
-export const prismaIncludeParams = {
+export const prismaIncludeParams: Prisma.CommentInclude =
+{
 	author: {
 		include: {
 			avatar: {
