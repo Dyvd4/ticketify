@@ -2,6 +2,10 @@ import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import config from "@config";
 import { MailTemplateProvider } from "./mail-template.provider";
+import { LogService } from "../log/log.service";
+import { LogService as MockLogService } from "../log/__mocks__/log.service";
+import { PrismaService } from "../global/database/prisma.service";
+import { PrismaService as PrismaServiceMock } from "../global/database/__mocks__/prisma.service"
 
 const htmlTemplate = `
 <p>
@@ -18,12 +22,22 @@ describe("when generating injected html", () => {
 
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
-			imports: [ConfigModule.forRoot({
-				isGlobal: true,
-				load: [config]
-			})],
-			providers: [MailTemplateProvider]
-		}).compile();
+			imports: [
+				ConfigModule.forRoot({
+					isGlobal: true,
+					load: [config]
+				})
+			],
+			providers: [
+				PrismaService,
+				MailTemplateProvider,
+				LogService
+			]
+		}).overrideProvider(PrismaService)
+			.useValue(PrismaServiceMock)
+			.overrideProvider(LogService)
+			.useClass(MockLogService)
+			.compile();
 
 		mailTemplateProvider = moduleRef.get(MailTemplateProvider);
 	})
@@ -40,7 +54,7 @@ describe("when generating injected html", () => {
 		expect(new RegExp(`${user.firstName}`, "g").exec(injectedHtml)).toHaveLength(1);
 		expect(new RegExp(`${user.lastName}`, "g").exec(injectedHtml)).toHaveLength(1);
 	});
-	
+
 	test("getInjectedHtmlFromFile renders context variables", async () => {
 		const user = {
 			firstName: "David",

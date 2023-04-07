@@ -11,6 +11,7 @@ export class TicketActivityMailProvider {
 
 	private JWT_SECRET_KEY: string
 	private SUPPORT_EMAIL: string
+	private URL: string
 
 	constructor(
 		private readonly prisma: PrismaService,
@@ -19,6 +20,7 @@ export class TicketActivityMailProvider {
 	) {
 		this.JWT_SECRET_KEY = configService.get<Config>("JWT_SECRET_KEY", { infer: true })
 		this.SUPPORT_EMAIL = configService.get<Config>("SUPPORT_EMAIL", { infer: true })
+		this.URL = configService.get<Config>("URL", { infer: true })
 	}
 
 	async sendEmailToWatchingUsers(ticketActivityId: string) {
@@ -51,13 +53,13 @@ export class TicketActivityMailProvider {
 				}, this.JWT_SECRET_KEY)
 
 				const html = await this.mailTemplateProvider.getInjectedHtmlFromFile("TicketActivityTemplate", {
-					URL,
+					URL: this.URL,
 					ticket,
 					user,
 					ticketActivity,
 					encodedUserId
 				});
-				
+
 				return MailTransporter.sendMail({
 					from: this.SUPPORT_EMAIL,
 					to: user.email!,

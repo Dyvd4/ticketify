@@ -21,7 +21,6 @@ export class TicketWatcherController {
 		this.CLIENT_URL = this.configService.get<Config>("CLIENT_URL", { infer: true });
 	}
 
-	// TODO: test when ticket-activity middleware is implemented
 	@Get("unwatch/:encodedUserId/:ticketId")
 	async unwatch(
 		@Param("ticketId") ticketId: number,

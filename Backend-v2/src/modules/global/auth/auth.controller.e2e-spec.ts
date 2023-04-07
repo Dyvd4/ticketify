@@ -11,6 +11,8 @@ import request from "supertest";
 import { AuthController } from "./auth.controller";
 import { AuthMailDeliveryService } from "./auth-mail-delivery.service";
 import { UserSignInDto, UserSignUpDto } from "./user.dtos";
+import { LogService } from "@src/modules/log/log.service";
+import { LogService as MockLogService } from "@src/modules/log/__mocks__/log.service";
 
 const dummyUser: User = {
 	id: "12345",
@@ -37,7 +39,12 @@ describe("AuthController", () => {
 					load: [config]
 				})
 			],
-			providers: [PrismaService, AuthMailDeliveryService, MailTemplateProvider],
+			providers: [
+				PrismaService,
+				AuthMailDeliveryService,
+				MailTemplateProvider,
+				LogService
+			],
 			controllers: [AuthController],
 		})
 			.overrideProvider(PrismaService)
@@ -45,7 +52,10 @@ describe("AuthController", () => {
 			.overrideProvider(AuthMailDeliveryService)
 			.useValue({
 				sendEmailConfirmationEmail: jest.fn()
-			}).compile();
+			})
+			.overrideProvider(LogService)
+			.useValue(MockLogService)
+			.compile();
 
 		app = moduleRef.createNestApplication();
 		await app.init();
@@ -90,7 +100,7 @@ describe("AuthController", () => {
 
 			})
 
-			it("sends 401 if not authorized", async () => {
+			it("sends 400 if password is invalid", async () => {
 				const dummyPassword = "123123";
 				const hashedDummyPassword = await bcrypt.hash(dummyPassword, 10);
 				myDummyUser.password = hashedDummyPassword;
@@ -105,7 +115,7 @@ describe("AuthController", () => {
 				return request(app.getHttpServer())
 					.post("/auth/signIn")
 					.send(userSignInDto)
-					.expect(401)
+					.expect(400)
 			})
 
 		})

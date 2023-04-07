@@ -10,6 +10,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Comment, Prisma } from '@prisma/client';
 import request from "supertest";
 import { CommentController } from './comment.controller';
+import { FileService } from '../file/file.service';
+import { FileService as MockFileService } from '../file/__mocks__/file.service';
 
 const newestDate = new Date();
 
@@ -181,11 +183,14 @@ describe('CommentController', () => {
 					provide: APP_GUARD,
 					useClass: MockAuthGuard,
 				},
+				FileService,
 				AuthService
 			],
 			controllers: [CommentController],
 		}).overrideProvider(PrismaService)
 			.useValue(prismaServiceMock)
+			.overrideProvider(FileService)
+			.useValue(MockFileService)
 			.compile();
 
 		controller = module.get<CommentController>(CommentController);
