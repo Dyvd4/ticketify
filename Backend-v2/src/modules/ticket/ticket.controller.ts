@@ -1,16 +1,16 @@
-import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
 import { User as TUser } from "@prisma/client";
+import { InfiniteLoaderQueryDto, PagerQueryDto } from '@src/lib/list/list.dtos';
+import ListResult from '@src/lib/list/result/list-result';
 import { parseFilePipe } from '@src/modules/file/file.pipes';
 import { FileService } from '@src/modules/file/file.service';
 import { isImageFile } from '@src/modules/file/file.utils';
 import { User } from '@src/modules/global/auth/user.decorator';
-import { InfiniteLoaderQueryDto, PagerQueryDto } from '@src/lib/list/list.dtos';
-import ListResult from '@src/lib/list/result/list-result';
+import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { InfiniteLoader, Pager } from 'src/lib/list';
-import { UpdateTicketDto, UpdateTicketStatusDto } from './ticket.dtos';
+import { UpdateTicketDto } from './ticket.dtos';
 import { TicketService } from './ticket.service';
 
 @Controller()
@@ -19,7 +19,7 @@ export class TicketController {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly ticketService: TicketService,
-		private readonly fileService: FileService
+		private readonly fileService: FileService,
 	) { }
 
 	@ApiParam({
@@ -78,9 +78,7 @@ export class TicketController {
 		return new ListResult(tickets);
 	}
 
-	// TODO: rename to pascal-case or at least do not use sub routes
-	// as sub routes should contain resources
-	@Get('tickets/assigned/groupedByStatus')
+	@Get('ticketsAssignedGroupedByStatus')
 	async getTicketsAssignedByUserAndGroupedByStatus(
 		@User() requestUser: TUser
 	) {
@@ -199,24 +197,6 @@ export class TicketController {
 				}
 			}
 		});
-
-		return updatedTicket;
-	}
-
-	@Patch('ticket/status/:id')
-	async updateTicketStatus(
-		@Param('id') id: number,
-		@Body() updateTicketStatusDto: UpdateTicketStatusDto
-	) {
-
-		const { prisma } = this;
-
-		const updatedTicket = await prisma.ticket.update({
-			where: {
-				id
-			},
-			data: updateTicketStatusDto
-		})
 
 		return updatedTicket;
 	}

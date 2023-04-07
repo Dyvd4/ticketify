@@ -58,61 +58,55 @@ export abstract class BaseLogService extends ConsoleLogger {
 		return true;
 	}
 
-	log(message: any, context?: string): Promise<void>;
-	log(message: any, ...optionalParams: [...any, string?]): Promise<void>;
-	async log(message: any, ...optionalParams: any[]): Promise<void> {
+	async log(message: any, context?: string): Promise<void> {
 
-		if (this.shouldCreateDbLog(optionalParams[optionalParams.length - 1])) {
+		if (this.shouldCreateDbLog(context)) {
 			await this.prisma.log.create({
 				data: {
 					level: "info",
 					message,
-					context: optionalParams[optionalParams.length - 1],
+					context,
 					icon: LogLevelIconMap["info"],
 					color: LogLevelColorSchemeMap["info"]
 				}
 			});
 		}
 
-		super.log(message, ...optionalParams);
+		super.log(message, context);
 	}
 
-	error(message: any, stack?: string, context?: string): Promise<void>;
-	error(message: any, ...optionalParams: [...any, string?, string?]): Promise<void>;
-	async error(message: any, ...optionalParams: any[]) {
+	async error(message: any, stack?: string, context?: string) {
 
-		if (this.shouldCreateDbLog(optionalParams[optionalParams.length - 1])) {
+		if (this.shouldCreateDbLog(context)) {
 			await this.prisma.log.create({
 				data: {
 					level: "error",
 					message,
-					context: optionalParams[optionalParams.length - 1],
-					stack: optionalParams[optionalParams.length - 2],
+					context,
+					stack,
 					icon: LogLevelIconMap["error"],
 					color: LogLevelColorSchemeMap["error"]
 				}
 			});
 		}
 
-		super.error(message, ...optionalParams);
+		super.error(message, stack, context);
 	}
 
-	warn(message: any, context?: string | undefined): Promise<void>;
-	warn(message: any, ...optionalParams: [...any, string?]): Promise<void>;
-	async warn(message: any, ...optionalParams: any[]): Promise<void> {
+	async warn(message: any, context?: string): Promise<void> {
 
-		if (this.shouldCreateDbLog(optionalParams[optionalParams.length - 1])) {
+		if (this.shouldCreateDbLog(context)) {
 			await this.prisma.log.create({
 				data: {
 					level: "warn",
 					message,
-					context: optionalParams[optionalParams.length - 1],
+					context,
 					icon: LogLevelIconMap["warn"],
 					color: LogLevelColorSchemeMap["warn"]
 				}
 			});
 		}
 
-		super.warn(message, ...optionalParams);
+		super.warn(message, context);
 	}
 }

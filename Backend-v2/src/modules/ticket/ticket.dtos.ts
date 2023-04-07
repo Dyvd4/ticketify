@@ -15,9 +15,3 @@ export class UpdateTicketDto implements Partial<Pick<Ticket, "title" | "responsi
 	@IsString() @IsOptional()
 	statusId?: string;
 }
-
-// TODO: unnecessary when providing only one update dto instead
-export class UpdateTicketStatusDto implements Pick<Ticket, "statusId">{
-	@IsString()
-	statusId!: string;
-}

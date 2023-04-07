@@ -26,7 +26,7 @@ function TicketKanbanboard({ className, ...props }: TicketKanbanboardProps) {
 		refetchOnWindowFocus: false
 	});
 	const ticketsQuery = useQuery<TicketQueryResponse, any>(["ticket"], {
-		route: `tickets/assigned/groupedByStatus`
+		route: `ticketsAssignedGroupedByStatus`
 	}, {
 		refetchOnWindowFocus: false,
 		enabled: ticketStatusQuery.isLoading
@@ -34,7 +34,7 @@ function TicketKanbanboard({ className, ...props }: TicketKanbanboardProps) {
 
 	const ticketUpdateMutation = useMutation(({ groupName: statusName, item }: { groupName: string, item: TicketItem }) => {
 		return updateEntity({
-			route: "ticket/status",
+			route: "ticket",
 			entityId: item.id.toString(),
 			payload: {
 				statusId: ticketStatusQuery.data.items.find(item => item.name === statusName).id
