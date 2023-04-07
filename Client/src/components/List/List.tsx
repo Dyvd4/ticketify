@@ -66,7 +66,7 @@ function List(props: ListProps) {
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
     const [queryParams, setQueryParams] = useState<any>({});
-    const [page, setPage] = useUrlParams("page", 1, { jsonParse: true });
+    const [page, setPage] = useUrlParams("page", 1);
 
     // hooks
     // -----
@@ -105,11 +105,11 @@ function List(props: ListProps) {
         enabled: variant.name === "infiniteLoading"
     });
 
-    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, page], {
+    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, parseInt(page)], {
         route,
         queryParams: {
             ...queryParams,
-            page
+            page: parseInt(page)
         }
     }, {
         enabled: variant.name === "pagination"
@@ -138,6 +138,7 @@ function List(props: ListProps) {
             ? filterItems
             : sortItems;
 
+        // MayBe: provide a utility for this
         if ((type === "filter" && currentUserSettings.allowFilterItemsByUrl) ||
             (type === "orderBy" && currentUserSettings.allowSortItemsByUrl)) {
             setUrlParam(`${type}-${props.id}`, itemsToSet);
@@ -209,7 +210,7 @@ function List(props: ListProps) {
                 ref={(listRef) => listRef && autoAnimate(listRef)}>
                 {variant.name === "pagination" && <>
                     <PagerResultItems
-                        page={page}
+                        page={parseInt(page)}
                         setPage={setPage}
                         query={paginationQuery}
                         loadingDisplay={props.loadingDisplay ||

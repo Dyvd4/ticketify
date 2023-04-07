@@ -9,16 +9,14 @@ type FileProps = {
 }
 
 function File({ file }: FileProps) {
-    
+
     const downloadFile = async () => {
-        const response = await request().get(`file/${file.id}`, { responseType: "blob" });
-        const blob: Blob = response.data;
+        const response = await request().get(`file/${file.id}`);
+
         const a = document.createElement("a");
-        const downloadUrl = window.URL.createObjectURL(blob);
-        a.href = downloadUrl
+        a.href = response.data.url;
         a.download = file.originalFileName;
         a.click();
-        window.URL.revokeObjectURL(downloadUrl)
     }
 
     return (

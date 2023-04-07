@@ -4,7 +4,6 @@ import { useAtom } from "jotai";
 import { ComponentPropsWithRef, useRef, useState } from "react";
 import HeartButton from "src/components/Buttons/Heart";
 import { hackyCommentRefreshAtom } from "src/context/atoms";
-import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { getDurationAgo } from "src/utils/date";
 import ShowMoreLabel from "../ShowMoreLabel";
 import ActionMenu from "./ActionMenu";
@@ -18,7 +17,7 @@ export type CommentSize = "normal" | "small"
 export type Interaction = LikeButtonVariant | "heart"
 export type AvatarType = {
     username: string
-    contentRoute?: string
+    url?: string
 }
 
 const defaultNoOfContentLines = 4;
@@ -98,7 +97,6 @@ function Comment(props: CommentProps) {
     const contentRef = useRef<HTMLDivElement | null>(null);
     const [replyValue, setReplyValue] = useState("");
     const [editValue, setEditValue] = useState(comment.content);
-    const [avatarImgUrl] = useGetProtectedImageUrl(avatar?.contentRoute as any, !avatar?.contentRoute);
 
     useAtom(hackyCommentRefreshAtom);
 
@@ -153,7 +151,7 @@ function Comment(props: CommentProps) {
                     <Avatar
                         size={size === "small" ? "sm" : "md"}
                         name={author.username}
-                        src={avatarImgUrl}
+                        src={avatar.url}
                     />
                 </Link>
             </>}

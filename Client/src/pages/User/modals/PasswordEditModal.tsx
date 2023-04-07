@@ -1,9 +1,10 @@
 import { Button, FormLabel, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
 import { request } from "src/services/request";
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 
 type PasswordEditModalProps = {
     user: any
@@ -29,7 +30,7 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
             if (props.onSuccess) props.onSuccess();
             handleClose();
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }
@@ -56,7 +57,7 @@ function PasswordEditModal({ isOpen, user, ...props }: PasswordEditModalProps) {
                     Edit password
                 </ModalHeader>
                 <ModalBody>
-                    <FormControl errorMessage={errorMap?.Fieldless}>
+                    <FormControl errorMessage={errorMap?.message}>
                         <FormControl errorMessage={errorMap?.currentPassword}>
                             <FormLabel>
                                 Current password

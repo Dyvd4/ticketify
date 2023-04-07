@@ -1,11 +1,11 @@
 import { Box, Button, ButtonGroup, Heading, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import FormControl from "src/components/Wrapper/FormControl";
-import useGetProtectedImageUrl from "src/hooks/useGetProtectedImageUrl";
 import { useIsCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
-import { ValidationErrorMap, getValidationErrorMap } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 import { createDataUrl } from "src/utils/image";
 import AvatarInput from "../components/AvatarInput";
 
@@ -16,8 +16,6 @@ type AvatarSectionProps = {
 function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
     const isOwnSite = useIsCurrentUser(user);
-
-    const [userAvatarImgUrl] = useGetProtectedImageUrl(user.avatar?.contentRoute, !user.avatar)
     const [newAvatarAsDataUrl, setNewAvatarAsDataUrl] = useState<string | undefined>();
     const [avatar, setAvatar] = useState<File | null>(null);
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>(null);
@@ -40,7 +38,7 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
                 status: "success"
             });
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }
@@ -76,11 +74,11 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
             <Box ref={avatarContainerRef}>
                 <FormControl
                     className="flex justify-center items-center flex-col my-4"
-                    errorMessage={errorMap?.files}>
+                    errorMessage={errorMap?.message}>
                     <AvatarInput
                         disabled={!isOwnSite}
                         username={user.username}
-                        imageSrc={newAvatarAsDataUrl || userAvatarImgUrl}
+                        imageSrc={newAvatarAsDataUrl || user.avatar?.url}
                         onChange={handleChange}
                     />
                     {!!newAvatarAsDataUrl && <>

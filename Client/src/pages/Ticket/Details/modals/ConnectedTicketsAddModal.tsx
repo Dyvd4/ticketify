@@ -1,4 +1,5 @@
 import { Button, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -6,7 +7,7 @@ import { addEntity, fetchEntity } from "src/api/entity";
 import AutoCompleter from "src/components/AutoCompleter";
 import FormControl from "src/components/Wrapper/FormControl";
 import Modal from "src/components/Wrapper/Modal";
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 
 type ConnectedTicketsAddModalProps = {
     connectedToTickets: any[]
@@ -69,7 +70,7 @@ function ConnectedTicketsAddModal({ isOpen, connectedToTickets, connectedByTicke
                 status: "success"
             });
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }
@@ -107,7 +108,7 @@ function ConnectedTicketsAddModal({ isOpen, connectedToTickets, connectedByTicke
                 </ModalHeader>
                 <ModalBody>
                     {!isLoading && <>
-                        <FormControl errorMessage={errorMap?.Fieldless}>
+                        <FormControl errorMessage={errorMap?.message}>
                             <AutoCompleter
                                 items={tickets}
                                 listItemRender={ticket => `#${ticket.id} ${ticket.title}`}

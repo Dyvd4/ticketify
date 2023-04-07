@@ -1,54 +1,41 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "commonjs",
-    "strict": true, 
-    "noImplicitAny": false, 
-    "strictPropertyInitialization": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "baseUrl": "./src/",
-    "paths": {
-      "@prisma": [
-        "prisma.ts"
-      ],
-      "@logger": [
-        "logger.ts"
-      ],
-      "@config": [
-        "config.ts"
-      ],
-      "@core/*": [
-        "core/*"
-      ],
-      "@controller/*": [
-        "controller/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@data/*": [
-        "lib/data/*"
-      ],
-      "@services/*": [
-        "core/services/*"
-      ],
-      "@schemas/*": [
-        "core/schemas/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
-      "@mail-delivery/*": [
-        "core/mail-delivery/*"
-      ]
-    }
-  },
-  "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
-  }
+	"compilerOptions": {
+		"module": "commonjs",
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "ESNext",
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"incremental": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"paths": {
+			"@src/*": [
+				"src/*"
+			],
+			"@config": [
+				"src/config"
+			],
+			"@mail/*": [
+				"src/mail/*"
+			],
+			"@database/*": [
+				"src/global/database/*"
+			],
+			"@auth/*": [
+				"src/global/auth/*"
+			]
+		}
+	}
 }

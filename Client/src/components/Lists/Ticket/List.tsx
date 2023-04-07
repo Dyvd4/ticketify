@@ -17,7 +17,7 @@ function TicketList(props: TicketListProps) {
                 }}
                 id="e72e4f55-d438-4f30-aaf6-a5c872f61e19"
                 fetch={{
-                    route: "tickets",
+                    route: "tickets/pager",
                     queryKey: "ticket"
                 }}
                 listItemRender={(item) => <ListItem item={item} />}

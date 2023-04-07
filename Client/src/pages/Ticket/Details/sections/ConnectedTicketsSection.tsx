@@ -13,14 +13,14 @@ function ConnectedTicketsSection({ connectedToTickets, connectedByTickets }: Con
             <Heading className="text-lg">Connected to:</Heading>
             <List className="my-2 flex flex-col gap-4">
                 {connectedToTickets.length > 0
-                    ? connectedToTickets.map(connectedTicket => <ListItem item={connectedTicket} />)
+                    ? connectedToTickets.map(connectedTicket => <ListItem item={connectedTicket} key={connectedTicket.id} />)
                     : <div className="flex items-center">No connected tickets</div>
                 }
             </List>
             <Heading className="text-lg">Connected by:</Heading>
             <List className="my-2 flex flex-col gap-4">
                 {connectedByTickets.length > 0
-                    ? connectedByTickets.map(connectedTicket => <ListItem item={connectedTicket} />)
+                    ? connectedByTickets.map(connectedTicket => <ListItem item={connectedTicket} key={connectedTicket.id} />)
                     : <div className="flex items-center">No connected tickets</div>
                 }
             </List>
