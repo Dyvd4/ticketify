@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import config from "src/config";
+import { LogModule } from '../log/log.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 
@@ -12,9 +13,14 @@ import { DatabaseModule } from './database/database.module';
 			load: [config]
 		}),
 		AuthModule,
-		DatabaseModule
+		DatabaseModule,
+		LogModule
 	],
 	providers: [],
-	exports: [AuthModule, DatabaseModule]
+	exports: [
+		AuthModule,
+		DatabaseModule,
+		LogModule
+	]
 })
 export class GlobalModule { }
