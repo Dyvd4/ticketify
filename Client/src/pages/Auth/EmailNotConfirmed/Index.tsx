@@ -1,4 +1,5 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Container, Divider, Input, useToast } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Divider, Input, useToast } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
@@ -6,7 +7,7 @@ import LoadingRipple from "src/components/Loading/LoadingRipple";
 import FormControl from "src/components/Wrapper/FormControl";
 import { useCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
-import { getValidationErrorMap, ValidationErrorMap } from "src/utils/error";
+import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
 import { isAuthenticated } from "../../../auth/auth";
 import MutationErrorAlert from "./components/MutationErrorAlert";
 
@@ -44,7 +45,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
                 title: "Successfully changed e-mail"
             });
         },
-        onError: (error) => {
+        onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error, "email");
             setErrorMap(errorMap);
         }
@@ -57,7 +58,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
     if (isAuthenticated(currentUser)) return <Navigate to="/Auth/EmailConfirmed" />
 
     return (
-        <Container maxW={"container.lg"}>
+        <>
             <Box className="mt-10 flex gap-4 justify-center">
                 <h1 className="text-6xl flex items-center">
                     401
@@ -142,7 +143,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
-        </Container>
+        </>
     )
 }
 

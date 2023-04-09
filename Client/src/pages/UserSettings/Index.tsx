@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Container, Heading, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Heading, Text } from "@chakra-ui/react";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useCurrentUserSettings } from "src/hooks/user";
@@ -32,12 +32,12 @@ function UserSettingsIndex() {
     )
 
     return (
-        <Container className="mt-2" maxWidth={"container.md"}>
+        <>
             <Heading as="h1" className="font-bold text-2xl my-4">
                 Settings
             </Heading>
             <FilterAndSortPersistenceSection />
-        </Container>
+        </>
     );
 }
 

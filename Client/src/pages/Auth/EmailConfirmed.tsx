@@ -1,4 +1,4 @@
-import { Box, Button, Container, Link } from "@chakra-ui/react";
+import { Box, Button, Link } from "@chakra-ui/react";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { useCurrentUser } from "src/hooks/user";
 import { isAuthenticated } from "../../auth/auth";
@@ -12,7 +12,7 @@ function EmailConfirmed(props: EmailConfirmedProps) {
     if (isLoading) return <LoadingRipple centered />
 
     return (
-        <Container maxW={"container.lg"}>
+        <>
             <Box className="mt-10 flex flex-col items-center justify-center">
                 <h1 className="text-6xl">
                     Your e-mail has been confirmed
@@ -30,7 +30,7 @@ function EmailConfirmed(props: EmailConfirmedProps) {
                     </>}
                 </Box>
             </Box>
-        </Container>
+        </>
     )
 }
 
