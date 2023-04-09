@@ -13,6 +13,5 @@ export type BreadcrumbLink = {
 } & Pick<BreadcrumbLinkProps, "href" | "isCurrentPage">
 
 export const breadcrumbAtom = atom({
-    containerSize: "lg",
     links: [] as BreadcrumbLink[]
 } as Breadcrumb);

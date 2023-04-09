@@ -1,16 +1,15 @@
-import { BreadcrumbItem, BreadcrumbLink, Breadcrumb as ChakraBreadcrumb, Container } from "@chakra-ui/react";
+import { Box, Breadcrumb as ChakraBreadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { breadcrumbAtom } from "src/context/stores/breadcrumb";
 
 function Breadcrumb() {
+
     const [breadcrumb] = useAtom(breadcrumbAtom)
 
     return (
-        <Container
-            maxW={`container.${breadcrumb.containerSize || "lg"}`}
-            className="font-bold my-4">
+        <Box className="font-bold pl-4 pt-6">
             <ChakraBreadcrumb
                 separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
                 {breadcrumb.links.map(({ name, href, isCurrentPage }, index) => (
@@ -23,7 +22,7 @@ function Breadcrumb() {
                     </BreadcrumbItem>
                 ))}
             </ChakraBreadcrumb>
-        </Container>
+        </Box>
     )
 }
 
