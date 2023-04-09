@@ -1,6 +1,4 @@
-import { Alert, AlertIcon, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Text, useDisclosure } from "@chakra-ui/react";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Alert, AlertIcon, Container, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -9,6 +7,7 @@ import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
+import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery } from "src/hooks/query";
 import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
 import SetStatusButton from "./components/SetStatusButton";
@@ -24,6 +23,19 @@ import HeadDataSection from "./sections/HeadDataSection";
 import TicketActivitySection from "./sections/TicketActivitySection";
 
 function TicketDetailsIndex() {
+
+    useBreadcrumb([
+        {
+            name: "Home",
+            href: "/"
+        },
+        {
+            name: "Details",
+            href: "#",
+            isCurrentPage: true
+        }
+    ])
+
     // state
     // -----
     const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
@@ -95,20 +107,6 @@ function TicketDetailsIndex() {
 
     return (
         <Container maxW="container.lg">
-            <Breadcrumb
-                className="font-bold my-4"
-                separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
-                <BreadcrumbItem className="text-secondary-hover">
-                    <BreadcrumbLink href="/">
-                        Home
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem className="text-secondary-hover">
-                    <BreadcrumbLink href="#" isCurrentPage>
-                        Details
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-            </Breadcrumb>
             {/* Head data section
                 ================= */}
             <SectionBlock
