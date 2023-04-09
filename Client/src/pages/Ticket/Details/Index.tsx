@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Container, Text, useDisclosure } from "@chakra-ui/react";
+import { Alert, AlertIcon, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -106,7 +106,7 @@ function TicketDetailsIndex() {
     const connectedByTickets = ticket.connectedByTickets.map(connectedByTicket => connectedByTicket.connectedByTicket);
 
     return (
-        <Container maxW="container.lg">
+        <>
             {/* Head data section
                 ================= */}
             <SectionBlock
@@ -248,7 +248,7 @@ function TicketDetailsIndex() {
             {/* Comments section
                 ================ */}
             <CommentsSection ticket={ticket} />
-        </Container>
+        </>
     );
 }
 

@@ -54,7 +54,7 @@ function Index(props: IndexProps) {
     }
 
     return (
-        <Container className="mt-4" maxW="lg">
+        <Container maxW="lg">
             <AvatarSection user={user} />
             <Divider className="my-2" />
             <UserDataSection user={user} />

@@ -1,15 +1,18 @@
-import { Button, Container, MenuItem, Tag } from "@chakra-ui/react";
+import { Button, MenuItem, Tag } from "@chakra-ui/react";
 import { faDownload, faEdit, faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchEntity } from "src/api/entity";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
 import ListItemHeading from "src/components/List/ListItemHeading";
+import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
 
 function Index(props: IndexProps) {
+
+    useBreadcrumb([{ name: "/", isCurrentPage: true }])
 
     const makeRequest = async () => {
         const objWithNested = {
@@ -26,9 +29,8 @@ function Index(props: IndexProps) {
 
         });
     }
-
     return (
-        <Container>
+        <>
             <List
                 variant={{
                     name: "infiniteLoading",
@@ -116,7 +118,7 @@ function Index(props: IndexProps) {
             <Button onClick={makeRequest}>
                 Make Request
             </Button>
-        </Container>
+        </>
     )
 }
 
