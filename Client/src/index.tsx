@@ -42,7 +42,7 @@ root.render(
         <AtomProvider>
           <Navbar />
           <Sidebar />
-          <Container id="container" maxW={"container.lg"}>
+          <Container id="container" maxW={"container.lg"} className="p-6">
             <Breadcrumb />
             <Router>
               <Routes>
