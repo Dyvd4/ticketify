@@ -22,6 +22,12 @@ function SidebarItem({ className, children, count, isActive, variant = "horizont
             _hover={{
                 color: "blue.100"
             }}
+            _light={{
+                _hover: {
+                    color: "blue.500"
+                },
+                ...(isActive ? { color: "blue.600" } : {})
+            }}
             {...(isActive ? { color: "blue.200" } : {})}
             {...props}>
 
