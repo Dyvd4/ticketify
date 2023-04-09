@@ -8,7 +8,7 @@ export function useToggle() {
         const isActive = document.documentElement.classList.toggle("dark", colorMode === "dark");
         return isActive;
     }
-    return [colorMode === "dark", toggle]
+    return [colorMode === "dark", toggle] as const
 }
 
 // maybe wrong usage of hook?

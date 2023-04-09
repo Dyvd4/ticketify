@@ -9,7 +9,7 @@ type DarkModeButtonProps = {
 function DarkModeButton(props: DarkModeButtonProps) {
     const [darkModeActive, toggleDarkMode] = useToggleDarkMode();
     return <IconButton
-        onClick={(toggleDarkMode as () => boolean)}
+        onClick={toggleDarkMode}
         icon={<FontAwesomeIcon icon={(darkModeActive ? faMoon : faSun)} />}
         {...props}
     />;
