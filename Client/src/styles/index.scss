@@ -1,5 +1,11 @@
+// * {
+//   outline: 1px solid red;
+// }
+
 :root {
   --heart-button-circles-animation-durationMs: 500;
+  --navbar-height: 5vh;
+  --sidebar-width: 0px; // This is set programmatically
 }
 
 // autocomplete-list
@@ -12,6 +18,27 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
+}
+
+#container {
+  position: absolute;
+  top: var(--navbar-height);
+  left: var(--sidebar-width);
+  right: 0;
+  width: calc(100% - var(--sidebar-width));
+}
+
+#navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: var(--navbar-height);
+  width: calc(100% - var(--sidebar-width));
+}
+
+#sidebar {
+  position: fixed;
+  width: var(--sidebar-width);
 }
 
 #root {

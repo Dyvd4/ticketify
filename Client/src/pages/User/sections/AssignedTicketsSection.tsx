@@ -13,7 +13,7 @@ type AssignedTicketsSectionsProps = {
 function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
 
     const isOwnSite = useIsCurrentUser(user);
-    const query = useInfiniteQuery<any, any>(["ticket"], { route: `tickets/assigned/${isOwnSite ? null : user.id}` });
+    const query = useInfiniteQuery<any, any>(["ticket"], { route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user.id}` });
     const ticketCount = useInfiniteQueryCount(query);
 
     return (

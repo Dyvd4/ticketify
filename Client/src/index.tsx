@@ -4,7 +4,7 @@ import { Provider as AtomProvider } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Index from "src/pages/Index/Index";
 import AuthenticatedArea from "./auth/AuthenticatedArea";
 import Breadcrumb from "./components/Breadcrumb";
@@ -42,7 +42,7 @@ root.render(
         <AtomProvider>
           <Navbar />
           <Sidebar />
-          <Container maxW={"container.lg"}>
+          <Container id="container" maxW={"container.lg"}>
             <Breadcrumb />
             <Router>
               <Routes>

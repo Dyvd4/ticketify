@@ -54,6 +54,42 @@ export class TicketController {
 	}
 
 	@ApiParam({
+		name: "userId",
+		required: false
+	})
+	@Get('tickets/assigned/:userId?')
+	async getTicketsAssignedByUser(
+		@User() requestUser: TUser,
+		@Query() query: InfiniteLoaderQueryDto,
+		@Param("userId") userId?: string
+	) {
+
+		const { prisma } = this;
+
+		const infiniteLoader = new InfiniteLoader(query);
+		const tickets = await prisma.ticket.findMany({
+			...infiniteLoader.getPrismaArgs(),
+			include: {
+				priority: true,
+				status: true
+			},
+			where: {
+				responsibleUserId: userId || requestUser.id
+			}
+		});
+		const ticketsCount = await prisma.ticket.count();
+
+		return infiniteLoader.getResult(tickets, ticketsCount);
+	}
+
+	@Get('tickets/count')
+	async getTicketCount() {
+		const { prisma } = this;
+		const ticketCount = await prisma.ticket.count();
+		return ticketCount;
+	}
+
+	@ApiParam({
 		name: "excludeIds",
 		required: false
 	})
@@ -102,34 +138,6 @@ export class TicketController {
 				items: tickets.filter(ticket => ticket.statusId === status.id)
 			}
 		}));
-	}
-
-	@ApiParam({
-		name: "userId",
-		required: false
-	})
-	@Get('tickets/assigned/:userId?')
-	async getTicketsAssignedByUser(
-		@User() requestUser: TUser,
-		@Query() query: InfiniteLoaderQueryDto,
-		@Param("userId") userId?: string
-	) {
-
-		const { prisma } = this;
-
-		const infiniteLoader = new InfiniteLoader(query);
-		const tickets = await prisma.ticket.findMany({
-			...infiniteLoader.getPrismaArgs(),
-			include: {
-				priority: true
-			},
-			where: {
-				responsibleUserId: userId || requestUser.id
-			}
-		});
-		const ticketsCount = await prisma.ticket.count();
-
-		return infiniteLoader.getResult(tickets, ticketsCount);
 	}
 
 	@Get('ticket/:id')
