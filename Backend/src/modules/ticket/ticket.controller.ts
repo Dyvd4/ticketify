@@ -70,7 +70,8 @@ export class TicketController {
 		const tickets = await prisma.ticket.findMany({
 			...infiniteLoader.getPrismaArgs(),
 			include: {
-				priority: true
+				priority: true,
+				status: true
 			},
 			where: {
 				responsibleUserId: userId || requestUser.id
