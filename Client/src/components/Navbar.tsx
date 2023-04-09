@@ -1,10 +1,10 @@
-import { Avatar, Flex, HStack, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Avatar, Box, Flex, HStack, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { faBars, faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAtom } from "jotai";
 import { useMutation } from "react-query";
 import { signOut } from "src/auth/auth";
-import { sidebarAtom } from "src/context/atoms";
+import { sidebarIsCollapsedAtom } from "src/context/atoms";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
@@ -14,7 +14,7 @@ type NavbarProps = {}
 function Navbar(props: NavbarProps) {
 
 	const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
-	const [sidebarActive, setSidebarActive] = useAtom(sidebarAtom);
+	const [sidebarActive, setSidebarActive] = useAtom(sidebarIsCollapsedAtom);
 
 	const signOutMutation = useMutation(signOut, {
 		onSuccess: () => {
@@ -25,16 +25,25 @@ function Navbar(props: NavbarProps) {
 	if (!isAuthenticated) return null;
 
 	return (
-		<nav className="w-full border-b-2 flex justify-between p-2">
-			<IconButton circle
-				onClick={() => setSidebarActive(!sidebarActive)}
-				size="sm"
-				aria-label="Homepage"
-				icon={<FontAwesomeIcon icon={faBars} />} />
-			<HStack gap={1}>
-				<DarkModeButton circle
+		<Box
+			as="nav"
+			id="navbar"
+			className="border-b-2 inline-flex justify-between p-2 z-50"
+			backgroundColor={"gray.900"}
+			_light={{
+				backgroundColor: "white"
+			}}>
+			<div className="flex items-center gap-2">
+				<IconButton
+					onClick={() => setSidebarActive(!sidebarActive)}
 					size="sm"
-					aria-label="Toggle darkmode" />
+					aria-label="Homepage"
+					icon={<FontAwesomeIcon icon={faBars} />} />
+			</div>
+			<HStack gap={1}>
+				<DarkModeButton
+					size="sm"
+					aria-label="Toggle dark mode" />
 				<Menu>
 					<MenuButton>
 						<Flex
@@ -68,7 +77,7 @@ function Navbar(props: NavbarProps) {
 					</MenuList>
 				</Menu>
 			</HStack>
-		</nav>
+		</Box>
 	);
 }
 
