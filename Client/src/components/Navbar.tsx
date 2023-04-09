@@ -1,10 +1,9 @@
 import { Avatar, Box, Flex, HStack, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { faBars, faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAtom } from "jotai";
 import { useMutation } from "react-query";
 import { signOut } from "src/auth/auth";
-import { sidebarIsCollapsedAtom } from "src/context/atoms";
+import useSidebarToggle from "src/context/hooks/useSidebarToggle";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
 import IconButton from "./Wrapper/IconButton";
@@ -14,7 +13,7 @@ type NavbarProps = {}
 function Navbar(props: NavbarProps) {
 
 	const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
-	const [sidebarActive, setSidebarActive] = useAtom(sidebarIsCollapsedAtom);
+	const [, toggleSidebarIsCollapsed] = useSidebarToggle();
 
 	const signOutMutation = useMutation(signOut, {
 		onSuccess: () => {
@@ -35,7 +34,7 @@ function Navbar(props: NavbarProps) {
 			}}>
 			<div className="flex items-center gap-2">
 				<IconButton
-					onClick={() => setSidebarActive(!sidebarActive)}
+					onClick={toggleSidebarIsCollapsed}
 					size="sm"
 					aria-label="Homepage"
 					icon={<FontAwesomeIcon icon={faBars} />} />

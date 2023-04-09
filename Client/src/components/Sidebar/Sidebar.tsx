@@ -3,10 +3,11 @@ import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { faBook, faFireFlameCurved, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import { useAtom } from 'jotai';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
+import { useQuery } from 'react-query';
+import { fetchEntity } from 'src/api/entity';
 import BgBox, { BgBoxProps } from 'src/components/BgBox';
-import { sidebarIsCollapsedAtom } from 'src/context/atoms';
+import useSidebarToggle from 'src/context/hooks/useSidebarToggle';
 import { useCurrentUserWithAuthentication } from 'src/hooks/user';
 import SidebarItem from './SidebarListItem';
 
@@ -14,28 +15,19 @@ type _SidebarProps = {}
 
 export type SidebarProps = PropsWithChildren<_SidebarProps> & BgBoxProps
 
-// TODO: useLocalStorage
-const useSidebarToggle = () => {
-    const [sidebarIsCollapsed, setSidebarIsCollapsed] = useAtom(sidebarIsCollapsedAtom);
-
-    useEffect(() => {
-        const rootElement = document.querySelector<HTMLElement>(":root")!
-        if (sidebarIsCollapsed) {
-            rootElement.style.setProperty("--sidebar-width", "10%");
-        }
-        else {
-            rootElement.style.setProperty("--sidebar-width", "20%");
-        }
-    }, [sidebarIsCollapsed])
-
-    return [sidebarIsCollapsed, setSidebarIsCollapsed] as const;
-}
-
 function Sidebar({ className, ...props }: SidebarProps) {
     const path = window.location.pathname;
 
     const { isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
     const [sidebarIsCollapsed] = useSidebarToggle();
+
+    const { data: ticketCount } = useQuery(["ticketCount"], () => fetchEntity({
+        route: "tickets/count"
+    }));
+
+    const { data: logCount } = useQuery(["logCount"], () => fetchEntity({
+        route: "logs/count"
+    }));
 
     if (!isAuthenticated) return null;
 
@@ -48,8 +40,11 @@ function Sidebar({ className, ...props }: SidebarProps) {
             variant='child'
             as="ul"
             id="sidebar"
-            className={classNames(`${className} p-4 rounded-none border-r-2 h-screen 
-                                    flex flex-col gap-2`)}
+            className={classNames(`${className} rounded-none border-r-2 h-screen 
+                                    flex flex-col`, {
+                "gap-4": !sidebarIsCollapsed,
+                "gap-6": sidebarIsCollapsed
+            })}
             {...props}>
             {!sidebarIsCollapsed && <>
                 <Link href="/">
@@ -82,7 +77,8 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 <SidebarItem
                     variant={!sidebarIsCollapsed ? "horizontal" : "vertical"}
                     icon={faTicket}
-                    isActive={path === "/Ticket"}>
+                    isActive={path === "/Ticket"}
+                    count={ticketCount}>
                     Tickets
                 </SidebarItem>
             </Link>
@@ -91,7 +87,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
                     variant={!sidebarIsCollapsed ? "horizontal" : "vertical"}
                     icon={faBook}
                     isActive={path === "/Log"}
-                    count={10}>
+                    count={logCount}>
                     Logs
                 </SidebarItem>
             </Link>

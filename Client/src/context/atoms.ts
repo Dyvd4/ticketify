@@ -1,7 +1,8 @@
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { mostLikedCommentSortParam } from "src/pages/Ticket/Details/sections/CommentsSection";
 
-export const sidebarIsCollapsedAtom = atom(false);
+export const sidebarIsCollapsedAtom = atomWithStorage("sidebarIsCollapsed", false);
 
 export const sortDrawerAtom = atom(false);
 export const filterDrawerAtom = atom(false);

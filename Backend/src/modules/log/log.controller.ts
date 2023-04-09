@@ -39,4 +39,11 @@ export class LogController {
 
 		return pager.getResult(items, itemsCount);
 	}
+
+	@Get('logs/count')
+	async getLogCount() {
+		const { prisma } = this;
+		const logCount = await prisma.log.count();
+		return logCount;
+	}
 }

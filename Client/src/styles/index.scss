@@ -5,7 +5,7 @@
 :root {
   --heart-button-circles-animation-durationMs: 500;
   --navbar-height: 5vh;
-  --sidebar-width: 10%;
+  --sidebar-width: 0px; // This is set programmatically
 }
 
 // autocomplete-list
