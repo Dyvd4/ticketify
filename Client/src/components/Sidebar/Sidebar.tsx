@@ -104,7 +104,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 variant={sidebarListItemVariant}
                 icon={faFlask}
             />
-            <PinnedTicketsSection />
+            <PinnedTicketsSection className='mt-6' />
         </BgBox>
     )
 }

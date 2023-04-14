@@ -1,4 +1,4 @@
-import { Box, Tooltip, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentPropsWithRef, PropsWithChildren } from 'react';
@@ -17,27 +17,29 @@ function PinnedTicketsSection({ className, ...props }: PinnedTicketsSectionProps
     const [pinnedTickets, isLoading] = usePinnedTickets();
 
     return (
-        <>
-            <Box className='flex justify-between text-sm' mr={2}>
+        <Box className={`${className}`}>
+            <Box className='flex justify-between items-center text-sm'>
                 Pinned tickets
-                <Tooltip
+                <Button
                     onClick={onOpen}
-                    placement="top"
-                    label="add"
-                    shouldWrapChildren>
+                    size="xs"
+                    className='flex gap-1'>
+                    Add
                     <FontAwesomeIcon icon={faAdd} />
-                </Tooltip>
+                </Button>
             </Box>
 
-            {!isLoading && pinnedTickets.map(pinnedTicket => (
-                <PinnedTicketItem pinnedTicket={pinnedTicket} />
-            ))}
+            <Box className='mt-4 flex flex-col gap-1'>
+                {!isLoading && pinnedTickets.map(pinnedTicket => (
+                    <PinnedTicketItem pinnedTicket={pinnedTicket} />
+                ))}
+            </Box>
 
             <PinnedTicketsAddModal
                 isOpen={isOpen}
                 onClose={onClose}
             />
-        </>
+        </Box>
     );
 }
 
