@@ -2,14 +2,14 @@ import { Link } from '@chakra-ui/react';
 import { ComponentPropsWithRef } from 'react';
 
 export type Variant = "vertical" | "horizontal"
-export type _BaseSidebarItemProps = {
+export type _BaseSidebarListItemProps = {
     children(isActive: boolean): React.ReactNode
     variant?: Variant
     urlPath?: string
 }
-export type BaseSidebarItemProps = _BaseSidebarItemProps & Omit<ComponentPropsWithRef<"a">, keyof _BaseSidebarItemProps>
+export type BaseSidebarListItemProps = _BaseSidebarListItemProps & Omit<ComponentPropsWithRef<"a">, keyof _BaseSidebarListItemProps>
 
-function BaseSidebarItem({ className, children, variant = "horizontal", urlPath, ...props }: BaseSidebarItemProps) {
+function BaseSidebarListItem({ className, children, variant = "horizontal", urlPath, ...props }: BaseSidebarListItemProps) {
 
     const isActive = window.location.pathname === urlPath;
 
@@ -33,4 +33,4 @@ function BaseSidebarItem({ className, children, variant = "horizontal", urlPath,
     );
 }
 
-export default BaseSidebarItem;
+export default BaseSidebarListItem;

@@ -1,5 +1,5 @@
 import BaseSidebarListItem from "./BaseSidebarListItem"
-import SidebarItem from "./SidebarListItem"
+import SidebarListItem from "./SidebarListItem"
 
-export { SidebarItem }
+export { SidebarListItem }
 export default BaseSidebarListItem

@@ -3,17 +3,17 @@ import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import BaseSidebarListItem from '.';
-import { BaseSidebarItemProps } from './BaseSidebarListItem';
+import { BaseSidebarListItemProps } from './BaseSidebarListItem';
 
-type _SidebarItemProps = {
+type _SidebarListItemProps = {
     title: string
     icon?: IconProp
     count?: number
 }
-export type SidebarItemProps = _SidebarItemProps &
-    Omit<BaseSidebarItemProps, "children">
+export type SidebarListItemProps = _SidebarListItemProps &
+    Omit<BaseSidebarListItemProps, "children">
 
-function SidebarItem({ className, count, variant = "horizontal", title, ...props }: SidebarItemProps) {
+function SidebarListItem({ className, count, variant = "horizontal", title, ...props }: SidebarListItemProps) {
     return (
         <BaseSidebarListItem
             {...props}>
@@ -47,4 +47,4 @@ function SidebarItem({ className, count, variant = "horizontal", title, ...props
     )
 }
 
-export default SidebarItem;
+export default SidebarListItem;

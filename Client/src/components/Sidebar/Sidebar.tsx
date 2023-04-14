@@ -9,7 +9,8 @@ import { fetchEntity } from 'src/api/entity';
 import BgBox, { BgBoxProps } from 'src/components/BgBox';
 import useSidebarToggle from 'src/context/hooks/useSidebarToggle';
 import { useCurrentUserWithAuthentication } from 'src/hooks/user';
-import SidebarItem from './SidebarListItem';
+import PinnedTicketsSection from './sections/PinnedTicketsSection';
+import BaseSidebarListItem, { SidebarListItem } from './SidebarListItem';
 
 type _SidebarProps = {}
 
@@ -20,6 +21,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
 
     const { isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
     const [sidebarIsCollapsed] = useSidebarToggle();
+    const sidebarListItemVariant = !sidebarIsCollapsed ? "horizontal" : "vertical";
 
     const { data: ticketCount } = useQuery(["ticketCount"], () => fetchEntity({
         route: "tickets/count"
@@ -46,59 +48,63 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 "gap-6": sidebarIsCollapsed
             })}
             {...props}>
+
             {!sidebarIsCollapsed && <>
-                <Link href="/">
-                    <Heading
-                        as="h1"
-                        className="text-xl pt-6 pb-8 px-4"
-                        {...(path === "/" ? { color: "blue.200" } : {})}>
-                        <Tooltip placement="bottom" label="Home" shouldWrapChildren>
-                            <span className='mr-2'>
-                                Ticketify
-                            </span>
-                            <FontAwesomeIcon icon={faFireFlameCurved} />
-                        </Tooltip>
-                    </Heading>
-                </Link>
+                <BaseSidebarListItem urlPath='/'>
+                    {() => (
+                        <Heading
+                            as="h1"
+                            className="text-xl pt-6 pb-8 px-4"
+                            {...(path === "/" ? { color: "blue.200" } : {})}>
+                            <Tooltip placement="bottom" label="Home" shouldWrapChildren>
+                                <span className='mr-2'>
+                                    Ticketify
+                                </span>
+                                <FontAwesomeIcon icon={faFireFlameCurved} />
+                            </Tooltip>
+                        </Heading>
+                    )}
+                </BaseSidebarListItem>
             </>}
+
             {sidebarIsCollapsed && <>
-                <Link href="/">
-                    <Heading
-                        as="h1"
-                        className="text-base pt-6 pb-8 px-4 flex justify-center"
-                        {...(path === "/" ? { color: "blue.200" } : {})}>
-                        <Tooltip placement="bottom" label="Home" shouldWrapChildren>
-                            <FontAwesomeIcon icon={faFireFlameCurved} size={"xl" as SizeProp} />
-                        </Tooltip>
-                    </Heading>
-                </Link>
+                <BaseSidebarListItem urlPath='/'>
+                    {() => (
+                        <Heading
+                            as="h1"
+                            className="text-base pt-6 pb-8 px-4 flex justify-center"
+                            {...(path === "/" ? { color: "blue.200" } : {})}>
+                            <Tooltip placement="bottom" label="Home" shouldWrapChildren>
+                                <FontAwesomeIcon icon={faFireFlameCurved} size={"xl" as SizeProp} />
+                            </Tooltip>
+                        </Heading>
+                    )}
+                </BaseSidebarListItem>
             </>}
-            <Link href="/Ticket">
-                <SidebarItem
-                    variant={!sidebarIsCollapsed ? "horizontal" : "vertical"}
-                    icon={faTicket}
-                    isActive={path === "/Ticket"}
-                    count={ticketCount}>
-                    Tickets
-                </SidebarItem>
-            </Link>
-            <Link href="/Log">
-                <SidebarItem
-                    variant={!sidebarIsCollapsed ? "horizontal" : "vertical"}
-                    icon={faBook}
-                    isActive={path === "/Log"}
-                    count={logCount}>
-                    Logs
-                </SidebarItem>
-            </Link>
-            <Link href="/Test">
-                <SidebarItem
-                    variant={!sidebarIsCollapsed ? "horizontal" : "vertical"}
-                    icon={faFlask}
-                    isActive={path === "/Test"}>
-                    Test
-                </SidebarItem>
-            </Link>
+
+            <SidebarListItem
+                title="Tickets"
+                urlPath={"/Ticket"}
+                variant={sidebarListItemVariant}
+                icon={faTicket}
+                count={ticketCount}
+            />
+
+            <SidebarListItem
+                title="Logs"
+                urlPath='/Test'
+                variant={sidebarListItemVariant}
+                icon={faBook}
+                count={logCount}
+            />
+
+            <SidebarListItem
+                title='Test'
+                urlPath={"/Test"}
+                variant={sidebarListItemVariant}
+                icon={faFlask}
+            />
+            <PinnedTicketsSection />
         </BgBox>
     )
 }
