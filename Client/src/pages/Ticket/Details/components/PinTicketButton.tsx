@@ -26,10 +26,9 @@ function PinTicketButton(props: PinTicketButtonProps) {
             await refetch();
             await queryClient.invalidateQueries(["pinnedTickets"]);
             await queryClient.invalidateQueries(["ticketsToPin"]);
-            // TODO: make undo available
             toast({
                 status: "success",
-                title: `successfully ${ticketIsPinned ? "pinned" : "unpinned"} ticket`
+                title: `successfully ${ticketIsPinned ? "unpinned" : "pinned"} ticket`,
             });
         }
     })

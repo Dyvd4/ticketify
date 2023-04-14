@@ -27,7 +27,6 @@ function PinnedTicketItem({ className, pinnedTicket, ...props }: PinnedTicketIte
         onSuccess: async () => {
             await queryClient.invalidateQueries(["pinnedTickets"]);
             await queryClient.invalidateQueries(["ticketsToPin"]);
-            // TODO: make undo available
             toast({
                 status: "success",
                 title: `successfully unpinned ticket`

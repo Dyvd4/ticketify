@@ -31,7 +31,7 @@ function PinnedTicketsSection({ className, ...props }: PinnedTicketsSectionProps
 
             <Box className='mt-4 flex flex-col gap-1'>
                 {!isLoading && pinnedTickets.map(pinnedTicket => (
-                    <PinnedTicketItem pinnedTicket={pinnedTicket} />
+                    <PinnedTicketItem pinnedTicket={pinnedTicket} key={pinnedTicket.id} />
                 ))}
             </Box>
 
