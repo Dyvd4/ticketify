@@ -92,7 +92,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
 
             <SidebarListItem
                 title="Logs"
-                urlPath='/Test'
+                urlPath='/Log'
                 variant={sidebarListItemVariant}
                 icon={faBook}
                 count={logCount}
