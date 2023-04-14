@@ -9,6 +9,7 @@ import LoadingRipple from "src/components/Loading/LoadingRipple";
 import SectionBlock from "src/components/SectionBlock";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery } from "src/hooks/query";
+import PinTicketButton from "./components/PinTicketButton";
 import SetResponsibleUserButton from "./components/SetResponsibleUserButton";
 import SetStatusButton from "./components/SetStatusButton";
 import WatchTicketButton from "./components/WatchTicketButton";
@@ -112,6 +113,7 @@ function TicketDetailsIndex() {
             <SectionBlock
                 title="Head data"
                 actions={[
+                    <PinTicketButton />,
                     <WatchTicketButton />,
                     <SetResponsibleUserButton />,
                     <SetStatusButton />

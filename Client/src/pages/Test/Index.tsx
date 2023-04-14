@@ -1,10 +1,11 @@
 import { Button, MenuItem, Tag } from "@chakra-ui/react";
-import { faDownload, faEdit, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEdit, faImage, faThumbTack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchEntity } from "src/api/entity";
 import List from "src/components/List/List";
 import ListItem from "src/components/List/ListItem";
 import ListItemHeading from "src/components/List/ListItemHeading";
+import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import ListItemContent from "./ListItemContent";
 
@@ -31,6 +32,11 @@ function Index(props: IndexProps) {
     }
     return (
         <>
+            <IconButton
+                aria-label="test"
+                circle
+                icon={<FontAwesomeIcon size="sm" icon={faThumbTack} />}
+            />
             <List
                 variant={{
                     name: "infiniteLoading",
