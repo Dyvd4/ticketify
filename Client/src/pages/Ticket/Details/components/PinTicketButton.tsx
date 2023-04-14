@@ -41,6 +41,7 @@ function PinTicketButton(props: PinTicketButtonProps) {
             label={ticketIsPinned ? "Unpin" : "Pin"}
             placement="top">
             <IconButton
+                isActive={ticketIsPinned}
                 aria-label="pin ticket"
                 isLoading={isLoading}
                 onClick={() => mutation.mutate()}

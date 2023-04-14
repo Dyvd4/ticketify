@@ -45,6 +45,7 @@ function WatchTicketButton(props: WatchTicketButtonProps) {
 
     return (
         <Button
+            isActive={isWatching}
             isLoading={isLoading}
             onClick={() => mutation.mutate()}
             size={"sm"}
