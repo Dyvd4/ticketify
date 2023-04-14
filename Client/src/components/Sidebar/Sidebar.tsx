@@ -49,7 +49,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
             })}
             {...props}>
 
-            {!sidebarIsCollapsed && <>
+            {sidebarListItemVariant === "horizontal" && <>
                 <BaseSidebarListItem urlPath='/'>
                     {() => (
                         <Heading
@@ -67,7 +67,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 </BaseSidebarListItem>
             </>}
 
-            {sidebarIsCollapsed && <>
+            {sidebarListItemVariant === "vertical" && <>
                 <BaseSidebarListItem urlPath='/'>
                     {() => (
                         <Heading
@@ -104,7 +104,11 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 variant={sidebarListItemVariant}
                 icon={faFlask}
             />
-            <PinnedTicketsSection className='mt-6' />
+
+            <PinnedTicketsSection
+                sidebarListItemVariant={sidebarListItemVariant}
+                className='mt-6'
+            />
         </BgBox>
     )
 }
