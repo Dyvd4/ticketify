@@ -9,7 +9,7 @@ import Index from "src/pages/Index/Index";
 import AuthenticatedArea from "./auth/AuthenticatedArea";
 import Breadcrumb from "./components/Breadcrumb";
 import Navbar from "./components/Navbar";
-import LoadingRipplePortalSlot from "./components/PortalSlots/LoadingRipplePortalSlot";
+import PortalSlot from "./components/Slots/PortalSlot";
 import Sidebar from "./components/Sidebar/Sidebar";
 import theme from "./config/theme";
 import Init from "./init";
@@ -34,12 +34,12 @@ const queryClient = new QueryClient();
 
 root.render(
   <React.StrictMode>
-    <ColorModeScript />
-    <Init />
-    <LoadingRipplePortalSlot />
-    <ChakraProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <AtomProvider>
+    <AtomProvider>
+      <ColorModeScript />
+      <Init />
+      <PortalSlot />
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
           <Navbar />
           <Sidebar />
           <Container id="container" maxW={"container.lg"} className="p-6">
@@ -72,8 +72,8 @@ root.render(
               </Routes>
             </Router>
           </Container>
-        </AtomProvider>
-      </QueryClientProvider>
-    </ChakraProvider>
+        </QueryClientProvider>
+      </ChakraProvider>
+    </AtomProvider>
   </React.StrictMode>
 );

@@ -26,7 +26,7 @@ function LoadingRipple({ centered, usePortal, ...props }: LoadingRippleProps) {
                 <div className="border-gray-800 dark:border-white"></div>
                 <div className="border-gray-800 dark:border-white"></div>
             </div>
-            , document.getElementById("loading-ripple-portal")!)
+            , document.getElementById("portal")!)
         : <div
             data-testid="LoadingRipple"
             className={`lds-ripple

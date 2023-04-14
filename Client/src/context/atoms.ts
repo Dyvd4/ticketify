@@ -10,3 +10,5 @@ export const filterDrawerAtom = atom(false);
 export const commentSortParamAtom = atom(mostLikedCommentSortParam);
 
 export const hackyCommentRefreshAtom = atom(0);
+
+export const portalIsRenderedAtom = atom(false);
