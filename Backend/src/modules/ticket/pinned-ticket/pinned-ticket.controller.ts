@@ -32,19 +32,21 @@ export class PinnedTicketController {
 	async getTicketsToPin(@User() requestUser: TUser) {
 		const { prisma } = this;
 
-		const pinnedTickets = await prisma.pinnedTicket.findMany({
+		const alreadyPinnedTickets = await prisma.pinnedTicket.findMany({
 			where: {
-				NOT: {
-					userId: requestUser.id
-				}
-			},
-			include: {
-				ticket: true
+				userId: requestUser.id
 			}
 		});
 
-		const ticketsToPin = pinnedTickets.map(pinnedTicket => pinnedTicket.ticket);
+		const pinnedTickets = await prisma.ticket.findMany({
+			where: {
+				id: {
+					notIn: alreadyPinnedTickets.map(pinnedTicket => pinnedTicket.ticketId)
+				}
+			}
+		});
 
+		const ticketsToPin = pinnedTickets;
 		return new ListResult(ticketsToPin);
 	}
 
