@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { FileModule } from '@src/modules/file/file.module';
+import { PinnedTicketModule } from './pinned-ticket/pinned-ticket.module';
 import { TicketActivityModule } from './ticket-activity/ticket-activity.module';
 import { TicketDueDateModule } from './ticket-due-date/ticket-due-date.module';
 import { TicketOnTicketModule } from './ticket-on-ticket/ticket-on-ticket.module';
@@ -17,7 +18,8 @@ import { TicketService } from './ticket.service';
 		TicketPriorityModule,
 		TicketStatusModule,
 		TicketWatcherModule,
-		FileModule
+		FileModule,
+		PinnedTicketModule
 	],
 	controllers: [TicketController],
 	providers: [TicketService]
