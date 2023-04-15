@@ -1,5 +1,6 @@
 import { ComponentPropsWithRef, useRef } from 'react';
 import useKeyPosition from 'src/hooks/useKeyPosition';
+import autoAnimate from "@formkit/auto-animate";
 
 type _NavigatableListProps = {
     listItems: any[]
@@ -27,9 +28,15 @@ function NavigatableList({ className, listItems, listItemProps, ...props }: Navi
         }
     });
 
+    const handleListRefChange = (ref) => {
+        if (!ref) return;
+        listRef.current = ref;
+        autoAnimate(ref);
+    }
+
     return (
         <ul
-            ref={listRef}
+            ref={handleListRefChange}
             className={`${className}`}
             {...props}>
             {listItems.map((listItem, index) => (

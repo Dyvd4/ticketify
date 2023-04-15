@@ -5,10 +5,12 @@ import { ComponentPropsWithRef, PropsWithChildren, useEffect, useRef, useState }
 import { useQuery } from 'react-query';
 import { fetchEntity } from 'src/api/entity';
 import NavigatableList from 'src/components/NavigatableList';
+import useDebounce from 'src/hooks/useDebounce';
 import { ListResultEmptyDisplay } from '../List/Result';
 import LoadingRipple from '../Loading/LoadingRipple';
 import SearchBarListItem from './SearchBarListItem';
 
+const DEBOUNCE_DELAY_MS = 250;
 type _SearchBarProps = {}
 
 export type SearchBarProps = PropsWithChildren<_SearchBarProps> &
@@ -20,12 +22,15 @@ function SearchBar({ className, ...props }: SearchBarProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState("");
 
-    const { isLoading, data } = useQuery(["ticketsForSearchBar", inputValue], () => fetchEntity({
-        route: "ticketsForSearchBar",
-        queryParams: {
-            title: inputValue
-        }
-    }))
+    const { value: debouncedInputValue, isDebouncing } = useDebounce(inputValue, DEBOUNCE_DELAY_MS);
+    const { isLoading, data } = useQuery(["ticketsForSearchBar", debouncedInputValue], () => {
+        return fetchEntity({
+            route: "ticketsForSearchBar",
+            queryParams: {
+                title: inputValue
+            }
+        })
+    })
 
     useEffect(() => {
         window.addEventListener("keydown", e => {
@@ -84,13 +89,13 @@ function SearchBar({ className, ...props }: SearchBarProps) {
                         </Box>
                         <Divider />
                     </Box>
-                    {isLoading && <>
+                    {isLoading || isDebouncing && <>
                         <LoadingRipple className='mx-auto' />
                     </>}
-                    {!isLoading && data.items.length === 0 && <>
+                    {!isLoading && !isDebouncing && data.items.length === 0 && <>
                         <ListResultEmptyDisplay className='list-none mx-auto pt-2 pb-4' />
                     </>}
-                    {!isLoading && data.items.length > 0 && <>
+                    {!isLoading && !isDebouncing && data.items.length > 0 && <>
                         <NavigatableList
                             className='pl-4 pb-4 pr-4 flex flex-col gap-2 m-0 overflow-y-scroll'
                             listItems={data.items}
