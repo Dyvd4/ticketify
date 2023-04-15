@@ -17,8 +17,8 @@ const COLOR_MAP = {
 }
 
 type _SearchBarListItemProps = {
-    title: string
-    description: string
+    title: React.ReactNode
+    description: React.ReactNode
     href: string
     enableHoverColors?: boolean
     isActive?: boolean
@@ -57,7 +57,8 @@ function SearchBarListItem(props: SearchBarListItemProps) {
     return (
         <Link
             href={href}
-            className={`${className} rounded-md p-4 flex items-center gap-4 hover:no-underline`}
+            className={`${className} rounded-md p-4 flex items-center 
+                        gap-4 hover:no-underline`}
             {...backgroundColorProps}
             {...hoverBackgroundColorProps}
             {...rest}>
@@ -66,9 +67,9 @@ function SearchBarListItem(props: SearchBarListItemProps) {
                 icon={faTicket}
                 size={"1x"}
             />
-            <Box className='flex w-full justify-between items-center'>
-                <Box className='flex flex-col'>
-                    <Box className='text-sm text-secondary'>
+            <Box className='flex w-full justify-between items-center min-w-0'>
+                <Box className='flex flex-col min-w-0 truncate'>
+                    <Box className='text-xs text-secondary'>
                         {description}
                     </Box>
                     <Heading as="h2" className='text-lg m-0 leading-tight'>
