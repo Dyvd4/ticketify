@@ -8,6 +8,9 @@
 		}
 	],
 	"settings": {
-		"typescript.tsdk": "Client\\node_modules\\typescript\\lib"
+		"typescript.tsdk": "Client\\node_modules\\typescript\\lib",
+		"cSpell.words": [
+			"Navigatable"
+		]
 	}
 }
