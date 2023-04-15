@@ -9,7 +9,7 @@
         @apply bg-gray-50 focus-within:bg-gray-100 
             dark:bg-gray-700 dark:focus-within:bg-gray-600
             transition-colors duration-200
-            rounded-md #{!important};
+            rounded-md;
     }
     .DraftEditor-editorContainer {
         @apply focus-within:ring-2 ring-blue-500 border p-2 #{!important};
