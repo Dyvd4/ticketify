@@ -11,7 +11,15 @@ type _NavigatableListProps = {
 
 export type NavigatableListProps = _NavigatableListProps & Omit<ComponentPropsWithRef<'ul'>, keyof _NavigatableListProps>
 
-function NavigatableList({ className, listItems, listItemProps, ...props }: NavigatableListProps) {
+function NavigatableList(props: NavigatableListProps) {
+
+    const {
+        className,
+        listItems,
+        listItemProps,
+        onListItemClick,
+        ...restProps
+    } = props;
 
     const listRef = useRef<HTMLUListElement | null>(null);
     const [keyPosition, setKeyPosition] = useKeyPosition(listItems.length - 1, {
@@ -38,11 +46,11 @@ function NavigatableList({ className, listItems, listItemProps, ...props }: Navi
         <ul
             ref={handleListRefChange}
             className={`${className}`}
-            {...props}>
+            {...restProps}>
             {listItems.map((listItem, index) => (
                 <li
                     key={listItem.id}
-                    onClick={e => { props.onListItemClick?.(e) }}
+                    onClick={e => { onListItemClick?.(e) }}
                     onMouseOver={() => setKeyPosition(index)}
                     {...listItemProps}>
                     {props.children(listItem, index === keyPosition)}
