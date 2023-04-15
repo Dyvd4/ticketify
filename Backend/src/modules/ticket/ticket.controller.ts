@@ -10,7 +10,7 @@ import { isImageFile } from '@src/modules/file/file.utils';
 import { User } from '@src/modules/global/auth/user.decorator';
 import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { InfiniteLoader, Pager } from 'src/lib/list';
-import { UpdateTicketDto } from './ticket.dtos';
+import { SearchTicketDto, UpdateTicketDto } from './ticket.dtos';
 import { TicketService } from './ticket.service';
 
 @Controller()
@@ -111,6 +111,34 @@ export class TicketController {
 			}
 		});
 
+		return new ListResult(tickets);
+	}
+
+	@Get("ticketsForSearchbar")
+	async getTicketsForSearchbar(
+		@Query() { title }: SearchTicketDto
+	) {
+		const { prisma } = this;
+		const tickets = await prisma.ticket.findMany({
+			where: {
+				title: {
+					startsWith: title
+				}
+			},
+			select: {
+				id: true,
+				title: true,
+				responsibleUser: {
+					select: {
+						username: true
+					}
+				}
+			},
+			take: 10,
+			orderBy: {
+				title: "desc"
+			}
+		});
 		return new ListResult(tickets);
 	}
 

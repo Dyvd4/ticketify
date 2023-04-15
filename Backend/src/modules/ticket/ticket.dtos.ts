@@ -15,3 +15,8 @@ export class UpdateTicketDto implements Partial<Pick<Ticket, "title" | "responsi
 	@IsString() @IsOptional()
 	statusId?: string;
 }
+
+export class SearchTicketDto implements Pick<Ticket, "title">{
+	@IsString()
+	title!: string;
+}

@@ -6,6 +6,7 @@ import { signOut } from "src/auth/auth";
 import useSidebarToggle from "src/context/hooks/useSidebarToggle";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import DarkModeButton from "./Buttons/DarkMode";
+import SearchBar from "./SearchBar";
 import IconButton from "./Wrapper/IconButton";
 
 type NavbarProps = {}
@@ -40,6 +41,7 @@ function Navbar(props: NavbarProps) {
 					icon={<FontAwesomeIcon icon={faBars} />} />
 			</div>
 			<HStack gap={1}>
+				<SearchBar />
 				<DarkModeButton
 					size="sm"
 					aria-label="Toggle dark mode" />

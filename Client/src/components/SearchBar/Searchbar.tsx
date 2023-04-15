@@ -1,89 +1,15 @@
-import { Box, Divider, Input, InputGroup, InputLeftElement, InputRightElement, Kbd, Modal, ModalContent, ModalOverlay, UnorderedList, useDisclosure } from '@chakra-ui/react';
+import { Box, Divider, Input, InputGroup, InputLeftElement, InputRightElement, Kbd, Modal, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ComponentPropsWithRef, PropsWithChildren, useEffect, useRef } from 'react';
-import useKeyPosition from 'src/hooks/useKeyPosition';
+import { ComponentPropsWithRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { useQuery } from 'react-query';
+import { fetchEntity } from 'src/api/entity';
+import NavigatableList from 'src/components/NavigatableList';
+import { ListResultEmptyDisplay } from '../List/Result';
+import LoadingRipple from '../Loading/LoadingRipple';
 import SearchBarListItem from './SearchBarListItem';
 
 type _SearchBarProps = {}
-
-const listItems = [
-    {
-        description: "Leon H",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "David Kimmich",
-        title: "#32 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Timo Hu",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Leon H",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "David Kimmich",
-        title: "#32 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Timo Hu",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Leon H",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "David Kimmich",
-        title: "#32 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Timo Hu",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Leon H",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "David Kimmich",
-        title: "#32 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Timo Hu",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Leon H",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "David Kimmich",
-        title: "#32 fdsfdsfdsfds",
-        href: "#"
-    },
-    {
-        description: "Timo Hu",
-        title: "#40 fdsfdsfdsfds",
-        href: "#"
-    }
-]
 
 export type SearchBarProps = PropsWithChildren<_SearchBarProps> &
     Omit<ComponentPropsWithRef<'div'>, keyof _SearchBarProps>
@@ -92,7 +18,14 @@ function SearchBar({ className, ...props }: SearchBarProps) {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [keyPosition, setKeyPosition] = useKeyPosition(listItems.length - 1);
+    const [inputValue, setInputValue] = useState("");
+
+    const { isLoading, data } = useQuery(["ticketsForSearchBar", inputValue], () => fetchEntity({
+        route: "ticketsForSearchBar",
+        queryParams: {
+            title: inputValue
+        }
+    }))
 
     useEffect(() => {
         window.addEventListener("keydown", e => {
@@ -102,6 +35,10 @@ function SearchBar({ className, ...props }: SearchBarProps) {
             }
         })
     }, [])
+
+    const handleListItemClick = (e) => {
+        (e.target as HTMLLIElement).querySelector("a")?.click();
+    }
 
     return (
         <>
@@ -134,6 +71,8 @@ function SearchBar({ className, ...props }: SearchBarProps) {
                         <Box className='flex flex-row items-center gap-6 p-4'>
                             <FontAwesomeIcon icon={faSearch} />
                             <Input
+                                value={inputValue}
+                                onChange={e => setInputValue(e.target.value)}
                                 variant={"unstyled"}
                                 style={{
                                     backgroundColor: "transparent",
@@ -145,16 +84,32 @@ function SearchBar({ className, ...props }: SearchBarProps) {
                         </Box>
                         <Divider />
                     </Box>
-                    <UnorderedList className='pl-4 pb-4 pr-4 flex flex-col gap-2 m-0 overflow-y-scroll'>
-                        {listItems.map((item, index) => (
-                            <SearchBarListItem
-                                onMouseOver={() => setKeyPosition(index)}
-                                enableHoverColors
-                                isActive={index === keyPosition}
-                                {...item}
-                            />
-                        ))}
-                    </UnorderedList>
+                    {isLoading && <>
+                        <LoadingRipple className='mx-auto' />
+                    </>}
+                    {!isLoading && data.items.length === 0 && <>
+                        <ListResultEmptyDisplay className='list-none mx-auto pt-2 pb-4' />
+                    </>}
+                    {!isLoading && data.items.length > 0 && <>
+                        <NavigatableList
+                            className='pl-4 pb-4 pr-4 flex flex-col gap-2 m-0 overflow-y-scroll'
+                            listItems={data.items}
+                            listItemProps={{
+                                className: "list-none"
+                            }}
+                            onListItemClick={handleListItemClick}>
+                            {(listItem, isActive) => (
+                                <SearchBarListItem
+                                    key={listItem.id}
+                                    enableHoverColors
+                                    isActive={isActive}
+                                    title={listItem.title}
+                                    description={listItem.responsibleUser?.username}
+                                    href={`/Ticket/Details/${listItem.id}`}
+                                />
+                            )}
+                        </NavigatableList>
+                    </>}
                 </ModalContent>
             </Modal>
         </>

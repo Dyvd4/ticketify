@@ -7,7 +7,7 @@ import ListItem from "src/components/List/ListItem";
 import ListItemHeading from "src/components/List/ListItemHeading";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
-import SearchBar from "../../components/SearchBar/Searchbar";
+import SearchBar from "../../components/SearchBar/SearchBar";
 import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
