@@ -7,6 +7,7 @@ import ListItem from "src/components/List/ListItem";
 import ListItemHeading from "src/components/List/ListItemHeading";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
+import SearchBar from "../../components/SearchBar/Searchbar";
 import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
@@ -30,8 +31,12 @@ function Index(props: IndexProps) {
 
         });
     }
+
     return (
         <>
+            <br />
+            <SearchBar />
+            <br />
             <IconButton
                 aria-label="test"
                 circle
