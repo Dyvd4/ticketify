@@ -71,10 +71,9 @@ function FormWrapper(props: FormWrapperProps) {
     }
     const ticketState = {
         ...fetchedTicket,
-        // FIXME: wrong format
-        dueDate: new Date(!!fetchedTicket && fetchedTicket.dueDate
+        dueDate: format(new Date(!!fetchedTicket && fetchedTicket.dueDate
             ? new Date(fetchedTicket.dueDate)
-            : new Date()),
+            : new Date()), "yyyy-MM-dd'T'hh:mm"),
         ...localTicketState
     }
     const inputState = {
