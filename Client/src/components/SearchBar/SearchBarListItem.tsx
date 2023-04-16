@@ -1,4 +1,4 @@
-import { Box, Heading, Link } from '@chakra-ui/react';
+import { Box, Heading, Highlight, Link } from '@chakra-ui/react';
 import { faArrowTurnDown, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentPropsWithRef, PropsWithChildren } from 'react';
@@ -17,9 +17,10 @@ const COLOR_MAP = {
 }
 
 type _SearchBarListItemProps = {
-    title: React.ReactNode
-    description: React.ReactNode
+    title: string
+    description: string
     href: string
+    highlightQuery: string
     enableHoverColors?: boolean
     isActive?: boolean
 }
@@ -36,6 +37,7 @@ function SearchBarListItem(props: SearchBarListItemProps) {
         href,
         enableHoverColors,
         isActive,
+        highlightQuery,
         ...rest
     } = props;
 
@@ -73,7 +75,13 @@ function SearchBarListItem(props: SearchBarListItemProps) {
                         {description}
                     </Box>
                     <Heading as="h2" className='text-lg m-0 leading-tight'>
-                        {title}
+                        <Highlight
+                            styles={{
+                                backgroundColor: "orange.300"
+                            }}
+                            query={highlightQuery}>
+                            {title}
+                        </Highlight>
                     </Heading>
                 </Box>
                 <FontAwesomeIcon

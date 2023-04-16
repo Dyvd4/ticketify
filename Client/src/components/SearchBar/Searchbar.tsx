@@ -21,7 +21,7 @@ function SearchBar({ className, ...props }: SearchBarProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState("");
 
-    const { value: debouncedInputValue, isDebouncing } = useDebounce(inputValue);
+    const { value: debouncedInputValue } = useDebounce(inputValue);
     const { isLoading, data } = useQuery(["ticketsForSearchBar", debouncedInputValue], () => {
         return fetchEntity({
             route: "ticketsForSearchBar",
@@ -88,13 +88,13 @@ function SearchBar({ className, ...props }: SearchBarProps) {
                         </Box>
                         <Divider />
                     </Box>
-                    {isLoading || isDebouncing && <>
+                    {isLoading && <>
                         <LoadingRipple className='mx-auto' />
                     </>}
-                    {!isLoading && !isDebouncing && data.items.length === 0 && <>
+                    {!isLoading && data.items.length === 0 && <>
                         <ListResultEmptyDisplay className='list-none mx-auto pt-2 pb-4' />
                     </>}
-                    {!isLoading && !isDebouncing && data.items.length > 0 && <>
+                    {!isLoading && data.items.length > 0 && <>
                         <NavigatableList
                             className='pl-4 pb-4 pr-4 flex flex-col gap-2 m-0 overflow-y-scroll'
                             listItems={data.items}
@@ -110,6 +110,7 @@ function SearchBar({ className, ...props }: SearchBarProps) {
                                     title={listItem.title}
                                     description={listItem.responsibleUser?.username}
                                     href={`/Ticket/Details/${listItem.id}`}
+                                    highlightQuery={inputValue}
                                 />
                             )}
                         </NavigatableList>
