@@ -1,4 +1,4 @@
-import { List as ChakraList, Divider } from "@chakra-ui/react";
+import { Divider, List as ChakraList } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
@@ -9,8 +9,9 @@ import { filterItemsAtom } from "src/context/stores/filter";
 import { searchItemAtom } from "src/context/stores/search";
 import { sortItemsAtom } from "src/context/stores/sort";
 import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
-import { useUrlParams } from "src/hooks/useUrlParams";
+import useDebounce from "src/hooks/useDebounce";
 import { useCurrentUserSettings } from "src/hooks/user";
+import { useUrlParams } from "src/hooks/useUrlParams";
 import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
@@ -65,6 +66,7 @@ function List(props: ListProps) {
     const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
+    const { value: debouncedSearchItem, isDebouncing } = useDebounce(searchItem)
     const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1);
 
@@ -123,15 +125,15 @@ function List(props: ListProps) {
     // useEffect
     // ---------
     useEffect(() => {
-        if (!searchItem) return;
+        if (!debouncedSearchItem) return;
         const oldFilterParams = [...queryParams.filter || []].filter((filterItem: TFilterItem) => {
-            return filterItem.property !== searchItem.property;
+            return filterItem.property !== debouncedSearchItem.property;
         });
         setQueryParams({
             ...queryParams,
-            filter: [...oldFilterParams, searchItem]
+            filter: [...oldFilterParams, debouncedSearchItem]
         });
-    }, [searchItem]);
+    }, [debouncedSearchItem]);
 
     const handleDrawerApply = (type: TDrawer) => {
         const itemsToSet = type === "filter"
