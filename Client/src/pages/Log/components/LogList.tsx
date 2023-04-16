@@ -8,7 +8,12 @@ function LogList(props: LogListProps) {
     return (
         <>
             <List
-                variant={{ name: "pagination" }}
+                variant={{
+                    name: "infiniteLoading",
+                    variant: {
+                        name: "intersection-observer"
+                    }
+                }}
                 id="6802edfd-85e0-41d7-818a-b2e7ab0c6d54"
                 fetch={{
                     route: "logs",
@@ -28,7 +33,7 @@ function LogList(props: LogListProps) {
                         property: "level",
                     },
                     {
-                        property: "message"
+                        property: "message",
                     },
                 ]}
                 filter={[
@@ -46,6 +51,14 @@ function LogList(props: LogListProps) {
                         type: "string"
                     }
                 ]}
+                search={{
+                    property: "message",
+                    type: "string",
+                    operation: {
+                        value: "contains"
+                    },
+                    label: "search by message"
+                }}
             />
             <br />
         </>

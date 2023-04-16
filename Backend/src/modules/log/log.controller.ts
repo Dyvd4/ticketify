@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { Pager } from '@src/lib/list';
-import { PagerQueryDto } from '@src/lib/list/list.dtos';
+import { InfiniteLoader } from '@src/lib/list';
+import { InfiniteLoaderQueryDto } from '@src/lib/list/list.dtos';
 import { PrismaService } from '../global/database/prisma.service';
 import { CreateErrorLogDto } from './log.dtos';
 import { LogService } from './log.service';
@@ -22,22 +22,22 @@ export class LogController {
 	}
 
 	@Get('logs')
-	async getLogs(@Query() query: PagerQueryDto) {
+	async getLogs(@Query() query: InfiniteLoaderQueryDto) {
 		const { prisma } = this;
 
-		const pager = new Pager(query, 3);
+		const infiniteLoader = new InfiniteLoader(query, 3);
 
 		const items = await prisma.log.findMany({
-			...pager.getPrismaArgs(),
-			where: pager.getPrismaFilterArgs(),
-			orderBy: pager.getPrismaOrderByArgs()
+			...infiniteLoader.getPrismaArgs(),
+			where: infiniteLoader.getPrismaFilterArgs(),
+			orderBy: infiniteLoader.getPrismaOrderByArgs()
 		});
 		const itemsCount = await prisma.log.count({
-			where: pager.getPrismaFilterArgs(),
-			orderBy: pager.getPrismaOrderByArgs()
+			where: infiniteLoader.getPrismaFilterArgs(),
+			orderBy: infiniteLoader.getPrismaOrderByArgs()
 		});
 
-		return pager.getResult(items, itemsCount);
+		return infiniteLoader.getResult(items, itemsCount);
 	}
 
 	@Get('logs/count')
