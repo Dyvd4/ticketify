@@ -19,9 +19,16 @@ const useIntersectionObserver = ({ selector, events, options }: UseIntersectionO
 
     useEffect(() => {
         const intersectionObserver = new IntersectionObserver(handleObserve, options as any);
-        getItemsToObserve().forEach((element) => {
+        const elementsToObserve = getItemsToObserve();
+        elementsToObserve.forEach((element) => {
             intersectionObserver.observe(element);
         });
+        return () => {
+            elementsToObserve.forEach((element) => {
+                intersectionObserver.unobserve(element)
+            });
+            intersectionObserver.disconnect();
+        }
     });
 
     const handleLastItemIntersecting = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
