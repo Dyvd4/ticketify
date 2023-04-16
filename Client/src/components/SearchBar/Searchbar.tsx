@@ -10,7 +10,6 @@ import { ListResultEmptyDisplay } from '../List/Result';
 import LoadingRipple from '../Loading/LoadingRipple';
 import SearchBarListItem from './SearchBarListItem';
 
-const DEBOUNCE_DELAY_MS = 250;
 type _SearchBarProps = {}
 
 export type SearchBarProps = PropsWithChildren<_SearchBarProps> &
@@ -22,7 +21,7 @@ function SearchBar({ className, ...props }: SearchBarProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState("");
 
-    const { value: debouncedInputValue, isDebouncing } = useDebounce(inputValue, DEBOUNCE_DELAY_MS);
+    const { value: debouncedInputValue, isDebouncing } = useDebounce(inputValue);
     const { isLoading, data } = useQuery(["ticketsForSearchBar", debouncedInputValue], () => {
         return fetchEntity({
             route: "ticketsForSearchBar",
