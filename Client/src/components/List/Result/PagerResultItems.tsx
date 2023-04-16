@@ -22,18 +22,19 @@ type PageQueryItemsProps = {
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
     emptyDisplay?: JSX.Element
+    isLoading?: boolean
 }
 
 /** expects a query with PagerResult */
-function PagerResultItems({ query, ...props }: PageQueryItemsProps) {
+function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
 
     const {
         isError,
-        isLoading,
+        isLoading: queryIsLoading,
         data,
     } = query;
 
-    if (isLoading) return props.loadingDisplay || <LoadingRipple centered />;
+    if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple centered />;
 
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 

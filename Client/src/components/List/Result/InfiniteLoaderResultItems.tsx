@@ -15,6 +15,7 @@ type InfiniteLoaderResultItemsProps = {
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
     emptyDisplay?: JSX.Element
+    isLoading?: boolean
 } & ({
     /** 
      * this option uses a `"load more"-button` that can be clicked in order to
@@ -34,11 +35,11 @@ type InfiniteLoaderResultItemsProps = {
 export type Variant = InfiniteLoaderResultItemsProps["variant"]
 
 /** expects a query with InfiniteLoaderResult */
-function InfiniteLoaderResultItems({ query, variant, ...props }: InfiniteLoaderResultItemsProps) {
+function InfiniteLoaderResultItems({ query, isLoading, variant, ...props }: InfiniteLoaderResultItemsProps) {
 
     const {
         isError,
-        isLoading,
+        isLoading: queryIsLoading,
         data,
         hasNextPage,
         isFetchingNextPage,
@@ -54,7 +55,7 @@ function InfiniteLoaderResultItems({ query, variant, ...props }: InfiniteLoaderR
         }
     });
 
-    if (isLoading) return props.loadingDisplay || <LoadingRipple centered />;
+    if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple centered />;
 
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 

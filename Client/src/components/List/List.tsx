@@ -215,6 +215,7 @@ function List(props: ListProps) {
                         page={parseInt(page)}
                         setPage={setPage}
                         query={paginationQuery}
+                        isLoading={isDebouncing}
                         loadingDisplay={props.loadingDisplay ||
                             <div className="flex justify-center items-center">
                                 <LoadingRipple />
@@ -230,6 +231,7 @@ function List(props: ListProps) {
                             className: "mx-auto flex"
                         }}
                         query={infiniteLoadingQuery}
+                        isLoading={isDebouncing}
                         loadingDisplay={props.loadingDisplay ||
                             <div className="flex justify-center items-center">
                                 <LoadingRipple />
