@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
+import ErrorAlert from "src/components/ErrorAlert";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { fetchCurrentUser } from "../api/user";
 import { isAuthenticated, isHalfAuthenticated } from "./auth";
@@ -38,9 +39,9 @@ function AuthenticatedArea(props: AuthenticatedAreaProps) {
 
     let returnElement;
 
-    if (isLoading) returnElement = <LoadingRipple centered />
+    if (isLoading) returnElement = <LoadingRipple usePortal />
 
-    else if (isError) returnElement = <div className="text-red-500">An error occurred</div>;
+    else if (isError) returnElement = <ErrorAlert />;
 
     else if (props.half
         ? isHalfAuthenticated(user)

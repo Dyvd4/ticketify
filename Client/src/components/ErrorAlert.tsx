@@ -2,9 +2,9 @@ import { Alert } from "@chakra-ui/react";
 
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL;
 
-type MutationErrorAlertProps = {}
+type ErrorAlertProps = {}
 
-function MutationErrorAlert(props: MutationErrorAlertProps) {
+function ErrorAlert(props: ErrorAlertProps) {
     return (
         <Alert status="error" className="flex-col items-start rounded-md">
             <div>
@@ -20,4 +20,4 @@ function MutationErrorAlert(props: MutationErrorAlertProps) {
     );
 }
 
-export default MutationErrorAlert;
+export default ErrorAlert;

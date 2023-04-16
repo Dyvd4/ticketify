@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
+import ErrorAlert from "src/components/ErrorAlert";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { fetchCurrentUser } from "../api/user";
 import { isAuthenticated, isAuthorized as defaultIsAuthorized } from "./auth";
@@ -36,9 +37,9 @@ function AuthorizedArea(props: AuthorizedAreaProps) {
         ? ((user) => isAuthenticated(user) && props.authorizationStrategy!(user))
         : defaultIsAuthorized;
 
-    if (isLoading) returnElement = <LoadingRipple centered />
+    if (isLoading) returnElement = <LoadingRipple usePortal />
 
-    else if (isError) returnElement = <div className="text-red-500">An error occurred</div>;
+    else if (isError) returnElement = <ErrorAlert />;
 
     else if (isAuthorized(user)) {
         if (type === "route") {

@@ -27,7 +27,7 @@ it("displays loading state", () => {
 
     expect(screen.getByTestId("LoadingRipple")).toBeTruthy();
 });
-// TODO: Add proper error state
+
 it("displays error state", () => {
 
     mockedUseQuery.mockImplementation(() => ({
@@ -40,7 +40,7 @@ it("displays error state", () => {
         </AuthenticatedArea>
     )
 
-    expect(screen.getByText("An error occurred")).toBeTruthy();
+    expect(screen.getByText("We're sorry but it seems that an error occurred during your request.")).toBeTruthy();
 });
 
 describe("type route", () => {

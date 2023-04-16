@@ -8,8 +8,8 @@ import FormControl from "src/components/Wrapper/FormControl";
 import { useCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
 import { getValidationErrorMap, ValidationErrorMap, ValidationErrorResponse } from "src/utils/error";
-import { isAuthenticated } from "../../../auth/auth";
-import MutationErrorAlert from "./components/MutationErrorAlert";
+import { isAuthenticated } from "../../auth/auth";
+import MutationErrorAlert from "../../components/ErrorAlert";
 
 interface EmailNotConfirmedIndexProps { }
 

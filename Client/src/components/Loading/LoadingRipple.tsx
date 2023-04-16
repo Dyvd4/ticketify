@@ -1,4 +1,6 @@
+import { useAtom } from "jotai";
 import ReactDOM from "react-dom";
+import { portalIsRenderedAtom } from "src/context/atoms";
 
 type _LoadingRippleProps = (
     | {
@@ -16,7 +18,10 @@ type LoadingRippleProps = _LoadingRippleProps &
     Omit<React.ComponentPropsWithRef<"div">, keyof _LoadingRippleProps>
 
 function LoadingRipple({ centered, usePortal, className, ...props }: LoadingRippleProps) {
-    return usePortal
+
+    const [portalIsRendered] = useAtom(portalIsRenderedAtom);
+
+    return portalIsRendered && usePortal
         ? ReactDOM.createPortal(
             <div
                 data-testid="LoadingRipple"
