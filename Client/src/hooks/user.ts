@@ -13,7 +13,9 @@ interface UseCurrentUserParams {
 }
 export const useCurrentUser = (params?: UseCurrentUserParams) => {
 
-    const { data, ...queryResult } = useQuery([params?.includeAllEntities ? "user/all" : "user"], params?.includeAllEntities ? fetchCurrentUserAll : fetchCurrentUser);
+    const { data, ...queryResult } = useQuery([params?.includeAllEntities ? "user/all" : "user"], params?.includeAllEntities ? fetchCurrentUserAll : fetchCurrentUser, {
+        refetchOnWindowFocus: false
+    });
 
     return {
         currentUser: data,
