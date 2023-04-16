@@ -13,6 +13,7 @@ export class FileService {
 
 	private s3Client: S3Client
 	private S3_BUCKET_NAME: string
+	private FILE_SIGNED_URL_EXPIRING_IN_SECONDS: number
 
 	constructor(
 		private readonly prisma: PrismaService,
@@ -31,6 +32,8 @@ export class FileService {
 			},
 			region: S3_REGION
 		});
+
+		this.FILE_SIGNED_URL_EXPIRING_IN_SECONDS = this.configService.get<Config>("FILE_SIGNED_URL_EXPIRING_IN_SECONDS", { infer: true });
 	}
 
 	private createOrUpdateFileInS3(fileToCreate: Express.Multer.File) {
@@ -116,7 +119,7 @@ export class FileService {
 		}
 
 		const clientFile = await this.getFileWithSignedUrl(file);
-		
+
 		return clientFile;
 	}
 
@@ -136,7 +139,7 @@ export class FileService {
 		const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand({
 			Bucket: this.S3_BUCKET_NAME,
 			Key: file.originalFileName
-		}), { expiresIn: 3600 });
+		}), { expiresIn: this.FILE_SIGNED_URL_EXPIRING_IN_SECONDS });
 		return PrismaFileToClientFileMap(file, signedUrl);
 	}
 }

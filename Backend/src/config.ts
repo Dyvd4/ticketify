@@ -30,7 +30,8 @@ const config = {
 	S3_PUBLIC_KEY: process.env.S3_PUBLIC_KEY!,
 	S3_PRIVATE_KEY: process.env.S3_PRIVATE_KEY!,
 	S3_BUCKET_NAME: process.env.S3_BUCKET_NAME!,
-	S3_REGION: process.env.S3_REGION!
+	S3_REGION: process.env.S3_REGION!,
+	FILE_SIGNED_URL_EXPIRING_IN_SECONDS: parseInt(process.env.FILE_SIGNED_URL_EXPIRING_IN_SECONDS!)
 }
 
 export type Config = typeof config;
