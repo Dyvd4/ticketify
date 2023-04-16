@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotImplementedException, Param, ParseArrayPipe, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseArrayPipe, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
 import { User as TUser } from "@prisma/client";
@@ -10,7 +10,8 @@ import { isImageFile } from '@src/modules/file/file.utils';
 import { User } from '@src/modules/global/auth/user.decorator';
 import { PrismaService } from '@src/modules/global/database/prisma.service';
 import { InfiniteLoader, Pager } from 'src/lib/list';
-import { SearchTicketDto, UpdateTicketDto } from './ticket.dtos';
+import { TicketStatus } from './ticket-status/ticket-status.enum';
+import { CreateTicketDto, SearchTicketDto, UpdateTicketDto } from './ticket.dtos';
 import { TicketService } from './ticket.service';
 
 @Controller()
@@ -207,8 +208,35 @@ export class TicketController {
 	}
 
 	@Post('ticket')
-	createTicket() {
-		throw new NotImplementedException();
+	@UseInterceptors(FilesInterceptor("files"))
+	async createTicket(
+		@Body() ticket: CreateTicketDto,
+		@UploadedFiles(parseFilePipe) files: Express.Multer.File[]
+	) {
+		const createdOrUpdatedFiles = await this.fileService.createOrUpdateFiles(files);
+
+		const openTicketStatus = await this.prisma.ticketStatus.findFirst({
+			where: {
+				name: TicketStatus.open
+			}
+		});
+
+		const createdTicket = await this.prisma.ticket.create({
+			data: {
+				...ticket,
+				statusId: openTicketStatus!.id,
+				dueDate: ticket.dueDate ? new Date(ticket.dueDate) : null,
+				attachments: {
+					create: createdOrUpdatedFiles.map(file => {
+						return {
+							fileId: file.id,
+						}
+					})
+				}
+			}
+		});
+
+		return createdTicket;
 	}
 
 	@Post('ticket/:id/file')

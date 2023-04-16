@@ -13,6 +13,7 @@ import { FileService } from "@src/modules/file/file.service";
 import { ValidationException } from "@src/modules/global/validation.exception";
 import bcrypt from "bcrypt";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
+import ListResult from "@src/lib/list/result/list-result";
 
 @Controller()
 @ApiCookieAuth()
@@ -30,9 +31,7 @@ export class UserController {
 
 		const users = await prisma.user.findMany();
 
-		return {
-			items: users
-		};
+		return new ListResult(users);
 	}
 
 	@Auth({
