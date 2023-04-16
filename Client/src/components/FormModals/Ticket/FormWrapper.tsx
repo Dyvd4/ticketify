@@ -1,5 +1,6 @@
 import { ContainerProps, useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
+import { format } from "date-fns";
 import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { useState } from "react";
@@ -26,9 +27,9 @@ function FormWrapper(props: FormWrapperProps) {
     const { variant = "add", id, isOpen, onClose } = props
     // state
     // -----
-    const [localTicketState, setLocalTicketState] = useState<any>();
-    const [localInputState, setLocalInputState] = useState<any>();
-    const [localEditorState, setLocalEditorState] = useState<any>();
+    const [localTicketState, setLocalTicketState] = useState<any>({});
+    const [localInputState, setLocalInputState] = useState<any>({});
+    const [localEditorState, setLocalEditorState] = useState<any>({});
     const [success, setSuccess] = useState(false);
     const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
     const toast = useToast();
@@ -70,6 +71,10 @@ function FormWrapper(props: FormWrapperProps) {
     }
     const ticketState = {
         ...fetchedTicket,
+        // FIXME: wrong format
+        dueDate: new Date(!!fetchedTicket && fetchedTicket.dueDate
+            ? new Date(fetchedTicket.dueDate)
+            : new Date()),
         ...localTicketState
     }
     const inputState = {
@@ -89,30 +94,31 @@ function FormWrapper(props: FormWrapperProps) {
         }, variant)
     }, {
         onSuccess: async (response) => {
-            // 🥵
             await queryClient.invalidateQueries(["ticket", String(ticketState.id)]);
             await queryClient.invalidateQueries(["ticket"]);
-            if (variant === "edit") handleOnClose();
             toast({
                 title: "successfully saved ticket",
                 status: "success"
             });
-            setLocalTicketState({
-                id: response.data.id
-            });
-            setLocalInputState({});
-            setLocalEditorState({
-                "description": getEmptyState(editorState["description"])
-            });
-            setSuccess(true);
-            setErrorMap(null);
+            if (variant === "add") {
+                setLocalTicketState({
+                    id: response.data.id
+                });
+                setLocalInputState({});
+                setErrorMap(null);
+                setLocalEditorState({
+                    "description": EditorState.createEmpty()
+                });
+                setSuccess(true);
+            } else {
+                handleOnClose()
+            }
         },
         onError: (error: AxiosError<ValidationErrorResponse>) => {
             const errorMap = getValidationErrorMap(error);
             setErrorMap(errorMap);
         }
     });
-
     // handler
     // -------
     const handleInputChange = ([key, value]) => {
