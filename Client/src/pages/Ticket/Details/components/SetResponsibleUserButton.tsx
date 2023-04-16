@@ -29,10 +29,7 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
     const {
         data: responsibleUsers,
         isLoading: responsibleUsersLoading
-    } = useQuery(["responsibleUsers"], async () => {
-        const response = await fetchEntity({ route: "users" })
-        return response.items;
-    });
+    } = useQuery(["responsibleUsers"], () => fetchEntity({ route: "users" }));
 
     const {
         data,
@@ -80,7 +77,7 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
                     <ModalBody>
                         {!isLoading && <>
                             <AutoCompleter
-                                items={responsibleUsers}
+                                items={responsibleUsers?.items || []}
                                 listItemRender={user => user.username}
                                 inputValue={responsibleUserInputState}
                                 onChange={setResponsibleUserInputState}
