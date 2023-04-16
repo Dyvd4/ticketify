@@ -39,8 +39,8 @@ const useSortItemsInit = ({ defaultSortItems, listId }: UseSortItemsInitArgs, on
 
         const sortItems = sortItemsToSet.map(sortItem => {
             return {
+                direction: getDefaultDirection(),
                 ...sortItem,
-                direction: getDefaultDirection()
             }
         });
 
