@@ -53,4 +53,6 @@ export class PagerQueryDto {
 	orderBy?: OrderByDto[]
 	@IsNumber()
 	page!: number
+	@IsNumber() @IsOptional()
+	itemsPerPage?: number
 }

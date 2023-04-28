@@ -33,12 +33,12 @@ class Pager<T> extends List {
 
 // adapter for NestJs
 export default class NestJsPager<T> extends Pager<T> {
-	constructor(queryDto: PagerQueryDto, itemsPerLoad = ITEMS_PER_PAGE) {
+	constructor(queryDto: PagerQueryDto) {
 		super(
 			queryDto.filter || [],
 			queryDto.orderBy || [],
 			queryDto.page,
-			itemsPerLoad
+			queryDto.itemsPerPage || ITEMS_PER_PAGE
 		);
 	}
 }

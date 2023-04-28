@@ -91,7 +91,7 @@ export class DummyController {
 		@Query() query: PagerQueryDto
 	) {
 		const { prisma } = this;
-		const pager = new Pager(query, 10);
+		const pager = new Pager(query);
 
 		const testItems = await prisma.test.findMany({
 			...pager.getPrismaArgs(),
