@@ -13,10 +13,15 @@ type UseSortItemsInitArgs = {
     listId: string
 }
 
-const useSortItemsInit = ({ defaultSortItems, listId }: UseSortItemsInitArgs, onInit?: (sortItems) => void) => {
+const useSortItemsInit = (
+    { defaultSortItems, listId }: UseSortItemsInitArgs,
+    onInit?: (sortItems, fromLocalStorage: boolean, fromUrl: boolean) => void
+) => {
 
     const { currentUserSettings } = useCurrentUserSettings();
     const [, setSortItems] = useAtom(sortItemsAtom);
+    let sortItemsAreFromLocalStorage = false;
+    let sortItemsAreFromUrl = false;
 
     useEffect(() => {
         if (!currentUserSettings) return;
@@ -30,11 +35,17 @@ const useSortItemsInit = ({ defaultSortItems, listId }: UseSortItemsInitArgs, on
 
         if (allowSortItemsByUrl) {
             let sortItemsFromUrl: any = getUrlParam(`orderBy-${listId}`);
-            if (sortItemsFromUrl) sortItemsToSet = sortItemsFromUrl;
+            if (sortItemsFromUrl) {
+                sortItemsToSet = sortItemsFromUrl;
+                sortItemsAreFromUrl = true
+            }
         }
         else if (allowSortItemsByLocalStorage) {
             let sortItemsFromLocalStorage = localStorage.getItem(`orderBy-${listId}`);
-            if (sortItemsFromLocalStorage) sortItemsToSet = JSON.parse(sortItemsFromLocalStorage);
+            if (sortItemsFromLocalStorage) {
+                sortItemsToSet = JSON.parse(sortItemsFromLocalStorage);
+                sortItemsAreFromLocalStorage = true;
+            }
         }
 
         const sortItems = sortItemsToSet.map(sortItem => {
@@ -45,7 +56,7 @@ const useSortItemsInit = ({ defaultSortItems, listId }: UseSortItemsInitArgs, on
         });
 
         setSortItems(sortItems as any);
-        if (onInit) onInit(sortItems);
+        if (onInit) onInit(sortItems, sortItemsAreFromLocalStorage, sortItemsAreFromUrl);
 
     }, [currentUserSettings]);
 

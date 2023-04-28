@@ -13,10 +13,15 @@ type UseFilterItemsInitArgs = {
     listId: string
 }
 
-const useFilterItemsInit = ({ defaultFilterItems, listId }: UseFilterItemsInitArgs, onInit?: (filterItems) => void) => {
+const useFilterItemsInit = (
+    { defaultFilterItems, listId }: UseFilterItemsInitArgs,
+    onInit?: (filterItems, fromLocalStorage: boolean, fromUrl: boolean) => void
+) => {
 
     const { currentUserSettings } = useCurrentUserSettings();
     const [, setFilterItems] = useAtom(filterItemsAtom);
+    let filterItemsAreFromLocalStorage = false;
+    let filterItemsAreFromUrl = false;
 
     useEffect(() => {
 
@@ -31,11 +36,17 @@ const useFilterItemsInit = ({ defaultFilterItems, listId }: UseFilterItemsInitAr
 
         if (allowFilterItemsByUrl) {
             let filterItemsFromUrl: any = getUrlParam(`filter-${listId}`);
-            if (filterItemsFromUrl) filterItemsToSet = filterItemsFromUrl;
+            if (filterItemsFromUrl) {
+                filterItemsToSet = filterItemsFromUrl;
+                filterItemsAreFromUrl = true;
+            }
         }
         else if (allowFilterItemsByLocalStorage) {
             let filterItemsFromLocalStorage = localStorage.getItem(`filter-${listId}`);
-            if (filterItemsFromLocalStorage) filterItemsToSet = JSON.parse(filterItemsFromLocalStorage);
+            if (filterItemsFromLocalStorage) {
+                filterItemsToSet = JSON.parse(filterItemsFromLocalStorage);
+                filterItemsAreFromLocalStorage = true;
+            }
         }
 
         const filterItems = filterItemsToSet.map(filterItem => {
@@ -47,7 +58,7 @@ const useFilterItemsInit = ({ defaultFilterItems, listId }: UseFilterItemsInitAr
         });
 
         setFilterItems(filterItems);
-        if (onInit) onInit(filterItems);
+        if (onInit) onInit(filterItems, filterItemsAreFromLocalStorage, filterItemsAreFromUrl);
 
     }, [currentUserSettings]);
 

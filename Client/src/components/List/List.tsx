@@ -77,7 +77,8 @@ function List(props: ListProps) {
     useFilterItemsInit({
         defaultFilterItems: props.filter,
         listId: props.id
-    }, (filterItems) => {
+    }, (filterItems, fromLocalStorage, fromUrl) => {
+        if (!fromLocalStorage && !fromUrl) return;
         setQueryParams(params => {
             return {
                 ...params,
@@ -89,7 +90,8 @@ function List(props: ListProps) {
     useSortItemsInit({
         defaultSortItems: props.sort,
         listId: props.id
-    }, (sortItems) => {
+    }, (sortItems, fromLocalStorage, fromUrl) => {
+        if (!fromLocalStorage && !fromUrl) return;
         setQueryParams(params => {
             return {
                 ...params,
