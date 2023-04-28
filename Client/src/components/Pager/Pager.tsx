@@ -28,7 +28,7 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
             .map((item, index) => index + 1);
 
     const handlePageChange = (newPageNumber: number) => {
-        if (!onChange || newPageNumber > pagesCount || newPageNumber < 1) return;
+        if (!onChange || newPageNumber > pagesCount || newPageNumber < 1 || newPageNumber === currentPage) return;
         onChange(newPageNumber);
     }
 

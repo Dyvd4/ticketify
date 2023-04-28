@@ -3,6 +3,7 @@ import LoadingRipple from "components/Loading/LoadingRipple";
 import Pager from "components/Pager";
 import { useEffect } from "react";
 import { UseQueryResult } from "react-query";
+import usePagingInfo from "./hooks/usePagingInfo";
 import ListResultErrorDisplay from "./ListResultErrorDisplay";
 import ListResultItems, { ListResult } from "./ListResultItems";
 
@@ -25,7 +26,6 @@ type PageQueryItemsProps = {
     isLoading?: boolean
 }
 
-/** expects a query with PagerResult */
 function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
 
     const {
@@ -39,17 +39,10 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 
     const handlePageChange = (pageNumber: number) => {
-        if (pageNumber === props.page) return;
         props.setPage(pageNumber)
     }
 
-    const pagingInfo = {
-        pagesCount: query.data.pagesCount,
-        pagesCountShrunk: query.data.pagesCountShrunk,
-        prevPage: query.data.prevPage,
-        nextPage: query.data.nextPage,
-        currentPage: query.data.nextPage - 1
-    }
+    const pagingInfo = usePagingInfo(query)!;
 
     useEffect(() => {
         if (pagingInfo.pagesCountShrunk) {
