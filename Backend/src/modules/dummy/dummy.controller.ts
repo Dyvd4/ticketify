@@ -9,9 +9,9 @@ import { UploadFileDto } from "@src/modules/file/file.dtos";
 import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
 import { PrismaService } from "@src/modules/global/database/prisma.service";
-import { InfiniteLoader } from "@src/lib/list";
+import { InfiniteLoader, Pager } from "@src/lib/list";
 import { FilterQueryParams, OrderByQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "@src/lib/list/list";
-import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
+import { InfiniteLoaderQueryDto, PagerQueryDto } from "@src/lib/list/list.dtos";
 import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import { SomeObjDto } from "./dummy.dtos";
 
@@ -72,6 +72,26 @@ export class DummyController {
 	) {
 		const { prisma } = this;
 		const pager = new InfiniteLoader(query, 5);
+
+		const testItems = await prisma.test.findMany({
+			...pager.getPrismaArgs(),
+			where: pager.getPrismaFilterArgs(),
+			orderBy: pager.getPrismaOrderByArgs()
+		});
+		const testItemsCount = await prisma.test.count({
+			where: pager.getPrismaFilterArgs(),
+			orderBy: pager.getPrismaOrderByArgs()
+		});
+
+		return pager.getResult(testItems, testItemsCount);
+	}
+
+	@Get("test/pager")
+	async getTestEntitiesWithPager(
+		@Query() query: PagerQueryDto
+	) {
+		const { prisma } = this;
+		const pager = new Pager(query, 10);
 
 		const testItems = await prisma.test.findMany({
 			...pager.getPrismaArgs(),

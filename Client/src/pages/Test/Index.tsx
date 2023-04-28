@@ -1,14 +1,11 @@
-import { Button, MenuItem, Tag } from "@chakra-ui/react";
-import { faDownload, faEdit, faImage, faThumbTack } from "@fortawesome/free-solid-svg-icons";
+import { Button, Td } from "@chakra-ui/react";
+import { faThumbTack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchEntity } from "src/api/entity";
-import List from "src/components/List/List";
-import ListItem from "src/components/List/ListItem";
-import ListItemHeading from "src/components/List/ListItemHeading";
+import TestList from "src/components/List/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
 
@@ -34,6 +31,122 @@ function Index(props: IndexProps) {
 
     return (
         <>
+            <TestList
+                header={{
+                    title: "test",
+                    showCount: true
+                }}
+                id="5802edfd-85e0-41d7-818a-b2e7ab0c6d54"
+                filter={
+                    [
+                        {
+                            property: "isAmazing",
+                            type: "boolean",
+                            label: "Is amazing"
+                        },
+                        {
+                            property: "createdAt",
+                            type: "date",
+                            label: "created at"
+                        }
+                    ]
+                }
+                fetch={{
+                    route: "dummy/test/pager",
+                    queryKey: "test"
+                }}
+                columns={[
+                    {
+                        property: "isAmazing",
+                        label: "is amazing"
+                    },
+                    {
+                        property: "createdAt",
+                        label: "created at"
+                    },
+                    {
+                        property: "description",
+                        label: "description"
+                    },
+                ]}
+                listItemRender={(item) => (
+                    <>
+                        <Td>{String(item.isAmazing)}</Td>
+                        <Td>{item.createdAt}</Td>
+                        <Td className="">{item.description}</Td>
+                    </>
+                )}
+                search={{
+                    property: "description",
+                    type: "string",
+                    operation: {
+                        value: "contains"
+                    },
+                    label: "search by description"
+                }}
+            >
+            </TestList>
+            {/* <ColumnList
+                variant={{
+                    name: "infiniteLoading",
+                    variant: {
+                        name: "intersection-observer"
+                    }
+                }}
+                id="5802edfd-85e0-41d7-818a-b2e7ab0c6d54"
+                fetch={{
+                    route: "logs",
+                    queryKey: "logs"
+                }}
+                listItemRender={(item) => (
+                    <Tr key={item.id}>
+                        <Td>{item.level}</Td>
+                        <Td>{item.createdAt}</Td>
+                        <Td>{item.message}</Td>
+                    </Tr>
+                )}
+                header={{
+                    title: "Logs",
+                    showCount: true
+                }}
+                columns={[
+                    {
+                        property: "level",
+                        label: "level"
+                    },
+                    {
+                        property: "createdAt",
+                        label: "created at"
+                    },
+                    {
+                        property: "message",
+                        label: "message"
+                    },
+                ]}
+                filter={[
+                    {
+                        property: "message",
+                        type: "string"
+                    },
+                    {
+                        property: "stack",
+                        label: "error stack",
+                        type: "string"
+                    },
+                    {
+                        property: "level",
+                        type: "string"
+                    }
+                ]}
+                search={{
+                    property: "message",
+                    type: "string",
+                    operation: {
+                        value: "contains"
+                    },
+                    label: "search by message"
+                }}
+            /> */}
             <br />
             <SearchBar />
             <br />
@@ -42,16 +155,13 @@ function Index(props: IndexProps) {
                 circle
                 icon={<FontAwesomeIcon size="sm" icon={faThumbTack} />}
             />
-            <List
+            {/* <List
                 variant={{
-                    name: "infiniteLoading",
-                    variant: {
-                        name: "load-more-button"
-                    }
+                    name: "pagination"
                 }}
                 id="6ed914af-4959-4920-8327-1bec3dccebc7"
                 fetch={{
-                    route: "dummy/test",
+                    route: "dummy/test/pager",
                     queryKey: "test"
                 }}
                 listItemRender={(item) => (
@@ -125,7 +235,7 @@ function Index(props: IndexProps) {
                         label: "created at"
                     }
                 ]}
-            />
+            /> */}
             <Button onClick={makeRequest}>
                 Make Request
             </Button>
@@ -134,3 +244,4 @@ function Index(props: IndexProps) {
 }
 
 export default Index;
+
