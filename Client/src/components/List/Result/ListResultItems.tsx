@@ -1,3 +1,4 @@
+import { Box, BoxProps } from "@chakra-ui/react";
 import { InfiniteData } from "react-query";
 import ListResultEmptyDisplay from "./ListResultEmptyDisplay";
 import { PagerResult } from "./PagerResultItems";
@@ -30,6 +31,8 @@ export type ListResult = {
 type ListResultItemsProps = {
     children(item: any): JSX.Element
     emptyDisplay?: JSX.Element
+    className?: string
+    as?: BoxProps["as"]
 } & ({
     variant: Extract<ListResultVariantNames, "pagination">
     data: PagerResult
@@ -38,14 +41,17 @@ type ListResultItemsProps = {
     data: InfiniteData<ListResult>
 })
 
-function ListResultItems({ data, variant, ...props }: ListResultItemsProps) {
+function ListResultItems({ data, variant, className, ...props }: ListResultItemsProps) {
     return <>
         {variant === "pagination" && <>
             {data.items.length > 0
                 ? data.items.map((item) => (
-                    <div className="page-query-item" key={item.id}>
+                    <Box
+                        as={props.as}
+                        className={`page-query-item ${className}`}
+                        key={item.id}>
                         {props.children(item)}
-                    </div>
+                    </Box>
                 ))
                 : props.emptyDisplay || <ListResultEmptyDisplay key={1} />}
         </>}
@@ -53,9 +59,12 @@ function ListResultItems({ data, variant, ...props }: ListResultItemsProps) {
             {data.pages.map(page => (
                 page.items.length > 0
                     ? page.items.map((item) => (
-                        <div className="infinite-query-item" key={item.id}>
+                        <Box
+                            as={props.as}
+                            className={`infinite-query-item ${className}`}
+                            key={item.id}>
                             {props.children(item)}
-                        </div>
+                        </Box>
                     ))
                     : props.emptyDisplay || <ListResultEmptyDisplay key={1} />
             ))}
