@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { TSearchItem } from "src/components/List";
-import { searchItemAtom } from "../stores/search";
+import searchItemAtom from "../atoms/searchItemAtom";
 
 const useSearchItemInit = (searchItem?: TSearchItem) => {
 

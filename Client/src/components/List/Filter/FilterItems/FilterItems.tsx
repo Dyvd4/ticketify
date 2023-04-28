@@ -1,6 +1,6 @@
 import { CircularProgress } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { filterItemsAtom } from "src/context/stores/filter";
+import filterItemsAtom from "src/components/List/context/atoms/filterItemsAtom";
 import FilterItem from "./FilterItem";
 
 type FilterItemsProps = {}

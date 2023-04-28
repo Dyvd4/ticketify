@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { sortDirections } from "src/components/List/Sort/data/directions";
 import { useCurrentUserSettings } from "src/hooks/user";
 import { getUrlParam } from "src/utils/url";
-import { sortItemsAtom } from "../stores/sort";
+import sortItemsAtom from "../atoms/sortItemsAtom";
 
 const getDefaultDirection = () => sortDirections[0];
 

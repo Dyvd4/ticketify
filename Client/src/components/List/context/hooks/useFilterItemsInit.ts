@@ -4,7 +4,7 @@ import { typeOperations } from "src/components/List/Filter/data/operations";
 import { TFilterItem } from "src/components/List/Filter/FilterItems";
 import { useCurrentUserSettings } from "src/hooks/user";
 import { getUrlParam } from "src/utils/url";
-import { filterItemsAtom } from "../stores/filter";
+import filterItemsAtom from "../atoms/filterItemsAtom";
 
 const getDefaultOperation = (filterItem: TFilterItem) => typeOperations[filterItem.type][0];
 

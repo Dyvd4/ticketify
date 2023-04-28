@@ -1,7 +1,7 @@
 import { CircularProgress } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
-import { sortItemsAtom } from "src/context/stores/sort";
+import sortItemsAtom from "src/components/List/context/atoms/sortItemsAtom";
 import { move } from "src/utils/array";
 import SortItem from "./SortItem";
 

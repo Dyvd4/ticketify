@@ -1,4 +1,5 @@
 import { TFilterItem } from "components/List/Filter/FilterItems";
 import { atom } from "jotai";
 
-export const filterItemsAtom = atom([] as TFilterItem[]);
+const filterItemsAtom = atom([] as TFilterItem[]);
+export default filterItemsAtom;
