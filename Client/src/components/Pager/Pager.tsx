@@ -3,7 +3,7 @@ import { faChevronLeft, faChevronRight, faEllipsis } from "@fortawesome/free-sol
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NumberButton from "./NumberButton";
 
-type PagerProps = {
+export type PagerProps = {
     currentPage: number
     pagesCount: number
     onChange?(page: number)
