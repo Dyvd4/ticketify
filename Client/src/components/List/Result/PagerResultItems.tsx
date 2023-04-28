@@ -38,10 +38,6 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
 
     if (isError) return props.errorDisplay || <ListResultErrorDisplay />
 
-    const handlePageChange = (pageNumber: number) => {
-        props.setPage(pageNumber)
-    }
-
     const pagingInfo = usePagingInfo(query)!;
 
     useEffect(() => {
@@ -60,7 +56,7 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
         <Divider />
         <Pager
             centered
-            onChange={handlePageChange}
+            onChange={props.setPage}
             pagesCount={pagingInfo.pagesCount}
             currentPage={props.page}
         />
