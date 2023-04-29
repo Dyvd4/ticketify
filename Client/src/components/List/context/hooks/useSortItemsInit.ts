@@ -6,7 +6,7 @@ import { useCurrentUserSettings } from "src/hooks/user";
 import { getUrlParam } from "src/utils/url";
 import sortItemsAtom from "../atoms/sortItemsAtom";
 
-const getDefaultDirection = () => sortDirections[0];
+const getDefaultDirection = () => sortDirections.get("ascending");
 
 type UseSortItemsInitArgs = {
     defaultSortItems: TSortItem[],

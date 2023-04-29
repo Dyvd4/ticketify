@@ -14,7 +14,7 @@ function SortDirections({ className, disabled, direction, ...props }: SortDirect
         <Select disabled={disabled}
             className={className}
             onChange={(e) => props.onSelect && props.onSelect((e.target as HTMLSelectElement).value)}>
-            {sortDirections.map((operation, index) => (
+            {Array.from(sortDirections.values()).map((operation, index) => (
                 <option
                     selected={operation.value === direction?.value}
                     key={index}
