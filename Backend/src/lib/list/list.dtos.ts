@@ -1,3 +1,4 @@
+import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { FilterOperationsType, FilterQueryParam, OrderByQueryParam } from "./list";
 
@@ -24,7 +25,9 @@ class FilterDto implements FilterQueryParam {
 	value?: string;
 	@IsOptional() @ValidateNested()
 	operation?: FilterOperationDto;
-	@IsBoolean() @IsOptional()
+	@IsOptional()
+	@IsBoolean()
+	@Transform(({ obj, key }) => obj[key] === 'true')
 	disabled?: boolean;
 }
 
@@ -33,23 +36,37 @@ class OrderByDto implements OrderByQueryParam {
 	property!: string;
 	@IsObject()
 	direction!: OrderByDirectionDto
-	@IsObject()
-	disabled!: boolean
+	@IsOptional()
+	@IsBoolean()
+	@Transform(({ obj, key }) => obj[key] === 'true')
+	disabled?: boolean
 }
 
 export class InfiniteLoaderQueryDto {
-	@IsOptional() @ValidateNested({ each: true })
+	@IsArray()
+	@IsOptional()
+	@ValidateNested({ each: true })
+	@Type(() => FilterDto)
 	filter?: FilterDto[]
-	@IsArray() @IsOptional()
+	@IsArray()
+	@IsOptional()
+	@ValidateNested({ each: true })
+	@Type(() => OrderByDto)
 	orderBy?: OrderByDto[]
 	@IsNumber()
 	skip!: number
 }
 
 export class PagerQueryDto {
-	@IsArray() @IsOptional()
+	@IsArray()
+	@IsOptional()
+	@ValidateNested({ each: true })
+	@Type(() => FilterDto)
 	filter?: FilterDto[]
-	@IsArray() @IsOptional()
+	@IsArray()
+	@IsOptional()
+	@ValidateNested({ each: true })
+	@Type(() => OrderByDto)
 	orderBy?: OrderByDto[]
 	@IsNumber()
 	page!: number
