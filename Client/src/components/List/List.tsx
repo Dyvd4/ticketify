@@ -157,7 +157,9 @@ function List(props: ListProps) {
 
         setQueryParams({
             ...queryParams,
-            [type]: itemsToSet
+            [type]: type === "filter"
+                ? [...itemsToSet, searchItem]
+                : itemsToSet
         });
     }
 
@@ -177,8 +179,16 @@ function List(props: ListProps) {
             localStorage.removeItem(`orderBy-${props.id}`);
             deleteUrlParam(`orderBy-${props.id}`);
         }
+
         const newQueryParams = { ...queryParams };
-        delete newQueryParams[type];
+
+        if (type === "filter") {
+            newQueryParams.filter = [searchItem]
+        }
+        else {
+            delete newQueryParams[type];
+        }
+
         setQueryParams(newQueryParams);
     }
 
