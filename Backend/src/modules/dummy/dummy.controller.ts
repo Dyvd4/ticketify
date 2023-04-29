@@ -1,17 +1,17 @@
 import { S3Client } from "@aws-sdk/client-s3";
-import { Controller, Delete, Get, Param, ParseArrayPipe, Post, Put, Query, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseArrayPipe, Post, Put, Query, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { BadRequestException } from "@nestjs/common/exceptions";
 import { ConfigService } from "@nestjs/config";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { Config } from "@src/config";
+import { InfiniteLoader, Pager } from "@src/lib/list";
+import { FilterQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs, OrderByQueryParams } from "@src/lib/list/list";
+import { InfiniteLoaderQueryDto, PagerQueryDto } from "@src/lib/list/list.dtos";
 import { UploadFileDto } from "@src/modules/file/file.dtos";
 import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
 import { PrismaService } from "@src/modules/global/database/prisma.service";
-import { InfiniteLoader, Pager } from "@src/lib/list";
-import { FilterQueryParams, OrderByQueryParams, getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "@src/lib/list/list";
-import { InfiniteLoaderQueryDto, PagerQueryDto } from "@src/lib/list/list.dtos";
 import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
 import { SomeObjDto } from "./dummy.dtos";
 
@@ -92,7 +92,6 @@ export class DummyController {
 	) {
 		const { prisma } = this;
 		const pager = new Pager(query);
-
 		const testItems = await prisma.test.findMany({
 			...pager.getPrismaArgs(),
 			where: pager.getPrismaFilterArgs(),
@@ -159,4 +158,10 @@ export class DummyController {
 		return deletedFile;
 	}
 
+	@Post("dto")
+	postDto(
+		@Body() dto: SomeObjDto
+	) {
+		return dto;
+	}
 }

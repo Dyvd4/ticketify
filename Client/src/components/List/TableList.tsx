@@ -1,7 +1,5 @@
-import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAtom } from 'jotai';
 import { ComponentPropsWithRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import filterItemsAtom from 'src/components/List/context/atoms/filterItemsAtom';
@@ -24,7 +22,9 @@ import FilterItems, { TFilterItem } from './Filter/FilterItems';
 import usePagingInfo from './Result/hooks/usePagingInfo';
 import ListResultItems from './Result/ListResultItems';
 import { PagerResult } from './Result/PagerResultItems';
+import SortColumns from './Sort/SortColumns';
 import { TSortItem } from './Sort/SortItems';
+import { initOrderByDirectionActiveMap } from './Sort/utils/sortColumns';
 import TableListHeader from './TableListHeader';
 
 type _TestListProps = {
@@ -90,7 +90,7 @@ function TestList({ className, ...props }: TestListProps) {
         defaultSortItems: props.columns,
         listId: props.id
     }, (sortItems, fromLocalStorage, fromUrl) => {
-        if (!fromLocalStorage && !fromUrl) return;
+        initOrderByDirectionActiveMap(sortItems);
         setQueryParams(params => {
             return {
                 ...params,
@@ -101,11 +101,12 @@ function TestList({ className, ...props }: TestListProps) {
 
     useSearchItemInit(props.search);
 
-    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, itemsPerPage, parseInt(page)], {
+    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, sortItems, itemsPerPage, parseInt(page)], {
         route,
         queryParams: {
             ...queryParams,
             page: parseInt(page),
+            orderBy: sortItems,
             itemsPerPage
         }
     });
@@ -198,17 +199,7 @@ function TestList({ className, ...props }: TestListProps) {
                 <Table variant='simple' >
                     <Thead>
                         <Tr>
-                            {props.columns.map(column => (
-                                <Th key={column.property}>
-                                    <div className="flex gap-2 items-center">
-                                        <span>
-                                            {column.label}
-                                        </span>
-                                        <FontAwesomeIcon icon={faCaretUp} />
-                                        {/* <FontAwesomeIcon icon={faCaretDown} /> */}
-                                    </div>
-                                </Th>
-                            ))}
+                            <SortColumns columns={props.columns} />
                         </Tr>
                     </Thead>
                     <Tbody ref={(listRef) => listRef && autoAnimate(listRef)}>

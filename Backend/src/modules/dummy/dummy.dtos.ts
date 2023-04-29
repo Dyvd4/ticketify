@@ -1,17 +1,18 @@
-import { IsArray, IsObject, IsString, ValidateNested } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsArray, IsBoolean, IsNumber, IsObject, IsString, ValidateNested } from "class-validator";
 
 class NestedObj {
-	@IsString()
-	someNestedProp!: string
+	@IsBoolean()
+	@Transform(({ obj, key }) => obj[key] === 'true')
+
+	nestedProp!: boolean
 	@IsArray()
 	someNestedArrProp!: string[]
 }
 
 export class SomeObjDto {
-	@IsString()
-	randomProp!: string
-	@IsString()
-	anotherProp!: string
+	@IsNumber()
+	prop!: number
 	@IsObject() @ValidateNested()
 	nestedObj!: NestedObj
 }

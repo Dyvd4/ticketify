@@ -1,13 +1,11 @@
-import { Button, MenuItem, Tag, Td } from "@chakra-ui/react";
-import { faDownload, faEdit, faImage, faThumbTack } from "@fortawesome/free-solid-svg-icons";
+import { Button, Td } from "@chakra-ui/react";
+import { faThumbTack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchEntity } from "src/api/entity";
-import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
 
@@ -33,7 +31,7 @@ function Index(props: IndexProps) {
 
     return (
         <>
-            {/* <TestList
+            <TestList
                 header={{
                     title: "test",
                     showCount: true
@@ -60,22 +58,25 @@ function Index(props: IndexProps) {
                 columns={[
                     {
                         property: "isAmazing",
-                        label: "is amazing"
+                        label: "is amazing",
+                        disabled: true
                     },
                     {
                         property: "createdAt",
-                        label: "created at"
+                        label: "created at",
+                        disabled: true
                     },
                     {
                         property: "description",
-                        label: "description"
+                        label: "description",
+                        disabled: true
                     },
                 ]}
                 listItemRender={(item) => (
                     <>
                         <Td>{String(item.isAmazing)}</Td>
                         <Td>{item.createdAt}</Td>
-                        <Td className="">{item.description}</Td>
+                        <Td>{item.description}</Td>
                     </>
                 )}
                 search={{
@@ -87,7 +88,7 @@ function Index(props: IndexProps) {
                     label: "search by description"
                 }}
             >
-            </TestList> */}
+            </TestList>
             <br />
             <SearchBar />
             <br />
@@ -96,7 +97,7 @@ function Index(props: IndexProps) {
                 circle
                 icon={<FontAwesomeIcon size="sm" icon={faThumbTack} />}
             />
-            <List
+            {/* <List
                 variant={{
                     name: "pagination"
                 }}
@@ -176,7 +177,7 @@ function Index(props: IndexProps) {
                         label: "created at"
                     }
                 ]}
-            />
+            /> */}
             <Button onClick={makeRequest}>
                 Make Request
             </Button>
