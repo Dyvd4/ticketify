@@ -135,45 +135,31 @@ function TestList({ className, ...props }: TestListProps) {
         }
     }, [pagingInfo?.pagesCountShrunk]);
 
-    const handleDrawerApply = (type: TDrawer) => {
-        const itemsToSet = type === "filter"
-            ? filterItems
-            : sortItems;
-
-        // MayBe: provide a utility for this
-        if ((type === "filter" && currentUserSettings.allowFilterItemsByUrl) ||
-            (type === "orderBy" && currentUserSettings.allowSortItemsByUrl)) {
-            setUrlParam(`${type}-${props.id}`, itemsToSet);
+    const handleFilterDrawerApply = () => {
+        if (currentUserSettings.allowFilterItemsByUrl) {
+            setUrlParam(`filter-${props.id}`, filterItems);
         }
-        if ((type === "filter" && currentUserSettings.allowFilterItemsByLocalStorage) ||
-            (type === "orderBy" && currentUserSettings.allowSortItemsByLocalStorage)) {
-            localStorage.setItem(`${type}-${props.id}`, JSON.stringify(itemsToSet))
+        if (currentUserSettings.allowFilterItemsByLocalStorage) {
+            localStorage.setItem(`filter-${props.id}`, JSON.stringify(filterItems))
         }
-
         setQueryParams({
             ...queryParams,
-            [type]: itemsToSet
-        });
+            filter: [...filterItems, searchItem]
+        })
     }
 
-    const handleDrawerReset = (type: TDrawer) => {
-        if (type === "filter") {
-            const newFilterItems = [...filterItems];
-            newFilterItems.forEach(filterItem => {
-                filterItem.value = undefined;
-            });
-            setFilterItems(newFilterItems);
-            localStorage.removeItem(`filter-${props.id}`);
-            deleteUrlParam(`filter-${props.id}`);
-        }
-        else {
-            const newFilterItems = [...sortItems];
-            setSortItems(newFilterItems);
-            localStorage.removeItem(`orderBy-${props.id}`);
-            deleteUrlParam(`orderBy-${props.id}`);
-        }
-        const newQueryParams = { ...queryParams };
-        delete newQueryParams[type];
+    const handleFilterDrawerReset = () => {
+        const newFilterItems = [...filterItems];
+        newFilterItems.forEach(filterItem => {
+            filterItem.value = undefined;
+        });
+        setFilterItems(newFilterItems);
+        localStorage.removeItem(`filter-${props.id}`);
+        deleteUrlParam(`filter-${props.id}`);
+        const newQueryParams = {
+            ...queryParams,
+            filter: [searchItem]
+        };
         setQueryParams(newQueryParams);
     }
 
@@ -192,8 +178,8 @@ function TestList({ className, ...props }: TestListProps) {
             <FilterDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                 inputs={<FilterItems />}
-                onApply={() => handleDrawerApply("filter")}
-                onReset={() => handleDrawerReset("filter")}
+                onApply={handleFilterDrawerApply}
+                onReset={handleFilterDrawerReset}
             />
             <TableContainer className='border rounded-md mt-4'>
                 <Table variant='simple' >

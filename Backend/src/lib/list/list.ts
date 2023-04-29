@@ -50,7 +50,7 @@ export const getMappedPrismaFilterArgs = (prismaFilter: FilterQueryParams) => {
 	const getParsedFilterValue = (value, type: FilterOperationsType) => {
 		switch (type) {
 			case "boolean":
-				return Boolean(value)
+				return Boolean(parseInt(value))
 			case "date":
 				return value
 					? new Date(value)
