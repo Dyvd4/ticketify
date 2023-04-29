@@ -20,7 +20,7 @@ export type OrderByQueryParam = {
 		label: string
 		value: "desc" | "asc"
 	},
-	disabled: boolean
+	disabled?: boolean
 }
 export type OrderByQueryParams = Array<OrderByQueryParam>
 
