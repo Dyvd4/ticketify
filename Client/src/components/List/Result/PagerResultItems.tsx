@@ -1,6 +1,6 @@
 import { Divider } from "@chakra-ui/react";
 import LoadingRipple from "components/Loading/LoadingRipple";
-import Pager from "components/Pager";
+import { PagerSection } from "components/Pager";
 import { useEffect } from "react";
 import { UseQueryResult } from "react-query";
 import usePagingInfo from "./hooks/usePagingInfo";
@@ -18,7 +18,9 @@ export type PagerResult = {
 type PageQueryItemsProps = {
     query: UseQueryResult<PagerResult>
     page: number
-    setPage(...args: any[]): void
+    setPage(page: number): void
+    itemsPerPage: number
+    handleItemsPerPageChange(itemsPerPage: number): void
     children(item: any): JSX.Element
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
@@ -54,11 +56,15 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
             {item => props.children(item)}
         </ListResultItems>
         <Divider />
-        <Pager
-            centered
-            onChange={props.setPage}
-            pagesCount={pagingInfo.pagesCount}
-            currentPage={props.page}
+        <PagerSection
+            itemsPerPageStep={props.itemsPerPage}
+            itemsPerPageChange={props.handleItemsPerPageChange}
+            pagerProps={{
+                centered: true,
+                onChange: props.setPage,
+                pagesCount: pagingInfo.pagesCount,
+                currentPage: props.page
+            }}
         />
     </>
 }

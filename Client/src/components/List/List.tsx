@@ -2,12 +2,12 @@ import { Divider, List as ChakraList } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
-import useFilterItemsInit from "src/components/List/context/hooks/useFilterItemsInit";
-import useSearchItemInit from "src/components/List/context/hooks/useSearchItemInit";
-import useSortItemsInit from "src/components/List/context/hooks/useSortItemsInit";
 import filterItemsAtom from "src/components/List/context/atoms/filterItemsAtom";
 import searchItemAtom from "src/components/List/context/atoms/searchItemAtom";
 import sortItemsAtom from "src/components/List/context/atoms/sortItemsAtom";
+import useFilterItemsInit from "src/components/List/context/hooks/useFilterItemsInit";
+import useSearchItemInit from "src/components/List/context/hooks/useSearchItemInit";
+import useSortItemsInit from "src/components/List/context/hooks/useSortItemsInit";
 import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
 import useDebounce from "src/hooks/useDebounce";
 import { useCurrentUserSettings } from "src/hooks/user";
@@ -15,6 +15,7 @@ import { useUrlParams } from "src/hooks/useUrlParams";
 import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
 import LoadingRipple from "../Loading/LoadingRipple";
+import { ITEMS_PER_PAGE_STEPS } from "../Pager/PagerSection";
 import FilterDrawer from "./Filter/FilterDrawer";
 import FilterItems, { TFilterItem } from "./Filter/FilterItems";
 import Header from "./ListHeader";
@@ -66,9 +67,10 @@ function List(props: ListProps) {
     const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
-    const { value: debouncedSearchItem, isDebouncing } = useDebounce(searchItem)
+    const { value: debouncedSearchItem } = useDebounce(searchItem)
     const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1);
+    const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_STEPS[0] as number);
 
     // hooks
     // -----
@@ -109,11 +111,12 @@ function List(props: ListProps) {
         enabled: variant.name === "infiniteLoading"
     });
 
-    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, parseInt(page)], {
+    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, itemsPerPage, parseInt(page)], {
         route,
         queryParams: {
             ...queryParams,
-            page: parseInt(page)
+            page: parseInt(page),
+            itemsPerPage
         }
     }, {
         enabled: variant.name === "pagination"
@@ -214,6 +217,8 @@ function List(props: ListProps) {
                 ref={(listRef) => listRef && autoAnimate(listRef)}>
                 {variant.name === "pagination" && <>
                     <PagerResultItems
+                        itemsPerPage={itemsPerPage}
+                        handleItemsPerPageChange={setItemsPerPage}
                         page={parseInt(page)}
                         setPage={setPage}
                         query={paginationQuery}

@@ -1,11 +1,13 @@
-import { Button, Td } from "@chakra-ui/react";
-import { faThumbTack } from "@fortawesome/free-solid-svg-icons";
+import { Button, MenuItem, Tag, Td } from "@chakra-ui/react";
+import { faDownload, faEdit, faImage, faThumbTack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchEntity } from "src/api/entity";
+import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import ListItemContent from "./ListItemContent";
 
 interface IndexProps { }
 
@@ -31,7 +33,7 @@ function Index(props: IndexProps) {
 
     return (
         <>
-            <TestList
+            {/* <TestList
                 header={{
                     title: "test",
                     showCount: true
@@ -85,68 +87,7 @@ function Index(props: IndexProps) {
                     label: "search by description"
                 }}
             >
-            </TestList>
-            {/* <ColumnList
-                variant={{
-                    name: "infiniteLoading",
-                    variant: {
-                        name: "intersection-observer"
-                    }
-                }}
-                id="5802edfd-85e0-41d7-818a-b2e7ab0c6d54"
-                fetch={{
-                    route: "logs",
-                    queryKey: "logs"
-                }}
-                listItemRender={(item) => (
-                    <Tr key={item.id}>
-                        <Td>{item.level}</Td>
-                        <Td>{item.createdAt}</Td>
-                        <Td>{item.message}</Td>
-                    </Tr>
-                )}
-                header={{
-                    title: "Logs",
-                    showCount: true
-                }}
-                columns={[
-                    {
-                        property: "level",
-                        label: "level"
-                    },
-                    {
-                        property: "createdAt",
-                        label: "created at"
-                    },
-                    {
-                        property: "message",
-                        label: "message"
-                    },
-                ]}
-                filter={[
-                    {
-                        property: "message",
-                        type: "string"
-                    },
-                    {
-                        property: "stack",
-                        label: "error stack",
-                        type: "string"
-                    },
-                    {
-                        property: "level",
-                        type: "string"
-                    }
-                ]}
-                search={{
-                    property: "message",
-                    type: "string",
-                    operation: {
-                        value: "contains"
-                    },
-                    label: "search by message"
-                }}
-            /> */}
+            </TestList> */}
             <br />
             <SearchBar />
             <br />
@@ -155,7 +96,7 @@ function Index(props: IndexProps) {
                 circle
                 icon={<FontAwesomeIcon size="sm" icon={faThumbTack} />}
             />
-            {/* <List
+            <List
                 variant={{
                     name: "pagination"
                 }}
@@ -235,7 +176,7 @@ function Index(props: IndexProps) {
                         label: "created at"
                     }
                 ]}
-            /> */}
+            />
             <Button onClick={makeRequest}>
                 Make Request
             </Button>

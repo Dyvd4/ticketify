@@ -18,7 +18,7 @@ import { deleteUrlParam, setUrlParam } from 'src/utils/url';
 import { TDrawer, TSearchItem } from '.';
 import ErrorAlert from '../ErrorAlert';
 import LoadingRipple from '../Loading/LoadingRipple';
-import Pager from '../Pager';
+import PagerSection, { ITEMS_PER_PAGE_STEPS } from '../Pager/PagerSection';
 import FilterDrawer from './Filter/FilterDrawer';
 import FilterItems, { TFilterItem } from './Filter/FilterItems';
 import usePagingInfo from './Result/hooks/usePagingInfo';
@@ -59,7 +59,7 @@ function TestList({ className, ...props }: TestListProps) {
     const {
         listItemRender,
         fetch: { queryKey, route },
-        header,
+        header
     } = props;
 
     const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -69,8 +69,9 @@ function TestList({ className, ...props }: TestListProps) {
     const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
     const [sortItems, setSortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
-    const { value: debouncedSearchItem, isDebouncing } = useDebounce(searchItem)
+    const { value: debouncedSearchItem } = useDebounce(searchItem)
     const { currentUserSettings } = useCurrentUserSettings();
+    const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_STEPS[0] as number);
 
     useFilterItemsInit({
         defaultFilterItems: props.filter,
@@ -100,11 +101,12 @@ function TestList({ className, ...props }: TestListProps) {
 
     useSearchItemInit(props.search);
 
-    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, parseInt(page)], {
+    const paginationQuery = useQuery<PagerResult>([queryKey, queryParams, itemsPerPage, parseInt(page)], {
         route,
         queryParams: {
             ...queryParams,
-            page: parseInt(page)
+            page: parseInt(page),
+            itemsPerPage
         }
     });
     const paginationQueryCount = paginationQuery.data?.items
@@ -174,6 +176,14 @@ function TestList({ className, ...props }: TestListProps) {
         setQueryParams(newQueryParams);
     }
 
+    const handleItemsPerPageChange = (itemsPerPage: number) => {
+        setItemsPerPage(itemsPerPage);
+        setQueryParams({
+            ...queryParams,
+            itemsPerPage
+        })
+    }
+
     return (
         <>
             {header && <>
@@ -236,29 +246,17 @@ function TestList({ className, ...props }: TestListProps) {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <div className="ml-auto flex items-center justify-end">
-                {/* TODO */}
-                {/* <Menu>
-                    {({ isOpen }) => (
-                        <>
-                            <MenuButton isActive={isOpen} as={Button} rightIcon={<FontAwesomeIcon icon={faChevronDown} />}>
-                                10
-                            </MenuButton>
-                            <MenuList>
-                                <MenuItem>20</MenuItem>
-                                <MenuItem>30</MenuItem>
-                            </MenuList>
-                        </>
-                    )}
-                </Menu> */}
-                {!!pagingInfo && <>
-                    <Pager
-                        onChange={setPage}
-                        pagesCount={pagingInfo.pagesCount}
-                        currentPage={parseInt(page)}
-                    />
-                </>}
-            </div>
+            {!!pagingInfo && <>
+                <PagerSection
+                    itemsPerPageStep={itemsPerPage}
+                    itemsPerPageChange={handleItemsPerPageChange}
+                    pagerProps={{
+                        onChange: setPage,
+                        pagesCount: pagingInfo.pagesCount,
+                        currentPage: parseInt(page)
+                    }}
+                />
+            </>}
         </>
     );
 }
