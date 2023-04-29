@@ -176,14 +176,6 @@ function TestList({ className, ...props }: TestListProps) {
         setQueryParams(newQueryParams);
     }
 
-    const handleItemsPerPageChange = (itemsPerPage: number) => {
-        setItemsPerPage(itemsPerPage);
-        setQueryParams({
-            ...queryParams,
-            itemsPerPage
-        })
-    }
-
     return (
         <>
             {header && <>
@@ -248,8 +240,8 @@ function TestList({ className, ...props }: TestListProps) {
             </TableContainer>
             {!!pagingInfo && <>
                 <PagerSection
-                    itemsPerPageStep={itemsPerPage}
-                    itemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
                     pagerProps={{
                         onChange: setPage,
                         pagesCount: pagingInfo.pagesCount,

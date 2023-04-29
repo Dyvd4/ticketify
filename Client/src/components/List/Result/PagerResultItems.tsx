@@ -20,7 +20,7 @@ type PageQueryItemsProps = {
     page: number
     setPage(page: number): void
     itemsPerPage: number
-    handleItemsPerPageChange(itemsPerPage: number): void
+    setItemsPerPage(itemsPerPage: number): void
     children(item: any): JSX.Element
     loadingDisplay?: JSX.Element
     errorDisplay?: JSX.Element
@@ -57,8 +57,8 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
         </ListResultItems>
         <Divider />
         <PagerSection
-            itemsPerPageStep={props.itemsPerPage}
-            itemsPerPageChange={props.handleItemsPerPageChange}
+            itemsPerPage={props.itemsPerPage}
+            setItemsPerPage={props.setItemsPerPage}
             pagerProps={{
                 centered: true,
                 onChange: props.setPage,

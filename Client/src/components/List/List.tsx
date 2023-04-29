@@ -218,7 +218,7 @@ function List(props: ListProps) {
                 {variant.name === "pagination" && <>
                     <PagerResultItems
                         itemsPerPage={itemsPerPage}
-                        handleItemsPerPageChange={setItemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
                         page={parseInt(page)}
                         setPage={setPage}
                         query={paginationQuery}

@@ -8,15 +8,15 @@ import { PagerProps } from './Pager';
 export const ITEMS_PER_PAGE_STEPS = [10, 20, 50, 100, 200] as const
 
 type _PagerSectionProps = {
-    itemsPerPageStep: number
-    itemsPerPageChange(itemsPerPage: number): void
+    itemsPerPage: number
+    setItemsPerPage(itemsPerPage: number): void
     pagerProps: PagerProps
 }
 
 export type PagerSectionProps = PropsWithChildren<_PagerSectionProps> &
     Omit<ComponentPropsWithRef<'div'>, keyof _PagerSectionProps>
 
-function PagerSection({ className, pagerProps, itemsPerPageChange, itemsPerPageStep, ...props }: PagerSectionProps) {
+function PagerSection({ className, pagerProps, setItemsPerPage, itemsPerPage, ...props }: PagerSectionProps) {
     return (
         <div
             className={`${className} ml-auto flex items-center justify-end`}
@@ -28,13 +28,13 @@ function PagerSection({ className, pagerProps, itemsPerPageChange, itemsPerPageS
                             isActive={isOpen}
                             as={Button}
                             rightIcon={<FontAwesomeIcon icon={faChevronDown} />}>
-                            {itemsPerPageStep}
+                            {itemsPerPage}
                         </MenuButton>
                         <MenuList>
                             <MenuOptionGroup
                                 type="radio"
-                                value={itemsPerPageStep.toString()}
-                                onChange={(itemsPerPage) => itemsPerPageChange(+itemsPerPage)}>
+                                value={itemsPerPage.toString()}
+                                onChange={(itemsPerPage) => setItemsPerPage(+itemsPerPage)}>
                                 {ITEMS_PER_PAGE_STEPS.map(step => (
                                     <MenuItemOption
                                         key={step}
