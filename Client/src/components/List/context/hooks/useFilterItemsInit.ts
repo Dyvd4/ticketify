@@ -4,6 +4,7 @@ import { typeOperations } from "src/components/List/Filter/data/operations";
 import { TFilterItem } from "src/components/List/Filter/FilterItems";
 import { useCurrentUserSettings } from "src/hooks/user";
 import { getUrlParam } from "src/utils/url";
+import { e } from "vitest/dist/index-9f5bc072";
 import filterItemsAtom from "../atoms/filterItemsAtom";
 
 const getDefaultOperation = (filterItem: TFilterItem) => typeOperations[filterItem.type][0];
@@ -50,10 +51,14 @@ const useFilterItemsInit = (
         }
 
         const filterItems = filterItemsToSet.map(filterItem => {
-            return {
-                ...filterItem,
-                // 🤔
-                operation: getDefaultOperation(filterItem)
+            if (!filterItem.operation) {
+                return {
+                    ...filterItem,
+                    operation: getDefaultOperation(filterItem)
+                }
+            }
+            else {
+                return filterItem
             }
         });
 
