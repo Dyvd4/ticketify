@@ -1,5 +1,4 @@
-import { Container } from "@chakra-ui/react";
-import TicketList from "src/components/Lists/Ticket/List";
+import { TicketTableList } from "src/components/Lists/Ticket";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 
 interface IndexProps { }
@@ -19,9 +18,9 @@ function Index(props: IndexProps) {
   ])
 
   return (
-    <Container>
-      <TicketList />
-    </Container>
+    <>
+      <TicketTableList />
+    </>
   )
 }
 
