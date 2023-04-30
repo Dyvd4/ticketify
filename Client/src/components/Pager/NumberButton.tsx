@@ -1,8 +1,11 @@
-import { Button } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 
-type NumberButtonProps = React.PropsWithChildren<{
+type _NumberButtonProps = {
     active?: boolean
-}> & React.ComponentPropsWithRef<"button">
+}
+
+type NumberButtonProps = _NumberButtonProps &
+    Omit<React.PropsWithChildren<ButtonProps>, keyof _NumberButtonProps>
 
 function NumberButton({ children, active, ...props }: NumberButtonProps) {
     return (
