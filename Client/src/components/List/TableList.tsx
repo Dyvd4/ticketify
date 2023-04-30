@@ -15,7 +15,6 @@ import { useUrlParams } from 'src/hooks/useUrlParams';
 import { deleteUrlParam, setUrlParam } from 'src/utils/url';
 import { TSearchItem } from '.';
 import ErrorAlert from '../ErrorAlert';
-import LoadingRipple from '../Loading/LoadingRipple';
 import PagerSection, { ITEMS_PER_PAGE_STEPS } from '../Pager/PagerSection';
 import FilterDrawer from './Filter/FilterDrawer';
 import FilterItems, { TFilterItem } from './Filter/FilterItems';
@@ -26,6 +25,7 @@ import { PagerResult } from './Result/PagerResultItems';
 import SortColumns from './Sort/SortColumns';
 import { TSortItem } from './Sort/SortItems';
 import { initOrderByDirectionActiveMap } from './Sort/utils/sortColumns';
+import TableListItemSkeleton from './TableListItemSkeleton';
 
 type _TestListProps = {
     fetch: {
@@ -193,9 +193,9 @@ function TestList({ className, ...props }: TestListProps) {
                     </Thead>
                     <Tbody ref={(listRef) => listRef && autoAnimate(listRef)}>
                         {paginationQuery.isLoading && <>
-                            <Tr>
-                                <LoadingRipple centered />
-                            </Tr>
+                            {new Array(8).fill(null).map((e, i) => (
+                                <TableListItemSkeleton key={i} columnCount={props.columns.length} />
+                            ))}
                         </>}
                         {paginationQuery.isError && <>
                             <ErrorAlert />
