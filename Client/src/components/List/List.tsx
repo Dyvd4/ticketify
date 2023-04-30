@@ -131,9 +131,12 @@ function List(props: ListProps) {
     // ---------
     useEffect(() => {
         if (!debouncedSearchItem) return;
+        const oldFilterParams = [...queryParams.filter || []].filter((filterItem: TFilterItem) => {
+            return filterItem.property !== debouncedSearchItem.property;
+        });
         setQueryParams({
             ...queryParams,
-            filter: [...filterItems, debouncedSearchItem]
+            filter: [...oldFilterParams, debouncedSearchItem]
         });
     }, [debouncedSearchItem]);
 
