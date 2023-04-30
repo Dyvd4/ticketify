@@ -38,6 +38,7 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
             className={`flex gap-2 m-4 ${centered ? "justify-center" : ""}`}
             {...props}>
             <Button
+                size={"sm"}
                 data-testid="prev-button"
                 onClick={() => handlePageChange(currentPage - 1)}>
                 <FontAwesomeIcon icon={faChevronLeft} />
@@ -45,11 +46,15 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
             {pageNumbers.map((pageNumber) => (
                 hitsFive && pageNumber === 2
                     ?
-                    <Button key={pageNumber} disabled>
+                    <Button
+                        size={"sm"}
+                        key={pageNumber}
+                        disabled>
                         <FontAwesomeIcon icon={faEllipsis} />
                     </Button>
                     :
                     <NumberButton
+                        size={"sm"}
                         key={pageNumber}
                         active={currentPage === pageNumber}
                         onClick={() => handlePageChange(pageNumber)}>
@@ -60,22 +65,27 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
                 {hitsPenultimate
                     ?
                     <NumberButton
+                        size={"sm"}
                         active={currentPage === secondLastPage}
                         onClick={() => handlePageChange(secondLastPage)}>
                         {secondLastPage}
                     </NumberButton>
                     :
-                    <Button disabled>
+                    <Button
+                        size={"sm"}
+                        disabled>
                         <FontAwesomeIcon icon={faEllipsis} />
                     </Button>
                 }
                 <NumberButton
+                    size={"sm"}
                     active={currentPage === pagesCount}
                     onClick={() => handlePageChange(pagesCount)}>
                     {pagesCount}
                 </NumberButton>
             </>}
             <Button
+                size={"sm"}
                 data-testid="next-button"
                 onClick={() => handlePageChange(currentPage + 1)}>
                 <FontAwesomeIcon icon={faChevronRight} />

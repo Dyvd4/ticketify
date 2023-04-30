@@ -27,6 +27,7 @@ function PagerSection({ className, pagerProps, setItemsPerPage, itemsPerPage, ..
                         <MenuButton
                             isActive={isOpen}
                             as={Button}
+                            size={"sm"}
                             rightIcon={<FontAwesomeIcon icon={faChevronDown} />}>
                             {itemsPerPage}
                         </MenuButton>
