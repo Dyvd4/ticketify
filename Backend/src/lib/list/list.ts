@@ -55,6 +55,10 @@ export const getMappedPrismaFilterArgs = (prismaFilter: FilterQueryParams) => {
 				return value
 					? new Date(value)
 					: undefined
+			case "number":
+				return !isNaN(parseInt(value))
+					? parseInt(value)
+					: undefined
 			default:
 				return value
 		}

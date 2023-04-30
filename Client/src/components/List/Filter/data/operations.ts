@@ -50,7 +50,8 @@ export const typeOperations = {
         operations.gt,
         operations.not,
         operations.gte,
-        operations.lte
+        operations.lte,
+        operations.equals
     ],
     date: [
         operations.equals,

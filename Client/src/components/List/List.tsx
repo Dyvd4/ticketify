@@ -131,12 +131,9 @@ function List(props: ListProps) {
     // ---------
     useEffect(() => {
         if (!debouncedSearchItem) return;
-        const oldFilterParams = [...queryParams.filter || []].filter((filterItem: TFilterItem) => {
-            return filterItem.property !== debouncedSearchItem.property;
-        });
         setQueryParams({
             ...queryParams,
-            filter: [...oldFilterParams, debouncedSearchItem]
+            filter: [...filterItems, debouncedSearchItem]
         });
     }, [debouncedSearchItem]);
 
@@ -155,12 +152,18 @@ function List(props: ListProps) {
             localStorage.setItem(`${type}-${props.id}`, JSON.stringify(itemsToSet))
         }
 
-        setQueryParams({
-            ...queryParams,
-            [type]: type === "filter"
-                ? [...itemsToSet, searchItem]
-                : itemsToSet
-        });
+        if (type === "filter" && searchItem) {
+            setQueryParams({
+                ...queryParams,
+                [type]: [...itemsToSet, searchItem]
+            });
+        }
+        else {
+            setQueryParams({
+                ...queryParams,
+                [type]: itemsToSet
+            });
+        }
     }
 
     const handleDrawerReset = (type: TDrawer) => {
@@ -182,7 +185,7 @@ function List(props: ListProps) {
 
         const newQueryParams = { ...queryParams };
 
-        if (type === "filter") {
+        if (type === "filter" && searchItem) {
             newQueryParams.filter = [searchItem]
         }
         else {
