@@ -144,8 +144,10 @@ function TestList({ className, ...props }: TestListProps) {
         }
         setQueryParams({
             ...queryParams,
-            filter: [...filterItems, searchItem]
-        })
+            filter: searchItem
+                ? [...filterItems, searchItem]
+                : filterItems
+        });
     }
 
     const handleFilterDrawerReset = () => {
@@ -158,7 +160,7 @@ function TestList({ className, ...props }: TestListProps) {
         deleteUrlParam(`filter-${props.id}`);
         const newQueryParams = {
             ...queryParams,
-            filter: [searchItem]
+            filter: searchItem ? [searchItem] : []
         };
         setQueryParams(newQueryParams);
     }
