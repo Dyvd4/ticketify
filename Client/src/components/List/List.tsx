@@ -1,4 +1,4 @@
-import { Divider, List as ChakraList } from "@chakra-ui/react";
+import { List as ChakraList } from "@chakra-ui/react";
 import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,7 @@ import LoadingRipple from "../Loading/LoadingRipple";
 import { ITEMS_PER_PAGE_STEPS } from "../Pager/PagerSection";
 import FilterDrawer from "./Filter/FilterDrawer";
 import FilterItems, { TFilterItem } from "./Filter/FilterItems";
-import Header from "./ListHeader";
+import ListHeader from "./ListHeader";
 import { InfiniteLoaderResultItems, PagerResultItems } from "./Result";
 import { InfiniteLoaderResult } from "./Result/InfiniteLoaderResultItems";
 import { ListResultVariant } from "./Result/ListResultItems";
@@ -205,7 +205,7 @@ function List(props: ListProps) {
     return (
         <>
             {header && <>
-                <Header
+                <ListHeader
                     title={header.title}
                     count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
                     showCount={header?.showCount}
@@ -214,7 +214,6 @@ function List(props: ListProps) {
                     useFilter={props.filter.length > 0}
                     onAdd={props.onAdd}
                 />
-                <Divider />
             </>}
             <SortDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
@@ -229,7 +228,7 @@ function List(props: ListProps) {
                 onReset={() => handleDrawerReset("filter")}
             />
             <ChakraList
-                className="p-4 flex flex-col gap-4"
+                className="flex flex-col gap-4"
                 ref={(listRef) => listRef && autoAnimate(listRef)}>
                 {variant.name === "pagination" && <>
                     <PagerResultItems

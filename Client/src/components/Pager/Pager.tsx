@@ -35,7 +35,7 @@ function Pager({ currentPage, pagesCount, onChange, centered, ...props }: PagerP
     return (
         <div
             data-testid="Pager"
-            className={`flex gap-2 m-4 ${centered ? "justify-center" : ""}`}
+            className={`flex gap-2 ${centered ? "justify-center" : ""}`}
             {...props}>
             <Button
                 size={"sm"}

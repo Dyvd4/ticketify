@@ -13,19 +13,19 @@ import useDebounce from 'src/hooks/useDebounce';
 import { useCurrentUserSettings } from 'src/hooks/user';
 import { useUrlParams } from 'src/hooks/useUrlParams';
 import { deleteUrlParam, setUrlParam } from 'src/utils/url';
-import { TDrawer, TSearchItem } from '.';
+import { TSearchItem } from '.';
 import ErrorAlert from '../ErrorAlert';
 import LoadingRipple from '../Loading/LoadingRipple';
 import PagerSection, { ITEMS_PER_PAGE_STEPS } from '../Pager/PagerSection';
 import FilterDrawer from './Filter/FilterDrawer';
 import FilterItems, { TFilterItem } from './Filter/FilterItems';
+import ListHeader from './ListHeader';
 import usePagingInfo from './Result/hooks/usePagingInfo';
 import ListResultItems from './Result/ListResultItems';
 import { PagerResult } from './Result/PagerResultItems';
 import SortColumns from './Sort/SortColumns';
 import { TSortItem } from './Sort/SortItems';
 import { initOrderByDirectionActiveMap } from './Sort/utils/sortColumns';
-import TableListHeader from './TableListHeader';
 
 type _TestListProps = {
     fetch: {
@@ -168,11 +168,12 @@ function TestList({ className, ...props }: TestListProps) {
     return (
         <>
             {header && <>
-                <TableListHeader
+                <ListHeader
                     count={paginationQueryCount}
                     title={header.title}
                     showCount={header.showCount}
                     useSearch={!!searchItem}
+                    useSort={false}
                     useFilter={props.filter.length > 0}
                     onAdd={props.onAdd}
                 />
@@ -183,7 +184,7 @@ function TestList({ className, ...props }: TestListProps) {
                 onApply={handleFilterDrawerApply}
                 onReset={handleFilterDrawerReset}
             />
-            <TableContainer className='border rounded-md mt-4'>
+            <TableContainer className='border rounded-md'>
                 <Table variant='simple' >
                     <Thead>
                         <Tr>

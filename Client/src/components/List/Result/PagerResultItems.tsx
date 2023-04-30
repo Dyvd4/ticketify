@@ -1,4 +1,3 @@
-import { Divider } from "@chakra-ui/react";
 import LoadingRipple from "components/Loading/LoadingRipple";
 import { PagerSection } from "components/Pager";
 import { useEffect } from "react";
@@ -55,7 +54,6 @@ function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
             emptyDisplay={props.emptyDisplay}>
             {item => props.children(item)}
         </ListResultItems>
-        <Divider />
         <PagerSection
             itemsPerPage={props.itemsPerPage}
             setItemsPerPage={props.setItemsPerPage}

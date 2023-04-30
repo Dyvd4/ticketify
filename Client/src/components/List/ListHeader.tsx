@@ -1,12 +1,12 @@
-import { Heading, Input, Tooltip } from "@chakra-ui/react";
-import { faAdd, faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAtom } from "jotai";
-import { filterDrawerAtom, sortDrawerAtom } from "src/context/atoms";
-import searchItemAtom from "src/components/List/context/atoms/searchItemAtom";
-import IconButton from "../Wrapper/IconButton";
+import { Heading, IconButton, Input, Tooltip } from '@chakra-ui/react';
+import { faAdd, faFilter, faSort } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAtom } from 'jotai';
+import { ComponentPropsWithRef, PropsWithChildren } from 'react';
+import searchItemAtom from 'src/components/List/context/atoms/searchItemAtom';
+import { filterDrawerAtom, sortDrawerAtom } from 'src/context/atoms';
 
-type HeaderProps = {
+type _TableListHeaderProps = {
     title: string
     count: number
     showCount?: boolean
@@ -16,52 +16,53 @@ type HeaderProps = {
     onAdd?(...args: any[]): void
 }
 
-function Header(props: HeaderProps) {
+export type TableListHeaderProps = PropsWithChildren<_TableListHeaderProps> &
+    Omit<ComponentPropsWithRef<'div'>, keyof _TableListHeaderProps>
 
-    const { title, count, showCount, useSort, useFilter, useSearch, onAdd } = props;
+function TableListHeader(props: TableListHeaderProps) {
 
-    const { 1: setSortDrawer } = useAtom(sortDrawerAtom);
-    const { 1: setFilterDrawer } = useAtom(filterDrawerAtom);
+    const {
+        title,
+        count,
+        showCount,
+        useFilter,
+        useSearch,
+        useSort,
+        className,
+        onAdd,
+        ...restProps
+    } = props;
+
+    const [, setSortDrawer] = useAtom(sortDrawerAtom);
+    const [, setFilterDrawer] = useAtom(filterDrawerAtom);
     const [searchItem, setSearchItem] = useAtom(searchItemAtom);
 
     return (
-        <Heading
-            data-testid="ListHeader"
-            className="text-center my-8 mb-2 flex justify-between items-center gap-2">
-            <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
-                <span>
-                    {title}
-                </span>
-                {showCount && <>
+        <div
+            className={`${className} flex justify-between my-4`}
+            {...restProps}>
+            <Heading>
+                <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
                     <span>
-                        ({count})
+                        {title}
                     </span>
-                </>}
-            </div>
-            {!!useSearch && <>
-                <Input
-                    placeholder={searchItem!.label}
-                    onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
-                    value={searchItem!.value}
-                    type={"search"}
-                />
-            </>}
-            <div className="flex items-center justify-center gap-2">
-                {!!onAdd && <>
-                    <Tooltip
-                        label="add"
-                        placement="top"
-                        aria-label="add">
-                        <span className="flex justify-center items-center">
-                            <IconButton
-                                colorScheme={"cyan"}
-                                size={"sm"}
-                                onClick={onAdd}
-                                aria-label="add"
-                                icon={<FontAwesomeIcon icon={faAdd} />}
-                            />
+                    {showCount && <>
+                        <span>
+                            ({count})
                         </span>
-                    </Tooltip>
+                    </>}
+                </div>
+            </Heading>
+            <div className='flex items-center gap-4'>
+                {!!useSearch && <>
+                    <Input
+                        className='rounded-md'
+                        size={"sm"}
+                        placeholder={searchItem!.label}
+                        onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
+                        value={searchItem!.value}
+                        type={"search"}
+                    />
                 </>}
                 {!!useSort && <>
                     <Tooltip
@@ -95,9 +96,25 @@ function Header(props: HeaderProps) {
                         </span>
                     </Tooltip>
                 </>}
+                {!!onAdd && <>
+                    <Tooltip
+                        label="add"
+                        placement="top"
+                        aria-label="add">
+                        <span className="flex justify-center items-center">
+                            <IconButton
+                                colorScheme={"cyan"}
+                                size={"sm"}
+                                onClick={onAdd}
+                                aria-label="add"
+                                icon={<FontAwesomeIcon icon={faAdd} />}
+                            />
+                        </span>
+                    </Tooltip>
+                </>}
             </div>
-        </Heading>
+        </div>
     );
 }
 
-export default Header;
+export default TableListHeader;

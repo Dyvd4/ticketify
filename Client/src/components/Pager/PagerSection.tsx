@@ -19,7 +19,7 @@ export type PagerSectionProps = PropsWithChildren<_PagerSectionProps> &
 function PagerSection({ className, pagerProps, setItemsPerPage, itemsPerPage, ...props }: PagerSectionProps) {
     return (
         <div
-            className={`${className} ml-auto flex items-center justify-end`}
+            className={`${className} ml-auto flex items-center justify-end gap-4 my-4`}
             {...props}>
             <Menu>
                 {({ isOpen }) => (
