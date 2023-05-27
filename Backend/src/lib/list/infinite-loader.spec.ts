@@ -1,4 +1,4 @@
-import { InfiniteLoader } from "."
+import { InfiniteLoader } from ".";
 import { testItems } from "./setup-tests";
 
 const ITEMS_PER_LOAD = 2;
@@ -19,4 +19,4 @@ describe("result", () => {
 
         expect(result.nextSkip).toBe(undefined);
     });
-})
+});

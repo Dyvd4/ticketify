@@ -6,139 +6,131 @@ import { TicketActivityMailProvider } from "./ticket-activity-mail.provider";
 
 @Injectable()
 export class TicketActivityPrismaMiddleWareProvider extends BaseTicketActivityPrismaMiddlewareProvider {
+    constructor(
+        protected readonly prisma: PrismaService,
+        protected readonly userService: UserService,
+        protected readonly ticketActivityMailProvider: TicketActivityMailProvider
+    ) {
+        super(prisma, userService, ticketActivityMailProvider);
+    }
 
-	constructor(
-		protected readonly prisma: PrismaService,
-		protected readonly userService: UserService,
-		protected readonly ticketActivityMailProvider: TicketActivityMailProvider
-	) {
-		super(prisma, userService, ticketActivityMailProvider)
-	}
+    createActivityIfDescriptionHasChanged = this.create("Ticket", ["update"], {
+        onlyIf: async (event, args) => {
+            const ticketId = args.where.id;
+            const newDescription = args.data.description;
+            const ticket = (await this.prisma.ticket.findUnique({
+                where: {
+                    id: ticketId,
+                },
+            }))!;
 
-	createActivityIfDescriptionHasChanged = this.create("Ticket", ["update"], {
-		onlyIf: async (event, args) => {
+            const descriptionHasChanged = newDescription
+                ? ticket.description !== newDescription
+                : false;
+            return [descriptionHasChanged, undefined];
+        },
+        descriptionEvaluator: async () => `Description changed`,
+        ticketIdEvaluator: (event, args) => args.where.id,
+    });
 
-			const ticketId = args.where.id;
-			const newDescription = args.data.description
-			const ticket = (await this.prisma.ticket.findUnique({
-				where: {
-					id: ticketId
-				}
-			}))!
+    createActivityIfStatusHasChanged = this.create("Ticket", ["update"], {
+        onlyIf: async (event, args) => {
+            const ticketId = args.where.id;
+            const newStatusId = args.data.statusId;
+            const oldTicket = (await this.prisma.ticket.findUnique({
+                where: {
+                    id: ticketId,
+                },
+                include: {
+                    responsibleUser: true,
+                    status: true,
+                },
+            }))!;
 
-			const descriptionHasChanged = newDescription
-				? ticket.description !== newDescription
-				: false
-			return [descriptionHasChanged, undefined];
-		},
-		descriptionEvaluator: async () => `Description changed`,
-		ticketIdEvaluator: (event, args) => args.where.id
-	});
+            const statusHasChanged = newStatusId ? oldTicket.statusId !== newStatusId : false;
+            return [statusHasChanged, { oldTicket }];
+        },
+        descriptionEvaluator: async (event, args, ctx) => {
+            const newStatusId = args.data.statusId;
 
-	createActivityIfStatusHasChanged = this.create("Ticket", ["update"], {
-		onlyIf: async (event, args) => {
+            if (newStatusId) {
+                const status = (await this.prisma.ticketStatus.findUnique({
+                    where: {
+                        id: newStatusId,
+                    },
+                }))!;
 
-			const ticketId = args.where.id;
-			const newStatusId = args.data.statusId
-			const oldTicket = (await this.prisma.ticket.findUnique({
-				where: {
-					id: ticketId
-				},
-				include: {
-					responsibleUser: true,
-					status: true
-				}
-			}))!
+                return `Status changed from "${ctx.oldTicket.status!.name}" to "${status.name}"`;
+            }
 
-			const statusHasChanged = newStatusId
-				? oldTicket.statusId !== newStatusId
-				: false
-			return [statusHasChanged, { oldTicket }];
-		},
-		descriptionEvaluator: async (event, args, ctx) => {
+            return null;
+        },
+        ticketIdEvaluator: (event, args) => args.where.id,
+    });
 
-			const newStatusId = args.data.statusId;
+    createActivityIfResponsibleUserHasChanged = this.create("Ticket", ["update"], {
+        onlyIf: async (event, args) => {
+            const ticketId = args.where.id;
+            const newResponsibleUserId = args.data.responsibleUserId;
+            const oldTicket = (await this.prisma.ticket.findUnique({
+                where: {
+                    id: ticketId,
+                },
+                include: {
+                    responsibleUser: true,
+                    status: true,
+                },
+            }))!;
 
-			if (newStatusId) {
-				const status = (await this.prisma.ticketStatus.findUnique({
-					where: {
-						id: newStatusId
-					}
-				}))!;
+            const responsibleUserHasChanged = newResponsibleUserId
+                ? oldTicket.responsibleUserId !== newResponsibleUserId
+                : false;
+            return [responsibleUserHasChanged, { oldTicket }];
+        },
+        descriptionEvaluator: async (event, args, ctx) => {
+            const newResponsibleUserId = args.data.responsibleUserId;
 
-				return `Status changed from "${ctx.oldTicket.status!.name}" to "${status.name}"`
-			}
+            if (newResponsibleUserId) {
+                const responsibleUser = (await this.prisma.user.findUnique({
+                    where: {
+                        id: newResponsibleUserId,
+                    },
+                }))!;
 
-			return null
-		},
-		ticketIdEvaluator: (event, args) => args.where.id
-	});
+                return `Responsible user changed from "${
+                    ctx.oldTicket.responsibleUser?.username || "none"
+                }" to "${responsibleUser.username}"`;
+            }
 
-	createActivityIfResponsibleUserHasChanged = this.create("Ticket", ["update"], {
-		onlyIf: async (event, args) => {
+            return null;
+        },
+        ticketIdEvaluator: (event, args) => args.where.id,
+    });
 
-			const ticketId = args.where.id;
-			const newResponsibleUserId = args.data.responsibleUserId
-			const oldTicket = (await this.prisma.ticket.findUnique({
-				where: {
-					id: ticketId
-				},
-				include: {
-					responsibleUser: true,
-					status: true
-				}
-			}))!
+    createActivityByComment = this.create("Comment", ["create", "update"], {
+        onlyIf: async (event, args) => {
+            if (event === "update") {
+                const newCommentContent = args.data.content;
 
-			const responsibleUserHasChanged = newResponsibleUserId
-				? oldTicket.responsibleUserId !== newResponsibleUserId
-				: false
-			return [responsibleUserHasChanged, { oldTicket }]
-		},
-		descriptionEvaluator: async (event, args, ctx) => {
+                const commentId = args.where.id;
+                const oldComment = (await this.prisma.comment.findUnique({
+                    where: {
+                        id: commentId,
+                    },
+                }))!;
 
-			const newResponsibleUserId = args.data.responsibleUserId
+                const commentContentHasChanged = oldComment.content !== newCommentContent;
+                return [commentContentHasChanged, { oldComment }];
+            }
+            return [true, undefined];
+        },
+        descriptionEvaluator: async (event, args, ctx) => {
+            if (event === "update") {
+                const newCommentContent = args.data.content;
 
-			if (newResponsibleUserId) {
-				const responsibleUser = (await this.prisma.user.findUnique({
-					where: {
-						id: newResponsibleUserId
-					}
-				}))!;
-
-				return `Responsible user changed from "${ctx.oldTicket.responsibleUser?.username || "none"}" to "${responsibleUser.username}"`
-			}
-
-			return null
-		},
-		ticketIdEvaluator: (event, args) => args.where.id
-	});
-
-	createActivityByComment = this.create("Comment", ["create", "update"], {
-		onlyIf: async (event, args) => {
-			if (event === "update") {
-
-				const newCommentContent = args.data.content;
-
-				const commentId = args.where.id;
-				const oldComment = (await this.prisma.comment.findUnique({
-					where: {
-						id: commentId
-					}
-				}))!;
-
-				const commentContentHasChanged = oldComment.content !== newCommentContent;
-				return [commentContentHasChanged, { oldComment }];
-			}
-			return [true, undefined];
-		},
-		descriptionEvaluator: async (event, args, ctx) => {
-			if (event === "update") {
-
-				const newCommentContent = args.data.content;
-
-				return `Comment content changed from "${ctx.oldComment.content}" to "${newCommentContent}"`;
-			}
-			return null;
-		}
-	});
+                return `Comment content changed from "${ctx.oldComment.content}" to "${newCommentContent}"`;
+            }
+            return null;
+        },
+    });
 }

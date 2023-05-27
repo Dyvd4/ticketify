@@ -1,30 +1,30 @@
-version: '1'
+version: "1"
 services:
-  rest-sql-server:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    ports:
-      - 1234:1234
-    env_file:
-      - docker.rest-sql-server.env
-    volumes:
-      - rest-sql-server-data:/var/opt/mssql/data
-    user: root
-  # FIXME: bind mount not detecting file changes
-  # run sql server in container and rest api locally instead
-  
-  # rest-api:
-  #   build: 
-  #     target: dev 
-  #     dockerfile: Dockerfile
-  #   image: ticketify
-  #   ports:
-  #     - 8080:8080
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - .:/api
-  #     - /api/node_modules
-  #   depends_on:
-  #     - rest-sql-server
+    rest-sql-server:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+            - 1234:1234
+        env_file:
+            - docker.rest-sql-server.env
+        volumes:
+            - rest-sql-server-data:/var/opt/mssql/data
+        user: root
+    # FIXME: bind mount not detecting file changes
+    # run sql server in container and rest api locally instead
+
+    # rest-api:
+    #   build:
+    #     target: dev
+    #     dockerfile: Dockerfile
+    #   image: ticketify
+    #   ports:
+    #     - 8080:8080
+    #   env_file:
+    #     - .env
+    #   volumes:
+    #     - .:/api
+    #     - /api/node_modules
+    #   depends_on:
+    #     - rest-sql-server
 volumes:
-  rest-sql-server-data:
+    rest-sql-server-data:

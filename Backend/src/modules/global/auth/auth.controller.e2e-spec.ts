@@ -15,157 +15,138 @@ import { LogService } from "@src/modules/log/log.service";
 import { LogService as MockLogService } from "@src/modules/log/__mocks__/log.service";
 
 const dummyUser: User = {
-	id: "12345",
-	username: "johndoe",
-	password: "secretpassword",
-	email: "johndoe@example.com",
-	emailConfirmed: true,
-	createdAt: new Date("2022-01-01T00:00:00.000Z"),
-	updatedAt: new Date("2022-01-01T01:00:00.000Z"),
-	createUser: null,
-	updateUser: "admin",
+    id: "12345",
+    username: "johndoe",
+    password: "secretpassword",
+    email: "johndoe@example.com",
+    emailConfirmed: true,
+    createdAt: new Date("2022-01-01T00:00:00.000Z"),
+    updatedAt: new Date("2022-01-01T01:00:00.000Z"),
+    createUser: null,
+    updateUser: "admin",
 };
 
 describe("AuthController", () => {
+    let app: INestApplication;
+    const prismaServiceMock = MockPrismaService;
 
-	let app: INestApplication
-	const prismaServiceMock = MockPrismaService;
+    beforeAll(async () => {
+        const moduleRef = await Test.createTestingModule({
+            imports: [
+                ConfigModule.forRoot({
+                    isGlobal: true,
+                    load: [config],
+                }),
+            ],
+            providers: [PrismaService, AuthMailDeliveryService, MailTemplateProvider, LogService],
+            controllers: [AuthController],
+        })
+            .overrideProvider(PrismaService)
+            .useValue(prismaServiceMock)
+            .overrideProvider(AuthMailDeliveryService)
+            .useValue({
+                sendEmailConfirmationEmail: jest.fn(),
+            })
+            .overrideProvider(LogService)
+            .useValue(MockLogService)
+            .compile();
 
-	beforeAll(async () => {
-		const moduleRef = await Test.createTestingModule({
-			imports: [
-				ConfigModule.forRoot({
-					isGlobal: true,
-					load: [config]
-				})
-			],
-			providers: [
-				PrismaService,
-				AuthMailDeliveryService,
-				MailTemplateProvider,
-				LogService
-			],
-			controllers: [AuthController],
-		})
-			.overrideProvider(PrismaService)
-			.useValue(prismaServiceMock)
-			.overrideProvider(AuthMailDeliveryService)
-			.useValue({
-				sendEmailConfirmationEmail: jest.fn()
-			})
-			.overrideProvider(LogService)
-			.useValue(MockLogService)
-			.compile();
+        app = moduleRef.createNestApplication();
+        await app.init();
+    });
 
-		app = moduleRef.createNestApplication();
-		await app.init();
-	});
+    describe("/POST signIn", () => {
+        it("sends 400 if user not existing", () => {
+            const userSignInDto: UserSignInDto = {
+                username: "David",
+                password: "any pw",
+            };
 
-	describe("/POST signIn", () => {
-		it("sends 400 if user not existing", () => {
+            prismaServiceMock.user.findFirst.mockResolvedValue(null);
 
-			const userSignInDto: UserSignInDto = {
-				username: "David",
-				password: "any pw"
-			}
+            return request(app.getHttpServer())
+                .post("/auth/signIn")
+                .send(userSignInDto)
+                .expect(400);
+        });
 
-			prismaServiceMock.user.findFirst.mockResolvedValue(null);
+        describe("checks for password", () => {
+            const myDummyUser = { ...dummyUser };
 
-			return request(app.getHttpServer())
-				.post("/auth/signIn")
-				.send(userSignInDto)
-				.expect(400);
-		});
+            it("sends 201 if authorized", async () => {
+                const dummyPassword = "123123";
+                const hashedDummyPassword = await bcrypt.hash(dummyPassword, 10);
+                myDummyUser.password = hashedDummyPassword;
 
-		describe("checks for password", () => {
+                const userSignInDto: UserSignInDto = {
+                    username: "David",
+                    password: dummyPassword,
+                };
 
-			const myDummyUser = { ...dummyUser };
+                prismaServiceMock.user.findFirst.mockResolvedValue(myDummyUser);
 
-			it("sends 201 if authorized", async () => {
-				const dummyPassword = "123123";
-				const hashedDummyPassword = await bcrypt.hash(dummyPassword, 10);
-				myDummyUser.password = hashedDummyPassword;
+                return request(app.getHttpServer())
+                    .post("/auth/signIn")
+                    .send(userSignInDto)
+                    .expect(201);
+            });
 
-				const userSignInDto: UserSignInDto = {
-					username: "David",
-					password: dummyPassword
-				}
+            it("sends 400 if password is invalid", async () => {
+                const dummyPassword = "123123";
+                const hashedDummyPassword = await bcrypt.hash(dummyPassword, 10);
+                myDummyUser.password = hashedDummyPassword;
 
-				prismaServiceMock.user.findFirst.mockResolvedValue(myDummyUser);
+                const userSignInDto: UserSignInDto = {
+                    username: "David",
+                    password: "wrong pw",
+                };
 
-				return request(app.getHttpServer())
-					.post("/auth/signIn")
-					.send(userSignInDto)
-					.expect(201)
+                prismaServiceMock.user.findFirst.mockResolvedValue(myDummyUser);
 
-			})
+                return request(app.getHttpServer())
+                    .post("/auth/signIn")
+                    .send(userSignInDto)
+                    .expect(400);
+            });
+        });
+    });
 
-			it("sends 400 if password is invalid", async () => {
-				const dummyPassword = "123123";
-				const hashedDummyPassword = await bcrypt.hash(dummyPassword, 10);
-				myDummyUser.password = hashedDummyPassword;
+    describe("/POST signUp", () => {
+        it("checks for existing user", () => {
+            prismaServiceMock.user.findFirst.mockResolvedValue(dummyUser);
 
-				const userSignInDto: UserSignInDto = {
-					username: "David",
-					password: "wrong pw"
-				}
+            return request(app.getHttpServer()).post("/auth/signUp").expect(400);
+        });
 
-				prismaServiceMock.user.findFirst.mockResolvedValue(myDummyUser);
+        it("checks for existing email", () => {
+            prismaServiceMock.user.findFirst
+                .mockResolvedValueOnce(null)
+                .mockResolvedValueOnce(dummyUser);
 
-				return request(app.getHttpServer())
-					.post("/auth/signIn")
-					.send(userSignInDto)
-					.expect(400)
-			})
+            return request(app.getHttpServer()).post("/auth/signUp").expect(400);
+        });
 
-		})
-	})
+        it("returns success username and email not already exist", () => {
+            const userSignUpDto: UserSignUpDto = {
+                username: dummyUser.username,
+                password: dummyUser.password,
+                email: dummyUser.email!,
+            };
 
-	describe("/POST signUp", () => {
+            prismaServiceMock.user.findFirst
+                .mockResolvedValueOnce(null)
+                .mockResolvedValueOnce(null);
 
-		it("checks for existing user", () => {
+            prismaServiceMock.user.create.mockResolvedValue(dummyUser);
 
-			prismaServiceMock.user.findFirst.mockResolvedValue(dummyUser);
+            return request(app.getHttpServer())
+                .post("/auth/signUp")
+                .send(userSignUpDto)
+                .expect(201);
+        });
+    });
 
-			return request(app.getHttpServer())
-				.post("/auth/signUp")
-				.expect(400);
-		});
-
-		it("checks for existing email", () => {
-
-			prismaServiceMock.user.findFirst
-				.mockResolvedValueOnce(null)
-				.mockResolvedValueOnce(dummyUser);
-
-			return request(app.getHttpServer())
-				.post("/auth/signUp")
-				.expect(400);
-		});
-
-		it("returns success username and email not already exist", () => {
-
-			const userSignUpDto: UserSignUpDto = {
-				username: dummyUser.username,
-				password: dummyUser.password,
-				email: dummyUser.email!
-			}
-
-			prismaServiceMock.user.findFirst
-				.mockResolvedValueOnce(null)
-				.mockResolvedValueOnce(null);
-
-			prismaServiceMock.user.create.mockResolvedValue(dummyUser);
-
-			return request(app.getHttpServer())
-				.post("/auth/signUp")
-				.send(userSignUpDto)
-				.expect(201);
-		});
-	})
-
-	afterAll(async () => {
-		await app.close();
-	});
-
+    afterAll(async () => {
+        await app.close();
+    });
 });

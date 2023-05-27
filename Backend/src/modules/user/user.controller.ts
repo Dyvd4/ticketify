@@ -18,224 +18,204 @@ import ListResult from "@src/lib/list/result/list-result";
 @Controller()
 @ApiCookieAuth()
 export class UserController {
+    constructor(
+        private prisma: PrismaService,
+        private authMailDeliveryService: AuthMailDeliveryService,
+        private fileService: FileService
+    ) {}
 
-	constructor(
-		private prisma: PrismaService,
-		private authMailDeliveryService: AuthMailDeliveryService,
-		private fileService: FileService
-	) { }
+    @Get("users")
+    async getUsers() {
+        const { prisma } = this;
 
-	@Get('users')
-	async getUsers() {
-		const { prisma } = this;
+        const users = await prisma.user.findMany();
 
-		const users = await prisma.user.findMany();
+        return new ListResult(users);
+    }
 
-		return new ListResult(users);
-	}
+    @Auth({
+        ignoreEmailConfirmation: true,
+    })
+    // ApiParam decorator is only for swagger UI
+    // optional parameter works with question mark only just fine
+    @ApiParam({
+        name: "id",
+        required: false,
+    })
+    @Get("user/:id?/all")
+    async getUserWithAllIncluded(@User() requestUser: TUser, @Param("id") id?: string) {
+        const { prisma } = this;
 
-	@Auth({
-		ignoreEmailConfirmation: true
-	})
-	// ApiParam decorator is only for swagger UI
-	// optional parameter works with question mark only just fine
-	@ApiParam({
-		name: "id",
-		required: false
-	})
-	@Get("user/:id?/all")
-	async getUserWithAllIncluded(
-		@User() requestUser: TUser,
-		@Param("id") id?: string
-	) {
+        const user = await prisma.user.findFirst({
+            where: {
+                id: id || requestUser.id,
+            },
+            include: {
+                avatar: {
+                    include: {
+                        file: true,
+                    },
+                },
+                watchingTickets: {
+                    include: {
+                        ticket: true,
+                    },
+                },
+            },
+        });
 
-		const { prisma } = this;
+        if (!user) {
+            throw new NotFoundException(null);
+        }
 
-		const user = await prisma.user.findFirst({
-			where: {
-				id: id || requestUser.id
-			},
-			include: {
-				avatar: {
-					include: {
-						file: true
-					}
-				},
-				watchingTickets: {
-					include: {
-						ticket: true
-					}
-				}
-			}
-		});
+        (user as any).avatar = user.avatar?.file
+            ? await this.fileService.getFileWithSignedUrl(user.avatar.file)
+            : null;
 
-		if (!user) {
-			throw new NotFoundException(null)
-		}
+        return user;
+    }
 
-		(user as any).avatar = user.avatar?.file
-			? await this.fileService.getFileWithSignedUrl(user.avatar.file)
-			: null;
+    @Auth({
+        ignoreEmailConfirmation: true,
+    })
+    @ApiParam({
+        name: "id",
+        required: false,
+    })
+    @Get("user/:id?")
+    async getUser(@User() requestUser: TUser, @Param("id") id?: string) {
+        const { prisma } = this;
 
-		return user;
-	}
+        const user = await prisma.user.findFirst({
+            where: {
+                id: id || requestUser.id,
+            },
+        });
 
-	@Auth({
-		ignoreEmailConfirmation: true
-	})
-	@ApiParam({
-		name: "id",
-		required: false
-	})
-	@Get('user/:id?')
-	async getUser(
-		@User() requestUser: TUser,
-		@Param("id") id?: string
-	) {
-		const { prisma } = this;
+        if (!user) {
+            throw new NotFoundException(null);
+        }
 
-		const user = await prisma.user.findFirst({
-			where: {
-				id: id || requestUser.id
-			}
-		});
+        return user;
+    }
 
-		if (!user) {
-			throw new NotFoundException(null)
-		}
+    @Put("user/username")
+    async updateUsername(@User() requestUser: TUser, @Body() { username }: UpdateUsernameDto) {
+        const { prisma } = this;
 
-		return user;
-	}
+        const existingUsername = await prisma.user.findFirst({
+            where: {
+                username,
+            },
+        });
 
-	@Put('user/username')
-	async updateUsername(
-		@User() requestUser: TUser,
-		@Body() { username }: UpdateUsernameDto
-	) {
+        if (existingUsername && username !== requestUser.username) {
+            throw new ValidationException(`User with name: ${username} already existing`);
+        }
 
-		const { prisma } = this;
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: requestUser.id,
+            },
+            data: {
+                username,
+            },
+        });
 
-		const existingUsername = await prisma.user.findFirst({
-			where: {
-				username
-			}
-		});
+        return updatedUser;
+    }
 
-		if (existingUsername && username !== requestUser.username) {
-			throw new ValidationException(`User with name: ${username} already existing`);
-		}
+    @Auth({
+        ignoreEmailConfirmation: true,
+    })
+    @Put("user/email")
+    async updateEmail(@User() requestUser: TUser, @Body() { email }: UpdateEmailDto) {
+        const { prisma } = this;
 
-		const updatedUser = await prisma.user.update({
-			where: {
-				id: requestUser.id
-			},
-			data: {
-				username
-			}
-		});
+        const existingEmail = await prisma.user.findFirst({
+            where: {
+                email,
+            },
+        });
 
-		return updatedUser;
-	}
+        const isSameEmail = email === requestUser.email;
 
-	@Auth({
-		ignoreEmailConfirmation: true
-	})
-	@Put('user/email')
-	async updateEmail(
-		@User() requestUser: TUser,
-		@Body() { email }: UpdateEmailDto
-	) {
+        if (existingEmail && !isSameEmail) {
+            throw new ValidationException(`E-mail: ${email} already existing`);
+        }
 
-		const { prisma } = this;
+        if (isSameEmail) return "Your e-mail is already equal to the provided value";
 
-		const existingEmail = await prisma.user.findFirst({
-			where: {
-				email
-			}
-		});
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: requestUser.id,
+            },
+            data: {
+                email,
+                emailConfirmed: false,
+            },
+        });
 
-		const isSameEmail = email === requestUser.email;
+        if (!isSameEmail) this.authMailDeliveryService.sendEmailConfirmationEmail(updatedUser);
 
-		if (existingEmail && !isSameEmail) {
-			throw new ValidationException(`E-mail: ${email} already existing`);
-		}
+        return updatedUser;
+    }
 
-		if (isSameEmail) return "Your e-mail is already equal to the provided value";
+    @Put("user/newPassword")
+    async updatePassword(@User() requestUser: TUser, @Body() passwordData: NewPasswordDto) {
+        const { prisma } = this;
 
-		const updatedUser = await prisma.user.update({
-			where: {
-				id: requestUser.id
-			},
-			data: {
-				email,
-				emailConfirmed: false
-			}
-		});
+        if (!(await bcrypt.compare(passwordData.currentPassword, requestUser.password))) {
+            throw new ValidationException("Current password is not valid");
+        }
 
-		if (!isSameEmail) this.authMailDeliveryService.sendEmailConfirmationEmail(updatedUser);
+        if (passwordData.newPassword !== passwordData.repeatedNewPassword) {
+            throw new ValidationException("passwords are not equal");
+        }
 
-		return updatedUser;
-	}
+        const newPassword = await bcrypt.hash(passwordData.newPassword, 10);
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: requestUser.id,
+            },
+            data: {
+                password: newPassword,
+            },
+        });
 
-	@Put('user/newPassword')
-	async updatePassword(
-		@User() requestUser: TUser,
-		@Body() passwordData: NewPasswordDto
-	) {
+        return updatedUser;
+    }
 
-		const { prisma } = this;
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({
+        type: UploadFileDto,
+    })
+    @Put("user/avatar")
+    @UseInterceptors(FileInterceptor("file"))
+    async updateAvatar(
+        @User() requestUser: TUser,
+        @UploadedFile(parseImageFilePipe) file: Express.Multer.File
+    ) {
+        const createdOrUpdatedFile = await this.fileService.createOrUpdateFile(file);
 
-		if (!(await bcrypt.compare(passwordData.currentPassword, requestUser.password))) {
-			throw new ValidationException("Current password is not valid")
-		}
+        const updatedUser = await this.prisma.user.update({
+            where: {
+                id: requestUser.id,
+            },
+            data: {
+                avatar: {
+                    upsert: {
+                        create: {
+                            fileId: createdOrUpdatedFile.id,
+                        },
+                        update: {
+                            fileId: createdOrUpdatedFile.id,
+                        },
+                    },
+                },
+            },
+        });
 
-		if (passwordData.newPassword !== passwordData.repeatedNewPassword) {
-			throw new ValidationException("passwords are not equal")
-		}
-
-		const newPassword = await bcrypt.hash(passwordData.newPassword, 10);
-		const updatedUser = await prisma.user.update({
-			where: {
-				id: requestUser.id
-			},
-			data: {
-				password: newPassword
-			}
-		});
-
-		return updatedUser;
-	}
-
-	@ApiConsumes("multipart/form-data")
-	@ApiBody({
-		type: UploadFileDto
-	})
-	@Put('user/avatar')
-	@UseInterceptors(FileInterceptor("file"))
-	async updateAvatar(
-		@User() requestUser: TUser,
-		@UploadedFile(parseImageFilePipe) file: Express.Multer.File
-	) {
-		const createdOrUpdatedFile = await this.fileService.createOrUpdateFile(file);
-
-		const updatedUser = await this.prisma.user.update({
-			where: {
-				id: requestUser.id
-			},
-			data: {
-				avatar: {
-					upsert: {
-						create: {
-							fileId: createdOrUpdatedFile.id
-						},
-						update: {
-							fileId: createdOrUpdatedFile.id
-						}
-					}
-				}
-			}
-		});
-
-		return updatedUser;
-	}
+        return updatedUser;
+    }
 }

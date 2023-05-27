@@ -1,103 +1,97 @@
-import { User } from '@src/modules/global/auth/user.decorator';
-import { PrismaService } from '@src/modules/global/database/prisma.service';
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { User } from "@src/modules/global/auth/user.decorator";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { CommentInteraction, User as TUser } from "@prisma/client";
-import { CreateCommentInteractionDto, UpdateCommentInteractionDto } from './comment-interaction.dtos';
+import {
+    CreateCommentInteractionDto,
+    UpdateCommentInteractionDto,
+} from "./comment-interaction.dtos";
 
-@Controller('commentInteraction')
+@Controller("commentInteraction")
 export class CommentInteractionController {
+    constructor(private readonly prisma: PrismaService) {}
 
-	constructor(private readonly prisma: PrismaService) { }
+    @Get()
+    async findAll() {
+        const { prisma } = this;
 
-	@Get()
-	async findAll() {
+        const items = await prisma.commentInteraction.findMany();
+        return { items };
+    }
 
-		const { prisma } = this;
+    @Get(":id")
+    async findOne(@Param("id") id: string) {
+        const { prisma } = this;
 
-		const items = await prisma.commentInteraction.findMany();
-		return { items };
-	}
+        const commentInteraction = await prisma.commentInteraction.findFirst({
+            where: {
+                id,
+            },
+        });
 
-	@Get(':id')
-	async findOne(@Param('id') id: string) {
+        return commentInteraction;
+    }
 
-		const { prisma } = this;
+    @Post()
+    async create(
+        @User() requestUser: TUser,
+        @Body() commentInteraction: CreateCommentInteractionDto
+    ) {
+        const { prisma } = this;
 
-		const commentInteraction = await prisma.commentInteraction.findFirst({
-			where: {
-				id
-			}
-		});
-		
-		return commentInteraction;
-	}
+        const existingInteraction = await prisma.commentInteraction.findUnique({
+            where: {
+                type_createdFromId_commentId: {
+                    createdFromId: requestUser.id,
+                    ...commentInteraction,
+                },
+            },
+        });
 
-	@Post()
-	async create(
-		@User() requestUser: TUser,
-		@Body() commentInteraction: CreateCommentInteractionDto
-	) {
+        await prisma.commentInteraction.deleteMany({
+            where: {
+                createdFromId: requestUser.id,
+                commentId: commentInteraction.commentId,
+            },
+        });
 
-		const { prisma } = this;
+        let newCommentInteraction: CommentInteraction | null = null;
+        if (!existingInteraction) {
+            newCommentInteraction = await prisma.commentInteraction.create({
+                data: {
+                    createdFromId: requestUser.id,
+                    ...commentInteraction,
+                },
+            });
+        }
 
-		const existingInteraction = await prisma.commentInteraction.findUnique({
-			where: {
-				type_createdFromId_commentId: {
-					createdFromId: requestUser.id,
-					...commentInteraction
-				}
-			}
-		});
+        return newCommentInteraction;
+    }
 
-		await prisma.commentInteraction.deleteMany({
-			where: {
-				createdFromId: requestUser.id,
-				commentId: commentInteraction.commentId
-			}
-		});
+    @Patch(":id")
+    async update(@Param("id") id: string, @Body() commentInteraction: UpdateCommentInteractionDto) {
+        const { prisma } = this;
 
-		let newCommentInteraction: CommentInteraction | null = null;
-		if (!existingInteraction) {
-			newCommentInteraction = await prisma.commentInteraction.create({
-				data: {
-					createdFromId: requestUser.id,
-					...commentInteraction
-				}
-			});
-		}
+        const updatedItem = await prisma.commentInteraction.update({
+            where: {
+                id,
+            },
+            data: commentInteraction,
+        });
 
-		return newCommentInteraction;
-	}
+        return updatedItem;
+    }
 
-	@Patch(':id')
-	async update(
-		@Param('id') id: string,
-		@Body() commentInteraction: UpdateCommentInteractionDto
-	) {
+    @Delete(":id")
+    async remove(@Param("id") id: string) {
+        const { prisma } = this;
 
-		const { prisma } = this;
+        const deletedItem = await prisma.commentInteraction.delete({
+            where: {
+                id,
+            },
+        });
 
-		const updatedItem = await prisma.commentInteraction.update({
-			where: {
-				id
-			},
-			data: commentInteraction
-		})
-
-		return updatedItem;
-	}
-
-	@Delete(':id')
-	async remove(@Param('id') id: string) {
-
-		const { prisma } = this;
-
-		const deletedItem = await prisma.commentInteraction.delete({
-			where: {
-				id
-			}
-		});
-
-		return deletedItem;
-	}
+        return deletedItem;
+    }
 }

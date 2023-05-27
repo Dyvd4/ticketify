@@ -1,18 +1,24 @@
 <body>
     <p>
-        Might be interesting what is going on <a href='ticket/details/{{ticket.id}}' target="_blank">here</a>
+        Might be interesting what is going on
+        <a href="ticket/details/{{ticket.id}}" target="_blank">here</a>
         (ticket).
     </p>
-    <br>
+    <br />
     <h3>
         {{ticketActivity.title}}
     </h3>
     <p>
         {{ticketActivity.description}}
     </p>
-    <br>
-    <br>
+    <br />
+    <br />
     <p>
-        Click <a href='{{URL}}/ticketWatcher/unwatch/{{encodedUserId}}/{{ticket.id}}' target="_blank">here</a> to unwatch.
+        Click
+        <a
+            href="{{URL}}/ticketWatcher/unwatch/{{encodedUserId}}/{{ticket.id}}"
+            target="_blank"
+        >here</a>
+        to unwatch.
     </p>
 </body>

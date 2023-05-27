@@ -1,47 +1,37 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { User as TUser } from '@prisma/client';
-import { User } from '@src/modules/global/auth/user.decorator';
-import { PrismaService } from '@src/modules/global/database/prisma.service';
+import { Body, Controller, Get, Patch } from "@nestjs/common";
+import { User as TUser } from "@prisma/client";
+import { User } from "@src/modules/global/auth/user.decorator";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { UpdateUserSettingsDto } from "./user-settings.dtos";
 
-@Controller('userSettings')
+@Controller("userSettings")
 export class UserSettingsController {
+    constructor(private prisma: PrismaService) {}
 
-	constructor(
-		private prisma: PrismaService
-	) { }
+    @Get()
+    async find(@User() requestUser: TUser) {
+        const { prisma } = this;
 
-	@Get()
-	async find(
-		@User() requestUser: TUser
-	) {
+        const userSettings = await prisma.userSettings.findFirst({
+            where: {
+                userId: requestUser.id,
+            },
+        });
 
-		const { prisma } = this;
+        return userSettings;
+    }
 
-		const userSettings = await prisma.userSettings.findFirst({
-			where: {
-				userId: requestUser.id
-			}
-		});
+    @Patch()
+    async update(@User() requestUser: TUser, @Body() updateUserSettingsDto: UpdateUserSettingsDto) {
+        const { prisma } = this;
 
-		return userSettings;
-	}
+        const updatedUserSettings = await prisma.userSettings.update({
+            where: {
+                userId: requestUser.id,
+            },
+            data: updateUserSettingsDto,
+        });
 
-	@Patch()
-	async update(
-		@User() requestUser: TUser,
-		@Body() updateUserSettingsDto: UpdateUserSettingsDto
-	) {
-
-		const { prisma } = this;
-
-		const updatedUserSettings = await prisma.userSettings.update({
-			where: {
-				userId: requestUser.id
-			},
-			data: updateUserSettingsDto
-		})
-
-		return updatedUserSettings;
-	}
+        return updatedUserSettings;
+    }
 }

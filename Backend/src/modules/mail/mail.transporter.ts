@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: username,
-        pass: password
-    }
+        pass: password,
+    },
 });
 
 export default transporter;

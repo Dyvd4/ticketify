@@ -1,12 +1,11 @@
 import ListResult from "./list-result";
 
-export default class PagerResult<T> extends ListResult<T>{
-
-    prevPage: number
-    nextPage: number
-    pagesCount: number
-    pagesCountShrunk: boolean
-    pageIsFull: boolean
+export default class PagerResult<T> extends ListResult<T> {
+    prevPage: number;
+    nextPage: number;
+    pagesCount: number;
+    pagesCountShrunk: boolean;
+    pageIsFull: boolean;
 
     constructor(items: T[], totalItemsCount: number, itemsPerPage: number, currentPage: number) {
         super(items);
@@ -19,16 +18,11 @@ export default class PagerResult<T> extends ListResult<T>{
 
         this.pagesCountShrunk = !!currentPage && currentPage > this.pagesCount;
 
-        const sanitizedCurrentPage = this.pagesCountShrunk
-            ? this.pagesCount
-            : currentPage;
+        const sanitizedCurrentPage = this.pagesCountShrunk ? this.pagesCount : currentPage;
 
-        this.prevPage = sanitizedCurrentPage !== 1
-            ? sanitizedCurrentPage - 1
-            : 1;
+        this.prevPage = sanitizedCurrentPage !== 1 ? sanitizedCurrentPage - 1 : 1;
 
-        this.nextPage = sanitizedCurrentPage < this.pagesCount
-            ? sanitizedCurrentPage + 1
-            : this.pagesCount;
+        this.nextPage =
+            sanitizedCurrentPage < this.pagesCount ? sanitizedCurrentPage + 1 : this.pagesCount;
     }
 }

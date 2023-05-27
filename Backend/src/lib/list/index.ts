@@ -1,9 +1,9 @@
-import InfiniteLoader from "./infinite-loader"
-import Pager from "./pager"
+import InfiniteLoader from "./infinite-loader";
+import Pager from "./pager";
 
-export { getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "./list"
-export { InfiniteLoader, Pager }
+export { getMappedPrismaFilterArgs, getMappedPrismaOrderByArgs } from "./list";
+export { InfiniteLoader, Pager };
 export type ListResultPrismaArgs = {
-	skip: number
-	take: number
-}
+    skip: number;
+    take: number;
+};

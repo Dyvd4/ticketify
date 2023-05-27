@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { TicketWatcherController } from './ticket-watcher.controller';
+import { Module } from "@nestjs/common";
+import { TicketWatcherController } from "./ticket-watcher.controller";
 
 @Module({
-	controllers: [TicketWatcherController],
+    controllers: [TicketWatcherController],
 })
-export class TicketWatcherModule { }
+export class TicketWatcherModule {}

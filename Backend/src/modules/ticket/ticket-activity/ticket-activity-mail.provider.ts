@@ -8,65 +8,72 @@ import jwt from "jsonwebtoken";
 
 @Injectable()
 export class TicketActivityMailProvider {
+    private JWT_SECRET_KEY: string;
+    private SUPPORT_EMAIL: string;
+    private URL: string;
 
-	private JWT_SECRET_KEY: string
-	private SUPPORT_EMAIL: string
-	private URL: string
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly mailTemplateProvider: MailTemplateProvider,
+        configService: ConfigService
+    ) {
+        this.JWT_SECRET_KEY = configService.get<Config>("JWT_SECRET_KEY", { infer: true });
+        this.SUPPORT_EMAIL = configService.get<Config>("SUPPORT_EMAIL", { infer: true });
+        this.URL = configService.get<Config>("URL", { infer: true });
+    }
 
-	constructor(
-		private readonly prisma: PrismaService,
-		private readonly mailTemplateProvider: MailTemplateProvider,
-		configService: ConfigService
-	) {
-		this.JWT_SECRET_KEY = configService.get<Config>("JWT_SECRET_KEY", { infer: true })
-		this.SUPPORT_EMAIL = configService.get<Config>("SUPPORT_EMAIL", { infer: true })
-		this.URL = configService.get<Config>("URL", { infer: true })
-	}
+    async sendEmailToWatchingUsers(ticketActivityId: string) {
+        const { prisma } = this;
 
-	async sendEmailToWatchingUsers(ticketActivityId: string) {
-		const { prisma } = this;
+        const ticketActivity = (await prisma.ticketActivity.findUnique({
+            where: {
+                id: ticketActivityId,
+            },
+        }))!;
 
-		const ticketActivity = (await prisma.ticketActivity.findUnique({
-			where: {
-				id: ticketActivityId
-			}
-		}))!;
+        const { title, ticketId } = ticketActivity;
 
-		const { title, ticketId } = ticketActivity;
+        const ticketWatcher = await prisma.ticketWatcher.findMany({
+            where: {
+                ticketId,
+            },
+            include: {
+                user: true,
+                ticket: true,
+            },
+        });
 
-		const ticketWatcher = await prisma.ticketWatcher.findMany({
-			where: {
-				ticketId
-			},
-			include: {
-				user: true,
-				ticket: true
-			}
-		});
+        return Promise.all(
+            ticketWatcher.map(({ user, ticket }) =>
+                (async () => {
+                    const encodedUserId = jwt.sign(
+                        {
+                            data: {
+                                userId: user.id,
+                            },
+                        },
+                        this.JWT_SECRET_KEY
+                    );
 
-		return Promise.all(ticketWatcher.map(({ user, ticket }) => (
-			(async () => {
-				const encodedUserId = jwt.sign({
-					data: {
-						userId: user.id
-					}
-				}, this.JWT_SECRET_KEY)
+                    const html = await this.mailTemplateProvider.getInjectedHtmlFromFile(
+                        "TicketActivityTemplate",
+                        {
+                            URL: this.URL,
+                            ticket,
+                            user,
+                            ticketActivity,
+                            encodedUserId,
+                        }
+                    );
 
-				const html = await this.mailTemplateProvider.getInjectedHtmlFromFile("TicketActivityTemplate", {
-					URL: this.URL,
-					ticket,
-					user,
-					ticketActivity,
-					encodedUserId
-				});
-
-				return MailTransporter.sendMail({
-					from: this.SUPPORT_EMAIL,
-					to: user.email!,
-					subject: `New activity on ticket '#${ticket.id} ${ticket.title}' ==> ${title}`,
-					html
-				})
-			})()
-		)));
-	}
+                    return MailTransporter.sendMail({
+                        from: this.SUPPORT_EMAIL,
+                        to: user.email!,
+                        subject: `New activity on ticket '#${ticket.id} ${ticket.title}' ==> ${title}`,
+                        html,
+                    });
+                })()
+            )
+        );
+    }
 }

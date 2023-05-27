@@ -6,18 +6,9 @@ import { UserPrismaMiddleWareProvider } from "./user-prisma-middleware.provider"
 import { UserService } from "./user.service";
 
 @Module({
-	imports: [
-		UserSettingsModule,
-		FileModule
-	],
-	providers: [
-		UserService,
-		UserPrismaMiddleWareProvider
-	],
-	controllers: [UserController],
-	exports: [
-		UserService,
-		UserPrismaMiddleWareProvider
-	]
+    imports: [UserSettingsModule, FileModule],
+    providers: [UserService, UserPrismaMiddleWareProvider],
+    controllers: [UserController],
+    exports: [UserService, UserPrismaMiddleWareProvider],
 })
-export class UserModule { }
+export class UserModule {}

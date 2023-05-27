@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-import { mockDeep, mockReset } from 'jest-mock-extended';
+import { PrismaClient } from "@prisma/client";
+import { mockDeep, mockReset } from "jest-mock-extended";
 
 beforeEach(() => {
-	mockReset(PrismaService)
-})
+    mockReset(PrismaService);
+});
 
 export const PrismaService = mockDeep<PrismaClient>();
