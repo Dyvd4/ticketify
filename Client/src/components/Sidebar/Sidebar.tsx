@@ -1,6 +1,6 @@
 import { Heading, Tooltip } from '@chakra-ui/react';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
-import { faBook, faFireFlameCurved, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
@@ -75,7 +75,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
                             className="text-base pt-6 pb-8 px-4 flex justify-center"
                             {...(path === "/" ? { color: "blue.200" } : {})}>
                             <Tooltip placement="bottom" label="Home" shouldWrapChildren>
-                                <FontAwesomeIcon icon={faFireFlameCurved} size={"xl" as SizeProp} />
+                                <FontAwesomeIcon icon={faTicket} size={"xl" as SizeProp} />
                             </Tooltip>
                         </Heading>
                     )}
