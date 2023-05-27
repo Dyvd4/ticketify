@@ -26,14 +26,14 @@ function SidebarListItem({ className, count, variant = "horizontal", title, ...p
                     {props.icon && <>
                         <FontAwesomeIcon
                             icon={props.icon}
-                            size={(variant === "vertical" ? "xl" : "1x") as SizeProp}
+                            size={(variant === "vertical" ? "lg" : "1x") as SizeProp}
                             className="aspect-square" />
                     </>}
 
                     <Box as="h3" className={classNames(``, {
                         "font-bold": isActive,
                         "ml-6 mr-auto": variant === "horizontal",
-                        "text-sm": variant === "vertical"
+                        "text-xs": variant === "vertical"
                     })}>
                         {title}
                     </Box>

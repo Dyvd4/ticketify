@@ -9,7 +9,7 @@ function Breadcrumb() {
     const [breadcrumb] = useAtom(breadcrumbAtom)
 
     return (
-        <Box className="font-bold py-6">
+        <Box className="font-bold flex items-center pl-2">
             <ChakraBreadcrumb
                 separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}>
                 {breadcrumb.links.map(({ name, href, isCurrentPage }, index) => (

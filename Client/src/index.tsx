@@ -7,10 +7,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Index from "src/pages/Index/Index";
 import AuthenticatedArea from "./auth/AuthenticatedArea";
-import Breadcrumb from "./components/Breadcrumb";
 import Navbar from "./components/Navbar";
-import PortalSlot from "./components/Slots/PortalSlot";
 import Sidebar from "./components/Sidebar/Sidebar";
+import PortalSlot from "./components/Slots/PortalSlot";
 import theme from "./config/theme";
 import Init from "./init";
 import EmailConfirmed from "./pages/Auth/EmailConfirmed";
@@ -43,7 +42,6 @@ root.render(
           <Navbar />
           <Sidebar />
           <Container id="container" maxW={"container.lg"} className="p-6">
-            <Breadcrumb />
             <Router>
               <Routes>
                 {/* authenticated or authorized */}

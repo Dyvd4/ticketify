@@ -1,6 +1,5 @@
-import { Heading, Tooltip } from '@chakra-ui/react';
-import { SizeProp } from '@fortawesome/fontawesome-svg-core';
-import { faBook, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { Box, Heading, Link, Tooltip } from '@chakra-ui/react';
+import { faArrowLeft, faArrowRight, faBook, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
@@ -9,8 +8,9 @@ import { fetchEntity } from 'src/api/entity';
 import BgBox, { BgBoxProps } from 'src/components/BgBox';
 import useSidebarToggle from 'src/context/hooks/useSidebarToggle';
 import { useCurrentUserWithAuthentication } from 'src/hooks/user';
+import IconButton from '../Wrapper/IconButton';
 import PinnedTicketsSection from './sections/PinnedTicketsSection';
-import BaseSidebarListItem, { SidebarListItem } from './SidebarListItem';
+import { SidebarListItem } from './SidebarListItem';
 
 type _SidebarProps = {}
 
@@ -20,7 +20,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
     const path = window.location.pathname;
 
     const { isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
-    const [sidebarIsCollapsed] = useSidebarToggle();
+    const [sidebarIsCollapsed, toggleSidebarIsCollapsed] = useSidebarToggle();
     const sidebarListItemVariant = !sidebarIsCollapsed ? "horizontal" : "vertical";
 
     const { data: ticketCount } = useQuery(["ticketCount"], () => fetchEntity({
@@ -50,36 +50,40 @@ function Sidebar({ className, ...props }: SidebarProps) {
             {...props}>
 
             {sidebarListItemVariant === "horizontal" && <>
-                <BaseSidebarListItem urlPath='/'>
-                    {() => (
-                        <Heading
-                            as="h1"
-                            className="text-xl pt-6 pb-8 px-4"
-                            {...(path === "/" ? { color: "blue.200" } : {})}>
-                            <Tooltip placement="bottom" label="Home" shouldWrapChildren>
-                                <span className='mr-2'>
+                <Heading
+                    as="h1"
+                    className="text-xl pt-6 pb-8 flex justify-between items-center">
+                    <Link href="/" className='no-underline'>
+                        <Tooltip
+                            placement="bottom"
+                            label="Go to home">
+                            <Box  {...(path === "/" ? { color: "blue.200" } : {})}>
+                                <FontAwesomeIcon className='mr-2' icon={faTicket} />
+                                <span>
                                     Ticketify
                                 </span>
-                                <FontAwesomeIcon icon={faTicket} />
-                            </Tooltip>
-                        </Heading>
-                    )}
-                </BaseSidebarListItem>
+                            </Box>
+                        </Tooltip>
+                    </Link>
+                    <IconButton
+                        backgroundColor={"transparent"}
+                        size={"sm"}
+                        aria-label="toggle sidebar"
+                        icon={<FontAwesomeIcon icon={faArrowLeft} />}
+                        onClick={toggleSidebarIsCollapsed}>
+                    </IconButton>
+                </Heading>
             </>}
 
             {sidebarListItemVariant === "vertical" && <>
-                <BaseSidebarListItem urlPath='/'>
-                    {() => (
-                        <Heading
-                            as="h1"
-                            className="text-base pt-6 pb-8 px-4 flex justify-center"
-                            {...(path === "/" ? { color: "blue.200" } : {})}>
-                            <Tooltip placement="bottom" label="Home" shouldWrapChildren>
-                                <FontAwesomeIcon icon={faTicket} size={"xl" as SizeProp} />
-                            </Tooltip>
-                        </Heading>
-                    )}
-                </BaseSidebarListItem>
+                <IconButton
+                    backgroundColor={"transparent"}
+                    className="w-fit mx-auto"
+                    size={"sm"}
+                    aria-label="toggle sidebar"
+                    icon={<FontAwesomeIcon icon={faArrowRight} />}
+                    onClick={toggleSidebarIsCollapsed}>
+                </IconButton>
             </>}
 
             <SidebarListItem

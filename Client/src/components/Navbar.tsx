@@ -1,20 +1,18 @@
 import { Avatar, Box, Flex, HStack, Link, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { faBars, faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "react-query";
 import { signOut } from "src/auth/auth";
-import useSidebarToggle from "src/context/hooks/useSidebarToggle";
 import { useCurrentUserWithAuthentication } from "src/hooks/user";
+import Breadcrumb from "./Breadcrumb";
 import DarkModeButton from "./Buttons/DarkMode";
 import SearchBar from "./SearchBar";
-import IconButton from "./Wrapper/IconButton";
 
 type NavbarProps = {}
 
 function Navbar(props: NavbarProps) {
 
 	const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
-	const [, toggleSidebarIsCollapsed] = useSidebarToggle();
 
 	const signOutMutation = useMutation(signOut, {
 		onSuccess: () => {
@@ -33,13 +31,7 @@ function Navbar(props: NavbarProps) {
 			_light={{
 				backgroundColor: "white"
 			}}>
-			<div className="flex items-center gap-2">
-				<IconButton
-					onClick={toggleSidebarIsCollapsed}
-					size="sm"
-					aria-label="Homepage"
-					icon={<FontAwesomeIcon icon={faBars} />} />
-			</div>
+			<Breadcrumb />
 			<HStack gap={1}>
 				<SearchBar />
 				<DarkModeButton
