@@ -1,5 +1,6 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import TicketActivityList from "src/components/Lists/TicketActivity/TicketActivityList";
+import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery } from "src/hooks/query";
 import TicketKanbanboard from "./components/TicketKanbanboard";
 
@@ -8,6 +9,14 @@ interface IndexProps { }
 function Index(props: IndexProps) {
 
   const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities"], { route: "ticketActivities" });
+
+  useBreadcrumb([
+    {
+      name: "Home",
+      href: "#",
+      isCurrentPage: true
+    },
+  ]);
 
   return (
     <>

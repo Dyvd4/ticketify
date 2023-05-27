@@ -9,6 +9,7 @@ import BgBox, { BgBoxProps } from 'src/components/BgBox';
 import useSidebarToggle from 'src/context/hooks/useSidebarToggle';
 import { useCurrentUserWithAuthentication } from 'src/hooks/user';
 import IconButton from '../Wrapper/IconButton';
+import NewTicketSection from './sections/NewTicketSection';
 import PinnedTicketsSection from './sections/PinnedTicketsSection';
 import { SidebarListItem } from './SidebarListItem';
 
@@ -52,7 +53,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
             {sidebarListItemVariant === "horizontal" && <>
                 <Heading
                     as="h1"
-                    className="text-xl pt-6 pb-8 flex justify-between items-center">
+                    className="text-xl flex justify-between items-center">
                     <Link href="/" className='no-underline'>
                         <Tooltip
                             placement="bottom"
@@ -85,6 +86,8 @@ function Sidebar({ className, ...props }: SidebarProps) {
                     onClick={toggleSidebarIsCollapsed}>
                 </IconButton>
             </>}
+
+            <NewTicketSection />
 
             <SidebarListItem
                 title="Tickets"

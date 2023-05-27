@@ -1,4 +1,4 @@
-import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
+import { Box, ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import "draft-js/dist/Draft.css";
 import { Provider as AtomProvider } from "jotai";
 import React from "react";
@@ -41,7 +41,7 @@ root.render(
         <QueryClientProvider client={queryClient}>
           <Navbar />
           <Sidebar />
-          <Container id="container" maxW={"container.lg"} className="p-6">
+          <Box id="container" className="p-4">
             <Router>
               <Routes>
                 {/* authenticated or authorized */}
@@ -69,7 +69,7 @@ root.render(
                 </Route>
               </Routes>
             </Router>
-          </Container>
+          </Box>
         </QueryClientProvider>
       </ChakraProvider>
     </AtomProvider>
