@@ -1,5 +1,3 @@
-import { List as ChakraList } from "@chakra-ui/react";
-import autoAnimate from "@formkit/auto-animate";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import filterItemsAtom from "src/components/List/context/atoms/filterItemsAtom";
@@ -14,12 +12,10 @@ import { useCurrentUserSettings } from "src/hooks/user";
 import { useUrlParams } from "src/hooks/useUrlParams";
 import { deleteUrlParam, setUrlParam } from "src/utils/url";
 import { TDrawer, TSearchItem } from ".";
-import LoadingRipple from "../Loading/LoadingRipple";
 import { ITEMS_PER_PAGE_STEPS } from "../Pager/PagerSection";
-import FilterDrawer from "./Filter/FilterDrawer";
-import FilterItems, { TFilterItem } from "./Filter/FilterItems";
+import { TFilterItem } from "./Filter/FilterItems";
+import ListBody from "./ListBody";
 import ListHeader from "./ListHeader";
-import { InfiniteLoaderResultItems, PagerResultItems } from "./Result";
 import { InfiniteLoaderResult } from "./Result/InfiniteLoaderResultItems";
 import { ListResultVariant } from "./Result/ListResultItems";
 import { PagerResult } from "./Result/PagerResultItems";
@@ -198,70 +194,44 @@ function List(props: ListProps) {
         setQueryParams(newQueryParams);
     }
 
-    const infiniteLoaderResultVariantName = variant.name === "infiniteLoading"
-        ? variant.variant.name
-        : "intersection-observer";
+    const useFilter = props.filter.length > 0;
 
     return (
-        <>
-            {header && <>
-                <ListHeader
-                    title={header.title}
-                    count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
-                    showCount={header?.showCount}
-                    useSearch={!!searchItem}
-                    useSort={props.sort.length > 0}
-                    useFilter={props.filter.length > 0}
-                    onAdd={props.onAdd}
-                />
-            </>}
+        <div className="grid grid-cols-12">
+            <ListHeader
+                count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
+                title={header?.title}
+                showCount={header?.showCount}
+                useSearch={!!searchItem}
+                useSort={props.sort.length > 0}
+                useFilter={useFilter}
+                onAdd={props.onAdd}
+            />
+            <ListBody
+                useFilter={useFilter}
+                variant={variant}
+                filterProps={{
+                    onFilterApply: () => handleDrawerApply("filter"),
+                    onFilterReset: () => handleDrawerReset("filter")
+                }}
+                listProps={{
+                    page: parseInt(page),
+                    setPage,
+                    itemsPerPage,
+                    setItemsPerPage,
+                    listItemRender,
+                    paginationQuery,
+                    infiniteLoadingQuery,
+                    loadingDisplay: props.loadingDisplay
+                }}
+            />
             <SortDrawer
                 onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
                 inputs={<SortItems />}
                 onApply={() => handleDrawerApply("orderBy")}
                 onReset={() => handleDrawerReset("orderBy")}
             />
-            <FilterDrawer
-                onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                inputs={<FilterItems />}
-                onApply={() => handleDrawerApply("filter")}
-                onReset={() => handleDrawerReset("filter")}
-            />
-            <ChakraList
-                className="flex flex-col gap-4"
-                ref={(listRef) => listRef && autoAnimate(listRef)}>
-                {variant.name === "pagination" && <>
-                    <PagerResultItems
-                        itemsPerPage={itemsPerPage}
-                        setItemsPerPage={setItemsPerPage}
-                        page={parseInt(page)}
-                        setPage={setPage}
-                        query={paginationQuery}
-                        loadingDisplay={props.loadingDisplay ||
-                            <div className="flex justify-center items-center">
-                                <LoadingRipple />
-                            </div>
-                        }>
-                        {listItem => listItemRender(listItem)}
-                    </PagerResultItems>
-                </>}
-                {variant.name === "infiniteLoading" && <>
-                    <InfiniteLoaderResultItems
-                        variant={infiniteLoaderResultVariantName}
-                        loadMoreButtonProps={{
-                            className: "mx-auto flex"
-                        }}
-                        query={infiniteLoadingQuery}
-                        loadingDisplay={props.loadingDisplay ||
-                            <div className="flex justify-center items-center">
-                                <LoadingRipple />
-                            </div>
-                        }>
-                        {listItem => listItemRender(listItem)}
-                    </InfiniteLoaderResultItems>
-                </>}
-            </ChakraList>
-        </>
+        </div>
     );
 }
 

@@ -3,7 +3,7 @@ import Header from "./ListHeader";
 import List from "./List";
 import ListItem from "./ListItem";
 import ListItemHeading from "./ListItemHeading";
-import TableList from "./TableList"
+import TableList from "./Table/TableList";
 
 export type TSearchItem = Omit<TFilterItem, "operation"> & {
     operation: Partial<TFilterOperation>

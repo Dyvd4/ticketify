@@ -1,10 +1,11 @@
 import { Heading, IconButton, Input, Tooltip } from '@chakra-ui/react';
-import { faAdd, faFilter, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
 import { useAtom } from 'jotai';
 import { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import searchItemAtom from 'src/components/List/context/atoms/searchItemAtom';
-import { filterDrawerAtom, sortDrawerAtom } from 'src/context/atoms';
+import { sortDrawerAtom } from 'src/context/atoms';
 
 type _TableListHeaderProps = {
     title?: string
@@ -34,88 +35,83 @@ function TableListHeader(props: TableListHeaderProps) {
     } = props;
 
     const [, setSortDrawer] = useAtom(sortDrawerAtom);
-    const [, setFilterDrawer] = useAtom(filterDrawerAtom);
     const [searchItem, setSearchItem] = useAtom(searchItemAtom);
 
     return (
-        <div
-            className={`${className} flex justify-between my-4`}
-            {...restProps}>
-            <Heading>
-                <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl whitespace-nowrap">
-                    {showCount && <>
-                        <div>
-                            ({count})
+        <>
+            <div className={classNames({
+                "col-span-9 2xl:col-span-10": useFilter,
+                "col-span-12": !useFilter,
+            })}>
+                <div
+                    className={`${className} flex justify-between my-4`}
+                    {...restProps}>
+                    <Heading>
+                        <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl whitespace-nowrap">
+                            {showCount && <>
+                                <div>
+                                    ({count})
+                                </div>
+                            </>}
+                            {title && <>
+                                <div>
+                                    {title}
+                                </div>
+                            </>}
+                            {!!useSearch && <>
+                                <Input
+                                    className='rounded-md'
+                                    size={"sm"}
+                                    placeholder={searchItem!.label}
+                                    onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
+                                    value={searchItem!.value}
+                                    type={"search"}
+                                />
+                            </>}
                         </div>
-                    </>}
-                    {title && <>
-                        <div>
-                            {title}
-                        </div>
-                    </>}
-                    {!!useSearch && <>
-                        <Input
-                            className='rounded-md'
-                            size={"sm"}
-                            placeholder={searchItem!.label}
-                            onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
-                            value={searchItem!.value}
-                            type={"search"}
-                        />
-                    </>}
+                    </Heading>
+                    <div className='flex items-center gap-4'>
+                        {!!useSort && <>
+                            <Tooltip
+                                label="sort"
+                                placement="top"
+                                aria-label="sort">
+                                <span className="flex justify-center items-center">
+                                    <IconButton
+                                        data-testid="ListHeader-sort-button"
+                                        size={"sm"}
+                                        onClick={() => setSortDrawer(true)}
+                                        aria-label="sort"
+                                        icon={<FontAwesomeIcon icon={faSort} />}
+                                    />
+                                </span>
+                            </Tooltip>
+                        </>}
+                        {!!onAdd && <>
+                            <Tooltip
+                                label="add"
+                                placement="top"
+                                aria-label="add">
+                                <span className="flex justify-center items-center">
+                                    <IconButton
+                                        colorScheme={"cyan"}
+                                        size={"sm"}
+                                        onClick={onAdd}
+                                        aria-label="add"
+                                        icon={<FontAwesomeIcon icon={faAdd} />}
+                                    />
+                                </span>
+                            </Tooltip>
+                        </>}
+                    </div>
                 </div>
-            </Heading>
-            <div className='flex items-center gap-4'>
-                {!!useSort && <>
-                    <Tooltip
-                        label="sort"
-                        placement="top"
-                        aria-label="sort">
-                        <span className="flex justify-center items-center">
-                            <IconButton
-                                data-testid="ListHeader-sort-button"
-                                size={"sm"}
-                                onClick={() => setSortDrawer(true)}
-                                aria-label="sort"
-                                icon={<FontAwesomeIcon icon={faSort} />}
-                            />
-                        </span>
-                    </Tooltip>
-                </>}
-                {!!useFilter && <>
-                    <Tooltip
-                        label="filter"
-                        placement="top"
-                        aria-label="filter">
-                        <span className="flex justify-center items-center">
-                            <IconButton
-                                data-testid="ListHeader-filter-button"
-                                size={"sm"}
-                                onClick={() => setFilterDrawer(true)}
-                                aria-label="filter"
-                                icon={<FontAwesomeIcon icon={faFilter} />}
-                            />
-                        </span>
-                    </Tooltip>
-                </>}
-                {!!onAdd && <>
-                    <Tooltip
-                        label="add"
-                        placement="top"
-                        aria-label="add">
-                        <span className="flex justify-center items-center">
-                            <IconButton
-                                colorScheme={"cyan"}
-                                size={"sm"}
-                                onClick={onAdd}
-                                aria-label="add"
-                                icon={<FontAwesomeIcon icon={faAdd} />}
-                            />
-                        </span>
-                    </Tooltip>
-                </>}
             </div>
-        </div>
+            {useFilter && <>
+                <Heading className="col-span-3 2xl:col-span-2 ml-6 py-2 text-xl self-center">
+                    Filter
+                </Heading>
+            </>}
+        </>
     );
 }
 

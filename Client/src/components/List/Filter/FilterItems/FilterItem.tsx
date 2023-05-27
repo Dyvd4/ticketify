@@ -18,18 +18,8 @@ export type FilterItemProps = {
 function FilterItem({ onChange, ...item }: FilterItemProps) {
     return (
         <FormControl>
-            <FormLabel>{item.label || item.property}</FormLabel>
-            <div className="flex items-center gap-2">
-                <FilterInput
-                    onChange={(value) => onChange(item.property, {
-                        ...item,
-                        value
-                    })}
-                    name={item.property}
-                    value={item.value}
-                    type={item.type}
-                    disabled={item.disabled}
-                />
+            <FormLabel className="flex gap-2 items-center font-normal whitespace-nowrap">
+                {item.label || item.property}
                 <FilterOperations
                     onChange={(value) => onChange(item.property, {
                         ...item,
@@ -42,9 +32,21 @@ function FilterItem({ onChange, ...item }: FilterItemProps) {
                     type={item.type}
                     disabled={item.disabled}
                 />
+            </FormLabel>
+            <div className="flex items-center gap-2">
+                <FilterInput
+                    onChange={(value) => onChange(item.property, {
+                        ...item,
+                        value
+                    })}
+                    name={item.property}
+                    value={item.value}
+                    type={item.type}
+                    disabled={item.disabled}
+                />
                 <Tooltip label={item.disabled ? "enable" : "disable"} placement="top">
                     <IconButton
-                        size="xs"
+                        size={"sm"}
                         aria-label="disable"
                         icon={<FontAwesomeIcon icon={item.disabled ? faCircleCheck : faBan} />}
                         onClick={() => onChange(item.property, { ...item, disabled: !item.disabled })}

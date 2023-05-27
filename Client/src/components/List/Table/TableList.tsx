@@ -1,7 +1,5 @@
-import { Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
-import autoAnimate from '@formkit/auto-animate';
 import { useAtom } from 'jotai';
-import { ComponentPropsWithRef, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { ComponentPropsWithRef, PropsWithChildren, useEffect, useState } from 'react';
 import filterItemsAtom from 'src/components/List/context/atoms/filterItemsAtom';
 import searchItemAtom from 'src/components/List/context/atoms/searchItemAtom';
 import sortItemsAtom from 'src/components/List/context/atoms/sortItemsAtom';
@@ -13,21 +11,18 @@ import useDebounce from 'src/hooks/useDebounce';
 import { useCurrentUserSettings } from 'src/hooks/user';
 import { useUrlParams } from 'src/hooks/useUrlParams';
 import { deleteUrlParam, setUrlParam } from 'src/utils/url';
-import { TSearchItem } from '.';
-import ErrorAlert from '../ErrorAlert';
-import PagerSection, { ITEMS_PER_PAGE_STEPS } from '../Pager/PagerSection';
-import FilterDrawer from './Filter/FilterDrawer';
-import FilterItems, { TFilterItem } from './Filter/FilterItems';
-import ListHeader from './ListHeader';
-import usePagingInfo from './Result/hooks/usePagingInfo';
-import ListResultItems from './Result/ListResultItems';
-import { PagerResult } from './Result/PagerResultItems';
-import SortColumns from './Sort/SortColumns';
-import { TSortItem } from './Sort/SortItems';
-import { initOrderByDirectionActiveMap } from './Sort/utils/sortColumns';
-import TableListItemSkeleton from './TableListItemSkeleton';
+import { TSearchItem } from '..';
+import { ITEMS_PER_PAGE_STEPS } from '../../Pager/PagerSection';
+import { TFilterItem } from '../Filter/FilterItems';
+import ListHeader from '../ListHeader';
+import usePagingInfo from '../Result/hooks/usePagingInfo';
+import { PagerResult } from '../Result/PagerResultItems';
+import { TSortItem } from '../Sort/SortItems';
+import { initOrderByDirectionActiveMap } from '../Sort/utils/sortColumns';
+import ListBody from './TableListBody';
+import ListFooter from './TableListFooter';
 
-type _TestListProps = {
+export type _ListProps = {
     fetch: {
         /** used for react-query */
         queryKey: string
@@ -37,7 +32,7 @@ type _TestListProps = {
     listItemRender(listItem): React.ReactElement
     loadingDisplay?: JSX.Element
     header?: {
-        title: string
+        title?: string
         showCount?: boolean
     }
     /**
@@ -51,10 +46,10 @@ type _TestListProps = {
     onAdd?(...args: any[]): void
 }
 
-export type TestListProps = PropsWithChildren<_TestListProps> &
-    Omit<ComponentPropsWithRef<'div'>, keyof _TestListProps>
+export type ListProps = PropsWithChildren<_ListProps> &
+    Omit<ComponentPropsWithRef<'div'>, keyof _ListProps>
 
-function TestList({ className, ...props }: TestListProps) {
+function List({ className, ...props }: ListProps) {
 
     const {
         listItemRender,
@@ -62,12 +57,10 @@ function TestList({ className, ...props }: TestListProps) {
         header
     } = props;
 
-    const drawerRef = useRef<HTMLDivElement | null>(null);
-
     const [queryParams, setQueryParams] = useState<any>({});
     const [page, setPage] = useUrlParams("page", 1);
     const [filterItems, setFilterItems] = useAtom(filterItemsAtom);
-    const [sortItems, setSortItems] = useAtom(sortItemsAtom);
+    const [sortItems] = useAtom(sortItemsAtom);
     const [searchItem] = useAtom(searchItemAtom);
     const { value: debouncedSearchItem } = useDebounce(searchItem)
     const { currentUserSettings } = useCurrentUserSettings();
@@ -135,7 +128,7 @@ function TestList({ className, ...props }: TestListProps) {
         }
     }, [pagingInfo?.pagesCountShrunk]);
 
-    const handleFilterDrawerApply = () => {
+    const handleFilterApply = () => {
         if (currentUserSettings.allowFilterItemsByUrl) {
             setUrlParam(`filter-${props.id}`, filterItems);
         }
@@ -150,7 +143,7 @@ function TestList({ className, ...props }: TestListProps) {
         });
     }
 
-    const handleFilterDrawerReset = () => {
+    const handleFilterReset = () => {
         const newFilterItems = [...filterItems];
         newFilterItems.forEach(filterItem => {
             filterItem.value = undefined;
@@ -165,72 +158,45 @@ function TestList({ className, ...props }: TestListProps) {
         setQueryParams(newQueryParams);
     }
 
+    const useFilter = props.filter.length > 0;
+
     return (
         <>
-            {header && <>
+            <div className="grid grid-cols-12">
                 <ListHeader
                     count={paginationQueryCount}
-                    title={header.title}
-                    showCount={header.showCount}
+                    title={header?.title}
+                    showCount={header?.showCount}
                     useSearch={!!searchItem}
                     useSort={false}
-                    useFilter={props.filter.length > 0}
+                    useFilter={useFilter}
                     onAdd={props.onAdd}
                 />
-            </>}
-            <FilterDrawer
-                onDrawerBodyRefChange={(drawerBody) => drawerRef.current = drawerBody}
-                inputs={<FilterItems />}
-                onApply={handleFilterDrawerApply}
-                onReset={handleFilterDrawerReset}
-            />
-            <TableContainer className='border rounded-md'>
-                <Table variant='simple' >
-                    <Thead>
-                        <Tr>
-                            <SortColumns columns={props.columns} />
-                        </Tr>
-                    </Thead>
-                    <Tbody ref={(listRef) => listRef && autoAnimate(listRef)}>
-                        {paginationQuery.isLoading && <>
-                            {new Array(8).fill(null).map((e, i) => (
-                                <TableListItemSkeleton key={i} columnCount={props.columns.length} />
-                            ))}
-                        </>}
-                        {paginationQuery.isError && <>
-                            <ErrorAlert />
-                        </>}
-                        {!paginationQuery.isLoading && !paginationQuery.isError && <>
-                            <ListResultItems
-                                as={"tr"}
-                                variant={"pagination"}
-                                emptyDisplay={<>
-                                    <Tr>
-                                        <Td colSpan={props.columns.length}>
-                                            This list seems to be empty 😴
-                                        </Td>
-                                    </Tr>
-                                </>}
-                                data={paginationQuery.data}>
-                                {item => listItemRender(item)}
-                            </ListResultItems>
-                        </>}
-                    </Tbody>
-                </Table>
-            </TableContainer>
-            {!!pagingInfo && <>
-                <PagerSection
-                    itemsPerPage={itemsPerPage}
-                    setItemsPerPage={setItemsPerPage}
-                    pagerProps={{
-                        onChange: setPage,
-                        pagesCount: pagingInfo.pagesCount,
-                        currentPage: parseInt(page)
+                <ListBody
+                    useFilter={useFilter}
+                    listProps={{
+                        query: paginationQuery,
+                        listItemRender: listItemRender,
+                        columns: props.columns
+                    }}
+                    filterProps={{
+                        onFilterApply: handleFilterApply,
+                        onFilterReset: handleFilterReset
                     }}
                 />
-            </>}
+                <ListFooter
+                    useFilter={useFilter}
+                    pagerSectionProps={{
+                        pagingInfo: pagingInfo,
+                        itemsPerPage: itemsPerPage,
+                        setItemsPerPage: setItemsPerPage,
+                        page: parseInt(page),
+                        setPage: setPage,
+                    }}
+                />
+            </div>
         </>
     );
 }
 
-export default TestList;
+export default List;

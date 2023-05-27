@@ -39,6 +39,8 @@ function FilterInput({ type, name, value, disabled, ...props }: FilterInputProps
         case "number":
             return (
                 <Input
+                    className="rounded-md"
+                    size={"sm"}
                     onChange={handleChange}
                     type="number"
                     name={name}
@@ -49,6 +51,8 @@ function FilterInput({ type, name, value, disabled, ...props }: FilterInputProps
         case "date":
             return (
                 <Input
+                    className="rounded-md"
+                    size={"sm"}
                     onChange={handleChange}
                     type="datetime-local"
                     name={name}
@@ -68,6 +72,8 @@ function FilterInput({ type, name, value, disabled, ...props }: FilterInputProps
         default:
             return (
                 <Input
+                    className="rounded-md"
+                    size={"sm"}
                     onChange={handleChange}
                     type="text"
                     name={name}

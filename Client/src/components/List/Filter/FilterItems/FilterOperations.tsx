@@ -12,6 +12,9 @@ type FilterOperationsProps = {
 function FilterOperations(props: FilterOperationsProps) {
     return (
         <Select
+            icon={<></>}
+            variant={"unstyled"}
+            className="font-bold cursor-pointer text-right"
             onChange={e => props.onChange(e.target.value)}
             disabled={props.disabled}>
             {typeOperations[props.type].map((operation, index) => (
