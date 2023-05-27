@@ -47,7 +47,7 @@ function TableListHeader(props: TableListHeaderProps) {
                     className={`${className} flex justify-between my-4`}
                     {...restProps}>
                     <Heading>
-                        <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-2 text-2xl whitespace-nowrap">
                             {showCount && <>
                                 <div>
                                     ({count})
