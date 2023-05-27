@@ -195,18 +195,23 @@ function List(props: ListProps) {
     }
 
     const useFilter = props.filter.length > 0;
+    const useSort = props.sort.length > 0
+    const useSearch = !!searchItem
+    const headerIsVisible = header?.title || header?.showCount || useSearch || useSort || useFilter || props.onAdd;
 
     return (
         <div className="grid grid-cols-12">
-            <ListHeader
-                count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
-                title={header?.title}
-                showCount={header?.showCount}
-                useSearch={!!searchItem}
-                useSort={props.sort.length > 0}
-                useFilter={useFilter}
-                onAdd={props.onAdd}
-            />
+            {headerIsVisible && <>
+                <ListHeader
+                    count={variant.name === "infiniteLoading" ? infiniteLoadingQueryCount : paginationQueryCount}
+                    title={header?.title}
+                    showCount={header?.showCount}
+                    useSearch={useSearch}
+                    useSort={useSort}
+                    useFilter={useFilter}
+                    onAdd={props.onAdd}
+                />
+            </>}
             <ListBody
                 useFilter={useFilter}
                 variant={variant}

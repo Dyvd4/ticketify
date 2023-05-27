@@ -159,19 +159,24 @@ function List({ className, ...props }: ListProps) {
     }
 
     const useFilter = props.filter.length > 0;
+    const useSort = props.columns.length > 0
+    const useSearch = !!searchItem
+    const headerIsVisible = header?.title || header?.showCount || useSearch || useFilter || props.onAdd;
 
     return (
         <>
             <div className="grid grid-cols-12">
-                <ListHeader
-                    count={paginationQueryCount}
-                    title={header?.title}
-                    showCount={header?.showCount}
-                    useSearch={!!searchItem}
-                    useSort={false}
-                    useFilter={useFilter}
-                    onAdd={props.onAdd}
-                />
+                {headerIsVisible && <>
+                    <ListHeader
+                        count={paginationQueryCount}
+                        title={header?.title}
+                        showCount={header?.showCount}
+                        useSearch={!!searchItem}
+                        useSort={useSort}
+                        useFilter={useFilter}
+                        onAdd={props.onAdd}
+                    />
+                </>}
                 <ListBody
                     useFilter={useFilter}
                     listProps={{
