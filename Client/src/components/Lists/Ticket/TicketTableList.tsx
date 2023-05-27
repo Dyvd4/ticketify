@@ -22,7 +22,6 @@ function TicketTableList({ className, ...props }: TicketTableListProps) {
                     queryKey: "ticket"
                 }}
                 header={{
-                    title: "pending tickets",
                     showCount: true
                 }}
                 columns={[

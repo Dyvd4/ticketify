@@ -22,7 +22,6 @@ function LogList(props: LogListProps) {
                 listItemRender={(item) => <LogListItem item={item} key={item.id} />}
                 loadingDisplay={<>{new Array(3).fill(undefined).map((num, i) => <LogListItemSkeleton key={i} />)}</>}
                 header={{
-                    title: "Logs",
                     showCount: true
                 }}
                 sort={[

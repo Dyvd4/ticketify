@@ -7,7 +7,7 @@ import searchItemAtom from 'src/components/List/context/atoms/searchItemAtom';
 import { filterDrawerAtom, sortDrawerAtom } from 'src/context/atoms';
 
 type _TableListHeaderProps = {
-    title: string
+    title?: string
     count: number
     showCount?: boolean
     useSort: boolean
@@ -42,28 +42,30 @@ function TableListHeader(props: TableListHeaderProps) {
             className={`${className} flex justify-between my-4`}
             {...restProps}>
             <Heading>
-                <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl">
-                    <span>
-                        {title}
-                    </span>
+                <div className="flex items-center justify-center gap-2 text-2xl sm:text-3xl whitespace-nowrap">
                     {showCount && <>
-                        <span>
+                        <div>
                             ({count})
-                        </span>
+                        </div>
+                    </>}
+                    {title && <>
+                        <div>
+                            {title}
+                        </div>
+                    </>}
+                    {!!useSearch && <>
+                        <Input
+                            className='rounded-md'
+                            size={"sm"}
+                            placeholder={searchItem!.label}
+                            onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
+                            value={searchItem!.value}
+                            type={"search"}
+                        />
                     </>}
                 </div>
             </Heading>
             <div className='flex items-center gap-4'>
-                {!!useSearch && <>
-                    <Input
-                        className='rounded-md'
-                        size={"sm"}
-                        placeholder={searchItem!.label}
-                        onChange={(e) => setSearchItem({ ...searchItem!, value: e.target.value })}
-                        value={searchItem!.value}
-                        type={"search"}
-                    />
-                </>}
                 {!!useSort && <>
                     <Tooltip
                         label="sort"

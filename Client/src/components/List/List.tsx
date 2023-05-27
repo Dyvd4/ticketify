@@ -36,7 +36,7 @@ type ListProps = {
     listItemRender(listItem): React.ReactElement
     loadingDisplay?: JSX.Element
     header?: {
-        title: string
+        title?: string
         showCount?: boolean
     }
     /**

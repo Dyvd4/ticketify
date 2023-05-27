@@ -19,9 +19,7 @@ function Index(props: IndexProps) {
   ])
 
   return (
-    <Container>
-      <LogList />
-    </Container>
+    <LogList />
   )
 }
 
