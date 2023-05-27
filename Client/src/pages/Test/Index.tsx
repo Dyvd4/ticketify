@@ -7,6 +7,7 @@ import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/Table/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
+import { cn } from "src/utils/component";
 import { twJoin, twMerge } from "tailwind-merge";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import ListItemContent from "./ListItemContent";
@@ -30,9 +31,6 @@ function Index(props: IndexProps) {
             queryParams: objWithNested,
         });
     };
-
-    const className = twMerge("bg-red-500 text-center", "bg-red-400");
-    console.log(className);
 
     return (
         <>

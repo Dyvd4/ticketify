@@ -15,6 +15,6 @@ export function mapColorProps(colors: Array<Tailwind.Color | undefined>) {
     return className;
 }
 
-export function cn() {
-    //return classNames() twMerge()
+export function cn(...args: classNames.ArgumentArray) {
+    return twMerge(classNames(...args));
 }
