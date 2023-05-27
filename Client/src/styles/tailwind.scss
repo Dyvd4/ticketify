@@ -6,13 +6,13 @@
     input,
     textarea,
     .DraftEditor-editorContainer {
-        @apply bg-gray-50 focus-within:bg-gray-100 
-            dark:bg-gray-700 dark:focus-within:bg-gray-600
+        @apply rounded-md bg-gray-50 
             transition-colors duration-200
-            rounded-md;
+            focus-within:bg-gray-100 dark:bg-gray-700
+            dark:focus-within:bg-gray-600;
     }
     .DraftEditor-editorContainer {
-        @apply focus-within:ring-2 ring-blue-500 border p-2 #{!important};
+        @apply border p-2 ring-blue-500 focus-within:ring-2 #{!important};
     }
     .text-secondary {
         @apply text-gray-600

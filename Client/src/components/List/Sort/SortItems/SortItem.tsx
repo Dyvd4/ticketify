@@ -5,14 +5,14 @@ import { TSortDirection } from ".";
 import SortDirections from "./SortDirections";
 
 export type SortItemProps = {
-    property: string
-    label?: string
-    disabled?: boolean
-    direction?: TSortDirection
-    onChange(property: string, changedItem: any)
-    onSortUp?(...args)
-    onSortDown?(...args)
-}
+    property: string;
+    label?: string;
+    disabled?: boolean;
+    direction?: TSortDirection;
+    onChange(property: string, changedItem: any);
+    onSortUp?(...args);
+    onSortDown?(...args);
+};
 
 function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
     return (
@@ -23,19 +23,19 @@ function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
                 name={item.property}
                 type="text"
                 value={item.label || item.property}
-                onChange={e => onChange(item.property, { ...item, value: e.target.value })}
+                onChange={(e) => onChange(item.property, { ...item, value: e.target.value })}
             />
             <SortDirections
                 disabled={item.disabled}
-                onSelect={(value) =>{
-                    onChange(item.property, { 
-                        ...item, 
+                onSelect={(value) => {
+                    onChange(item.property, {
+                        ...item,
                         direction: {
                             ...item.direction,
-                            value
-                        }
-                     })
-                } }
+                            value,
+                        },
+                    });
+                }}
                 direction={item.direction}
             />
             <Tooltip label="move up" placement="top">
@@ -43,8 +43,7 @@ function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
                     disabled={!onSortUp || item.disabled}
                     size="xs"
                     aria-label="sort-up"
-                    icon={<FontAwesomeIcon
-                        icon={faSortUp} />}
+                    icon={<FontAwesomeIcon icon={faSortUp} />}
                     onClick={() => onSortUp && onSortUp(item.property)}
                 />
             </Tooltip>
@@ -53,8 +52,7 @@ function SortItem({ onChange, onSortUp, onSortDown, ...item }: SortItemProps) {
                     disabled={!onSortDown || item.disabled}
                     size="xs"
                     aria-label="sort-down"
-                    icon={<FontAwesomeIcon
-                        icon={faSortDown} />}
+                    icon={<FontAwesomeIcon icon={faSortDown} />}
                     onClick={() => onSortDown && onSortDown(item.property)}
                 />
             </Tooltip>

@@ -22,7 +22,7 @@ export function getSmallestMatchingIndex(arr1, arr2) {
         if (smallestIndex === -1) smallestIndex = index;
         if (index < smallestIndex) smallestIndex = index;
     }
-    return smallestIndex
+    return smallestIndex;
 }
 export function getHighestMatchingIndex(arr1, arr2) {
     let highestIndex = -1;
@@ -32,7 +32,7 @@ export function getHighestMatchingIndex(arr1, arr2) {
         if (highestIndex === -1) highestIndex = index;
         if (index > highestIndex) highestIndex = index;
     }
-    return highestIndex
+    return highestIndex;
 }
 
 export const move = (array: any[], arrayItem, direction: "up" | "down") => {
@@ -42,12 +42,12 @@ export const move = (array: any[], arrayItem, direction: "up" | "down") => {
     array[newIndex] = arrayItem;
     array[oldIndex] = itemToSwap;
     return array;
-}
+};
 
 export const moveUp = (array: any[], arrayItem, direction: "up" | "down") => {
     return move(array, arrayItem, "up");
-}
+};
 
 export const moveDown = (array: any[], arrayItem, direction: "up" | "down") => {
     return move(array, arrayItem, "down");
-}
+};

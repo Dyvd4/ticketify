@@ -2,21 +2,20 @@ import { useEffect, useState } from "react";
 
 type UseKeyPositionOptions = {
     events?: {
-        onArrowDown?(keyPosition: number): void
-        onArrowUp?(keyPosition: number): void
-        onEnter?(keyPosition: number): void
-    }
-}
+        onArrowDown?(keyPosition: number): void;
+        onArrowUp?(keyPosition: number): void;
+        onEnter?(keyPosition: number): void;
+    };
+};
 
 /** updates key position based on the `ArrowUp` and `ArrowDown` event */
 const useKeyPosition = (limit: number, options?: UseKeyPositionOptions) => {
-
     const [keyPosition, setKeyPosition] = useState(0);
 
-    const handleKeyDown = e => {
-        setKeyPosition(keyPosition => {
+    const handleKeyDown = (e) => {
+        setKeyPosition((keyPosition) => {
             if (e.key === "ArrowUp" && keyPosition > 0) {
-                const newKeyPosition = keyPosition - 1
+                const newKeyPosition = keyPosition - 1;
                 options?.events?.onArrowUp?.(newKeyPosition);
                 return newKeyPosition;
             }
@@ -30,18 +29,17 @@ const useKeyPosition = (limit: number, options?: UseKeyPositionOptions) => {
                 return keyPosition;
             }
             return keyPosition;
-        })
-    }
+        });
+    };
 
     useEffect(() => {
-        window.addEventListener("keydown", handleKeyDown)
+        window.addEventListener("keydown", handleKeyDown);
         return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
+            window.removeEventListener("keydown", handleKeyDown);
+        };
     }, []);
 
     return [keyPosition, setKeyPosition] as const;
-}
-
+};
 
 export default useKeyPosition;

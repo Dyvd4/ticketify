@@ -13,46 +13,46 @@ import Input from "./Input";
 import LikeButton, { LikeButtonVariant } from "./LikeButton";
 import RepliesButton from "./RepliesButton";
 
-export type CommentSize = "normal" | "small"
-export type Interaction = LikeButtonVariant | "heart"
+export type CommentSize = "normal" | "small";
+export type Interaction = LikeButtonVariant | "heart";
 export type AvatarType = {
-    username: string
-    url?: string
-}
+    username: string;
+    url?: string;
+};
 
 const defaultNoOfContentLines = 4;
 
 type CommentProps = {
     comment: {
-        authorId: string
-        ticketId: number
+        authorId: string;
+        ticketId: number;
         author: {
-            username: string
-            id: string
-        },
-        content: string
-        createdAt: Date
-        updatedAt: Date
-        likes: any[]
-        dislikes: any[]
-        hearts: any[]
-        liked: boolean
-        disliked: boolean
-        hearted: boolean
-        childs: any[]
-    }
-    avatar?: AvatarType
-    size?: CommentSize
-    replyInputAvatar?(comment): AvatarType | undefined
-    replyButtonAvatar?(comment): AvatarType | undefined
-    usernameTagged?(comment): boolean
-    canEdit?(comment): boolean
-    canDelete?(comment): boolean
-    onInteractionSubmit?(type: Interaction, comment): void
-    onReplySubmit?(e, comment, replyValue: string): void
-    onEditSubmit?(e, comment, editValue: string): void
-    onDeleteSubmit?(e, comment): void
-} & ComponentPropsWithRef<"div">
+            username: string;
+            id: string;
+        };
+        content: string;
+        createdAt: Date;
+        updatedAt: Date;
+        likes: any[];
+        dislikes: any[];
+        hearts: any[];
+        liked: boolean;
+        disliked: boolean;
+        hearted: boolean;
+        childs: any[];
+    };
+    avatar?: AvatarType;
+    size?: CommentSize;
+    replyInputAvatar?(comment): AvatarType | undefined;
+    replyButtonAvatar?(comment): AvatarType | undefined;
+    usernameTagged?(comment): boolean;
+    canEdit?(comment): boolean;
+    canDelete?(comment): boolean;
+    onInteractionSubmit?(type: Interaction, comment): void;
+    onReplySubmit?(e, comment, replyValue: string): void;
+    onEditSubmit?(e, comment, editValue: string): void;
+    onDeleteSubmit?(e, comment): void;
+} & ComponentPropsWithRef<"div">;
 
 function Comment(props: CommentProps) {
     // props
@@ -73,15 +73,7 @@ function Comment(props: CommentProps) {
         ...restProps
     } = props;
 
-    const {
-        author,
-        content,
-        createdAt,
-        updatedAt,
-        likes,
-        dislikes,
-        hearts,
-    } = comment;
+    const { author, content, createdAt, updatedAt, likes, dislikes, hearts } = comment;
 
     // state
     // -----
@@ -89,11 +81,15 @@ function Comment(props: CommentProps) {
         reply: false,
         hover: false,
         edit: false,
-        childs: false
+        childs: false,
     });
 
     const [noOfContentLines, setNoOfContentLines] = useState(defaultNoOfContentLines);
-    const { isOpen: deleteDialogOpen, onOpen: onDeleteDialogOpen, onClose: onDeleteDialogClose } = useDisclosure();
+    const {
+        isOpen: deleteDialogOpen,
+        onOpen: onDeleteDialogOpen,
+        onClose: onDeleteDialogClose,
+    } = useDisclosure();
     const contentRef = useRef<HTMLDivElement | null>(null);
     const [replyValue, setReplyValue] = useState("");
     const [editValue, setEditValue] = useState(comment.content);
@@ -105,191 +101,201 @@ function Comment(props: CommentProps) {
     const handleInteractionOnSubmit = (type: Interaction) => {
         setActiveState({
             ...activeState,
-            [type]: !activeState[type]
+            [type]: !activeState[type],
         });
         if (props.onInteractionSubmit) props.onInteractionSubmit(type, comment);
-    }
+    };
 
     const handleReplyOnCancel = () => {
         setActiveState({ ...activeState, reply: false });
         setReplyValue("");
-    }
+    };
 
     const handleReplyOnSubmit = (e) => {
         setActiveState({ ...activeState, reply: false });
         setReplyValue("");
         if (props.onReplySubmit) props.onReplySubmit(e, comment, replyValue);
-    }
+    };
 
     const handleEditOnCancel = () => {
         setActiveState({ ...activeState, edit: false });
         setEditValue(comment.content);
-    }
+    };
 
     const handleEditOnSubmit = (e) => {
         setActiveState({ ...activeState, edit: false });
         if (props.onEditSubmit) props.onEditSubmit(e, comment, editValue);
-    }
+    };
 
     const handleDeleteOnSubmit = (e) => {
         if (props.onDeleteSubmit) props.onDeleteSubmit(e, comment);
         onDeleteDialogClose();
-    }
+    };
 
-    const canEdit = canEditEvaluator && canEditEvaluator(comment)
+    const canEdit = canEditEvaluator && canEditEvaluator(comment);
     const canDelete = canDeleteEvaluator && canDeleteEvaluator(comment);
     const usernameTagged = usernameTaggedEvaluator && usernameTaggedEvaluator(comment);
 
     return (
-        <Flex
-            data-testid="Comment"
-            className="comment"
-            gap={3}
-            {...restProps}>
-            {avatar && <>
-                <Link href={`/User/${author.id}`}>
-                    <Avatar
-                        size={size === "small" ? "sm" : "md"}
-                        name={author.username}
-                        src={avatar.url}
-                    />
-                </Link>
-            </>}
+        <Flex data-testid="Comment" className="comment" gap={3} {...restProps}>
+            {avatar && (
+                <>
+                    <Link href={`/User/${author.id}`}>
+                        <Avatar
+                            size={size === "small" ? "sm" : "md"}
+                            name={author.username}
+                            src={avatar.url}
+                        />
+                    </Link>
+                </>
+            )}
             <Flex flexDirection={"column"} className="w-full">
                 <Flex
                     position={"relative"}
                     flexDirection={"column"}
                     onMouseOver={() => setActiveState({ ...activeState, hover: true })}
-                    onMouseOut={() => setActiveState({ ...activeState, hover: false })}>
-                    <Flex
-                        justifyContent={"space-between"}
-                        alignItems={"center"}>
+                    onMouseOut={() => setActiveState({ ...activeState, hover: false })}
+                >
+                    <Flex justifyContent={"space-between"} alignItems={"center"}>
                         <Flex gap={2} alignItems={"center"}>
-                            {usernameTagged && <>
-                                <Tag className="rounded-full">
-                                    <div className="text-base font-bold">
-                                        {author.username}
-                                    </div>
-                                </Tag>
-                            </>}
-                            {!usernameTagged && <>
-                                <div className="text-base font-bold">
-                                    {author.username}
-                                </div>
-                            </>}
-                            <div className="text-sm cursor-pointer text-secondary flex items-center gap-1">
-                                <span>
-                                    {getDurationAgo(new Date(createdAt))}
-                                </span>
-                                {isAfter(new Date(updatedAt), new Date(createdAt)) && <>
-                                    <span>
-                                        (edited)
-                                    </span>
-                                </>}
+                            {usernameTagged && (
+                                <>
+                                    <Tag className="rounded-full">
+                                        <div className="text-base font-bold">{author.username}</div>
+                                    </Tag>
+                                </>
+                            )}
+                            {!usernameTagged && (
+                                <>
+                                    <div className="text-base font-bold">{author.username}</div>
+                                </>
+                            )}
+                            <div className="text-secondary flex cursor-pointer items-center gap-1 text-sm">
+                                <span>{getDurationAgo(new Date(createdAt))}</span>
+                                {isAfter(new Date(updatedAt), new Date(createdAt)) && (
+                                    <>
+                                        <span>(edited)</span>
+                                    </>
+                                )}
                             </div>
                         </Flex>
                     </Flex>
-                    {!activeState.edit && <>
-                        <Box
-                            ref={contentRef}
-                            noOfLines={noOfContentLines}
-                            className={`text-sm ${usernameTagged ? "pl-1 pt-1" : ""}`}>
-                            {content}
-                        </Box>
-                        <ShowMoreLabel
-                            contentRef={contentRef}
-                            contentNoOfLines={noOfContentLines}
-                            setContentNoOfLines={setNoOfContentLines}
-                            defaultContentNoOfLines={defaultNoOfContentLines}
-                        />
-                        <Flex
-                            alignItems={"center"}
-                            mt={2}
-                            gap={3}>
-                            <Flex alignItems={"center"} gap={2}>
-                                <LikeButton
-                                    active={comment.liked}
-                                    onClick={() => handleInteractionOnSubmit("like")}
-                                    variant="like"
-                                />
-                                {likes.length}
-                            </Flex>
-                            <Flex alignItems={"center"} gap={2}>
-                                <LikeButton
-                                    active={comment.disliked}
-                                    onClick={() => handleInteractionOnSubmit("dislike")}
-                                    variant="dislike"
-                                />
-                                {dislikes.length}
-                            </Flex>
-                            <Flex alignItems={"center"} gap={2}>
-                                <HeartButton
-                                    active={comment.hearted}
-                                    onClick={() => handleInteractionOnSubmit("heart")}
-                                />
-                                {hearts.length}
-                            </Flex>
+                    {!activeState.edit && (
+                        <>
                             <Box
-                                data-testid="CommentReplyButton"
-                                onClick={() => setActiveState({ ...activeState, reply: true })}
-                                className="uppercase ml-2 select-none text-sm
-                                    cursor-pointer text-secondary">
-                                reply
+                                ref={contentRef}
+                                noOfLines={noOfContentLines}
+                                className={`text-sm ${usernameTagged ? "pl-1 pt-1" : ""}`}
+                            >
+                                {content}
                             </Box>
-                        </Flex>
-                    </>}
+                            <ShowMoreLabel
+                                contentRef={contentRef}
+                                contentNoOfLines={noOfContentLines}
+                                setContentNoOfLines={setNoOfContentLines}
+                                defaultContentNoOfLines={defaultNoOfContentLines}
+                            />
+                            <Flex alignItems={"center"} mt={2} gap={3}>
+                                <Flex alignItems={"center"} gap={2}>
+                                    <LikeButton
+                                        active={comment.liked}
+                                        onClick={() => handleInteractionOnSubmit("like")}
+                                        variant="like"
+                                    />
+                                    {likes.length}
+                                </Flex>
+                                <Flex alignItems={"center"} gap={2}>
+                                    <LikeButton
+                                        active={comment.disliked}
+                                        onClick={() => handleInteractionOnSubmit("dislike")}
+                                        variant="dislike"
+                                    />
+                                    {dislikes.length}
+                                </Flex>
+                                <Flex alignItems={"center"} gap={2}>
+                                    <HeartButton
+                                        active={comment.hearted}
+                                        onClick={() => handleInteractionOnSubmit("heart")}
+                                    />
+                                    {hearts.length}
+                                </Flex>
+                                <Box
+                                    data-testid="CommentReplyButton"
+                                    onClick={() => setActiveState({ ...activeState, reply: true })}
+                                    className="text-secondary ml-2 cursor-pointer select-none
+                                    text-sm uppercase"
+                                >
+                                    reply
+                                </Box>
+                            </Flex>
+                        </>
+                    )}
                     <ActionMenu
                         active={activeState.hover}
                         onDelete={canDelete ? onDeleteDialogOpen : undefined}
-                        onEdit={canEdit ? () => setActiveState({ ...activeState, edit: true }) : undefined}
+                        onEdit={
+                            canEdit
+                                ? () => setActiveState({ ...activeState, edit: true })
+                                : undefined
+                        }
                     />
                 </Flex>
-                {activeState.reply && !activeState.edit && <>
-                    <Input
-                        avatar={props.replyInputAvatar && props.replyInputAvatar(comment)}
-                        variant="reply"
-                        className="mt-2"
-                        value={replyValue}
-                        setValue={setReplyValue}
-                        onCancel={handleReplyOnCancel}
-                        onSubmit={handleReplyOnSubmit}
-                    />
-                </>}
-                {comment.childs.length > 0 && !activeState.edit && <>
-                    <Box>
-                        <RepliesButton
-                            avatar={props.replyButtonAvatar && props.replyButtonAvatar(comment)}
-                            active={activeState.childs}
-                            setActive={active => setActiveState({ ...activeState, childs: active })}
-                            repliesCount={comment.childs.length}
+                {activeState.reply && !activeState.edit && (
+                    <>
+                        <Input
+                            avatar={props.replyInputAvatar && props.replyInputAvatar(comment)}
+                            variant="reply"
                             className="mt-2"
+                            value={replyValue}
+                            setValue={setReplyValue}
+                            onCancel={handleReplyOnCancel}
+                            onSubmit={handleReplyOnSubmit}
                         />
-                        {activeState.childs && <>
-                            <ChildComments
-                                comments={comment.childs}
-                                onInteractionSubmit={props.onInteractionSubmit}
-                                onReplySubmit={props.onReplySubmit}
-                                onEditSubmit={props.onEditSubmit}
-                                onDeleteSubmit={props.onDeleteSubmit}
-                                replyInputAvatar={props.replyInputAvatar}
-                                replyButtonAvatar={props.replyButtonAvatar}
-                                usernameTagged={props.usernameTagged}
-                                canEdit={props.canEdit}
-                                canDelete={props.canDelete}
+                    </>
+                )}
+                {comment.childs.length > 0 && !activeState.edit && (
+                    <>
+                        <Box>
+                            <RepliesButton
+                                avatar={props.replyButtonAvatar && props.replyButtonAvatar(comment)}
+                                active={activeState.childs}
+                                setActive={(active) =>
+                                    setActiveState({ ...activeState, childs: active })
+                                }
+                                repliesCount={comment.childs.length}
+                                className="mt-2"
                             />
-                        </>}
-                    </Box>
-                </>}
-                {activeState.edit && <>
-                    <Input
-                        variant="edit"
-                        className="mt-2"
-                        value={editValue}
-                        setValue={setEditValue}
-                        onCancel={handleEditOnCancel}
-                        onSubmit={handleEditOnSubmit}
-                    />
-                </>}
+                            {activeState.childs && (
+                                <>
+                                    <ChildComments
+                                        comments={comment.childs}
+                                        onInteractionSubmit={props.onInteractionSubmit}
+                                        onReplySubmit={props.onReplySubmit}
+                                        onEditSubmit={props.onEditSubmit}
+                                        onDeleteSubmit={props.onDeleteSubmit}
+                                        replyInputAvatar={props.replyInputAvatar}
+                                        replyButtonAvatar={props.replyButtonAvatar}
+                                        usernameTagged={props.usernameTagged}
+                                        canEdit={props.canEdit}
+                                        canDelete={props.canDelete}
+                                    />
+                                </>
+                            )}
+                        </Box>
+                    </>
+                )}
+                {activeState.edit && (
+                    <>
+                        <Input
+                            variant="edit"
+                            className="mt-2"
+                            value={editValue}
+                            setValue={setEditValue}
+                            onCancel={handleEditOnCancel}
+                            onSubmit={handleEditOnSubmit}
+                        />
+                    </>
+                )}
                 <DeleteDialog
                     isOpen={deleteDialogOpen}
                     onClose={onDeleteDialogClose}

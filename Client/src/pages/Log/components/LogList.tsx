@@ -2,7 +2,7 @@ import List from "src/components/List/List";
 import LogListItem from "./LogListItem";
 import LogListItemSkeleton from "./LogListItemSkeleton";
 
-type LogListProps = {}
+type LogListProps = {};
 
 function LogList(props: LogListProps) {
     return (
@@ -11,22 +11,28 @@ function LogList(props: LogListProps) {
                 variant={{
                     name: "infiniteLoading",
                     variant: {
-                        name: "intersection-observer"
-                    }
+                        name: "intersection-observer",
+                    },
                 }}
                 id="6802edfd-85e0-41d7-818a-b2e7ab0c6d54"
                 fetch={{
                     route: "logs",
-                    queryKey: "logs"
+                    queryKey: "logs",
                 }}
                 listItemRender={(item) => <LogListItem item={item} key={item.id} />}
-                loadingDisplay={<>{new Array(3).fill(undefined).map((num, i) => <LogListItemSkeleton key={i} />)}</>}
+                loadingDisplay={
+                    <>
+                        {new Array(3).fill(undefined).map((num, i) => (
+                            <LogListItemSkeleton key={i} />
+                        ))}
+                    </>
+                }
                 header={{
-                    showCount: true
+                    showCount: true,
                 }}
                 sort={[
                     {
-                        property: "createdAt"
+                        property: "createdAt",
                     },
                     {
                         property: "level",
@@ -38,25 +44,25 @@ function LogList(props: LogListProps) {
                 filter={[
                     {
                         property: "message",
-                        type: "string"
+                        type: "string",
                     },
                     {
                         property: "stack",
                         label: "error stack",
-                        type: "string"
+                        type: "string",
                     },
                     {
                         property: "level",
-                        type: "string"
-                    }
+                        type: "string",
+                    },
                 ]}
                 search={{
                     property: "message",
                     type: "string",
                     operation: {
-                        value: "contains"
+                        value: "contains",
                     },
-                    label: "search by message"
+                    label: "search by message",
                 }}
             />
             <br />

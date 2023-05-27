@@ -1,35 +1,34 @@
-import { Button, MenuButton as ChakraMenuButton, MenuButtonProps as ChakraMenuButtonProps, useBoolean, useOutsideClick } from "@chakra-ui/react";
+import {
+    Button,
+    MenuButton as ChakraMenuButton,
+    MenuButtonProps as ChakraMenuButtonProps,
+    useBoolean,
+    useOutsideClick,
+} from "@chakra-ui/react";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef } from "react";
 
-type MenuButtonProps = {
-} & ChakraMenuButtonProps
+type MenuButtonProps = {} & ChakraMenuButtonProps;
 
 function MenuButton(props: MenuButtonProps) {
-
     const [active, setActive] = useBoolean(false);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const { children } = props;
 
     useOutsideClick({
         ref: buttonRef,
-        handler: setActive.off
+        handler: setActive.off,
     });
 
     return (
-        <ChakraMenuButton
-            ref={buttonRef}
-            onClick={() => setActive.toggle()}
-            as={Button}
-            {...props}>
-            <span>
-                {children}
-            </span>&nbsp;&nbsp;
+        <ChakraMenuButton ref={buttonRef} onClick={() => setActive.toggle()} as={Button} {...props}>
+            <span>{children}</span>&nbsp;&nbsp;
             <FontAwesomeIcon
-                className={`transition-all duration-100 transform ${active ? "rotate-180" : ""}`}
+                className={`transform transition-all duration-100 ${active ? "rotate-180" : ""}`}
                 icon={faChevronUp}
-                size={"sm"} />
+                size={"sm"}
+            />
         </ChakraMenuButton>
     );
 }

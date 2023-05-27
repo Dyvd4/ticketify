@@ -6,21 +6,20 @@ const payload = {
     dueDate: null,
     priorityId: null,
     files: null,
-    description: null
-}
+    description: null,
+};
 
-type PayloadKeys = keyof typeof payload
+type PayloadKeys = keyof typeof payload;
 
 export const mutateTicket = async (ticket: any, variant: "add" | "edit") => {
-
     if (variant === "add") {
         const formData = new FormData();
-        Object.keys(ticket || {}).forEach(key => {
+        Object.keys(ticket || {}).forEach((key) => {
             if (key !== "files" && Object.keys(payload).includes(key)) {
-                formData.append(key, ticket[key])
+                formData.append(key, ticket[key]);
             }
         });
-        Array.from(ticket?.files || []).forEach(file => {
+        Array.from(ticket?.files || []).forEach((file) => {
             formData.append("files", file as File);
         });
         return addEntity({
@@ -28,10 +27,10 @@ export const mutateTicket = async (ticket: any, variant: "add" | "edit") => {
             payload: formData,
             options: {
                 headers: {
-                    "content-type": "multipart/form-data"
-                }
-            }
-        })
+                    "content-type": "multipart/form-data",
+                },
+            },
+        });
     }
     return updateEntity({
         route: "ticket",
@@ -42,7 +41,7 @@ export const mutateTicket = async (ticket: any, variant: "add" | "edit") => {
             dueDate: ticket.dueDate,
             priorityId: ticket.priorityId,
             files: ticket.files,
-            description: ticket.description
-        } satisfies Record<PayloadKeys, any>
+            description: ticket.description,
+        } satisfies Record<PayloadKeys, any>,
     });
-}
+};

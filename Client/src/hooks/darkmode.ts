@@ -7,8 +7,8 @@ export function useToggle() {
         colorMode = localStorage.getItem("chakra-ui-color-mode") as "light" | "dark";
         const isActive = document.documentElement.classList.toggle("dark", colorMode === "dark");
         return isActive;
-    }
-    return [colorMode === "dark", toggle] as const
+    };
+    return [colorMode === "dark", toggle] as const;
 }
 
 // maybe wrong usage of hook?

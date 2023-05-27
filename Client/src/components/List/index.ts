@@ -6,10 +6,10 @@ import ListItemHeading from "./ListItemHeading";
 import TableList from "./Table/TableList";
 
 export type TSearchItem = Omit<TFilterItem, "operation"> & {
-    operation: Partial<TFilterOperation>
-}
+    operation: Partial<TFilterOperation>;
+};
 
-export type TDrawer = "filter" | "orderBy"
+export type TDrawer = "filter" | "orderBy";
 
 export { Header, ListItem, ListItemHeading, TableList };
-export default List
+export default List;

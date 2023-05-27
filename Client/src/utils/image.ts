@@ -3,9 +3,10 @@ export const createDataUrl = (blob: Blob) => {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
             resolve(e.target?.result as string);
-        }
+        };
         fileReader.readAsDataURL(blob);
     });
-}
+};
 
-export const getDataUrl = (base64: string, mimeType?: string) => `data:${mimeType};base64,${base64}`;
+export const getDataUrl = (base64: string, mimeType?: string) =>
+    `data:${mimeType};base64,${base64}`;

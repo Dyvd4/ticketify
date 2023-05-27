@@ -1,4 +1,16 @@
-import { Alert, AlertIcon, Box, Divider, Flex, Heading, Menu, MenuItemOption, MenuList, MenuOptionGroup, Text } from "@chakra-ui/react";
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Divider,
+    Flex,
+    Heading,
+    Menu,
+    MenuItemOption,
+    MenuList,
+    MenuOptionGroup,
+    Text,
+} from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -15,25 +27,25 @@ import Comment from "../../../../components/Comment/Comment";
 const newestCommentSortParam = {
     label: "Newest first",
     property: "newestFirst",
-}
+};
 export const mostLikedCommentSortParam = {
     label: "Most likes",
     property: "mostLikes",
-}
+};
 const mostHeartedCommentSortParam = {
     label: "Most hearts",
     property: "mostHearts",
-}
+};
 
 const sortParamsData = [
     mostLikedCommentSortParam,
     newestCommentSortParam,
-    mostHeartedCommentSortParam
-]
+    mostHeartedCommentSortParam,
+];
 
 type CommentsSectionProps = {
-    ticket: any
-}
+    ticket: any;
+};
 
 function CommentsSection(props: CommentsSectionProps) {
     const { ticket } = props;
@@ -48,18 +60,26 @@ function CommentsSection(props: CommentsSectionProps) {
     const {
         isLoading,
         isError,
-        data: comments = []
-    } = useQuery(["comments", sortParam, ticket.id], () => {
-        return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${sortParam.property}` });
-    }, {
-        refetchOnWindowFocus: false
-    });
+        data: comments = [],
+    } = useQuery(
+        ["comments", sortParam, ticket.id],
+        () => {
+            return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${sortParam.property}` });
+        },
+        {
+            refetchOnWindowFocus: false,
+        }
+    );
 
-    const { isError: countError, data: count } = useQuery(["comments/count"], () => {
-        return fetchEntity({ route: `comments/count/${ticket.id}` });
-    }, {
-        refetchOnWindowFocus: false
-    });
+    const { isError: countError, data: count } = useQuery(
+        ["comments/count"],
+        () => {
+            return fetchEntity({ route: `comments/count/${ticket.id}` });
+        },
+        {
+            refetchOnWindowFocus: false,
+        }
+    );
 
     // mutations
     // ---------
@@ -68,15 +88,16 @@ function CommentsSection(props: CommentsSectionProps) {
         addInteractionMutation,
         addCommentMutation,
         editCommentMutation,
-        deleteCommentMutation
+        deleteCommentMutation,
     } = useCommentMutations(ticket.id);
 
     // event handler
     // -------------
     const handleMenuButtonClick = async (selectedProperty) => {
-        const selectedSortParam: any = sortParamsData.find(param => param.property === selectedProperty) || {}
-        setSortParam(selectedSortParam)
-    }
+        const selectedSortParam: any =
+            sortParamsData.find((param) => param.property === selectedProperty) || {};
+        setSortParam(selectedSortParam);
+    };
 
     const handleAddSubmit = () => {
         setCommentInputValue("");
@@ -84,20 +105,20 @@ function CommentsSection(props: CommentsSectionProps) {
             route: "comment",
             payload: {
                 ticketId: ticket.id,
-                content: commentInputValue
-            }
-        })
-    }
+                content: commentInputValue,
+            },
+        });
+    };
 
     const handleInteractionSubmit = (type, comment) => {
         addInteractionMutation.mutate({
             route: "commentInteraction",
             payload: {
                 type,
-                commentId: comment.id
-            }
+                commentId: comment.id,
+            },
         });
-    }
+    };
     const handleReplySubmit = (e, comment, replyValue) => {
         addCommentMutation.mutate({
             route: "comment",
@@ -105,10 +126,10 @@ function CommentsSection(props: CommentsSectionProps) {
                 id: uuid(),
                 parentId: comment.parentId || comment.id,
                 ticketId: ticket.id,
-                content: replyValue
-            }
+                content: replyValue,
+            },
         });
-    }
+    };
     const handleEditSubmit = (e, comment, editValue) => {
         const { authorId, ticketId } = comment;
         editCommentMutation.mutate({
@@ -117,38 +138,40 @@ function CommentsSection(props: CommentsSectionProps) {
             payload: {
                 ticketId,
                 authorId,
-                content: editValue
-            }
+                content: editValue,
+            },
         });
-    }
+    };
     const handleDeleteSubmit = (e, comment) => {
         deleteCommentMutation.mutate({
             route: "comment",
-            entityId: comment.id
+            entityId: comment.id,
         });
-    }
-    const replyInputAvatar = comment => {
+    };
+    const replyInputAvatar = (comment) => {
         const avatar = currentUser
             ? {
-                username: currentUser.username,
-                ...currentUser.avatar
-            }
+                  username: currentUser.username,
+                  ...currentUser.avatar,
+              }
             : null;
         return avatar;
-    }
-    const replyButtonAvatar = comment => {
-        const responsibleUserHasReplied = comment.childs.some(childComment => childComment.authorId === ticket.responsibleUserId);
+    };
+    const replyButtonAvatar = (comment) => {
+        const responsibleUserHasReplied = comment.childs.some(
+            (childComment) => childComment.authorId === ticket.responsibleUserId
+        );
         const avatar = responsibleUserHasReplied
             ? {
-                username: ticket.responsibleUser.username,
-                ...ticket.responsibleUser.avatar
-            }
+                  username: ticket.responsibleUser.username,
+                  ...ticket.responsibleUser.avatar,
+              }
             : null;
         return avatar;
-    }
+    };
 
     const newestComment = comments
-        .filter(comment => comment.authorId === currentUser.id)
+        .filter((comment) => comment.authorId === currentUser.id)
         .sort((a, b) => {
             // @ts-ignore
             return new Date(b.createdAt) - new Date(a.createdAt);
@@ -157,7 +180,7 @@ function CommentsSection(props: CommentsSectionProps) {
     return (
         <Box>
             <Flex gap={2} className="mt-4 mb-2 items-center justify-between">
-                <Heading className="text-2xl p-2 whitespace-nowrap">
+                <Heading className="whitespace-nowrap p-2 text-2xl">
                     Comments ({count || 0})
                 </Heading>
                 <Menu>
@@ -170,7 +193,8 @@ function CommentsSection(props: CommentsSectionProps) {
                                 <MenuItemOption
                                     onClick={() => handleMenuButtonClick(property)}
                                     key={property}
-                                    value={property}>
+                                    value={property}
+                                >
                                     {label}
                                 </MenuItemOption>
                             ))}
@@ -187,38 +211,55 @@ function CommentsSection(props: CommentsSectionProps) {
                     onSubmit={handleAddSubmit}
                 />
                 <Flex className="flex-col gap-4">
-                    {(countError || isError) && <>
-                        <Alert className="rounded-md" status="error" variant="top-accent">
-                            <AlertIcon />
-                            <Text>
-                                There was an error processing your request
-                            </Text>
-                        </Alert>
-                    </>}
-                    {(isLoading) && Array(5).fill("").map((item, index) => <CommentSkeleton key={index} />)}
-                    {newestComment && <>
-                        <Text>Your newest added comment:</Text>
-                        <Comment
-                            comment={newestComment}
-                            avatar={{ username: newestComment.author.username, ...newestComment.author.avatar }}
-                            key={newestComment.id}
-                            onInteractionSubmit={handleInteractionSubmit}
-                            onReplySubmit={handleReplySubmit}
-                            onEditSubmit={handleEditSubmit}
-                            onDeleteSubmit={handleDeleteSubmit}
-                            replyInputAvatar={replyInputAvatar}
-                            replyButtonAvatar={replyButtonAvatar}
-                            usernameTagged={comment => ticket.responsibleUserId === comment.authorId}
-                            canEdit={comment => currentUser.id === comment.authorId}
-                            canDelete={comment => currentUser.id === comment.authorId && comment.childs.length === 0}
-                        />
-                        <Divider />
-                    </>}
-                    {comments.filter(comment => comment.id !== newestComment?.id)
-                        .map(comment => (
+                    {(countError || isError) && (
+                        <>
+                            <Alert className="rounded-md" status="error" variant="top-accent">
+                                <AlertIcon />
+                                <Text>There was an error processing your request</Text>
+                            </Alert>
+                        </>
+                    )}
+                    {isLoading &&
+                        Array(5)
+                            .fill("")
+                            .map((item, index) => <CommentSkeleton key={index} />)}
+                    {newestComment && (
+                        <>
+                            <Text>Your newest added comment:</Text>
+                            <Comment
+                                comment={newestComment}
+                                avatar={{
+                                    username: newestComment.author.username,
+                                    ...newestComment.author.avatar,
+                                }}
+                                key={newestComment.id}
+                                onInteractionSubmit={handleInteractionSubmit}
+                                onReplySubmit={handleReplySubmit}
+                                onEditSubmit={handleEditSubmit}
+                                onDeleteSubmit={handleDeleteSubmit}
+                                replyInputAvatar={replyInputAvatar}
+                                replyButtonAvatar={replyButtonAvatar}
+                                usernameTagged={(comment) =>
+                                    ticket.responsibleUserId === comment.authorId
+                                }
+                                canEdit={(comment) => currentUser.id === comment.authorId}
+                                canDelete={(comment) =>
+                                    currentUser.id === comment.authorId &&
+                                    comment.childs.length === 0
+                                }
+                            />
+                            <Divider />
+                        </>
+                    )}
+                    {comments
+                        .filter((comment) => comment.id !== newestComment?.id)
+                        .map((comment) => (
                             <Comment
                                 comment={comment}
-                                avatar={{ username: comment.author.username, ...comment.author.avatar }}
+                                avatar={{
+                                    username: comment.author.username,
+                                    ...comment.author.avatar,
+                                }}
                                 key={comment.id}
                                 onInteractionSubmit={handleInteractionSubmit}
                                 onReplySubmit={handleReplySubmit}
@@ -226,9 +267,14 @@ function CommentsSection(props: CommentsSectionProps) {
                                 onDeleteSubmit={handleDeleteSubmit}
                                 replyInputAvatar={replyInputAvatar}
                                 replyButtonAvatar={replyButtonAvatar}
-                                usernameTagged={comment => ticket.responsibleUserId === comment.authorId}
-                                canEdit={comment => currentUser.id === comment.authorId}
-                                canDelete={comment => currentUser.id === comment.authorId && comment.childs.length === 0}
+                                usernameTagged={(comment) =>
+                                    ticket.responsibleUserId === comment.authorId
+                                }
+                                canEdit={(comment) => currentUser.id === comment.authorId}
+                                canDelete={(comment) =>
+                                    currentUser.id === comment.authorId &&
+                                    comment.childs.length === 0
+                                }
                             />
                         ))}
                 </Flex>

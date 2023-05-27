@@ -2,10 +2,10 @@ import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/rea
 import Attachments from "../components/Attachments";
 
 type AttachmentsProps = {
-    images: any[]
-    files: any[]
-    attachments: any[]
-}
+    images: any[];
+    files: any[];
+    attachments: any[];
+};
 
 function Index({ images, files, attachments, ...props }: AttachmentsProps) {
     return (

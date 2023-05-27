@@ -10,7 +10,7 @@ it("renders title and editButton", () => {
     const editButton = <Button>{buttonContent}</Button>;
     const testId = "SectionBlock";
 
-    render(<SectionBlock title={title} editButton={editButton} />)
+    render(<SectionBlock title={title} editButton={editButton} />);
     screen.getByText(buttonContent, { selector: "button" });
     screen.getByTestId(testId);
     expect(screen.queryByTestId(testId)!.innerHTML).toContain(title);

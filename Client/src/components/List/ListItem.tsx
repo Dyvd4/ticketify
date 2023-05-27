@@ -1,65 +1,85 @@
-import { Box, Button, ListItem as ChakraListItem, ListItemProps as ChakraListItemProps, Divider, LinkBox, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    ListItem as ChakraListItem,
+    ListItemProps as ChakraListItemProps,
+    Divider,
+    LinkBox,
+    Menu,
+    MenuButton,
+    MenuList,
+} from "@chakra-ui/react";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type ListItemProps = {
     /** The title to display. Will be placed on top of the content. */
-    heading: React.ReactElement
+    heading: React.ReactElement;
     /** actions as menuItems from chakra */
-    actions?: React.ReactElement
+    actions?: React.ReactElement;
     /** content to display */
-    content?: React.ReactElement
+    content?: React.ReactElement;
     /** tags as tags from chakra */
-    tags?: React.ReactElement[]
+    tags?: React.ReactElement[];
     /** if set to true, shows divider between slots */
-    useDivider?: boolean
-} & ChakraListItemProps
+    useDivider?: boolean;
+} & ChakraListItemProps;
 
-function ListItem({ heading, content, actions, tags, className, useDivider, ...props }: ListItemProps) {
+function ListItem({
+    heading,
+    content,
+    actions,
+    tags,
+    className,
+    useDivider,
+    ...props
+}: ListItemProps) {
     return (
         <ChakraListItem
             data-testid="ListItem"
             _light={{
-                backgroundColor: "gray.200"
+                backgroundColor: "gray.200",
             }}
             bgColor={"gray.700"}
-            className={`rounded-lg p-4 flex flex-col ${className}`}
-            {...props}>
+            className={`flex flex-col rounded-lg p-4 ${className}`}
+            {...props}
+        >
             <LinkBox>
                 <Box className="flex justify-between">
-                    <Box className="flex-grow">
-                        {heading}
-                    </Box>
-                    {!!actions && <>
-                        <Box>
-                            <Menu>
-                                <MenuButton
-                                    aria-label="actions"
-                                    as={Button}
-                                    colorScheme="cyan"
-                                    className={`rounded-full p-2 h-6
-                                flex justify-center items-center`}>
-                                    <FontAwesomeIcon icon={faEllipsisVertical} size="1x" />
-                                </MenuButton>
-                                <MenuList>
-                                    {actions}
-                                </MenuList>
-                            </Menu>
-                        </Box>
-                    </>}
+                    <Box className="flex-grow">{heading}</Box>
+                    {!!actions && (
+                        <>
+                            <Box>
+                                <Menu>
+                                    <MenuButton
+                                        aria-label="actions"
+                                        as={Button}
+                                        colorScheme="cyan"
+                                        className={`flex h-6 items-center
+                                justify-center rounded-full p-2`}
+                                    >
+                                        <FontAwesomeIcon icon={faEllipsisVertical} size="1x" />
+                                    </MenuButton>
+                                    <MenuList>{actions}</MenuList>
+                                </Menu>
+                            </Box>
+                        </>
+                    )}
                 </Box>
                 {useDivider && !!content && <Divider my="2" />}
-                {!!content && <>
-                    <Box className={`${!useDivider ? "mt-1" : ""}`}>
-                        {content}
-                    </Box>
-                </>}
+                {!!content && (
+                    <>
+                        <Box className={`${!useDivider ? "mt-1" : ""}`}>{content}</Box>
+                    </>
+                )}
                 {useDivider && !!tags && <Divider my="2" />}
-                {!!tags && <>
-                    <Box className={`${!useDivider ? "mt-2" : "mt-1"} flex items-center gap-4`}>
-                        {tags}
-                    </Box>
-                </>}
+                {!!tags && (
+                    <>
+                        <Box className={`${!useDivider ? "mt-2" : "mt-1"} flex items-center gap-4`}>
+                            {tags}
+                        </Box>
+                    </>
+                )}
             </LinkBox>
         </ChakraListItem>
     );

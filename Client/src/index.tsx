@@ -26,52 +26,56 @@ import UserSettingsIndex from "./pages/UserSettings/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.scss";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
-    <AtomProvider>
-      <ColorModeScript />
-      <Init />
-      <PortalSlot />
-      <ChakraProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Navbar />
-          <Sidebar />
-          <Box id="container" className="p-4">
-            <Router>
-              <Routes>
-                {/* authenticated or authorized */}
-                <Route path="/" element={<AuthenticatedArea type="route" />}>
-                  <Route index element={<Index />} />
-                  <Route path="Test" element={<TestIndex />} />
-                  <Route path="User" element={<UserIndex />} />
-                  <Route path="UserSettings" element={<UserSettingsIndex />} />
-                  <Route path="User/:id" element={<UserIndex />} />
-                  <Route path="Ticket">
-                    <Route index element={<TicketIndex />} />
-                    <Route path="Details/:id" element={<TicketDetailsIndex />} />
-                  </Route>
-                  <Route path="Log" element={<LogIndex />} />
-                </Route>
-                <Route path="/Auth/EmailNotConfirmed" element={<AuthenticatedArea type="route" half={true} />}>
-                  <Route index element={<EmailNotConfirmed />} />
-                </Route>
-                {/* Not authenticated or authorized */}
-                <Route path="*" element={<NotFound />} />
-                <Route path="/Auth">
-                  <Route path="SignIn" element={<SignIn />} />
-                  <Route path="SignUp" element={<SignUp />} />
-                  <Route path="EmailConfirmed" element={<EmailConfirmed />} />
-                </Route>
-              </Routes>
-            </Router>
-          </Box>
-        </QueryClientProvider>
-      </ChakraProvider>
-    </AtomProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <AtomProvider>
+            <ColorModeScript />
+            <Init />
+            <PortalSlot />
+            <ChakraProvider theme={theme}>
+                <QueryClientProvider client={queryClient}>
+                    <Navbar />
+                    <Sidebar />
+                    <Box id="container" className="p-4">
+                        <Router>
+                            <Routes>
+                                {/* authenticated or authorized */}
+                                <Route path="/" element={<AuthenticatedArea type="route" />}>
+                                    <Route index element={<Index />} />
+                                    <Route path="Test" element={<TestIndex />} />
+                                    <Route path="User" element={<UserIndex />} />
+                                    <Route path="UserSettings" element={<UserSettingsIndex />} />
+                                    <Route path="User/:id" element={<UserIndex />} />
+                                    <Route path="Ticket">
+                                        <Route index element={<TicketIndex />} />
+                                        <Route
+                                            path="Details/:id"
+                                            element={<TicketDetailsIndex />}
+                                        />
+                                    </Route>
+                                    <Route path="Log" element={<LogIndex />} />
+                                </Route>
+                                <Route
+                                    path="/Auth/EmailNotConfirmed"
+                                    element={<AuthenticatedArea type="route" half={true} />}
+                                >
+                                    <Route index element={<EmailNotConfirmed />} />
+                                </Route>
+                                {/* Not authenticated or authorized */}
+                                <Route path="*" element={<NotFound />} />
+                                <Route path="/Auth">
+                                    <Route path="SignIn" element={<SignIn />} />
+                                    <Route path="SignUp" element={<SignUp />} />
+                                    <Route path="EmailConfirmed" element={<EmailConfirmed />} />
+                                </Route>
+                            </Routes>
+                        </Router>
+                    </Box>
+                </QueryClientProvider>
+            </ChakraProvider>
+        </AtomProvider>
+    </React.StrictMode>
 );

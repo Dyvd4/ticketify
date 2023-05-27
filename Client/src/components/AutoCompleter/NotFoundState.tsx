@@ -6,13 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  */
 function NotFoundState({ className, ...rest }: React.ComponentPropsWithRef<"li">) {
     return (
-        <li className={`autocomplete-list-item no-underline
-                        flex justify-center items-center gap-2
+        <li
+            className={`autocomplete-list-item flex
+                        items-center justify-center gap-2 no-underline
                       dark:text-white ${className}`}
-            {...rest}>
-            <span>
-                Not found
-            </span>
+            {...rest}
+        >
+            <span>Not found</span>
             <FontAwesomeIcon icon={faFrown} size="lg" />
         </li>
     );

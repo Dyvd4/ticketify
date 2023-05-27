@@ -5,45 +5,29 @@ import BgBox from "src/components/BgBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
 
 type HeadDataProps = {
-    ticket: any
-}
+    ticket: any;
+};
 
 function HeadDataSection({ ticket, ...props }: HeadDataProps) {
-
-    const {
-        title,
-        priority,
-        status, dueDate,
-        responsibleUser,
-        description
-    } = ticket;
+    const { title, priority, status, dueDate, responsibleUser, description } = ticket;
 
     return (
         <>
-            <Heading as="h1" className="font-bold text-xl">
+            <Heading as="h1" className="text-xl font-bold">
                 {`#${ticket.id} ${title}`}
             </Heading>
-            <Flex
-                gap={2}
-                direction="column"
-                className="my-2 text-secondary">
+            <Flex gap={2} direction="column" className="text-secondary my-2">
                 <Flex justifyContent="space-between">
                     <div>priority</div>
-                    <Tag colorScheme={priority.color}>
-                        {priority.name}
-                    </Tag>
+                    <Tag colorScheme={priority.color}>{priority.name}</Tag>
                 </Flex>
                 <Flex justifyContent="space-between">
                     <div>status</div>
-                    <Tag colorScheme={status.color}>
-                        {status?.name || "none"}
-                    </Tag>
+                    <Tag colorScheme={status.color}>{status?.name || "none"}</Tag>
                 </Flex>
                 <Flex justifyContent="space-between">
                     <div>due date</div>
-                    <div>{dueDate
-                        ? format(new Date(dueDate), "dd.mm.yyyy hh:mm:ss")
-                        : "-"}</div>
+                    <div>{dueDate ? format(new Date(dueDate), "dd.mm.yyyy hh:mm:ss") : "-"}</div>
                 </Flex>
                 <Flex justifyContent="space-between">
                     <div>responsible user</div>
@@ -53,7 +37,12 @@ function HeadDataSection({ ticket, ...props }: HeadDataProps) {
             <Flex direction="column" className="my-2">
                 <BgBox
                     variant="child"
-                    dangerouslySetInnerHTML={{ __html: dompurify.sanitize(description === CONTENTSTATE.EMPTY ? "No description" : description) }} />
+                    dangerouslySetInnerHTML={{
+                        __html: dompurify.sanitize(
+                            description === CONTENTSTATE.EMPTY ? "No description" : description
+                        ),
+                    }}
+                />
             </Flex>
         </>
     );

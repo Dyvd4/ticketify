@@ -9,48 +9,41 @@ import AssignedTicketsSection from "./sections/AssignedTicketsSection";
 import AvatarSection from "./sections/AvatarSection";
 import UserDataSection from "./sections/UserDataSection";
 
-type IndexProps = {}
+type IndexProps = {};
 
 function Index(props: IndexProps) {
-
     useBreadcrumb([
         {
             name: "Home",
-            href: "/"
+            href: "/",
         },
         {
             name: "Profile data",
             href: "#",
-            isCurrentPage: true
-        }
+            isCurrentPage: true,
+        },
     ]);
 
     const { id } = useParams();
     const {
         data: user,
         isLoading,
-        isError
-    } = useQuery(id
-        ? ["user/all", id]
-        : ["user/all"], () => {
-            return id
-                ? fetchEntity({ route: `user/all`, queryParams: { id } })
-                : fetchCurrentUserAll()
-        });
+        isError,
+    } = useQuery(id ? ["user/all", id] : ["user/all"], () => {
+        return id ? fetchEntity({ route: `user/all`, queryParams: { id } }) : fetchCurrentUserAll();
+    });
 
     if (isLoading) {
-        return <LoadingRipple centered />
+        return <LoadingRipple centered />;
     }
 
     if (isError) {
         return (
             <Alert className="rounded-md" status="error" variant="top-accent">
                 <AlertIcon />
-                <Text>
-                    There was an error processing your request
-                </Text>
+                <Text>There was an error processing your request</Text>
             </Alert>
-        )
+        );
     }
 
     return (
@@ -61,6 +54,6 @@ function Index(props: IndexProps) {
             <Divider className="my-2" />
             <AssignedTicketsSection user={user} />
         </Container>
-    )
+    );
 }
-export default Index
+export default Index;

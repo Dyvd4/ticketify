@@ -1,5 +1,4 @@
 const getCommentPosition = (parentComments: any[], commentId: string) => {
-
     let parentCommentIndex = -1;
     let commentIndex = -1;
 
@@ -21,7 +20,7 @@ const getCommentPosition = (parentComments: any[], commentId: string) => {
     }
 
     return { parentCommentIndex, commentIndex };
-}
+};
 
 export const getComment = (parentComments: any[], commentId) => {
     const { parentCommentIndex, commentIndex } = getCommentPosition(parentComments, commentId);
@@ -33,39 +32,37 @@ export const getComment = (parentComments: any[], commentId) => {
         comment = parentComments[parentCommentIndex].childs[commentIndex];
     }
     return comment;
-}
+};
 
 export const addComment = (parentComments: any[], comment, parentCommentId?: string) => {
     const newComments: any = [...parentComments];
     const oldComments: any = [...parentComments];
 
     if (parentCommentId) {
-        const parentCommentIndex = parentComments.findIndex(comment => comment.id === parentCommentId);
-        const parentComment = parentComments[parentCommentIndex]
+        const parentCommentIndex = parentComments.findIndex(
+            (comment) => comment.id === parentCommentId
+        );
+        const parentComment = parentComments[parentCommentIndex];
         const newParentComment = {
             ...parentComment,
-            childs: [
-                ...parentComment.childs,
-                comment
-            ]
-        }
+            childs: [...parentComment.childs, comment],
+        };
         newComments[parentCommentIndex] = newParentComment;
-    }
-    else {
+    } else {
         newComments.push(comment);
     }
 
     return {
         comments: newComments,
-        oldComments
-    }
-}
+        oldComments,
+    };
+};
 
 export const deleteComment = (parentComments: any[], commentId: string) => {
     let newComments: any = [...parentComments];
     let oldComments: any = [...parentComments];
     const { parentCommentIndex, commentIndex } = getCommentPosition(parentComments, commentId);
-    const isParent = parentCommentIndex === -1 && commentIndex > -1
+    const isParent = parentCommentIndex === -1 && commentIndex > -1;
     const isChild = parentCommentIndex > -1 && commentIndex > -1;
 
     if (isParent) {
@@ -78,27 +75,26 @@ export const deleteComment = (parentComments: any[], commentId: string) => {
 
     return {
         comments: newComments,
-        oldComments
+        oldComments,
     };
-}
+};
 
 export const replaceComment = (parentComments: any[], commentId: string, comment) => {
     let newComments: any = [...parentComments];
     let oldComments: any = [...parentComments];
     const { parentCommentIndex, commentIndex } = getCommentPosition(parentComments, commentId);
-    const isParent = parentCommentIndex === -1 && commentIndex > -1
+    const isParent = parentCommentIndex === -1 && commentIndex > -1;
     const isChild = parentCommentIndex > -1 && commentIndex > -1;
 
     if (isParent) {
         newComments[commentIndex] = comment;
-    }
-    else if (isChild) {
+    } else if (isChild) {
         const parent = newComments[parentCommentIndex];
         parent.childs[commentIndex] = comment;
     }
 
     return {
         comments: newComments,
-        oldComments
-    }
-}
+        oldComments,
+    };
+};

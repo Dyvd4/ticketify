@@ -1,22 +1,24 @@
 import { AxiosError } from "axios";
 
 export interface HandleErrorOptions {
-    postError?: boolean
+    postError?: boolean;
 }
 
 export function handleError(error: Error, options?: HandleErrorOptions) {
-    window.dispatchEvent(new CustomEvent("CustomError", {
-        detail: {
-            options,
-            error
-        }
-    }));
+    window.dispatchEvent(
+        new CustomEvent("CustomError", {
+            detail: {
+                options,
+                error,
+            },
+        })
+    );
 }
 
 export type ValidationErrorMap = Partial<{
-    [key: string]: string | string[]
-    message: string
-}>
+    [key: string]: string | string[];
+    message: string;
+}>;
 
 // Copied from @nest/common
 // don't want to install the whole package for the client
@@ -57,35 +59,37 @@ interface ValidationError {
 }
 
 export type ValidationErrorResponse = {
-    message: string
-    statusCode: number
+    message: string;
+    statusCode: number;
     error: {
         validation: {
-            message: string
-            items: ValidationError[]
-        }
-    }
-}
+            message: string;
+            items: ValidationError[];
+        };
+    };
+};
 
 /** @param key - the name of the field (for single field validations) */
-export function getValidationErrorMap(error: AxiosError<ValidationErrorResponse>, key?: string): ValidationErrorMap | null {
-
+export function getValidationErrorMap(
+    error: AxiosError<ValidationErrorResponse>,
+    key?: string
+): ValidationErrorMap | null {
     const validationErrorsToMap = error.response?.data.error.validation.items || [];
     const validationErrorMap = validationErrorsToMap.reduce((map, validationError, index) => {
         if (index === 0) {
-            map = {}
+            map = {};
         }
-        map[key || validationError.property] = Object.keys(validationError.constraints || {}).map(key => {
-            return validationError.constraints![key]
-        })
+        map[key || validationError.property] = Object.keys(validationError.constraints || {}).map(
+            (key) => {
+                return validationError.constraints![key];
+            }
+        );
         return map;
     }, {} as ValidationErrorMap);
 
     const validationMessage = error.response?.data.error.validation.message;
     if (validationMessage) validationErrorMap.message = validationMessage;
 
-    console.debug(validationErrorsToMap)
-    return Object.keys(validationErrorMap).length > 0
-        ? validationErrorMap
-        : null;
+    console.debug(validationErrorsToMap);
+    return Object.keys(validationErrorMap).length > 0 ? validationErrorMap : null;
 }

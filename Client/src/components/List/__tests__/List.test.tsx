@@ -12,162 +12,165 @@ import ListItem from "../ListItem";
 vi.mock("../../../hooks/query", () => ({
     useQuery: vi.fn(),
     useInfiniteQuery: vi.fn(),
-    useInfiniteQueryCount: vi.fn()
+    useInfiniteQueryCount: vi.fn(),
 }));
 vi.mock("@formkit/auto-animate");
 vi.mock("../../../hooks/user", () => ({
-    useCurrentUserSettings: vi.fn()
+    useCurrentUserSettings: vi.fn(),
 }));
 
-const mockedUseQuery = useQuery as Mock<any>
-const mockedAutoAnimate = autoAnimate as Mock<any>
-const mockedUseCurrentUserSettings = useCurrentUserSettings as Mock<any>
+const mockedUseQuery = useQuery as Mock<any>;
+const mockedAutoAnimate = autoAnimate as Mock<any>;
+const mockedUseCurrentUserSettings = useCurrentUserSettings as Mock<any>;
 
 const pagerResult = {
-    "items": [
+    items: [
         {
-            "id": 1,
-            "title": "react console errors",
-            "description": "<p>testestststs</p>",
-            "dueDate": "2022-09-04T17:36:00.000Z",
-            "createdAt": "2022-08-31T14:21:33.861Z",
-            "updatedAt": "2022-11-11T22:01:21.277Z",
-            "createUser": "test",
-            "updateUser": "test",
-            "statusId": null,
-            "priority": {
-                "color": "slate-500",
-                "name": "Low",
-                "createdAt": "2022-08-16T23:00:32.037Z",
-                "updatedAt": "2022-08-18T08:41:34.420Z",
-                "createUser": "test",
-                "updateUser": "test"
-            }
+            id: 1,
+            title: "react console errors",
+            description: "<p>testestststs</p>",
+            dueDate: "2022-09-04T17:36:00.000Z",
+            createdAt: "2022-08-31T14:21:33.861Z",
+            updatedAt: "2022-11-11T22:01:21.277Z",
+            createUser: "test",
+            updateUser: "test",
+            statusId: null,
+            priority: {
+                color: "slate-500",
+                name: "Low",
+                createdAt: "2022-08-16T23:00:32.037Z",
+                updatedAt: "2022-08-18T08:41:34.420Z",
+                createUser: "test",
+                updateUser: "test",
+            },
         },
         {
-            "id": 7,
-            "title": "test hahah niiice",
-            "description": "<p><br></p>",
-            "dueDate": "2022-10-09T13:26:00.000Z",
-            "createdAt": "2022-10-09T13:36:07.078Z",
-            "updatedAt": "2022-11-18T16:34:31.226Z",
-            "createUser": "test",
-            "updateUser": "test",
-            "statusId": null,
-            "priority": {
-                "color": "red-500",
-                "name": "High",
-                "createdAt": "2022-08-18T08:39:51.514Z",
-                "updatedAt": "2022-08-18T08:39:51.514Z",
-                "createUser": "test",
-                "updateUser": "test"
-            }
+            id: 7,
+            title: "test hahah niiice",
+            description: "<p><br></p>",
+            dueDate: "2022-10-09T13:26:00.000Z",
+            createdAt: "2022-10-09T13:36:07.078Z",
+            updatedAt: "2022-11-18T16:34:31.226Z",
+            createUser: "test",
+            updateUser: "test",
+            statusId: null,
+            priority: {
+                color: "red-500",
+                name: "High",
+                createdAt: "2022-08-18T08:39:51.514Z",
+                updatedAt: "2022-08-18T08:39:51.514Z",
+                createUser: "test",
+                updateUser: "test",
+            },
         },
         {
-            "id": 8,
-            "title": "testdd",
-            "description": "<p><br></p>",
-            "dueDate": "2022-10-22T12:13:00.000Z",
-            "createdAt": "2022-10-22T12:13:24.423Z",
-            "updatedAt": "2022-11-11T23:47:01.451Z",
-            "createUser": "test",
-            "updateUser": "test",
-            "statusId": null,
-            "priority": {
-                "color": "slate-500",
-                "name": "Low",
-                "createdAt": "2022-08-16T23:00:32.037Z",
-                "updatedAt": "2022-08-18T08:41:34.420Z",
-                "createUser": "test",
-                "updateUser": "test"
-            }
+            id: 8,
+            title: "testdd",
+            description: "<p><br></p>",
+            dueDate: "2022-10-22T12:13:00.000Z",
+            createdAt: "2022-10-22T12:13:24.423Z",
+            updatedAt: "2022-11-11T23:47:01.451Z",
+            createUser: "test",
+            updateUser: "test",
+            statusId: null,
+            priority: {
+                color: "slate-500",
+                name: "Low",
+                createdAt: "2022-08-16T23:00:32.037Z",
+                updatedAt: "2022-08-18T08:41:34.420Z",
+                createUser: "test",
+                updateUser: "test",
+            },
         },
         {
-            "id": 17,
-            "title": "4rty",
-            "description": "<p>yrdy</p>",
-            "dueDate": "2022-11-11T22:56:00.000Z",
-            "createdAt": "2022-11-11T22:56:26.214Z",
-            "updatedAt": "2022-11-11T22:56:26.214Z",
-            "createUser": "test",
-            "updateUser": "test",
-            "statusId": null,
-            "priority": {
-                "color": "yellow-500",
-                "name": "Middle",
-                "createdAt": "2022-08-25T14:57:58.946Z",
-                "updatedAt": null,
-                "createUser": "test",
-                "updateUser": "test"
-            }
+            id: 17,
+            title: "4rty",
+            description: "<p>yrdy</p>",
+            dueDate: "2022-11-11T22:56:00.000Z",
+            createdAt: "2022-11-11T22:56:26.214Z",
+            updatedAt: "2022-11-11T22:56:26.214Z",
+            createUser: "test",
+            updateUser: "test",
+            statusId: null,
+            priority: {
+                color: "yellow-500",
+                name: "Middle",
+                createdAt: "2022-08-25T14:57:58.946Z",
+                updatedAt: null,
+                createUser: "test",
+                updateUser: "test",
+            },
         },
         {
-            "id": 18,
-            "title": "testtestesteststestest",
-            "description": "<p><br></p>",
-            "dueDate": "2022-11-11T22:58:00.000Z",
-            "createdAt": "2022-11-11T22:58:41.928Z",
-            "updatedAt": "2022-11-11T22:58:54.839Z",
-            "createUser": "test",
-            "updateUser": "test",
-            "statusId": null,
-            "priority": {
-                "color": "red-500",
-                "name": "High",
-                "createdAt": "2022-08-18T08:39:51.514Z",
-                "updatedAt": "2022-08-18T08:39:51.514Z",
-                "createUser": "test",
-                "updateUser": "test"
-            }
-        }
+            id: 18,
+            title: "testtestesteststestest",
+            description: "<p><br></p>",
+            dueDate: "2022-11-11T22:58:00.000Z",
+            createdAt: "2022-11-11T22:58:41.928Z",
+            updatedAt: "2022-11-11T22:58:54.839Z",
+            createUser: "test",
+            updateUser: "test",
+            statusId: null,
+            priority: {
+                color: "red-500",
+                name: "High",
+                createdAt: "2022-08-18T08:39:51.514Z",
+                updatedAt: "2022-08-18T08:39:51.514Z",
+                createUser: "test",
+                updateUser: "test",
+            },
+        },
     ],
-    "currentPage": 1,
-    "pagesCount": 2,
-    "pagesCountShrunk": false
-}
+    currentPage: 1,
+    pagesCount: 2,
+    pagesCountShrunk: false,
+};
 
 const listId = "372fdeec-9638-41ef-a073-12c4b6ec397c";
-const listRenderer = () => (
-    render(<List
-        variant={{
-            name: "pagination"
-        }}
-        id={listId}
-        fetch={{
-            route: "test",
-            queryKey: "test"
-        }}
-        listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
-        header={{
-            title: "test",
-            showCount: true
-        }}
-        sort={[
-            {
-                property: "isAmazing",
-                label: "Is amazing"
-            },
-            {
-                property: "description",
-            },
-            {
-                property: "createdAt",
-                label: "created at"
-            }
-        ]}
-        filter={[]}
-    />)
-)
+const listRenderer = () =>
+    render(
+        <List
+            variant={{
+                name: "pagination",
+            }}
+            id={listId}
+            fetch={{
+                route: "test",
+                queryKey: "test",
+            }}
+            listItemRender={(item) => (
+                <ListItem heading={<></>} content={<ListItemContent item={item} />} />
+            )}
+            header={{
+                title: "test",
+                showCount: true,
+            }}
+            sort={[
+                {
+                    property: "isAmazing",
+                    label: "Is amazing",
+                },
+                {
+                    property: "description",
+                },
+                {
+                    property: "createdAt",
+                    label: "created at",
+                },
+            ]}
+            filter={[]}
+        />
+    );
 
 beforeEach(() => {
     const mockIntersectionObserver = vi.fn().mockImplementation(() => ({
-        observe: () => null
+        observe: () => null,
     }));
-    window.IntersectionObserver = mockIntersectionObserver
+    window.IntersectionObserver = mockIntersectionObserver;
     mockedUseQuery.mockImplementation(() => ({
         data: pagerResult,
         isLoading: false,
-        isError: false
+        isError: false,
     }));
     mockedAutoAnimate.mockReturnValue(createRef());
     mockedUseCurrentUserSettings.mockReturnValue({
@@ -175,12 +178,12 @@ beforeEach(() => {
             allowFilterItemsByLocalStorage: false,
             allowFilterItemsByUrl: false,
             allowSortItemsByLocalStorage: false,
-            allowSortItemsByUrl: false
+            allowSortItemsByUrl: false,
         },
-        isLoading: false
+        isLoading: false,
     });
     localStorage.clear();
-    const cleanedUrl = new URL(window.location.href)
+    const cleanedUrl = new URL(window.location.href);
     cleanedUrl.searchParams.delete(`filter-${listId}`);
     cleanedUrl.searchParams.delete(`orderBy-${listId}`);
     window.history.pushState(null, "", cleanedUrl);
@@ -209,29 +212,30 @@ describe("listItems", () => {
 });
 
 describe("filter", () => {
-
-    const listRenderer = () => (
+    const listRenderer = () =>
         render(
             <List
                 variant={{
-                    name: "pagination"
+                    name: "pagination",
                 }}
                 id={listId}
                 fetch={{
                     route: "test",
-                    queryKey: "test"
+                    queryKey: "test",
                 }}
-                listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
+                listItemRender={(item) => (
+                    <ListItem heading={<></>} content={<ListItemContent item={item} />} />
+                )}
                 header={{
                     title: "test",
-                    showCount: true
+                    showCount: true,
                 }}
                 sort={[]}
                 filter={[
                     {
                         property: "isAmazing",
                         type: "boolean",
-                        label: "Is amazing"
+                        label: "Is amazing",
                     },
                     {
                         property: "description",
@@ -240,11 +244,11 @@ describe("filter", () => {
                     {
                         property: "createdAt",
                         type: "date",
-                        label: "created at"
-                    }
+                        label: "created at",
+                    },
                 ]}
-            />)
-    );
+            />
+        );
 
     it("renders filter button", async () => {
         listRenderer();
@@ -287,17 +291,18 @@ describe("filter", () => {
                             allowFilterItemsByLocalStorage: false,
                             allowFilterItemsByUrl: true,
                             allowSortItemsByLocalStorage: false,
-                            allowSortItemsByUrl: false
+                            allowSortItemsByUrl: false,
                         },
-                        isLoading: false
+                        isLoading: false,
                     });
                 });
                 it("initializes filter items via url if user setting is true", async () => {
-
-                    setUrlParam(`filter-${listId}`, [{
-                        property: "testProperty",
-                        type: "string",
-                    }]);
+                    setUrlParam(`filter-${listId}`, [
+                        {
+                            property: "testProperty",
+                            type: "string",
+                        },
+                    ]);
 
                     listRenderer();
 
@@ -331,17 +336,21 @@ describe("filter", () => {
                             allowFilterItemsByLocalStorage: true,
                             allowFilterItemsByUrl: false,
                             allowSortItemsByLocalStorage: false,
-                            allowSortItemsByUrl: false
+                            allowSortItemsByUrl: false,
                         },
-                        isLoading: false
+                        isLoading: false,
                     });
                 });
                 it("initializes filter items via local storage if user setting is true", async () => {
-
-                    localStorage.setItem(`filter-${listId}`, JSON.stringify([{
-                        property: "testProperty",
-                        type: "string",
-                    }]));
+                    localStorage.setItem(
+                        `filter-${listId}`,
+                        JSON.stringify([
+                            {
+                                property: "testProperty",
+                                type: "string",
+                            },
+                        ])
+                    );
 
                     listRenderer();
 
@@ -373,38 +382,40 @@ describe("filter", () => {
 });
 
 describe("sort", () => {
-
-    const listRenderer = () => (
-        render(<List
-            variant={{
-                name: "pagination"
-            }}
-            id={listId}
-            fetch={{
-                route: "test",
-                queryKey: "test"
-            }}
-            listItemRender={(item) => <ListItem heading={<></>} content={<ListItemContent item={item} />} />}
-            header={{
-                title: "test",
-                showCount: true
-            }}
-            sort={[
-                {
-                    property: "isAmazing",
-                    label: "Is amazing"
-                },
-                {
-                    property: "description",
-                },
-                {
-                    property: "createdAt",
-                    label: "created at"
-                }
-            ]}
-            filter={[]}
-        />)
-    );
+    const listRenderer = () =>
+        render(
+            <List
+                variant={{
+                    name: "pagination",
+                }}
+                id={listId}
+                fetch={{
+                    route: "test",
+                    queryKey: "test",
+                }}
+                listItemRender={(item) => (
+                    <ListItem heading={<></>} content={<ListItemContent item={item} />} />
+                )}
+                header={{
+                    title: "test",
+                    showCount: true,
+                }}
+                sort={[
+                    {
+                        property: "isAmazing",
+                        label: "Is amazing",
+                    },
+                    {
+                        property: "description",
+                    },
+                    {
+                        property: "createdAt",
+                        label: "created at",
+                    },
+                ]}
+                filter={[]}
+            />
+        );
 
     it("renders sort button", () => {
         listRenderer();
@@ -446,16 +457,17 @@ describe("sort", () => {
                             allowFilterItemsByLocalStorage: false,
                             allowFilterItemsByUrl: false,
                             allowSortItemsByLocalStorage: false,
-                            allowSortItemsByUrl: true
+                            allowSortItemsByUrl: true,
                         },
-                        isLoading: false
+                        isLoading: false,
                     });
                 });
                 it("initializes sort items via url if user setting is true", async () => {
-
-                    setUrlParam(`orderBy-${listId}`, [{
-                        property: "testProperty"
-                    }]);
+                    setUrlParam(`orderBy-${listId}`, [
+                        {
+                            property: "testProperty",
+                        },
+                    ]);
 
                     listRenderer();
 
@@ -489,16 +501,20 @@ describe("sort", () => {
                             allowFilterItemsByLocalStorage: false,
                             allowFilterItemsByUrl: false,
                             allowSortItemsByLocalStorage: true,
-                            allowSortItemsByUrl: false
+                            allowSortItemsByUrl: false,
                         },
-                        isLoading: false
+                        isLoading: false,
                     });
                 });
                 it("initializes sort items via local storage if user setting is true", async () => {
-
-                    localStorage.setItem(`orderBy-${listId}`, JSON.stringify([{
-                        property: "testProperty"
-                    }]));
+                    localStorage.setItem(
+                        `orderBy-${listId}`,
+                        JSON.stringify([
+                            {
+                                property: "testProperty",
+                            },
+                        ])
+                    );
 
                     listRenderer();
 
@@ -522,7 +538,9 @@ describe("sort", () => {
                     const applyButton = within(drawer).getByRole("button", { name: "apply" });
                     fireEvent.click(applyButton);
 
-                    expect(JSON.parse(localStorage.getItem(`orderBy-${listId}`)!).length).toEqual(3);
+                    expect(JSON.parse(localStorage.getItem(`orderBy-${listId}`)!).length).toEqual(
+                        3
+                    );
                 });
             });
         });

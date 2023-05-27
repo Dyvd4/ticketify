@@ -4,9 +4,7 @@ import { useErrorHandler } from "./hooks/error";
 function Init() {
     useErrorHandler();
     useApplyDarkMode();
-    return (
-        <div className="hidden"></div>
-    );
+    return <div className="hidden"></div>;
 }
 
 export default Init;

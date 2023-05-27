@@ -1,16 +1,18 @@
-import { FormControl as ChakraFormControl, FormControlProps as ChakraFormControlProps, FormErrorMessage } from "@chakra-ui/react";
+import {
+    FormControl as ChakraFormControl,
+    FormControlProps as ChakraFormControlProps,
+    FormErrorMessage,
+} from "@chakra-ui/react";
 
 type FormControlProps = {
-    errorMessage?: string | string[]
-} & ChakraFormControlProps
+    errorMessage?: string | string[];
+} & ChakraFormControlProps;
 
 function FormControl({ errorMessage, children, ...props }: FormControlProps) {
     return (
         <ChakraFormControl isInvalid={!!errorMessage} {...props}>
             {children}
-            <FormErrorMessage>
-                {errorMessage}
-            </FormErrorMessage>
+            <FormErrorMessage>{errorMessage}</FormErrorMessage>
         </ChakraFormControl>
     );
 }

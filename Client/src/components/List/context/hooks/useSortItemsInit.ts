@@ -9,15 +9,14 @@ import sortItemsAtom from "../atoms/sortItemsAtom";
 const getDefaultDirection = () => sortDirections.get("ascending");
 
 type UseSortItemsInitArgs = {
-    defaultSortItems: TSortItem[],
-    listId: string
-}
+    defaultSortItems: TSortItem[];
+    listId: string;
+};
 
 const useSortItemsInit = (
     { defaultSortItems, listId }: UseSortItemsInitArgs,
     onInit?: (sortItems, fromLocalStorage: boolean, fromUrl: boolean) => void
 ) => {
-
     const { currentUserSettings } = useCurrentUserSettings();
     const [, setSortItems] = useAtom(sortItemsAtom);
     let sortItemsAreFromLocalStorage = false;
@@ -26,10 +25,7 @@ const useSortItemsInit = (
     useEffect(() => {
         if (!currentUserSettings) return;
 
-        const {
-            allowSortItemsByLocalStorage,
-            allowSortItemsByUrl
-        } = currentUserSettings;
+        const { allowSortItemsByLocalStorage, allowSortItemsByUrl } = currentUserSettings;
 
         let sortItemsToSet: TSortItem[] = defaultSortItems;
 
@@ -37,10 +33,9 @@ const useSortItemsInit = (
             let sortItemsFromUrl: any = getUrlParam(`orderBy-${listId}`);
             if (sortItemsFromUrl) {
                 sortItemsToSet = sortItemsFromUrl;
-                sortItemsAreFromUrl = true
+                sortItemsAreFromUrl = true;
             }
-        }
-        else if (allowSortItemsByLocalStorage) {
+        } else if (allowSortItemsByLocalStorage) {
             let sortItemsFromLocalStorage = localStorage.getItem(`orderBy-${listId}`);
             if (sortItemsFromLocalStorage) {
                 sortItemsToSet = JSON.parse(sortItemsFromLocalStorage);
@@ -48,18 +43,16 @@ const useSortItemsInit = (
             }
         }
 
-        const sortItems = sortItemsToSet.map(sortItem => {
+        const sortItems = sortItemsToSet.map((sortItem) => {
             return {
                 direction: getDefaultDirection(),
                 ...sortItem,
-            }
+            };
         });
 
         setSortItems(sortItems as any);
         if (onInit) onInit(sortItems, sortItemsAreFromLocalStorage, sortItemsAreFromUrl);
-
     }, [currentUserSettings]);
-
-}
+};
 
 export default useSortItemsInit;

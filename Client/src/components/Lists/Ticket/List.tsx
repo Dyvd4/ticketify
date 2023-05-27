@@ -3,58 +3,54 @@ import TicketFormModal from "src/components/FormModals/Ticket";
 import List from "src/components/List/List";
 import ListItem from "./ListItem";
 
-type TicketListProps = {}
+type TicketListProps = {};
 
 function TicketList(props: TicketListProps) {
-
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
             <List
                 variant={{
-                    name: "pagination"
+                    name: "pagination",
                 }}
                 id="e72e4f55-d438-4f30-aaf6-a5c872f61e19"
                 fetch={{
                     route: "tickets/pager",
-                    queryKey: "ticket"
+                    queryKey: "ticket",
                 }}
                 listItemRender={(item) => <ListItem item={item} />}
                 header={{
                     title: "pending tickets",
-                    showCount: true
+                    showCount: true,
                 }}
                 sort={[
                     {
-                        property: "title"
+                        property: "title",
                     },
                     {
                         property: "priority.name",
-                        label: "priority"
+                        label: "priority",
                     },
                     {
-                        property: "dueDate"
+                        property: "dueDate",
                     },
                 ]}
                 filter={[
                     {
                         property: "title",
                         label: "Title",
-                        type: "string"
+                        type: "string",
                     },
                     {
                         property: "priority.name",
                         label: "priority",
-                        type: "string"
-                    }
+                        type: "string",
+                    },
                 ]}
                 onAdd={onOpen}
             />
-            <TicketFormModal
-                isOpen={isOpen}
-                onClose={onClose}
-            />
+            <TicketFormModal isOpen={isOpen} onClose={onClose} />
         </>
     );
 }

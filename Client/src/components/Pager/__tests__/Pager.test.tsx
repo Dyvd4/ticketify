@@ -1,18 +1,12 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
-import Pager from "../Pager"
-import { Mock, vi } from "vitest"
+import Pager from "../Pager";
+import { Mock, vi } from "vitest";
 
 const PagerDummy = ({ pagesCount, initialPage = 1 }) => {
     const [page, setPage] = React.useState(initialPage);
-    return (
-        <Pager
-            onChange={(page) => setPage(page)}
-            currentPage={page}
-            pagesCount={pagesCount}
-        />
-    )
-}
+    return <Pager onChange={(page) => setPage(page)} currentPage={page} pagesCount={pagesCount} />;
+};
 
 beforeEach(() => {
     cleanup();
@@ -36,10 +30,11 @@ it("displays page button with value of last page", () => {
 });
 
 it("lets navigate via next button", () => {
-
     const setState = vi.fn();
-    (vi.spyOn(React, "useState") as Mock<any>)
-        .mockImplementation((initialState) => [initialState, setState]);
+    (vi.spyOn(React, "useState") as Mock<any>).mockImplementation((initialState) => [
+        initialState,
+        setState,
+    ]);
 
     render(<PagerDummy pagesCount={11} />);
 
@@ -48,14 +43,14 @@ it("lets navigate via next button", () => {
 
     fireEvent.click(nextButton);
     expect(setState).toHaveBeenCalledWith(2);
-
 });
 
 it("lets navigate via prev button", () => {
-
     const setState = vi.fn();
-    (vi.spyOn(React, "useState") as Mock<any>)
-        .mockImplementation((initialState) => [initialState, setState]);
+    (vi.spyOn(React, "useState") as Mock<any>).mockImplementation((initialState) => [
+        initialState,
+        setState,
+    ]);
 
     render(<PagerDummy pagesCount={11} initialPage={2} />);
 
@@ -64,7 +59,6 @@ it("lets navigate via prev button", () => {
 
     fireEvent.click(prevButton);
     expect(setState).toHaveBeenCalledWith(1);
-
 });
 
 describe("pages count = 7", () => {
@@ -73,9 +67,11 @@ describe("pages count = 7", () => {
 
         const pager = screen.getByTestId("Pager");
 
-        new Array(7).map((val, i) => i + 1).forEach(number => {
-            expect(within(pager).getByText(number)).toBeTruthy();
-        });
+        new Array(7)
+            .map((val, i) => i + 1)
+            .forEach((number) => {
+                expect(within(pager).getByText(number)).toBeTruthy();
+            });
     });
 });
 

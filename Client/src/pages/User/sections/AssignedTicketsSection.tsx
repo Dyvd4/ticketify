@@ -7,28 +7,25 @@ import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
 import { useIsCurrentUser } from "src/hooks/user";
 
 type AssignedTicketsSectionsProps = {
-    user: any
-}
+    user: any;
+};
 
 function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
-
     const isOwnSite = useIsCurrentUser(user);
-    const query = useInfiniteQuery<any, any>(["ticket"], { route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user.id}` });
+    const query = useInfiniteQuery<any, any>(["ticket"], {
+        route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user.id}`,
+    });
     const ticketCount = useInfiniteQueryCount(query);
 
     return (
         <>
-            <Heading as="h1" className="font-bold text-2xl">
+            <Heading as="h1" className="text-2xl font-bold">
                 Assigned tickets ({ticketCount}) &nbsp;
                 <FontAwesomeIcon icon={faTicketSimple} />
             </Heading>
-            <List
-                id="9151947b-ad33-44cd-bbcc-7e8316ba1439"
-                className="flex flex-col gap-4 mt-4">
-                <InfiniteLoaderResultItems
-                    variant="intersection-observer"
-                    query={query}>
-                    {ticket => <ListItem item={ticket} />}
+            <List id="9151947b-ad33-44cd-bbcc-7e8316ba1439" className="mt-4 flex flex-col gap-4">
+                <InfiniteLoaderResultItems variant="intersection-observer" query={query}>
+                    {(ticket) => <ListItem item={ticket} />}
                 </InfiniteLoaderResultItems>
             </List>
         </>

@@ -1,4 +1,22 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Flex, Heading, List, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
+    Button,
+    Flex,
+    Heading,
+    List,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    useDisclosure,
+    useToast,
+} from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -8,14 +26,18 @@ import Modal from "src/components/Wrapper/Modal";
 import TicketListItem from "../components/TicketListItem";
 
 type ConnectedTicketsEditModalProps = {
-    connectedToTickets: any[]
-    connectedByTickets: any[]
-    isOpen: boolean
-    onClose(...args: any[]): void
-}
+    connectedToTickets: any[];
+    connectedByTickets: any[];
+    isOpen: boolean;
+    onClose(...args: any[]): void;
+};
 
-function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTickets, ...props }: ConnectedTicketsEditModalProps) {
-
+function ConnectedTicketsEditModal({
+    isOpen,
+    connectedToTickets,
+    connectedByTickets,
+    ...props
+}: ConnectedTicketsEditModalProps) {
     // state
     // -----
     const { isOpen: alertIsOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
@@ -28,98 +50,109 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
 
     // mutations
     // ---------
-    const mutation = useMutation(() => {
-        const connectedById = connectedTicketToRemove.isConnectedTo
-            ? id
-            : connectedTicketToRemove.id;
+    const mutation = useMutation(
+        () => {
+            const connectedById = connectedTicketToRemove.isConnectedTo
+                ? id
+                : connectedTicketToRemove.id;
 
-        const connectedToId = connectedTicketToRemove.isConnectedTo
-            ? connectedTicketToRemove.id
-            : id;
-        return removeEntity({
-            route: `ticketOnTicket/${connectedById}/${connectedToId}`,
-        })
-    }, {
-        onSuccess: async () => {
-            await queryClient.invalidateQueries(["ticket", String(id)]);
-            onAlertClose();
-            const { connectedToTickets, connectedByTickets } = queryClient.getQueryData(["ticket", String(id)]) as any;
-            if (connectedToTickets.concat(connectedByTickets).length === 0) props.onClose();
-            toast({
-                title: "successfully removed connection to ticket",
-                status: "success"
+            const connectedToId = connectedTicketToRemove.isConnectedTo
+                ? connectedTicketToRemove.id
+                : id;
+            return removeEntity({
+                route: `ticketOnTicket/${connectedById}/${connectedToId}`,
             });
+        },
+        {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(["ticket", String(id)]);
+                onAlertClose();
+                const { connectedToTickets, connectedByTickets } = queryClient.getQueryData([
+                    "ticket",
+                    String(id),
+                ]) as any;
+                if (connectedToTickets.concat(connectedByTickets).length === 0) props.onClose();
+                toast({
+                    title: "successfully removed connection to ticket",
+                    status: "success",
+                });
+            },
         }
-    });
+    );
 
     const handleOpen = (connectedTicket) => {
         setConnectedTicketToRemove(connectedTicket);
         onAlertOpen();
-    }
+    };
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={props.onClose}>
+        <Modal isOpen={isOpen} onClose={props.onClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalCloseButton />
-                <ModalHeader>
-                    EDIT connected tickets
-                </ModalHeader>
+                <ModalHeader>EDIT connected tickets</ModalHeader>
                 <ModalBody>
-                    {connectedToTickets.length > 0 && <>
-                        <Heading className="text-lg">Connected to:</Heading>
-                        <List className="my-2 flex flex-col gap-2">
-                            {connectedToTickets.map(connectedTicket => (
-                                <Flex
-                                    alignItems={"center"}
-                                    justifyContent={"space-between"}
-                                    gap={2}
-                                    key={connectedTicket.id}>
-                                    <TicketListItem item={connectedTicket} />
-                                    <TooltipIconButton
-                                        variant="remove"
-                                        iconButtonProps={{
-                                            circle: true,
-                                            onClick: () => handleOpen({
-                                                ...connectedTicket,
-                                                isConnectedTo: true
-                                            })
-                                        }}
-                                    />
-                                </Flex>
-                            ))}
-                        </List>
-                    </>}
-                    {connectedByTickets.length > 0 && <>
-                        <Heading className="text-lg">Connected by:</Heading>
-                        <List className="my-2 flex flex-col gap-2">
-                            {connectedByTickets.map(connectedTicket => (
-                                <Flex
-                                    alignItems={"center"}
-                                    justifyContent={"space-between"}
-                                    gap={2}
-                                    key={connectedTicket.id}>
-                                    <TicketListItem item={connectedTicket} />
-                                    <TooltipIconButton
-                                        variant="remove"
-                                        iconButtonProps={{
-                                            circle: true,
-                                            onClick: () => handleOpen({
-                                                ...connectedTicket,
-                                                isConnectedTo: true
-                                            })
-                                        }}
-                                    />
-                                </Flex>
-                            ))}
-                        </List>
-                    </>}
+                    {connectedToTickets.length > 0 && (
+                        <>
+                            <Heading className="text-lg">Connected to:</Heading>
+                            <List className="my-2 flex flex-col gap-2">
+                                {connectedToTickets.map((connectedTicket) => (
+                                    <Flex
+                                        alignItems={"center"}
+                                        justifyContent={"space-between"}
+                                        gap={2}
+                                        key={connectedTicket.id}
+                                    >
+                                        <TicketListItem item={connectedTicket} />
+                                        <TooltipIconButton
+                                            variant="remove"
+                                            iconButtonProps={{
+                                                circle: true,
+                                                onClick: () =>
+                                                    handleOpen({
+                                                        ...connectedTicket,
+                                                        isConnectedTo: true,
+                                                    }),
+                                            }}
+                                        />
+                                    </Flex>
+                                ))}
+                            </List>
+                        </>
+                    )}
+                    {connectedByTickets.length > 0 && (
+                        <>
+                            <Heading className="text-lg">Connected by:</Heading>
+                            <List className="my-2 flex flex-col gap-2">
+                                {connectedByTickets.map((connectedTicket) => (
+                                    <Flex
+                                        alignItems={"center"}
+                                        justifyContent={"space-between"}
+                                        gap={2}
+                                        key={connectedTicket.id}
+                                    >
+                                        <TicketListItem item={connectedTicket} />
+                                        <TooltipIconButton
+                                            variant="remove"
+                                            iconButtonProps={{
+                                                circle: true,
+                                                onClick: () =>
+                                                    handleOpen({
+                                                        ...connectedTicket,
+                                                        isConnectedTo: true,
+                                                    }),
+                                            }}
+                                        />
+                                    </Flex>
+                                ))}
+                            </List>
+                        </>
+                    )}
                     <AlertDialog
                         isOpen={alertIsOpen}
                         leastDestructiveRef={cancelRef}
-                        onClose={onAlertClose}>
+                        onClose={onAlertClose}
+                    >
                         <AlertDialogOverlay>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -136,7 +169,8 @@ function ConnectedTicketsEditModal({ isOpen, connectedToTickets, connectedByTick
                                         isLoading={mutation.isLoading}
                                         colorScheme="red"
                                         onClick={() => mutation.mutate()}
-                                        ml={3} >
+                                        ml={3}
+                                    >
                                         Delete
                                     </Button>
                                 </AlertDialogFooter>

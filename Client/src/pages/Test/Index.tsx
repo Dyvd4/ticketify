@@ -1,19 +1,20 @@
 import { Button, MenuItem, Tag, Td } from "@chakra-ui/react";
 import { faDownload, faEdit, faImage, faThumbTack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import { fetchEntity } from "src/api/entity";
 import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/Table/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
+import { twJoin, twMerge } from "tailwind-merge";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import ListItemContent from "./ListItemContent";
 
-interface IndexProps { }
+interface IndexProps {}
 
 function Index(props: IndexProps) {
-
-    useBreadcrumb([{ name: "/", isCurrentPage: true }])
+    useBreadcrumb([{ name: "/", isCurrentPage: true }]);
 
     const makeRequest = async () => {
         const objWithNested = {
@@ -21,57 +22,57 @@ function Index(props: IndexProps) {
             anotherProp: "hehe",
             nestedObj: {
                 someNestedProp: "fhdsjkfhs",
-                someNestedArrProp: ["fdsfds", "fhdjskhfjk"]
-            }
+                someNestedArrProp: ["fdsfds", "fhdjskhfjk"],
+            },
         };
         await fetchEntity({
             route: "dummy/getWithObjectUrlParams",
-            queryParams: objWithNested
-
+            queryParams: objWithNested,
         });
-    }
+    };
+
+    const className = twMerge("bg-red-500 text-center", "bg-red-400");
+    console.log(className);
 
     return (
         <>
             <TestList
                 header={{
                     title: "test",
-                    showCount: true
+                    showCount: true,
                 }}
                 id="5802edfd-85e0-41d7-818a-b2e7ab0c6d54"
-                filter={
-                    [
-                        {
-                            property: "isAmazing",
-                            type: "boolean",
-                            label: "Is amazing"
-                        },
-                        {
-                            property: "createdAt",
-                            type: "date",
-                            label: "created at"
-                        }
-                    ]
-                }
+                filter={[
+                    {
+                        property: "isAmazing",
+                        type: "boolean",
+                        label: "Is amazing",
+                    },
+                    {
+                        property: "createdAt",
+                        type: "date",
+                        label: "created at",
+                    },
+                ]}
                 fetch={{
                     route: "dummy/test/pager",
-                    queryKey: "test"
+                    queryKey: "test",
                 }}
                 columns={[
                     {
                         property: "isAmazing",
                         label: "is amazing",
-                        disabled: true
+                        disabled: true,
                     },
                     {
                         property: "createdAt",
                         label: "created at",
-                        disabled: true
+                        disabled: true,
                     },
                     {
                         property: "description",
                         label: "description",
-                        disabled: true
+                        disabled: true,
                     },
                 ]}
                 listItemRender={(item) => (
@@ -85,12 +86,11 @@ function Index(props: IndexProps) {
                     property: "description",
                     type: "string",
                     operation: {
-                        value: "contains"
+                        value: "contains",
                     },
-                    label: "search by description"
+                    label: "search by description",
                 }}
-            >
-            </TestList>
+            ></TestList>
             <br />
             <SearchBar />
             <br />
@@ -180,12 +180,9 @@ function Index(props: IndexProps) {
                     }
                 ]}
             /> */}
-            <Button onClick={makeRequest}>
-                Make Request
-            </Button>
+            <Button onClick={makeRequest}>Make Request</Button>
         </>
-    )
+    );
 }
 
 export default Index;
-

@@ -1,9 +1,9 @@
 import { request } from "../services/request";
 
-const validStatuses = [200, 401]
+const validStatuses = [200, 401];
 
 const myRequest = request({
-    validateStatus: (status) => validStatuses.includes(status)
+    validateStatus: (status) => validStatuses.includes(status),
 });
 
 export async function fetchCurrentUser() {

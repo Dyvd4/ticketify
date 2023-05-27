@@ -10,28 +10,23 @@ import filterItemsAtom from "../atoms/filterItemsAtom";
 const getDefaultOperation = (filterItem: TFilterItem) => typeOperations[filterItem.type][0];
 
 type UseFilterItemsInitArgs = {
-    defaultFilterItems: TFilterItem[],
-    listId: string
-}
+    defaultFilterItems: TFilterItem[];
+    listId: string;
+};
 
 const useFilterItemsInit = (
     { defaultFilterItems, listId }: UseFilterItemsInitArgs,
     onInit?: (filterItems, fromLocalStorage: boolean, fromUrl: boolean) => void
 ) => {
-
     const { currentUserSettings } = useCurrentUserSettings();
     const [, setFilterItems] = useAtom(filterItemsAtom);
     let filterItemsAreFromLocalStorage = false;
     let filterItemsAreFromUrl = false;
 
     useEffect(() => {
-
         if (!currentUserSettings) return;
 
-        const {
-            allowFilterItemsByLocalStorage,
-            allowFilterItemsByUrl,
-        } = currentUserSettings;
+        const { allowFilterItemsByLocalStorage, allowFilterItemsByUrl } = currentUserSettings;
 
         let filterItemsToSet: TFilterItem[] = defaultFilterItems;
 
@@ -41,8 +36,7 @@ const useFilterItemsInit = (
                 filterItemsToSet = filterItemsFromUrl;
                 filterItemsAreFromUrl = true;
             }
-        }
-        else if (allowFilterItemsByLocalStorage) {
+        } else if (allowFilterItemsByLocalStorage) {
             let filterItemsFromLocalStorage = localStorage.getItem(`filter-${listId}`);
             if (filterItemsFromLocalStorage) {
                 filterItemsToSet = JSON.parse(filterItemsFromLocalStorage);
@@ -50,23 +44,20 @@ const useFilterItemsInit = (
             }
         }
 
-        const filterItems = filterItemsToSet.map(filterItem => {
+        const filterItems = filterItemsToSet.map((filterItem) => {
             if (!filterItem.operation) {
                 return {
                     ...filterItem,
-                    operation: getDefaultOperation(filterItem)
-                }
-            }
-            else {
-                return filterItem
+                    operation: getDefaultOperation(filterItem),
+                };
+            } else {
+                return filterItem;
             }
         });
 
         setFilterItems(filterItems);
         if (onInit) onInit(filterItems, filterItemsAreFromLocalStorage, filterItemsAreFromUrl);
-
     }, [currentUserSettings]);
-
-}
+};
 
 export default useFilterItemsInit;

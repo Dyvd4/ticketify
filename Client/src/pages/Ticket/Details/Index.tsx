@@ -24,26 +24,45 @@ import HeadDataSection from "./sections/HeadDataSection";
 import TicketActivitySection from "./sections/TicketActivitySection";
 
 function TicketDetailsIndex() {
-
     useBreadcrumb([
         {
             name: "Home",
-            href: "/"
+            href: "/",
         },
         {
             name: "Details",
             href: "#",
-            isCurrentPage: true
-        }
-    ])
+            isCurrentPage: true,
+        },
+    ]);
 
     // state
     // -----
-    const { isOpen: ticketFormModalIsOpen, onOpen: onTicketFormModalOpen, onClose: onTicketFormModalClose } = useDisclosure();
-    const { isOpen: attachmentsEditModalIsOpen, onOpen: onAttachmentsEditModalOpen, onClose: onAttachmentsEditModalClose } = useDisclosure();
-    const { isOpen: attachmentsAddModalIsOpen, onOpen: onAttachmentsAddModalOpen, onClose: onAttachmentsAddModalClose } = useDisclosure();
-    const { isOpen: connectedTicketsAddModalIsOpen, onOpen: onConnectedTicketsAddModalOpen, onClose: onConnectedTicketsAddModalClose } = useDisclosure();
-    const { isOpen: connectedTicketsEditModalIsOpen, onOpen: onConnectedTicketsEditModalOpen, onClose: onConnectedTicketsEditModalClose } = useDisclosure();
+    const {
+        isOpen: ticketFormModalIsOpen,
+        onOpen: onTicketFormModalOpen,
+        onClose: onTicketFormModalClose,
+    } = useDisclosure();
+    const {
+        isOpen: attachmentsEditModalIsOpen,
+        onOpen: onAttachmentsEditModalOpen,
+        onClose: onAttachmentsEditModalClose,
+    } = useDisclosure();
+    const {
+        isOpen: attachmentsAddModalIsOpen,
+        onOpen: onAttachmentsAddModalOpen,
+        onClose: onAttachmentsAddModalClose,
+    } = useDisclosure();
+    const {
+        isOpen: connectedTicketsAddModalIsOpen,
+        onOpen: onConnectedTicketsAddModalOpen,
+        onClose: onConnectedTicketsAddModalClose,
+    } = useDisclosure();
+    const {
+        isOpen: connectedTicketsEditModalIsOpen,
+        onOpen: onConnectedTicketsEditModalOpen,
+        onClose: onConnectedTicketsEditModalClose,
+    } = useDisclosure();
     const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
 
     const { id } = useParams();
@@ -53,58 +72,64 @@ function TicketDetailsIndex() {
     const {
         isLoading: ticketLoading,
         isError: ticketError,
-        data: ticket
+        data: ticket,
     } = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
     const {
         isLoading: ticketAttachmentsLoading,
         isError: ticketAttachmentsError,
-        data: ticketAttachments
-    } = useQuery(["ticket/attachments", id], () => fetchEntity({ route: `ticket/attachments/${id}` }), {
-        refetchOnWindowFocus: false
-    });
-
-    const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities", id], {
-        route: "ticketActivities",
-        queryParams: {
-            ticketId: id
+        data: ticketAttachments,
+    } = useQuery(
+        ["ticket/attachments", id],
+        () => fetchEntity({ route: `ticket/attachments/${id}` }),
+        {
+            refetchOnWindowFocus: false,
         }
-    }, {
-        refetchInterval: 60000
-    });
+    );
+
+    const activitiesQuery = useInfiniteQuery<any, any>(
+        ["ticketActivities", id],
+        {
+            route: "ticketActivities",
+            queryParams: {
+                ticketId: id,
+            },
+        },
+        {
+            refetchInterval: 60000,
+        }
+    );
 
     // event handler
     // -------------
     const handleOnTicketFormModalOpen = (variant) => {
         setTicketFormModalVariant(variant);
         onTicketFormModalOpen();
-    }
+    };
 
-    const isLoading = [ticketLoading, ticketAttachmentsLoading].some(loading => loading);
+    const isLoading = [ticketLoading, ticketAttachmentsLoading].some((loading) => loading);
     if (isLoading) {
-        return <LoadingRipple centered />
+        return <LoadingRipple centered />;
     }
 
-    const isError = [ticketError, ticketAttachmentsError].some(error => error);
+    const isError = [ticketError, ticketAttachmentsError].some((error) => error);
     if (isError) {
         return (
             <Alert className="rounded-md" status="error" variant="top-accent">
                 <AlertIcon />
-                <Text>
-                    There was an error processing your request
-                </Text>
+                <Text>There was an error processing your request</Text>
             </Alert>
-        )
+        );
     }
 
-    const {
-        files,
-        images,
-        attachments,
-    } = ticketAttachments;
+    const { files, images, attachments } = ticketAttachments;
 
-    const connectedToTickets = ticket.connectedToTickets.map(connectedToTicket => connectedToTicket.connectedToTicket);
-    const connectedByTickets = ticket.connectedByTickets.map(connectedByTicket => connectedByTicket.connectedByTicket);
+    const connectedToTickets = ticket.connectedToTickets.map(
+        (connectedToTicket) => connectedToTicket.connectedToTicket
+    );
+    const connectedByTickets = ticket.connectedByTickets.map(
+        (connectedByTicket) => connectedByTicket.connectedByTicket
+    );
 
     return (
         <>
@@ -116,16 +141,16 @@ function TicketDetailsIndex() {
                     <PinTicketButton />,
                     <WatchTicketButton />,
                     <SetResponsibleUserButton />,
-                    <SetStatusButton />
+                    <SetStatusButton />,
                 ]}
                 addButton={
                     <TooltipIconButton
                         variant="add"
                         tooltipProps={{
-                            label: "add ticket"
+                            label: "add ticket",
                         }}
                         iconButtonProps={{
-                            onClick: () => handleOnTicketFormModalOpen("add")
+                            onClick: () => handleOnTicketFormModalOpen("add"),
                         }}
                     />
                 }
@@ -133,29 +158,34 @@ function TicketDetailsIndex() {
                     <TooltipIconButton
                         variant="edit"
                         tooltipProps={{
-                            label: "edit ticket"
+                            label: "edit ticket",
                         }}
                         iconButtonProps={{
-                            onClick: () => handleOnTicketFormModalOpen("edit")
+                            onClick: () => handleOnTicketFormModalOpen("edit"),
                         }}
                     />
-                }>
+                }
+            >
                 <HeadDataSection ticket={ticket} />
-                {ticketFormModalVariant === "add" && <>
-                    <TicketFormModal
-                        isOpen={ticketFormModalIsOpen}
-                        onClose={onTicketFormModalClose}
-                        variant={ticketFormModalVariant}
-                    />
-                </>}
-                {ticketFormModalVariant === "edit" && <>
-                    <TicketFormModal
-                        id={id}
-                        isOpen={ticketFormModalIsOpen}
-                        onClose={onTicketFormModalClose}
-                        variant={ticketFormModalVariant}
-                    />
-                </>}
+                {ticketFormModalVariant === "add" && (
+                    <>
+                        <TicketFormModal
+                            isOpen={ticketFormModalIsOpen}
+                            onClose={onTicketFormModalClose}
+                            variant={ticketFormModalVariant}
+                        />
+                    </>
+                )}
+                {ticketFormModalVariant === "edit" && (
+                    <>
+                        <TicketFormModal
+                            id={id}
+                            isOpen={ticketFormModalIsOpen}
+                            onClose={onTicketFormModalClose}
+                            variant={ticketFormModalVariant}
+                        />
+                    </>
+                )}
             </SectionBlock>
             {/* Attachments section
                 =================== */}
@@ -166,29 +196,27 @@ function TicketDetailsIndex() {
                     <TooltipIconButton
                         variant="add"
                         tooltipProps={{
-                            label: "add attachment"
+                            label: "add attachment",
                         }}
                         iconButtonProps={{
-                            onClick: onAttachmentsAddModalOpen
+                            onClick: onAttachmentsAddModalOpen,
                         }}
-                    />}
+                    />
+                }
                 editButton={
                     <TooltipIconButton
                         variant="edit"
                         tooltipProps={{
-                            label: "edit attachments"
+                            label: "edit attachments",
                         }}
                         iconButtonProps={{
                             disabled: attachments.length === 0,
-                            onClick: onAttachmentsEditModalOpen
+                            onClick: onAttachmentsEditModalOpen,
                         }}
                     />
-                }>
-                <AttachmentsSection
-                    attachments={attachments}
-                    images={images}
-                    files={files}
-                />
+                }
+            >
+                <AttachmentsSection attachments={attachments} images={images} files={files} />
                 <AttachmentsEditModal
                     isOpen={attachmentsEditModalIsOpen}
                     onClose={onAttachmentsEditModalClose}
@@ -208,10 +236,10 @@ function TicketDetailsIndex() {
                     <TooltipIconButton
                         variant="add"
                         tooltipProps={{
-                            label: "add connection"
+                            label: "add connection",
                         }}
                         iconButtonProps={{
-                            onClick: onConnectedTicketsAddModalOpen
+                            onClick: onConnectedTicketsAddModalOpen,
                         }}
                     />
                 }
@@ -219,14 +247,15 @@ function TicketDetailsIndex() {
                     <TooltipIconButton
                         variant="edit"
                         tooltipProps={{
-                            label: "edit connections"
+                            label: "edit connections",
                         }}
                         iconButtonProps={{
                             disabled: connectedToTickets.concat(connectedByTickets).length === 0,
-                            onClick: onConnectedTicketsEditModalOpen
+                            onClick: onConnectedTicketsEditModalOpen,
                         }}
                     />
-                }>
+                }
+            >
                 <ConnectedTicketsSection
                     connectedByTickets={connectedByTickets}
                     connectedToTickets={connectedToTickets}

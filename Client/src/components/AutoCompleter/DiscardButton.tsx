@@ -3,8 +3,7 @@ import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { mapColorProps } from "src/utils/component";
 
-type DiscardButtonProps = {}
-    & React.ComponentPropsWithRef<"div">
+type DiscardButtonProps = {} & React.ComponentPropsWithRef<"div">;
 
 function DiscardButton({ className, ...rest }: DiscardButtonProps) {
     const textColor = {
@@ -12,9 +11,9 @@ function DiscardButton({ className, ...rest }: DiscardButtonProps) {
         hover: "text-gray-800",
         darkMode: {
             value: "text-gray-500",
-            hover: "text-gray-400"
-        }
-    }
+            hover: "text-gray-400",
+        },
+    };
     return (
         <Tooltip label="discard" placement="top">
             <>
@@ -22,7 +21,8 @@ function DiscardButton({ className, ...rest }: DiscardButtonProps) {
                     className={`cursor-pointer
                             ${mapColorProps([textColor])}  
                             ${className}`}
-                    {...rest}>
+                    {...rest}
+                >
                     <FontAwesomeIcon icon={faMinusCircle} size="lg" />
                 </div>
             </>

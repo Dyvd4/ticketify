@@ -1,41 +1,41 @@
 export const operations = {
     contains: {
         label: "contains",
-        value: "contains"
+        value: "contains",
     },
     equals: {
         label: "equals",
-        value: "equals"
+        value: "equals",
     },
     startsWith: {
         label: "starts with",
-        value: "startsWith"
+        value: "startsWith",
     },
     endsWith: {
         label: "ends with",
-        value: "endsWith"
+        value: "endsWith",
     },
     gt: {
         label: "greater than",
-        value: "gt"
+        value: "gt",
     },
     gte: {
         label: "greather than or equal",
-        value: "gte"
+        value: "gte",
     },
     lt: {
         label: "less than",
-        value: "lt"
+        value: "lt",
     },
     lte: {
         label: "less than or equal",
-        value: "lte"
+        value: "lte",
     },
     not: {
         label: "not",
-        value: "not"
-    }
-}
+        value: "not",
+    },
+};
 
 export const typeOperations = {
     string: [
@@ -43,7 +43,7 @@ export const typeOperations = {
         operations.equals,
         operations.not,
         operations.startsWith,
-        operations.endsWith
+        operations.endsWith,
     ],
     number: [
         operations.lt,
@@ -51,7 +51,7 @@ export const typeOperations = {
         operations.not,
         operations.gte,
         operations.lte,
-        operations.equals
+        operations.equals,
     ],
     date: [
         operations.equals,
@@ -59,10 +59,7 @@ export const typeOperations = {
         operations.gt,
         operations.not,
         operations.gte,
-        operations.lte
+        operations.lte,
     ],
-    boolean: [
-        operations.equals,
-        operations.not
-    ]
-}
+    boolean: [operations.equals, operations.not],
+};

@@ -8,8 +8,8 @@
             "command": "npm run start_client",
             "presentation": {
                 "reveal": "always",
-                "panel": "new",
-            },
+                "panel": "new"
+            }
         },
         {
             "label": "start Backend",
@@ -17,15 +17,12 @@
             "command": "npm run start_backend",
             "presentation": {
                 "reveal": "always",
-                "panel": "new",
-            },
+                "panel": "new"
+            }
         },
         {
             "label": "start",
-            "dependsOn": [
-                "start Client",
-                "start Backend"
-            ],
+            "dependsOn": ["start Client", "start Backend"],
             "dependsOrder": "parallel"
         },
         // dev start
@@ -35,15 +32,12 @@
             "command": "npm run dev_start_backend",
             "presentation": {
                 "reveal": "always",
-                "panel": "new",
-            },
+                "panel": "new"
+            }
         },
         {
             "label": "dev start",
-            "dependsOn": [
-                "start Client",
-                "dev start Backend"
-            ],
+            "dependsOn": ["start Client", "dev start Backend"],
             "dependsOrder": "parallel"
         }
     ]
