@@ -167,7 +167,6 @@ function List({ className, ...props }: ListProps) {
     };
 
     const useFilter = props.filter.length > 0;
-    const useSort = props.columns.length > 0;
     const useSearch = !!searchItem;
     const headerIsVisible =
         header?.title || header?.showCount || useSearch || useFilter || props.onAdd;
@@ -182,7 +181,7 @@ function List({ className, ...props }: ListProps) {
                             title={header?.title}
                             showCount={header?.showCount}
                             useSearch={!!searchItem}
-                            useSort={useSort}
+                            useSort={false}
                             useFilter={useFilter}
                             onAdd={props.onAdd}
                         />
