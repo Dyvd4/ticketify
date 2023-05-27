@@ -1,4 +1,4 @@
-import { Box, Heading, Link, Tooltip } from '@chakra-ui/react';
+import { Box, Divider, Heading, Link, Tooltip } from '@chakra-ui/react';
 import { faArrowLeft, faArrowRight, faBook, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -89,6 +89,8 @@ function Sidebar({ className, ...props }: SidebarProps) {
 
             <NewTicketSection />
 
+            <Divider />
+
             <SidebarListItem
                 title="Tickets"
                 urlPath={"/Ticket"}
@@ -112,9 +114,10 @@ function Sidebar({ className, ...props }: SidebarProps) {
                 icon={faFlask}
             />
 
+            <Divider />
+
             <PinnedTicketsSection
                 sidebarListItemVariant={sidebarListItemVariant}
-                className='mt-6'
             />
         </BgBox>
     )
