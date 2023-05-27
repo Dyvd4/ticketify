@@ -1,4 +1,4 @@
-import { Heading, Link, Tooltip } from '@chakra-ui/react';
+import { Heading, Tooltip } from '@chakra-ui/react';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { faBook, faFireFlameCurved, faFlask, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -60,7 +60,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
                                 <span className='mr-2'>
                                     Ticketify
                                 </span>
-                                <FontAwesomeIcon icon={faFireFlameCurved} />
+                                <FontAwesomeIcon icon={faTicket} />
                             </Tooltip>
                         </Heading>
                     )}
