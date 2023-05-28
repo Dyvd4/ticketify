@@ -8,8 +8,8 @@ import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import { cn } from "src/utils/component";
-import SetResponsibleUserButton from "../Shared/SetResponsibleUserButton";
-import SetStatusButton from "../Shared/SetStatusButton";
+import SetResponsibleUserButton from "../components/SetResponsibleUserButton";
+import SetStatusButton from "../components/SetStatusButton";
 
 type _TicketHeadDataActionBoxProps = {};
 

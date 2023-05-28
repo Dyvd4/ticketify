@@ -7,8 +7,8 @@ import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
 import { cn } from "src/utils/component";
 import { getTitle } from "src/utils/ticket";
-import PinTicketButton from "../Shared/PinTicketButton";
-import WatchTicketButton from "../Shared/WatchTicketButton";
+import PinTicketButton from "../components/PinTicketButton";
+import WatchTicketButton from "../components/WatchTicketButton";
 
 type _TicketDescriptionActionBoxProps = {};
 
