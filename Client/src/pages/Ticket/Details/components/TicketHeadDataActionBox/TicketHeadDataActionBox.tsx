@@ -1,10 +1,15 @@
-import { Flex, Tag } from "@chakra-ui/react";
+import { Flex, Tag, useDisclosure } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
+import TicketFormModal from "src/components/FormModals/Ticket";
 import { cn } from "src/utils/component";
+import SetResponsibleUserButton from "../Shared/SetResponsibleUserButton";
+import SetStatusButton from "../Shared/SetStatusButton";
 
 type _TicketHeadDataActionBoxProps = {};
 
@@ -22,20 +27,49 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
 	// TODO: skeleton loading
-	if (ticketLoading) return null;
 
-	const { priority, status, dueDate, responsibleUser, description } = ticket;
+	const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
+	const {
+		isOpen: ticketFormModalIsOpen,
+		onOpen: onTicketFormModalOpen,
+		onClose: onTicketFormModalClose,
+	} = useDisclosure();
+	const handleOnTicketFormModalOpen = (variant) => {
+		setTicketFormModalVariant(variant);
+		onTicketFormModalOpen();
+	};
+	if (ticketLoading) return null;
+	const { priority, dueDate, responsibleUser } = ticket;
 
 	return (
-		<ActionBox title="Meta data" className={cn("", className)} {...props}>
-			<Flex gap={2} direction="column" className="text-secondary">
+		<ActionBox
+			useDivider
+			title="Meta data"
+			className={cn("", className)}
+			actions={[
+				<TooltipIconButton
+					variant="edit"
+					tooltipProps={{
+						label: "edit ticket",
+					}}
+					iconButtonProps={{
+						onClick: () => handleOnTicketFormModalOpen("edit"),
+						size: "sm",
+					}}
+				/>,
+			]}
+			{...props}
+		>
+			<Flex gap={4} direction="column" className="text-secondary">
 				<Flex justifyContent="space-between">
 					<div>priority</div>
 					<Tag colorScheme={priority.color}>{priority.name}</Tag>
 				</Flex>
 				<Flex justifyContent="space-between">
 					<div>status</div>
-					<Tag colorScheme={status.color}>{status?.name || "none"}</Tag>
+					<div className="flex-gap-2">
+						<SetStatusButton />
+					</div>
 				</Flex>
 				<Flex justifyContent="space-between">
 					<div>due date</div>
@@ -43,9 +77,22 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 				</Flex>
 				<Flex justifyContent="space-between">
 					<div>responsible user</div>
-					<div>{responsibleUser?.username || "-"}</div>
+					<div className="flex items-center justify-center gap-2">
+						{responsibleUser?.username || "-"}
+						<SetResponsibleUserButton />
+					</div>
 				</Flex>
 			</Flex>
+			{ticketFormModalVariant === "edit" && (
+				<>
+					<TicketFormModal
+						id={id}
+						isOpen={ticketFormModalIsOpen}
+						onClose={onTicketFormModalClose}
+						variant={ticketFormModalVariant}
+					/>
+				</>
+			)}
 		</ActionBox>
 	);
 }
