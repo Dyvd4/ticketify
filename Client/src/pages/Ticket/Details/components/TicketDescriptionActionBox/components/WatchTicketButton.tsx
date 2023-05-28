@@ -1,4 +1,4 @@
-import { Button, useToast } from "@chakra-ui/react";
+import { IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { faEye as farEye } from "@fortawesome/free-regular-svg-icons";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,15 +56,16 @@ function WatchTicketButton(props: WatchTicketButtonProps) {
 		);
 
 	return (
-		<Button
-			isActive={isWatching}
-			isLoading={isLoading}
-			onClick={() => mutation.mutate()}
-			size={"sm"}
-			leftIcon={<FontAwesomeIcon icon={isWatching ? faEye : farEye} />}
-		>
-			{isWatching ? "unwatch ticket" : "watch ticket"}
-		</Button>
+		<Tooltip label={isWatching ? "unwatch ticket" : "watch ticket"} placement="top">
+			<IconButton
+				isActive={isWatching}
+				isLoading={isLoading}
+				aria-label="watch ticket"
+				onClick={() => mutation.mutate()}
+				size={"sm"}
+				icon={<FontAwesomeIcon icon={isWatching ? faEye : farEye} />}
+			/>
+		</Tooltip>
 	);
 }
 

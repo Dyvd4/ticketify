@@ -108,7 +108,7 @@ function SetStatusButton(props: SetStatusButtonProps) {
 			<Menu>
 				<MenuButton height={"8"} className="text-sm" as={Button}>
 					<FontAwesomeIcon icon={faSignal} className="mr-2" />
-					set status
+					change status
 				</MenuButton>
 				{!isLoading && (
 					<>

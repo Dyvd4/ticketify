@@ -1,5 +1,6 @@
 import {
 	Button,
+	MenuItem,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
@@ -74,6 +75,9 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
 
 	return (
 		<>
+			<MenuItem onClick={onOpen} icon={<FontAwesomeIcon icon={faUser} />}>
+				change responsible user
+			</MenuItem>
 			<Modal isLoading={isLoading} isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
@@ -112,14 +116,6 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-			<Button
-				isLoading={mutation.isLoading}
-				size={"sm"}
-				onClick={onOpen}
-				leftIcon={<FontAwesomeIcon icon={faUser} />}
-			>
-				set responsible user
-			</Button>
 		</>
 	);
 }

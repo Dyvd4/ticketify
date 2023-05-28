@@ -14,6 +14,7 @@ import {
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import useCommentMutations from "src/api/mutations/hooks/useCommentMutations";
 import CommentSkeleton from "src/components/Comment/CommentSkeleton";
@@ -43,17 +44,21 @@ const sortParamsData = [
 	mostHeartedCommentSortParam,
 ];
 
-type CommentsSectionProps = {
-	ticket: any;
-};
+type CommentsSectionProps = {};
 
 function CommentsSection(props: CommentsSectionProps) {
-	const { ticket } = props;
-
+	const { id } = useParams();
 	const [commentInputValue, setCommentInputValue] = useState("");
 	const { currentUser } = useCurrentUser({ includeAllEntities: true });
-
 	const [sortParam, setSortParam] = useAtom(commentSortParamAtom);
+
+	// queries
+	// -------
+	const {
+		isLoading: ticketLoading,
+		isError: ticketError,
+		data: ticket,
+	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
 	// queries
 	// -------
@@ -62,22 +67,24 @@ function CommentsSection(props: CommentsSectionProps) {
 		isError,
 		data: comments = [],
 	} = useQuery(
-		["comments", sortParam, ticket.id],
+		["comments", sortParam, id],
 		() => {
-			return fetchEntity({ route: `comments/${ticket.id}/?orderBy=${sortParam.property}` });
+			return fetchEntity({ route: `comments/${id}/?orderBy=${sortParam.property}` });
 		},
 		{
 			refetchOnWindowFocus: false,
+			enabled: !!id,
 		}
 	);
 
 	const { isError: countError, data: count } = useQuery(
 		["comments/count"],
 		() => {
-			return fetchEntity({ route: `comments/count/${ticket.id}` });
+			return fetchEntity({ route: `comments/count/${id}` });
 		},
 		{
 			refetchOnWindowFocus: false,
+			enabled: !!id,
 		}
 	);
 
@@ -89,7 +96,7 @@ function CommentsSection(props: CommentsSectionProps) {
 		addCommentMutation,
 		editCommentMutation,
 		deleteCommentMutation,
-	} = useCommentMutations(ticket.id);
+	} = useCommentMutations(id);
 
 	// event handler
 	// -------------
@@ -104,7 +111,7 @@ function CommentsSection(props: CommentsSectionProps) {
 		addCommentMutation.mutate({
 			route: "comment",
 			payload: {
-				ticketId: ticket.id,
+				ticketId: id,
 				content: commentInputValue,
 			},
 		});
@@ -125,7 +132,7 @@ function CommentsSection(props: CommentsSectionProps) {
 			payload: {
 				id: uuid(),
 				parentId: comment.parentId || comment.id,
-				ticketId: ticket.id,
+				ticketId: id,
 				content: replyValue,
 			},
 		});
@@ -176,6 +183,9 @@ function CommentsSection(props: CommentsSectionProps) {
 			// @ts-ignore
 			return new Date(b.createdAt) - new Date(a.createdAt);
 		})[0];
+
+	// TODO: skeleton loading
+	if (ticketLoading) return null;
 
 	return (
 		<Box>
