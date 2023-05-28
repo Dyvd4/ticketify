@@ -48,7 +48,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
 		<BgBox
 			backgroundColor={"gray.800"}
 			_light={{
-				backgroundColor: "gray.100",
+				backgroundColor: "gray.100", // TODO: rethink of better color
 			}}
 			variant="child"
 			as="ul"
