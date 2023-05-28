@@ -1,6 +1,5 @@
 import {
 	Button,
-	MenuItem,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
@@ -10,13 +9,12 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity, updateEntity } from "src/api/entity";
 import AutoCompleter from "src/components/AutoCompleter";
+import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import Modal from "src/components/Wrapper/Modal";
 
 type SetResponsibleUserButtonProps = {};
@@ -75,9 +73,16 @@ function SetResponsibleUserButton(props: SetResponsibleUserButtonProps) {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen} icon={<FontAwesomeIcon icon={faUser} />}>
-				change responsible user
-			</MenuItem>
+			<TooltipIconButton
+				variant="edit"
+				tooltipProps={{
+					label: "edit responsible user",
+				}}
+				iconButtonProps={{
+					onClick: onOpen,
+					size: "xs",
+				}}
+			/>
 			<Modal isLoading={isLoading} isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>

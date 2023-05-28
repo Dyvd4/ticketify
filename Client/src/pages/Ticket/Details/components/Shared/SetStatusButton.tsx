@@ -15,8 +15,6 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { faSignal } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -106,12 +104,17 @@ function SetStatusButton(props: SetStatusButtonProps) {
 				</ModalContent>
 			</Modal>
 			<Menu>
-				<MenuButton height={"8"} className="text-sm" as={Button}>
-					<FontAwesomeIcon icon={faSignal} className="mr-2" />
-					change status
-				</MenuButton>
 				{!isLoading && (
 					<>
+						<MenuButton
+							height={"6"}
+							className="cursor-pointer text-xs"
+							as={Tag}
+							// @ts-ignore
+							colorScheme={status.color}
+						>
+							{status?.name || "none"}
+						</MenuButton>
 						<MenuList>
 							<MenuOptionGroup
 								onChange={handleStatusChange}
