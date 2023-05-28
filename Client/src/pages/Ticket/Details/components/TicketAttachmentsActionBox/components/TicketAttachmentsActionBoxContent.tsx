@@ -27,9 +27,7 @@ function TicketAttachmentsActionBoxContent({
 		}
 	);
 
-	// TODO: skeleton loading
 	if (ticketAttachmentsLoading) return null;
-
 	const { files, images, attachments } = ticketAttachments;
 
 	return (

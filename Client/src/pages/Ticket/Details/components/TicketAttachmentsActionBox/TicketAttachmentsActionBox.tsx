@@ -2,7 +2,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import { cn } from "src/utils/component";
 import TicketAttachmentsActionBoxContent from "./components/TicketAttachmentsActionBoxContent";
@@ -16,6 +16,7 @@ export type TicketAttachmentsActionBoxProps = _TicketAttachmentsActionBoxProps &
 
 function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsActionBoxProps) {
 	const { id } = useParams();
+
 	// state
 	// -----
 	const {
@@ -28,6 +29,7 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 		onOpen: onAttachmentsAddModalOpen,
 		onClose: onAttachmentsAddModalClose,
 	} = useDisclosure();
+
 	const {
 		isLoading: ticketAttachmentsLoading,
 		isError: ticketAttachmentsError,
@@ -40,10 +42,9 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 		}
 	);
 
-	// TODO: skeleton loading
-	if (ticketAttachmentsLoading) return null;
+	if (ticketAttachmentsLoading) return <ActionBoxSkeleton />;
+	const { attachments } = ticketAttachments;
 
-	const { files, images, attachments } = ticketAttachments;
 	return (
 		<ActionBox
 			className={cn("", className)}

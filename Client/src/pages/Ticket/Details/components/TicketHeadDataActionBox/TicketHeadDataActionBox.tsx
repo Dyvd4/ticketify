@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import { cn } from "src/utils/component";
@@ -18,6 +18,8 @@ export type TicketHeadDataActionBoxProps = _TicketHeadDataActionBoxProps &
 
 function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBoxProps) {
 	const { id } = useParams();
+	const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
+
 	// queries
 	// -------
 	const {
@@ -26,19 +28,18 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 		data: ticket,
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
-	// TODO: skeleton loading
-
-	const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
 	const {
 		isOpen: ticketFormModalIsOpen,
 		onOpen: onTicketFormModalOpen,
 		onClose: onTicketFormModalClose,
 	} = useDisclosure();
+
 	const handleOnTicketFormModalOpen = (variant) => {
 		setTicketFormModalVariant(variant);
 		onTicketFormModalOpen();
 	};
-	if (ticketLoading) return null;
+
+	if (ticketLoading) return <ActionBoxSkeleton />;
 	const { priority, dueDate, responsibleUser } = ticket;
 
 	return (

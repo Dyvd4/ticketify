@@ -45,7 +45,7 @@ function ActionBox({
 							)}
 						</>
 					)}
-					{menuActions && (
+					{menuActions && menuActions.length > 0 && (
 						<>
 							<Menu>
 								<MenuButton

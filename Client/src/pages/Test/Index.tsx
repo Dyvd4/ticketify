@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { fetchEntity } from "src/api/entity";
-import ActionBox from "src/components/ActionBox";
+import ActionBox from "src/components/ActionBox/ActionBox";
 import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/Table/TableList";
 import IconButton from "src/components/Wrapper/IconButton";

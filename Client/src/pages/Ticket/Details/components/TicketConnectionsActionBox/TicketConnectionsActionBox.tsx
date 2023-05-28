@@ -2,7 +2,7 @@ import { Heading, List, useDisclosure } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import { cn } from "src/utils/component";
 import ListItem from "./components/TicketListItem";
@@ -27,6 +27,7 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 		onOpen: onConnectedTicketsEditModalOpen,
 		onClose: onConnectedTicketsEditModalClose,
 	} = useDisclosure();
+
 	// queries
 	// -------
 	const {
@@ -35,8 +36,7 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 		data: ticket,
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
-	// TODO: skeleton loading
-	if (ticketLoading) return null;
+	if (ticketLoading) return <ActionBoxSkeleton />;
 
 	const connectedToTickets = ticket.connectedToTickets.map(
 		(connectedToTicket) => connectedToTicket.connectedToTicket
@@ -44,6 +44,7 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 	const connectedByTickets = ticket.connectedByTickets.map(
 		(connectedByTicket) => connectedByTicket.connectedByTicket
 	);
+
 	return (
 		<ActionBox
 			className={cn("", className)}

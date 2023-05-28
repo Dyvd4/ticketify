@@ -1,7 +1,5 @@
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxProps, ActionBoxSkeleton } from "src/components/ActionBox";
 import TicketActivityList from "src/components/Lists/TicketActivity";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
 import { cn } from "src/utils/component";
@@ -16,12 +14,6 @@ function TicketActivityActionBox({ className, ...props }: TicketActivityActionBo
 
 	// queries
 	// -------
-	const {
-		isLoading: ticketLoading,
-		isError: ticketError,
-		data: ticket,
-	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
-
 	const activitiesQuery = useInfiniteQuery<any, any>(
 		["ticketActivities", id],
 		{
@@ -35,8 +27,8 @@ function TicketActivityActionBox({ className, ...props }: TicketActivityActionBo
 		}
 	);
 	const activitiesCount = useInfiniteQueryCount(activitiesQuery);
-	// TODO: skeleton loading
-	if (ticketLoading) return null;
+
+	if (activitiesQuery.isLoading) return <ActionBoxSkeleton />;
 
 	return (
 		<ActionBox className={cn("", className)} title={`Activity (${activitiesCount})`} {...props}>

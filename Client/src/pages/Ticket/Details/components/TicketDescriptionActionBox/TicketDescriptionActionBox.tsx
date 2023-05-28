@@ -3,7 +3,7 @@ import dompurify from "dompurify";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
 import { cn } from "src/utils/component";
 import { getTitle } from "src/utils/ticket";
@@ -17,6 +17,7 @@ export type TicketDescriptionActionBoxProps = _TicketDescriptionActionBoxProps &
 
 function TicketDescriptionActionBox({ className, ...props }: TicketDescriptionActionBoxProps) {
 	const { id } = useParams();
+
 	// queries
 	// -------
 	const {
@@ -25,9 +26,7 @@ function TicketDescriptionActionBox({ className, ...props }: TicketDescriptionAc
 		data: ticket,
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
 
-	// TODO: skeleton loading
-	if (ticketLoading) return null;
-
+	if (ticketLoading) return <ActionBoxSkeleton />;
 	const { description } = ticket;
 
 	return (
