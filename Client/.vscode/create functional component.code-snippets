@@ -4,6 +4,7 @@
         "prefix": "cfc",
         "body": [
             "import { ComponentPropsWithRef, PropsWithChildren } from 'react';",
+            "import { cn } from 'src/utils/component';",
             "",
             "type _${1:Component}Props = {}",
             "",
@@ -13,7 +14,7 @@
             "function ${1:Component}({ className, ...props }: ${1:Component}Props) {",
             "\treturn (",
             "\t\t<div",
-            "\t\t\tclassName={`${${className}}`}",
+            "\t\t\tclassName={cn('', className)}",
             "\t\t\t{...props}>",
             "\t\t\tMy component",
             "\t\t</div>",
@@ -22,6 +23,6 @@
             "",
             "export default ${1:Component};"
         ],
-        "description": "Log output to console"
+        "description": "Create a highly reusable component"
     }
 }
