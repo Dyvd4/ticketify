@@ -3,27 +3,27 @@ import { ComponentPropsWithRef, PropsWithChildren } from "react";
 import FilterItems from "./Filter/FilterItems";
 
 type _ListFilterProps = {
-    onFilterApply(...args: any[]): void;
-    onFilterReset(...args: any[]): void;
+	onFilterApply(...args: any[]): void;
+	onFilterReset(...args: any[]): void;
 };
 
 export type ListFilterProps = _ListFilterProps &
-    Omit<PropsWithChildren<ComponentPropsWithRef<"div">>, keyof _ListFilterProps>;
+	Omit<PropsWithChildren<ComponentPropsWithRef<"div">>, keyof _ListFilterProps>;
 
 function ListFilter({ className, onFilterReset, onFilterApply, ...props }: ListFilterProps) {
-    return (
-        <div className="flex flex-col justify-between gap-4 rounded-md border p-4" {...props}>
-            <FilterItems />
-            <div className="flex flex-col gap-2">
-                <Button onClick={onFilterReset} variant="outline" mr={3}>
-                    reset
-                </Button>
-                <Button onClick={onFilterApply} colorScheme="blue" mr={3}>
-                    apply
-                </Button>
-            </div>
-        </div>
-    );
+	return (
+		<div className="flex flex-col justify-between gap-4 rounded-md border p-4" {...props}>
+			<FilterItems />
+			<div className="flex flex-col gap-2">
+				<Button onClick={onFilterReset} variant="outline" mr={3}>
+					reset
+				</Button>
+				<Button onClick={onFilterApply} colorScheme="blue" mr={3}>
+					apply
+				</Button>
+			</div>
+		</div>
+	);
 }
 
 export default ListFilter;

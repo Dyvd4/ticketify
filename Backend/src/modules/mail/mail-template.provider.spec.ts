@@ -17,50 +17,50 @@ const htmlTemplate = `
 `;
 
 describe("when generating injected html", () => {
-    let mailTemplateProvider: MailTemplateProvider;
+	let mailTemplateProvider: MailTemplateProvider;
 
-    beforeEach(async () => {
-        const moduleRef = await Test.createTestingModule({
-            imports: [
-                ConfigModule.forRoot({
-                    isGlobal: true,
-                    load: [config],
-                }),
-            ],
-            providers: [PrismaService, MailTemplateProvider, LogService],
-        })
-            .overrideProvider(PrismaService)
-            .useValue(PrismaServiceMock)
-            .overrideProvider(LogService)
-            .useClass(MockLogService)
-            .compile();
+	beforeEach(async () => {
+		const moduleRef = await Test.createTestingModule({
+			imports: [
+				ConfigModule.forRoot({
+					isGlobal: true,
+					load: [config],
+				}),
+			],
+			providers: [PrismaService, MailTemplateProvider, LogService],
+		})
+			.overrideProvider(PrismaService)
+			.useValue(PrismaServiceMock)
+			.overrideProvider(LogService)
+			.useClass(MockLogService)
+			.compile();
 
-        mailTemplateProvider = moduleRef.get(MailTemplateProvider);
-    });
+		mailTemplateProvider = moduleRef.get(MailTemplateProvider);
+	});
 
-    test("getInjectedHtml renders context variables", async () => {
-        const user = {
-            firstName: "David",
-            lastName: "Kimmich",
-        };
-        const injectedHtml = await mailTemplateProvider.getInjectedHtml(htmlTemplate, {
-            user,
-        });
+	test("getInjectedHtml renders context variables", async () => {
+		const user = {
+			firstName: "David",
+			lastName: "Kimmich",
+		};
+		const injectedHtml = await mailTemplateProvider.getInjectedHtml(htmlTemplate, {
+			user,
+		});
 
-        expect(new RegExp(`${user.firstName}`, "g").exec(injectedHtml)).toHaveLength(1);
-        expect(new RegExp(`${user.lastName}`, "g").exec(injectedHtml)).toHaveLength(1);
-    });
+		expect(new RegExp(`${user.firstName}`, "g").exec(injectedHtml)).toHaveLength(1);
+		expect(new RegExp(`${user.lastName}`, "g").exec(injectedHtml)).toHaveLength(1);
+	});
 
-    test("getInjectedHtmlFromFile renders context variables", async () => {
-        const user = {
-            firstName: "David",
-            lastName: "Kimmich",
-        };
-        const injectedHtml = await mailTemplateProvider.getInjectedHtmlFromFile("Test", {
-            user,
-        });
+	test("getInjectedHtmlFromFile renders context variables", async () => {
+		const user = {
+			firstName: "David",
+			lastName: "Kimmich",
+		};
+		const injectedHtml = await mailTemplateProvider.getInjectedHtmlFromFile("Test", {
+			user,
+		});
 
-        expect(new RegExp(`${user.firstName}`, "g").exec(injectedHtml)).toHaveLength(1);
-        expect(new RegExp(`${user.lastName}`, "g").exec(injectedHtml)).toHaveLength(1);
-    });
+		expect(new RegExp(`${user.firstName}`, "g").exec(injectedHtml)).toHaveLength(1);
+		expect(new RegExp(`${user.lastName}`, "g").exec(injectedHtml)).toHaveLength(1);
+	});
 });

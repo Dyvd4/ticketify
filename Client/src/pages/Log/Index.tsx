@@ -5,19 +5,19 @@ import LogList from "./components/LogList";
 interface IndexProps {}
 
 function Index(props: IndexProps) {
-    useBreadcrumb([
-        {
-            name: "Home",
-            href: "/",
-        },
-        {
-            name: "Logs",
-            href: "#",
-            isCurrentPage: true,
-        },
-    ]);
+	useBreadcrumb([
+		{
+			name: "Home",
+			href: "/",
+		},
+		{
+			name: "Logs",
+			href: "#",
+			isCurrentPage: true,
+		},
+	]);
 
-    return <LogList />;
+	return <LogList />;
 }
 
 export default Index;

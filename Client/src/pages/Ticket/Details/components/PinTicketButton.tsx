@@ -9,48 +9,48 @@ import { useCurrentUser } from "src/hooks/user";
 type PinTicketButtonProps = {};
 
 function PinTicketButton(props: PinTicketButtonProps) {
-    // hooks
-    // -----
-    const toast = useToast();
-    const queryClient = useQueryClient();
-    const { isLoading: currentUserIsLoading, refetch } = useCurrentUser({
-        includeAllEntities: true,
-    });
-    const { id: ticketId } = useParams();
+	// hooks
+	// -----
+	const toast = useToast();
+	const queryClient = useQueryClient();
+	const { isLoading: currentUserIsLoading, refetch } = useCurrentUser({
+		includeAllEntities: true,
+	});
+	const { id: ticketId } = useParams();
 
-    const [ticketIsPinned] = useTicketIsPinned(+ticketId!);
+	const [ticketIsPinned] = useTicketIsPinned(+ticketId!);
 
-    const mutation = useMutation(
-        () => {
-            return mutatePinnedTicket(ticketId!, ticketIsPinned);
-        },
-        {
-            onSuccess: async () => {
-                await refetch();
-                await queryClient.invalidateQueries(["pinnedTickets"]);
-                await queryClient.invalidateQueries(["ticketsToPin"]);
-                toast({
-                    status: "success",
-                    title: `successfully ${ticketIsPinned ? "unpinned" : "pinned"} ticket`,
-                });
-            },
-        }
-    );
+	const mutation = useMutation(
+		() => {
+			return mutatePinnedTicket(ticketId!, ticketIsPinned);
+		},
+		{
+			onSuccess: async () => {
+				await refetch();
+				await queryClient.invalidateQueries(["pinnedTickets"]);
+				await queryClient.invalidateQueries(["ticketsToPin"]);
+				toast({
+					status: "success",
+					title: `successfully ${ticketIsPinned ? "unpinned" : "pinned"} ticket`,
+				});
+			},
+		}
+	);
 
-    const isLoading = mutation.isLoading || currentUserIsLoading;
+	const isLoading = mutation.isLoading || currentUserIsLoading;
 
-    return (
-        <Tooltip label={ticketIsPinned ? "Unpin" : "Pin"} placement="top">
-            <IconButton
-                isActive={ticketIsPinned}
-                aria-label="pin ticket"
-                isLoading={isLoading}
-                onClick={() => mutation.mutate()}
-                size={"sm"}
-                icon={<FontAwesomeIcon icon={faThumbTack} />}
-            ></IconButton>
-        </Tooltip>
-    );
+	return (
+		<Tooltip label={ticketIsPinned ? "Unpin" : "Pin"} placement="top">
+			<IconButton
+				isActive={ticketIsPinned}
+				aria-label="pin ticket"
+				isLoading={isLoading}
+				onClick={() => mutation.mutate()}
+				size={"sm"}
+				icon={<FontAwesomeIcon icon={faThumbTack} />}
+			></IconButton>
+		</Tooltip>
+	);
 }
 
 export default PinTicketButton;

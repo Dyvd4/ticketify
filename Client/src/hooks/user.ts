@@ -4,62 +4,62 @@ import { fetchCurrentUser, fetchCurrentUserAll } from "src/api/user";
 import { isAuthenticated, isHalfAuthenticated } from "src/auth/auth";
 
 interface UseCurrentUserParams {
-    /**
-     * if set to true it fetches the user from
-     * the user/all route where all nested entities
-     * are included
-     */
-    includeAllEntities?: boolean;
+	/**
+	 * if set to true it fetches the user from
+	 * the user/all route where all nested entities
+	 * are included
+	 */
+	includeAllEntities?: boolean;
 }
 export const useCurrentUser = (params?: UseCurrentUserParams) => {
-    const { data, ...queryResult } = useQuery(
-        [params?.includeAllEntities ? "user/all" : "user"],
-        params?.includeAllEntities ? fetchCurrentUserAll : fetchCurrentUser,
-        {
-            refetchOnWindowFocus: false,
-        }
-    );
+	const { data, ...queryResult } = useQuery(
+		[params?.includeAllEntities ? "user/all" : "user"],
+		params?.includeAllEntities ? fetchCurrentUserAll : fetchCurrentUser,
+		{
+			refetchOnWindowFocus: false,
+		}
+	);
 
-    return {
-        currentUser: data,
-        ...queryResult,
-    };
+	return {
+		currentUser: data,
+		...queryResult,
+	};
 };
 
 export const useCurrentUserSettings = () => {
-    const { data, ...queryResult } = useQuery(["userSettings"], () =>
-        fetchEntity({ route: "userSettings" })
-    );
+	const { data, ...queryResult } = useQuery(["userSettings"], () =>
+		fetchEntity({ route: "userSettings" })
+	);
 
-    return {
-        currentUserSettings: data,
-        ...queryResult,
-    };
+	return {
+		currentUserSettings: data,
+		...queryResult,
+	};
 };
 
 interface UseCurrentUserWithAuthenticationParams extends UseCurrentUserParams {
-    /** If set to true, checks if user is half authenticated instead of full.
-     * Half authenticated means that the e-mail is not confirmed yet.
-     */
-    half?: boolean;
+	/** If set to true, checks if user is half authenticated instead of full.
+	 * Half authenticated means that the e-mail is not confirmed yet.
+	 */
+	half?: boolean;
 }
 export const useCurrentUserWithAuthentication = (
-    params: UseCurrentUserWithAuthenticationParams = {}
+	params: UseCurrentUserWithAuthenticationParams = {}
 ) => {
-    const { half, ...useCurrentUserParams } = params;
+	const { half, ...useCurrentUserParams } = params;
 
-    const { currentUser, ...queryResult } = useCurrentUser(useCurrentUserParams);
+	const { currentUser, ...queryResult } = useCurrentUser(useCurrentUserParams);
 
-    return {
-        currentUser,
-        ...queryResult,
-        isAuthenticated: params?.half
-            ? isHalfAuthenticated(currentUser)
-            : isAuthenticated(currentUser),
-    };
+	return {
+		currentUser,
+		...queryResult,
+		isAuthenticated: params?.half
+			? isHalfAuthenticated(currentUser)
+			: isAuthenticated(currentUser),
+	};
 };
 
 export const useIsCurrentUser = (user) => {
-    const { currentUser } = useCurrentUser();
-    return currentUser?.id === user.id;
+	const { currentUser } = useCurrentUser();
+	return currentUser?.id === user.id;
 };

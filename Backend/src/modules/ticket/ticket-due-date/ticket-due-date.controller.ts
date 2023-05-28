@@ -4,66 +4,66 @@ import { CreateTicketDueDateDto, UpdateTicketDueDateDto } from "./ticket-due-dat
 
 @Controller()
 export class TicketDueDateController {
-    constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) {}
 
-    @Get("ticketDueDates")
-    async getTicketDueDates() {
-        const { prisma } = this;
-        const ticketDueDates = await prisma.ticketDueDate.findMany();
-        return { items: ticketDueDates };
-    }
+	@Get("ticketDueDates")
+	async getTicketDueDates() {
+		const { prisma } = this;
+		const ticketDueDates = await prisma.ticketDueDate.findMany();
+		return { items: ticketDueDates };
+	}
 
-    @Get("ticketDueDate/:id")
-    async getTicketDueDate(@Param("id") id: number) {
-        const { prisma } = this;
-        const ticketDueDate = await prisma.ticketDueDate.findFirst({
-            where: {
-                durationInMinutes: id,
-            },
-        });
+	@Get("ticketDueDate/:id")
+	async getTicketDueDate(@Param("id") id: number) {
+		const { prisma } = this;
+		const ticketDueDate = await prisma.ticketDueDate.findFirst({
+			where: {
+				durationInMinutes: id,
+			},
+		});
 
-        return ticketDueDate;
-    }
+		return ticketDueDate;
+	}
 
-    @Post("ticketDueDate")
-    async create(@Body() createTicketDueDateDto: CreateTicketDueDateDto) {
-        const { prisma } = this;
+	@Post("ticketDueDate")
+	async create(@Body() createTicketDueDateDto: CreateTicketDueDateDto) {
+		const { prisma } = this;
 
-        const newTicketDueDate = await prisma.ticketDueDate.create({
-            data: createTicketDueDateDto,
-        });
+		const newTicketDueDate = await prisma.ticketDueDate.create({
+			data: createTicketDueDateDto,
+		});
 
-        return newTicketDueDate;
-    }
+		return newTicketDueDate;
+	}
 
-    @Patch("ticketDueDate/:id")
-    async update(
-        @Param("id") id: number,
-        @Body()
-        updateTicketDueDateDto: UpdateTicketDueDateDto
-    ) {
-        const { prisma } = this;
+	@Patch("ticketDueDate/:id")
+	async update(
+		@Param("id") id: number,
+		@Body()
+		updateTicketDueDateDto: UpdateTicketDueDateDto
+	) {
+		const { prisma } = this;
 
-        const updatedTicketDueDate = await prisma.ticketDueDate.update({
-            where: {
-                durationInMinutes: id,
-            },
-            data: updateTicketDueDateDto,
-        });
+		const updatedTicketDueDate = await prisma.ticketDueDate.update({
+			where: {
+				durationInMinutes: id,
+			},
+			data: updateTicketDueDateDto,
+		});
 
-        return updatedTicketDueDate;
-    }
+		return updatedTicketDueDate;
+	}
 
-    @Delete("ticketDueDate/:id")
-    async remove(@Param("id") id: number) {
-        const { prisma } = this;
+	@Delete("ticketDueDate/:id")
+	async remove(@Param("id") id: number) {
+		const { prisma } = this;
 
-        const deletedTicketDueDate = await prisma.ticketDueDate.delete({
-            where: {
-                durationInMinutes: id,
-            },
-        });
+		const deletedTicketDueDate = await prisma.ticketDueDate.delete({
+			where: {
+				durationInMinutes: id,
+			},
+		});
 
-        return deletedTicketDueDate;
-    }
+		return deletedTicketDueDate;
+	}
 }

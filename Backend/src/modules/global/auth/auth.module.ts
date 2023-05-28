@@ -8,17 +8,17 @@ import { AuthService } from "./auth.service";
 import { UserModule } from "@src/modules/user/user.module";
 
 @Module({
-    providers: [
-        // only and ugly way to make it global using DI
-        {
-            provide: APP_GUARD,
-            useClass: AuthGuard,
-        },
-        AuthService,
-        AuthMailDeliveryService,
-    ],
-    imports: [MailModule, UserModule],
-    controllers: [AuthController],
-    exports: [AuthService, AuthMailDeliveryService],
+	providers: [
+		// only and ugly way to make it global using DI
+		{
+			provide: APP_GUARD,
+			useClass: AuthGuard,
+		},
+		AuthService,
+		AuthMailDeliveryService,
+	],
+	imports: [MailModule, UserModule],
+	controllers: [AuthController],
+	exports: [AuthService, AuthMailDeliveryService],
 })
 export class AuthModule {}

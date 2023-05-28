@@ -1,31 +1,31 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "declaration": true,
-        "removeComments": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "target": "ESNext",
-        "sourceMap": true,
-        "outDir": "./dist",
-        "baseUrl": "./",
-        "incremental": true,
-        "skipLibCheck": true,
-        "strictNullChecks": true,
-        "strict": true,
-        "noImplicitAny": false,
-        "strictBindCallApply": false,
-        "forceConsistentCasingInFileNames": false,
-        "noFallthroughCasesInSwitch": false,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "paths": {
-            "@src/*": ["src/*"],
-            "@config": ["src/config"],
-            "@mail/*": ["src/mail/*"],
-            "@database/*": ["src/global/database/*"],
-            "@auth/*": ["src/global/auth/*"]
-        }
-    }
+	"compilerOptions": {
+		"module": "commonjs",
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "ESNext",
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"incremental": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"paths": {
+			"@src/*": ["src/*"],
+			"@config": ["src/config"],
+			"@mail/*": ["src/mail/*"],
+			"@database/*": ["src/global/database/*"],
+			"@auth/*": ["src/global/auth/*"]
+		}
+	}
 }

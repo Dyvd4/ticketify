@@ -1,44 +1,44 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        // start
-        {
-            "label": "start Client",
-            "type": "shell",
-            "command": "npm run start_client",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "start Backend",
-            "type": "shell",
-            "command": "npm run start_backend",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "start",
-            "dependsOn": ["start Client", "start Backend"],
-            "dependsOrder": "parallel"
-        },
-        // dev start
-        {
-            "label": "dev start Backend",
-            "type": "shell",
-            "command": "npm run dev_start_backend",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "dev start",
-            "dependsOn": ["start Client", "dev start Backend"],
-            "dependsOrder": "parallel"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		// start
+		{
+			"label": "start Client",
+			"type": "shell",
+			"command": "npm run start_client",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "start Backend",
+			"type": "shell",
+			"command": "npm run start_backend",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "start",
+			"dependsOn": ["start Client", "start Backend"],
+			"dependsOrder": "parallel"
+		},
+		// dev start
+		{
+			"label": "dev start Backend",
+			"type": "shell",
+			"command": "npm run dev_start_backend",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "dev start",
+			"dependsOn": ["start Client", "dev start Backend"],
+			"dependsOrder": "parallel"
+		}
+	]
 }

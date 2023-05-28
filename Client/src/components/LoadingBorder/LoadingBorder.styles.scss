@@ -1,82 +1,82 @@
 /* shout out: https://www.youtube.com/watch?v=3wRBJESwarQ */
 :root {
-    --loading-border-animation-durationMs: 1500ms;
+	--loading-border-animation-durationMs: 1500ms;
 }
 @keyframes left-to-right {
-    0% {
-        left: -100%;
-    }
+	0% {
+		left: -100%;
+	}
 
-    50%,
-    100% {
-        left: 100%;
-    }
+	50%,
+	100% {
+		left: 100%;
+	}
 }
 
 @keyframes top-to-bottom {
-    0% {
-        top: -100%;
-    }
+	0% {
+		top: -100%;
+	}
 
-    50%,
-    100% {
-        top: 100%;
-    }
+	50%,
+	100% {
+		top: 100%;
+	}
 }
 
 @keyframes right-to-left {
-    0% {
-        right: -100%;
-    }
+	0% {
+		right: -100%;
+	}
 
-    50%,
-    100% {
-        right: 100%;
-    }
+	50%,
+	100% {
+		right: 100%;
+	}
 }
 
 @keyframes bottom-to-top {
-    0% {
-        bottom: -100%;
-    }
+	0% {
+		bottom: -100%;
+	}
 
-    50%,
-    100% {
-        bottom: 100%;
-    }
+	50%,
+	100% {
+		bottom: 100%;
+	}
 }
 
 .loading-border div {
-    position: absolute;
+	position: absolute;
 }
 
 .loading-border div:nth-child(1) {
-    top: 0;
-    left: -100%;
-    animation: left-to-right linear infinite;
-    animation-duration: var(--loading-border-animation-durationMs);
+	top: 0;
+	left: -100%;
+	animation: left-to-right linear infinite;
+	animation-duration: var(--loading-border-animation-durationMs);
 }
 
 .loading-border div:nth-child(2) {
-    top: -100%;
-    right: 0;
-    animation: top-to-bottom linear infinite;
-    animation-duration: var(--loading-border-animation-durationMs);
-    animation-delay: calc(var(--loading-border-animation-durationMs) * 0.25);
+	top: -100%;
+	right: 0;
+	animation: top-to-bottom linear infinite;
+	animation-duration: var(--loading-border-animation-durationMs);
+	animation-delay: calc(var(--loading-border-animation-durationMs) * 0.25);
 }
 
 .loading-border div:nth-child(3) {
-    bottom: 0;
-    right: -100%;
-    animation: right-to-left linear infinite;
-    animation-duration: var(--loading-border-animation-durationMs);
-    animation-delay: calc(var(--loading-border-animation-durationMs) * 0.5);
+	bottom: 0;
+	right: -100%;
+	animation: right-to-left linear infinite;
+	animation-duration: var(--loading-border-animation-durationMs);
+	animation-delay: calc(var(--loading-border-animation-durationMs) * 0.5);
 }
 
 .loading-border div:nth-child(4) {
-    bottom: -100%;
-    left: 0;
-    animation: bottom-to-top linear infinite;
-    animation-duration: var(--loading-border-animation-durationMs);
-    animation-delay: calc(var(--loading-border-animation-durationMs) * 0.75);
+	bottom: -100%;
+	left: 0;
+	animation: bottom-to-top linear infinite;
+	animation-duration: var(--loading-border-animation-durationMs);
+	animation-delay: calc(var(--loading-border-animation-durationMs) * 0.75);
 }

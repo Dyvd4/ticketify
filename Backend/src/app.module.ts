@@ -7,8 +7,8 @@ import { TicketModule } from "./modules/ticket/ticket.module";
 import { UserModule } from "./modules/user/user.module";
 
 @Module({
-    imports: [GlobalModule, UserModule, CommentModule, TicketModule, DummyModule, FileModule],
-    controllers: [],
-    providers: [],
+	imports: [GlobalModule, UserModule, CommentModule, TicketModule, DummyModule, FileModule],
+	controllers: [],
+	providers: [],
 })
 export class AppModule {}

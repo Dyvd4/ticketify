@@ -5,7 +5,7 @@ import ListItemHeading from "./ListItemHeading";
 import TableList from "./Table/TableList";
 
 export type TSearchItem = Omit<TFilterItem, "operation"> & {
-    operation: Partial<TFilterOperation>;
+	operation: Partial<TFilterOperation>;
 };
 
 export type TDrawer = "filter" | "orderBy";

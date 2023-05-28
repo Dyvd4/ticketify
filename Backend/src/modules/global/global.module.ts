@@ -7,16 +7,16 @@ import { DatabaseModule } from "./database/database.module";
 
 @Global()
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-            load: [config],
-        }),
-        AuthModule,
-        DatabaseModule,
-        LogModule,
-    ],
-    providers: [],
-    exports: [AuthModule, DatabaseModule, LogModule],
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [config],
+		}),
+		AuthModule,
+		DatabaseModule,
+		LogModule,
+	],
+	providers: [],
+	exports: [AuthModule, DatabaseModule, LogModule],
 })
 export class GlobalModule {}

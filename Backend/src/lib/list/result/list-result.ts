@@ -1,7 +1,7 @@
 export default class ListResult<T> {
-    items: T[];
+	items: T[];
 
-    constructor(items: T[]) {
-        this.items = items;
-    }
+	constructor(items: T[]) {
+		this.items = items;
+	}
 }

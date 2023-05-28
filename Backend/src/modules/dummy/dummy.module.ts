@@ -4,8 +4,8 @@ import { MailModule } from "@src/modules/mail/mail.module";
 import { DummyController } from "./dummy.controller";
 
 @Module({
-    imports: [FileModule, MailModule],
-    providers: [],
-    controllers: [DummyController],
+	imports: [FileModule, MailModule],
+	providers: [],
+	controllers: [DummyController],
 })
 export class DummyModule {}

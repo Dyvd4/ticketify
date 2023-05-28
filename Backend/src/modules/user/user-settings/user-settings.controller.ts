@@ -6,32 +6,32 @@ import { UpdateUserSettingsDto } from "./user-settings.dtos";
 
 @Controller("userSettings")
 export class UserSettingsController {
-    constructor(private prisma: PrismaService) {}
+	constructor(private prisma: PrismaService) {}
 
-    @Get()
-    async find(@User() requestUser: TUser) {
-        const { prisma } = this;
+	@Get()
+	async find(@User() requestUser: TUser) {
+		const { prisma } = this;
 
-        const userSettings = await prisma.userSettings.findFirst({
-            where: {
-                userId: requestUser.id,
-            },
-        });
+		const userSettings = await prisma.userSettings.findFirst({
+			where: {
+				userId: requestUser.id,
+			},
+		});
 
-        return userSettings;
-    }
+		return userSettings;
+	}
 
-    @Patch()
-    async update(@User() requestUser: TUser, @Body() updateUserSettingsDto: UpdateUserSettingsDto) {
-        const { prisma } = this;
+	@Patch()
+	async update(@User() requestUser: TUser, @Body() updateUserSettingsDto: UpdateUserSettingsDto) {
+		const { prisma } = this;
 
-        const updatedUserSettings = await prisma.userSettings.update({
-            where: {
-                userId: requestUser.id,
-            },
-            data: updateUserSettingsDto,
-        });
+		const updatedUserSettings = await prisma.userSettings.update({
+			where: {
+				userId: requestUser.id,
+			},
+			data: updateUserSettingsDto,
+		});
 
-        return updatedUserSettings;
-    }
+		return updatedUserSettings;
+	}
 }

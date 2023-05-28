@@ -4,8 +4,8 @@ import { CommentInteractionModule } from "./comment-interaction/comment-interact
 import { CommentController } from "./comment.controller";
 
 @Module({
-    imports: [CommentInteractionModule, FileModule],
-    controllers: [CommentController],
-    providers: [],
+	imports: [CommentInteractionModule, FileModule],
+	controllers: [CommentController],
+	providers: [],
 })
 export class CommentModule {}

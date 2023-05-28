@@ -6,14 +6,14 @@ import { useToggle as useToggleDarkMode } from "src/hooks/darkmode";
 type DarkModeButtonProps = {} & Omit<IconButtonProps, "icon">;
 
 function DarkModeButton(props: DarkModeButtonProps) {
-    const [darkModeActive, toggleDarkMode] = useToggleDarkMode();
-    return (
-        <IconButton
-            onClick={toggleDarkMode}
-            icon={<FontAwesomeIcon icon={darkModeActive ? faMoon : faSun} />}
-            {...props}
-        />
-    );
+	const [darkModeActive, toggleDarkMode] = useToggleDarkMode();
+	return (
+		<IconButton
+			onClick={toggleDarkMode}
+			icon={<FontAwesomeIcon icon={darkModeActive ? faMoon : faSun} />}
+			{...props}
+		/>
+	);
 }
 
 export default DarkModeButton;

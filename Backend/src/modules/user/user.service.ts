@@ -3,13 +3,13 @@ import { User } from "@prisma/client";
 
 @Injectable()
 export class UserService {
-    private currentUser?: User;
+	private currentUser?: User;
 
-    getCurrentUser(): User | undefined {
-        return this.currentUser;
-    }
+	getCurrentUser(): User | undefined {
+		return this.currentUser;
+	}
 
-    setCurrentUser(currentUser: User) {
-        this.currentUser = currentUser;
-    }
+	setCurrentUser(currentUser: User) {
+		this.currentUser = currentUser;
+	}
 }

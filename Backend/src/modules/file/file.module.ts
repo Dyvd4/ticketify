@@ -3,8 +3,8 @@ import { FileService } from "./file.service";
 import { FileController } from "./file.controller";
 
 @Module({
-    providers: [FileService],
-    controllers: [FileController],
-    exports: [FileService],
+	providers: [FileService],
+	controllers: [FileController],
+	exports: [FileService],
 })
 export class FileModule {}

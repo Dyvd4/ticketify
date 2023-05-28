@@ -9,58 +9,58 @@ import { Variant } from "../SidebarListItem/BaseSidebarListItem";
 import PinnedTicketItem from "./PinnedTicketItem";
 
 type _PinnedTicketsSectionProps = {
-    sidebarListItemVariant: Variant;
+	sidebarListItemVariant: Variant;
 };
 
 export type PinnedTicketsSectionProps = PropsWithChildren<_PinnedTicketsSectionProps> &
-    Omit<ComponentPropsWithRef<"div">, keyof _PinnedTicketsSectionProps>;
+	Omit<ComponentPropsWithRef<"div">, keyof _PinnedTicketsSectionProps>;
 
 function PinnedTicketsSection({
-    className,
-    sidebarListItemVariant,
-    ...props
+	className,
+	sidebarListItemVariant,
+	...props
 }: PinnedTicketsSectionProps) {
-    const { isOpen, onClose, onOpen } = useDisclosure();
-    const [pinnedTickets, isLoading] = usePinnedTickets();
+	const { isOpen, onClose, onOpen } = useDisclosure();
+	const [pinnedTickets, isLoading] = usePinnedTickets();
 
-    return (
-        <Box className={`${className}`}>
-            {sidebarListItemVariant === "horizontal" && (
-                <>
-                    <Box className="flex items-center justify-between text-sm">
-                        Pinned tickets
-                        <Button onClick={onOpen} size="xs" className="flex gap-1">
-                            Add
-                            <FontAwesomeIcon icon={faAdd} />
-                        </Button>
-                    </Box>
+	return (
+		<Box className={`${className}`}>
+			{sidebarListItemVariant === "horizontal" && (
+				<>
+					<Box className="flex items-center justify-between text-sm">
+						Pinned tickets
+						<Button onClick={onOpen} size="xs" className="flex gap-1">
+							Add
+							<FontAwesomeIcon icon={faAdd} />
+						</Button>
+					</Box>
 
-                    <Box className="mt-4 flex flex-col gap-1">
-                        {!isLoading &&
-                            pinnedTickets.map((pinnedTicket) => (
-                                <PinnedTicketItem
-                                    pinnedTicket={pinnedTicket}
-                                    key={pinnedTicket.id}
-                                />
-                            ))}
-                    </Box>
-                </>
-            )}
+					<Box className="mt-4 flex flex-col gap-1">
+						{!isLoading &&
+							pinnedTickets.map((pinnedTicket) => (
+								<PinnedTicketItem
+									pinnedTicket={pinnedTicket}
+									key={pinnedTicket.id}
+								/>
+							))}
+					</Box>
+				</>
+			)}
 
-            {sidebarListItemVariant === "vertical" && (
-                <>
-                    <SidebarListItem
-                        title={pinnedTickets?.length || 0}
-                        urlPath={"#"}
-                        variant={sidebarListItemVariant}
-                        icon={faThumbTack}
-                    />
-                </>
-            )}
+			{sidebarListItemVariant === "vertical" && (
+				<>
+					<SidebarListItem
+						title={pinnedTickets?.length || 0}
+						urlPath={"#"}
+						variant={sidebarListItemVariant}
+						icon={faThumbTack}
+					/>
+				</>
+			)}
 
-            <PinnedTicketsAddModal isOpen={isOpen} onClose={onClose} />
-        </Box>
-    );
+			<PinnedTicketsAddModal isOpen={isOpen} onClose={onClose} />
+		</Box>
+	);
 }
 
 export default PinnedTicketsSection;

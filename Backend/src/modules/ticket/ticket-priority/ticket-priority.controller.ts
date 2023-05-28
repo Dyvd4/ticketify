@@ -5,64 +5,64 @@ import { CreateTicketPriorityDto, UpdateTicketPriorityDto } from "./ticket-prior
 
 @Controller()
 export class TicketPriorityController {
-    constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) {}
 
-    @Get("ticketPriorities")
-    async findAll() {
-        const { prisma } = this;
-        const ticketPriorities = await prisma.ticketPriority.findMany();
-        return new ListResult(ticketPriorities);
-    }
+	@Get("ticketPriorities")
+	async findAll() {
+		const { prisma } = this;
+		const ticketPriorities = await prisma.ticketPriority.findMany();
+		return new ListResult(ticketPriorities);
+	}
 
-    @Get("ticketPriority/:id")
-    async findOne(@Param("id") id: string) {
-        const { prisma } = this;
+	@Get("ticketPriority/:id")
+	async findOne(@Param("id") id: string) {
+		const { prisma } = this;
 
-        const ticketPriority = await prisma.ticketPriority.findFirst({
-            where: {
-                id,
-            },
-        });
+		const ticketPriority = await prisma.ticketPriority.findFirst({
+			where: {
+				id,
+			},
+		});
 
-        return ticketPriority;
-    }
+		return ticketPriority;
+	}
 
-    @Post("ticketPriority")
-    async create(@Body() createTicketPriorityDto: CreateTicketPriorityDto) {
-        const { prisma } = this;
-        const newTicketPriority = await prisma.ticketPriority.create({
-            data: createTicketPriorityDto,
-        });
-        return newTicketPriority;
-    }
+	@Post("ticketPriority")
+	async create(@Body() createTicketPriorityDto: CreateTicketPriorityDto) {
+		const { prisma } = this;
+		const newTicketPriority = await prisma.ticketPriority.create({
+			data: createTicketPriorityDto,
+		});
+		return newTicketPriority;
+	}
 
-    @Patch("ticketPriority/:id")
-    async update(
-        @Param("id") id: string,
-        @Body() updateTicketPriorityDto: UpdateTicketPriorityDto
-    ) {
-        const { prisma } = this;
+	@Patch("ticketPriority/:id")
+	async update(
+		@Param("id") id: string,
+		@Body() updateTicketPriorityDto: UpdateTicketPriorityDto
+	) {
+		const { prisma } = this;
 
-        const updatedTicketPriority = await prisma.ticketPriority.update({
-            where: {
-                id,
-            },
-            data: updateTicketPriorityDto,
-        });
+		const updatedTicketPriority = await prisma.ticketPriority.update({
+			where: {
+				id,
+			},
+			data: updateTicketPriorityDto,
+		});
 
-        return updatedTicketPriority;
-    }
+		return updatedTicketPriority;
+	}
 
-    @Delete("ticketPriority/:id")
-    async remove(@Param("id") id: string) {
-        const { prisma } = this;
+	@Delete("ticketPriority/:id")
+	async remove(@Param("id") id: string) {
+		const { prisma } = this;
 
-        const deletedTicketPriority = await prisma.ticketPriority.delete({
-            where: {
-                id,
-            },
-        });
+		const deletedTicketPriority = await prisma.ticketPriority.delete({
+			where: {
+				id,
+			},
+		});
 
-        return deletedTicketPriority;
-    }
+		return deletedTicketPriority;
+	}
 }

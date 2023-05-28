@@ -3,13 +3,13 @@ import { useEffect } from "react";
 import { portalIsRenderedAtom } from "src/context/atoms";
 
 function PortalSlot() {
-    const [, setPortalIsRendered] = useAtom(portalIsRenderedAtom);
+	const [, setPortalIsRendered] = useAtom(portalIsRenderedAtom);
 
-    useEffect(() => {
-        setPortalIsRendered(true);
-    }, []);
+	useEffect(() => {
+		setPortalIsRendered(true);
+	}, []);
 
-    return <div id="portal"></div>;
+	return <div id="portal"></div>;
 }
 
 export default PortalSlot;

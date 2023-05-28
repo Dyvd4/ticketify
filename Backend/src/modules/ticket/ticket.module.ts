@@ -11,17 +11,17 @@ import { TicketController } from "./ticket.controller";
 import { TicketService } from "./ticket.service";
 
 @Module({
-    imports: [
-        TicketActivityModule,
-        TicketDueDateModule,
-        TicketOnTicketModule,
-        TicketPriorityModule,
-        TicketStatusModule,
-        TicketWatcherModule,
-        FileModule,
-        PinnedTicketModule,
-    ],
-    controllers: [TicketController],
-    providers: [TicketService],
+	imports: [
+		TicketActivityModule,
+		TicketDueDateModule,
+		TicketOnTicketModule,
+		TicketPriorityModule,
+		TicketStatusModule,
+		TicketWatcherModule,
+		FileModule,
+		PinnedTicketModule,
+	],
+	controllers: [TicketController],
+	providers: [TicketService],
 })
 export class TicketModule {}

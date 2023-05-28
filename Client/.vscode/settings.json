@@ -1,7 +1,7 @@
 {
-    "cSpell.words": ["Kanbanboard"],
-    "editor.renderWhitespace": "all",
-    "editor.useTabStops": true,
-    "editor.detectIndentation": true,
-    "editor.insertSpaces": true
+	"cSpell.words": ["Kanbanboard"],
+	"editor.renderWhitespace": "all",
+	"editor.useTabStops": true,
+	"editor.detectIndentation": true,
+	"editor.insertSpaces": true
 }

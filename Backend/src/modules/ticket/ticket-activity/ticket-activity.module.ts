@@ -6,9 +6,9 @@ import { TicketActivityPrismaMiddleWareProvider } from "./ticket-activity-prisma
 import { TicketActivityController } from "./ticket-activity.controller";
 
 @Module({
-    imports: [UserModule, MailModule],
-    providers: [TicketActivityMailProvider, TicketActivityPrismaMiddleWareProvider],
-    controllers: [TicketActivityController],
-    exports: [TicketActivityPrismaMiddleWareProvider],
+	imports: [UserModule, MailModule],
+	providers: [TicketActivityMailProvider, TicketActivityPrismaMiddleWareProvider],
+	controllers: [TicketActivityController],
+	exports: [TicketActivityPrismaMiddleWareProvider],
 })
 export class TicketActivityModule {}
