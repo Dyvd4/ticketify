@@ -16,7 +16,7 @@ export class TicketActivityController {
 	async findAll(@Param("ticketId") ticketId: number, @Query() query: InfiniteLoaderQueryDto) {
 		const { prisma } = this;
 
-		const infiniteLoader = new InfiniteLoader(query);
+		const infiniteLoader = new InfiniteLoader(query, 5);
 		const ticketActivities = await prisma.ticketActivity.findMany({
 			...infiniteLoader.getPrismaArgs(),
 			include: {
