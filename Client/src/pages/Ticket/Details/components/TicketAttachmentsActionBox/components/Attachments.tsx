@@ -14,7 +14,7 @@ type AttachmentsProps = {
 function Attachments({ attachments, variant }: AttachmentsProps) {
 	return attachments.length > 0 ? (
 		<Box
-			className={cn("py-2", {
+			className={cn("mt-2", {
 				"flex flex-wrap": variant === "images",
 				"grid grid-cols-2": variant !== "images",
 			})}
@@ -36,7 +36,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
 			})}
 		</Box>
 	) : (
-		<Flex gap={2} alignItems={"center"} className="text-secondary text-sm">
+		<Flex gap={2} alignItems={"center"} className="text-secondary mt-2 text-sm">
 			No {variant === "all" ? "attachments" : variant}
 			😴
 		</Flex>

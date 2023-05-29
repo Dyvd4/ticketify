@@ -33,9 +33,9 @@ function TicketAttachmentsActionBoxContent({
 
 	return (
 		<>
-			<Heading className="text-sm">Viewable ({images.length})</Heading>
+			<Heading className="mt-2 text-sm">Viewable ({images.length})</Heading>
 			<Attachments attachments={images} variant="images" />
-			<Heading className="text-sm">Downloadable ({attachments.length})</Heading>
+			<Heading className="mt-2 text-sm">Downloadable ({attachments.length})</Heading>
 			<Attachments attachments={attachments} variant="all" />
 		</>
 	);
