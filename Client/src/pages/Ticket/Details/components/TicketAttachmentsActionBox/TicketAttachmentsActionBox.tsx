@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
+import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import TicketAttachmentsActionBoxContent from "./components/TicketAttachmentsActionBoxContent";
 import AttachmentsAddModal from "./modals/AttachmentsAddModal";
@@ -16,6 +17,7 @@ export type TicketAttachmentsActionBoxProps = _TicketAttachmentsActionBoxProps &
 
 function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsActionBoxProps) {
 	const { id } = useParams();
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
 
 	// state
 	// -----
@@ -47,6 +49,9 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 
 	return (
 		<ActionBox
+			useCollapse
+			isCollapsed={isCollapsed}
+			toggleIsCollapsed={toggleIsCollapsed}
 			className={cn("", className)}
 			title="Attachments"
 			actions={[

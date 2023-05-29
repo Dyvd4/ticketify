@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import { CONTENTSTATE } from "src/components/RichText/Editor";
+import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import { getTitle } from "src/utils/ticket";
 import PinTicketButton from "../components/PinTicketButton";
@@ -17,6 +18,7 @@ export type TicketDescriptionActionBoxProps = _TicketDescriptionActionBoxProps &
 
 function TicketDescriptionActionBox({ className, ...props }: TicketDescriptionActionBoxProps) {
 	const { id } = useParams();
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
 
 	// queries
 	// -------
@@ -31,6 +33,9 @@ function TicketDescriptionActionBox({ className, ...props }: TicketDescriptionAc
 
 	return (
 		<ActionBox
+			useCollapse
+			isCollapsed={isCollapsed}
+			toggleIsCollapsed={toggleIsCollapsed}
 			className={cn("", className)}
 			title={getTitle(ticket)}
 			actions={[<PinTicketButton />, <WatchTicketButton />]}

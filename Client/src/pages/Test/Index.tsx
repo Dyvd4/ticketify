@@ -14,13 +14,15 @@ import List, { ListItem, ListItemHeading } from "src/components/List";
 import TestList from "src/components/List/Table/TableList";
 import IconButton from "src/components/Wrapper/IconButton";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
+import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import { twJoin, twMerge } from "tailwind-merge";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import ListItemContent from "./ListItemContent";
+import TestComponent from "./TestComponent";
 
 interface IndexProps {}
-
+type test = undefined | never;
 function Index(props: IndexProps) {
 	useBreadcrumb([{ name: "/", isCurrentPage: true }]);
 
@@ -38,73 +40,39 @@ function Index(props: IndexProps) {
 			queryParams: objWithNested,
 		});
 	};
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
 
 	return (
 		<>
-			<div className="grid grid-cols-4 gap-4">
-				<div className="col-span-3">
-					<ActionBox
-						actions={[
-							<MenuItem onClick={() => console.log("test")}>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-						]}
-						menuActions={[
-							<Button size={"xs"} onClick={() => console.log("test")}>
-								Download
-							</Button>,
-							<Button size={"xs"}>Download</Button>,
-							<Button size={"xs"}>Download</Button>,
-						]}
-						title="test"
-					>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quia iusto,
-						quibusdam fugiat error voluptatum itaque labore. Cumque aspernatur at eius
-						soluta repudiandae. Sint vitae numquam odit! Numquam, modi. Quis,
-						dignissimos veniam? Possimus ad autem repellendus dolore, sunt alias eveniet
-						incidunt iure fugit maiores numquam esse qui! Quod eos aliquid numquam
-						voluptates dicta? Reprehenderit doloremque tenetur delectus commodi a.
-						Quisquam itaque officiis veritatis minima a! Reiciendis autem fugiat aliquam
-						laborum alias dolorum ipsum facere ab dolorem architecto totam impedit
-						omnis, odit illo magnam ipsa inventore rerum eveniet iure! Illum, rem
-						tempore animi molestias inventore sed dolor fugit magnam reprehenderit
-						architecto.
-					</ActionBox>
-				</div>
-				<div className="display col-span-1 flex flex-col gap-4">
-					<ActionBox
-						menuActions={[
-							<Button size={"xs"} onClick={() => console.log("test")}>
-								Download
-							</Button>,
-						]}
-						actions={[
-							<MenuItem onClick={() => console.log("test")}>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-						]}
-						title="test"
-					>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quia iusto,
-						quibusdam fugiat error voluptatum itaque labore. Cumque aspernatur at eius
-						soluta repudiandae. Sint vitae numquam odit! Numquam, modi. Quis,
-						dignissimos veniam? Possimus ad autem repellendus dolore, sunt alias eveniet
-					</ActionBox>
-					<ActionBox
-						actions={[
-							<MenuItem onClick={() => console.log("test")}>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-							<MenuItem>Download</MenuItem>,
-						]}
-						title="test"
-						className=""
-					>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quia iusto,
-						quibusdam fugiat error voluptatum itaque labore. Cumque aspernatur at eius
-					</ActionBox>
-				</div>
-			</div>
-
+			<ActionBox
+				useCollapse
+				isCollapsed={isCollapsed}
+				toggleIsCollapsed={toggleIsCollapsed}
+				menuActions={[
+					<MenuItem onClick={() => console.log("test")}>Download</MenuItem>,
+					<MenuItem>Download</MenuItem>,
+					<MenuItem>Download</MenuItem>,
+				]}
+				actions={[
+					<Button size={"xs"} onClick={() => console.log("test")}>
+						Download
+					</Button>,
+					<Button size={"xs"}>Download</Button>,
+					<Button size={"xs"}>Download</Button>,
+				]}
+				title="test"
+			>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quia iusto, quibusdam
+				fugiat error voluptatum itaque labore. Cumque aspernatur at eius soluta repudiandae.
+				Sint vitae numquam odit! Numquam, modi. Quis, dignissimos veniam? Possimus ad autem
+				repellendus dolore, sunt alias eveniet incidunt iure fugit maiores numquam esse qui!
+				Quod eos aliquid numquam voluptates dicta? Reprehenderit doloremque tenetur delectus
+				commodi a. Quisquam itaque officiis veritatis minima a! Reiciendis autem fugiat
+				aliquam laborum alias dolorum ipsum facere ab dolorem architecto totam impedit
+				omnis, odit illo magnam ipsa inventore rerum eveniet iure! Illum, rem tempore animi
+				molestias inventore sed dolor fugit magnam reprehenderit architecto.
+			</ActionBox>
+			<TestComponent useCollapse isCollapsed toggleIsCollapsed={() => {}} />
 			{/* <TestList
                 header={{
                     title: "test",

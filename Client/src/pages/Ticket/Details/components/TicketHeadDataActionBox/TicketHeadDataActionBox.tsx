@@ -7,6 +7,7 @@ import { fetchEntity } from "src/api/entity";
 import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
+import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import SetResponsibleUserButton from "../components/SetResponsibleUserButton";
 import SetStatusButton from "../components/SetStatusButton";
@@ -19,6 +20,7 @@ export type TicketHeadDataActionBoxProps = _TicketHeadDataActionBoxProps &
 function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBoxProps) {
 	const { id } = useParams();
 	const [ticketFormModalVariant, setTicketFormModalVariant] = useState<"add" | "edit">("add");
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
 
 	// queries
 	// -------
@@ -26,7 +28,12 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 		isLoading: ticketLoading,
 		isError: ticketError,
 		data: ticket,
+		isStale,
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
+	console.log(
+		"🚀 ~ file: TicketHeadDataActionBox.tsx:33 ~ TicketHeadDataActionBox ~ isStale:",
+		isStale
+	);
 
 	const {
 		isOpen: ticketFormModalIsOpen,
@@ -44,6 +51,9 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 
 	return (
 		<ActionBox
+			useCollapse
+			isCollapsed={isCollapsed}
+			toggleIsCollapsed={toggleIsCollapsed}
 			useDivider
 			title="Meta data"
 			className={cn("", className)}

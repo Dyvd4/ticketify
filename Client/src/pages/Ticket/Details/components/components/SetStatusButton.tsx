@@ -41,7 +41,7 @@ function SetStatusButton(props: SetStatusButtonProps) {
 		["ticketStatus"],
 		() => fetchEntity({ route: "ticketStatuses" })
 	);
-	const { data, isLoading: ticketIsLoading } = useQuery(["ticket", id?.toString()]);
+	const { data, isLoading: ticketIsLoading } = useQuery(["ticket", id]);
 
 	const ticket = data as any;
 
@@ -104,7 +104,7 @@ function SetStatusButton(props: SetStatusButtonProps) {
 				</ModalContent>
 			</Modal>
 			<Menu>
-				{!isLoading && (
+				{!isLoading && status && (
 					<>
 						<MenuButton
 							height={"6"}

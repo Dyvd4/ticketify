@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
+import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import ListItem from "./components/TicketListItem";
 import ConnectedTicketsAddModal from "./modals/ConnectedTicketsAddModal";
@@ -16,6 +17,7 @@ export type TicketConnectionsActionBox = _TicketConnectionsActionBox &
 
 function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsActionBox) {
 	const { id } = useParams();
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
 
 	const {
 		isOpen: connectedTicketsAddModalIsOpen,
@@ -47,6 +49,9 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 
 	return (
 		<ActionBox
+			useCollapse
+			isCollapsed={isCollapsed}
+			toggleIsCollapsed={toggleIsCollapsed}
 			className={cn("", className)}
 			title="Connected tickets"
 			actions={[

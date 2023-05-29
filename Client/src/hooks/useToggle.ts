@@ -5,6 +5,6 @@ const useToggle = (defaultValue?: boolean) => {
 	const toggle = () => {
 		setValue(!value);
 	};
-	return [value, setValue, toggle];
+	return [value, setValue, toggle] as const;
 };
 export default useToggle;
