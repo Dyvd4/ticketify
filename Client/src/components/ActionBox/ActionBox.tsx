@@ -16,7 +16,7 @@ import { cloneElement, ComponentPropsWithRef, PropsWithChildren } from "react";
 import { cn } from "src/utils/component";
 
 type _ActionBoxProps = {
-	title?: string;
+	title?: React.ReactNode;
 	actions?: React.ReactElement[];
 	menuActions?: React.ReactElement[];
 	menuButtonSize?: IconButtonProps["size"];
