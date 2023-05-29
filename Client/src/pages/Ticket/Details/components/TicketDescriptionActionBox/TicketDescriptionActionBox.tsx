@@ -8,8 +8,8 @@ import { CONTENTSTATE } from "src/components/RichText/Editor";
 import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
 import { getTitle } from "src/utils/ticket";
-import PinTicketButton from "../components/PinTicketButton";
-import WatchTicketButton from "../components/WatchTicketButton";
+import PinTicketButton from "../PinTicketButton";
+import WatchTicketButton from "../WatchTicketButton";
 
 type _TicketDescriptionActionBoxProps = {};
 

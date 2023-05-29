@@ -9,8 +9,8 @@ import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
-import SetResponsibleUserButton from "../components/SetResponsibleUserButton";
-import SetStatusButton from "../components/SetStatusButton";
+import SetResponsibleUserButton from "../SetResponsibleUserButton";
+import SetStatusButton from "../SetStatusButton";
 
 type _TicketHeadDataActionBoxProps = {};
 
