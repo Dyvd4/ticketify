@@ -27,7 +27,13 @@ import "./styles/index.scss";
 import "./styles/tailwind.scss";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 6000,
+		},
+	},
+});
 
 root.render(
 	<React.StrictMode>
