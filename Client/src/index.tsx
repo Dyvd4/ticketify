@@ -30,7 +30,7 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			staleTime: 6000,
+			staleTime: 60000,
 		},
 	},
 });
