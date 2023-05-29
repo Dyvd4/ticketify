@@ -1,6 +1,7 @@
 import { Box, BoxProps } from "@chakra-ui/react";
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
+import { cn } from "src/utils/component";
 
 export type BgBoxProps = PropsWithChildren<{
 	variant?: keyof typeof VARIANT_MAP;
@@ -78,11 +79,15 @@ function BgBox(props: BgBoxProps) {
 		<Box
 			{...backgroundColorProps}
 			{...hoverBackgroundColorProps}
-			className={classNames(`rounded-md ${className}`, {
-				"cursor-pointer": enableHover,
-				"p-4": !padding,
-				[padding || ""]: !!padding,
-			})}
+			className={cn(
+				`rounded-md`,
+				{
+					"cursor-pointer": enableHover,
+					"p-4": !padding,
+					[padding || ""]: !!padding,
+				},
+				className
+			)}
 			{...restProps}
 		>
 			{children}
