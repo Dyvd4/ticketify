@@ -38,7 +38,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
 	) : (
 		<Flex gap={2} alignItems={"center"} className="text-secondary text-sm">
 			No {variant === "all" ? "attachments" : variant}
-			<FontAwesomeIcon icon={faFrown} />
+			😴
 		</Flex>
 	);
 }
