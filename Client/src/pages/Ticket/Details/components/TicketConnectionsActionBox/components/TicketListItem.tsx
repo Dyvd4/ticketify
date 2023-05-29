@@ -1,17 +1,24 @@
 import { Heading } from "@chakra-ui/react";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import BgBox from "src/components/BgBox";
+import BgBox, { BgBoxProps } from "src/components/BgBox";
 import IconLink from "src/components/IconLink";
+import { cn } from "src/utils/component";
 import { getTitle } from "src/utils/ticket";
 
-type TicketListItemProps = {
+type _TicketListItemProps = {
 	item: any;
 };
 
-function TicketListItem({ item }: TicketListItemProps) {
+type TicketListItemProps = _TicketListItemProps & Omit<BgBoxProps, keyof _TicketListItemProps>;
+
+function TicketListItem({ item, className, ...props }: TicketListItemProps) {
 	return (
-		<BgBox key={item.id} className="flex w-full items-center justify-between gap-2 p-2">
+		<BgBox
+			key={item.id}
+			className={cn("flex w-full items-center justify-between gap-2 p-2", className)}
+			{...props}
+		>
 			<Heading className="min-w-0">
 				<IconLink href={`/Ticket/Details/${item.id}`} className="text-base">
 					<span className="mr-2 truncate">{getTitle(item)}</span>

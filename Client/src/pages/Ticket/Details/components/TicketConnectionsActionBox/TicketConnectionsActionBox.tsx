@@ -50,62 +50,64 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 	);
 
 	return (
-		<ActionBox
-			useCollapse
-			isCollapsed={isCollapsed}
-			toggleIsCollapsed={toggleIsCollapsed}
-			className={cn("", className)}
-			title={
-				<>
-					<span className="mr-2">Connected tickets</span>
-					<FontAwesomeIcon icon={faLink} />
-				</>
-			}
-			actions={[
-				<TooltipIconButton
-					variant="add"
-					tooltipProps={{
-						label: "add connection",
-					}}
-					iconButtonProps={{
-						onClick: onConnectedTicketsAddModalOpen,
-						size: "xs",
-					}}
-				/>,
-				<TooltipIconButton
-					variant="edit"
-					tooltipProps={{
-						label: "edit connections",
-					}}
-					iconButtonProps={{
-						disabled: connectedToTickets.concat(connectedByTickets).length === 0,
-						onClick: onConnectedTicketsEditModalOpen,
-						size: "xs",
-					}}
-				/>,
-			]}
-			{...props}
-		>
-			<Heading className="text-sm">To</Heading>
-			<List className="mt-2 flex flex-col gap-4">
-				{connectedToTickets.length > 0 ? (
-					connectedToTickets.map((connectedTicket) => (
-						<TicketListItem item={connectedTicket} key={connectedTicket.id} />
-					))
-				) : (
-					<div className="flex items-center text-sm">No connected to tickets 😴</div>
-				)}
-			</List>
-			<Heading className="mt-2 text-sm">By</Heading>
-			<List className="mt-2 flex flex-col gap-4">
-				{connectedByTickets.length > 0 ? (
-					connectedByTickets.map((connectedTicket) => (
-						<TicketListItem item={connectedTicket} key={connectedTicket.id} />
-					))
-				) : (
-					<div className="flex items-center text-sm">No connected by tickets 😴</div>
-				)}
-			</List>
+		<>
+			<ActionBox
+				useCollapse
+				isCollapsed={isCollapsed}
+				toggleIsCollapsed={toggleIsCollapsed}
+				className={cn("", className)}
+				title={
+					<>
+						<span className="mr-2">Connected tickets</span>
+						<FontAwesomeIcon icon={faLink} />
+					</>
+				}
+				actions={[
+					<TooltipIconButton
+						variant="add"
+						tooltipProps={{
+							label: "add connection",
+						}}
+						iconButtonProps={{
+							onClick: onConnectedTicketsAddModalOpen,
+							size: "xs",
+						}}
+					/>,
+					<TooltipIconButton
+						variant="edit"
+						tooltipProps={{
+							label: "edit connections",
+						}}
+						iconButtonProps={{
+							disabled: connectedToTickets.concat(connectedByTickets).length === 0,
+							onClick: onConnectedTicketsEditModalOpen,
+							size: "xs",
+						}}
+					/>,
+				]}
+				{...props}
+			>
+				<Heading className="text-sm">To</Heading>
+				<List className="mt-2 flex flex-col gap-4">
+					{connectedToTickets.length > 0 ? (
+						connectedToTickets.map((connectedTicket) => (
+							<TicketListItem item={connectedTicket} key={connectedTicket.id} />
+						))
+					) : (
+						<div className="flex items-center text-sm">No connected to tickets 😴</div>
+					)}
+				</List>
+				<Heading className="mt-2 text-sm">By</Heading>
+				<List className="mt-2 flex flex-col gap-4">
+					{connectedByTickets.length > 0 ? (
+						connectedByTickets.map((connectedTicket) => (
+							<TicketListItem item={connectedTicket} key={connectedTicket.id} />
+						))
+					) : (
+						<div className="flex items-center text-sm">No connected by tickets 😴</div>
+					)}
+				</List>
+			</ActionBox>
 			<ConnectedTicketsAddModal
 				connectedByTickets={connectedByTickets}
 				connectedToTickets={connectedToTickets}
@@ -118,7 +120,7 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 				isOpen={connectedTicketsEditModalIsOpen}
 				onClose={onConnectedTicketsEditModalClose}
 			/>
-		</ActionBox>
+		</>
 	);
 }
 

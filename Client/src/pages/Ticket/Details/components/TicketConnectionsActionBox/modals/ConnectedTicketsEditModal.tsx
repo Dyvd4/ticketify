@@ -103,7 +103,7 @@ function ConnectedTicketsEditModal({
 										gap={2}
 										key={connectedTicket.id}
 									>
-										<TicketListItem item={connectedTicket} />
+										<TicketListItem variant="child" item={connectedTicket} />
 										<TooltipIconButton
 											variant="remove"
 											iconButtonProps={{
@@ -131,7 +131,7 @@ function ConnectedTicketsEditModal({
 										gap={2}
 										key={connectedTicket.id}
 									>
-										<TicketListItem item={connectedTicket} />
+										<TicketListItem variant="child" item={connectedTicket} />
 										<TooltipIconButton
 											variant="remove"
 											iconButtonProps={{

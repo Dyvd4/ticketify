@@ -50,43 +50,45 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 	const { attachments } = ticketAttachments;
 
 	return (
-		<ActionBox
-			useCollapse
-			isCollapsed={isCollapsed}
-			toggleIsCollapsed={toggleIsCollapsed}
-			className={cn("", className)}
-			title={
-				<>
-					<span className="mr-2">Attachments</span>
-					<FontAwesomeIcon icon={faFile} />
-				</>
-			}
-			actions={[
-				<TooltipIconButton
-					variant="add"
-					tooltipProps={{
-						label: "add attachment",
-					}}
-					iconButtonProps={{
-						onClick: onAttachmentsAddModalOpen,
-						size: "xs",
-					}}
-				/>,
-				<TooltipIconButton
-					variant="edit"
-					tooltipProps={{
-						label: "edit attachments",
-					}}
-					iconButtonProps={{
-						disabled: attachments.length === 0,
-						onClick: onAttachmentsEditModalOpen,
-						size: "xs",
-					}}
-				/>,
-			]}
-			{...props}
-		>
-			<TicketAttachmentsActionBoxContent />
+		<>
+			<ActionBox
+				useCollapse
+				isCollapsed={isCollapsed}
+				toggleIsCollapsed={toggleIsCollapsed}
+				className={cn("", className)}
+				title={
+					<>
+						<span className="mr-2">Attachments</span>
+						<FontAwesomeIcon icon={faFile} />
+					</>
+				}
+				actions={[
+					<TooltipIconButton
+						variant="add"
+						tooltipProps={{
+							label: "add attachment",
+						}}
+						iconButtonProps={{
+							onClick: onAttachmentsAddModalOpen,
+							size: "xs",
+						}}
+					/>,
+					<TooltipIconButton
+						variant="edit"
+						tooltipProps={{
+							label: "edit attachments",
+						}}
+						iconButtonProps={{
+							disabled: attachments.length === 0,
+							onClick: onAttachmentsEditModalOpen,
+							size: "xs",
+						}}
+					/>,
+				]}
+				{...props}
+			>
+				<TicketAttachmentsActionBoxContent />
+			</ActionBox>
 			<AttachmentsEditModal
 				isOpen={attachmentsEditModalIsOpen}
 				onClose={onAttachmentsEditModalClose}
@@ -96,7 +98,7 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 				isOpen={attachmentsAddModalIsOpen}
 				onClose={onAttachmentsAddModalClose}
 			/>
-		</ActionBox>
+		</>
 	);
 }
 
