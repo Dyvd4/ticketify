@@ -28,12 +28,7 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 		isLoading: ticketLoading,
 		isError: ticketError,
 		data: ticket,
-		isStale,
 	} = useQuery(["ticket", id], () => fetchEntity({ route: `ticket/${id}` }));
-	console.log(
-		"🚀 ~ file: TicketHeadDataActionBox.tsx:33 ~ TicketHeadDataActionBox ~ isStale:",
-		isStale
-	);
 
 	const {
 		isOpen: ticketFormModalIsOpen,
