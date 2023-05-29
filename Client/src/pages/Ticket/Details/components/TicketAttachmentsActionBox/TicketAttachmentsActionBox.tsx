@@ -1,4 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react";
+import { faFile } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
@@ -53,7 +55,12 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 			isCollapsed={isCollapsed}
 			toggleIsCollapsed={toggleIsCollapsed}
 			className={cn("", className)}
-			title="Attachments"
+			title={
+				<>
+					<span className="mr-2">Attachments</span>
+					<FontAwesomeIcon icon={faFile} />
+				</>
+			}
 			actions={[
 				<TooltipIconButton
 					variant="add"

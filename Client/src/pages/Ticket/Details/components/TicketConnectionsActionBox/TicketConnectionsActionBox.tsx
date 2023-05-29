@@ -1,4 +1,6 @@
 import { Heading, List, useDisclosure } from "@chakra-ui/react";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
@@ -6,7 +8,7 @@ import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/Act
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import useToggle from "src/hooks/useToggle";
 import { cn } from "src/utils/component";
-import ListItem from "./components/TicketListItem";
+import TicketListItem from "./components/TicketListItem";
 import ConnectedTicketsAddModal from "./modals/ConnectedTicketsAddModal";
 import ConnectedTicketsEditModal from "./modals/ConnectedTicketsEditModal";
 
@@ -53,7 +55,12 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 			isCollapsed={isCollapsed}
 			toggleIsCollapsed={toggleIsCollapsed}
 			className={cn("", className)}
-			title="Connected tickets"
+			title={
+				<>
+					<span className="mr-2">Connected tickets</span>
+					<FontAwesomeIcon icon={faLink} />
+				</>
+			}
 			actions={[
 				<TooltipIconButton
 					variant="add"
@@ -79,24 +86,24 @@ function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsAc
 			]}
 			{...props}
 		>
-			<Heading className="text-base">Connected to:</Heading>
-			<List className="my-2 flex flex-col gap-4">
+			<Heading className="text-sm">To</Heading>
+			<List className="mt-2 flex flex-col gap-4">
 				{connectedToTickets.length > 0 ? (
 					connectedToTickets.map((connectedTicket) => (
-						<ListItem item={connectedTicket} key={connectedTicket.id} />
+						<TicketListItem item={connectedTicket} key={connectedTicket.id} />
 					))
 				) : (
-					<div className="flex items-center">No connected tickets</div>
+					<div className="flex items-center text-sm">No connected to tickets 😴</div>
 				)}
 			</List>
-			<Heading className="text-base">Connected by:</Heading>
-			<List className="my-2 flex flex-col gap-4">
+			<Heading className="mt-2 text-sm">By</Heading>
+			<List className="mt-2 flex flex-col gap-4">
 				{connectedByTickets.length > 0 ? (
 					connectedByTickets.map((connectedTicket) => (
-						<ListItem item={connectedTicket} key={connectedTicket.id} />
+						<TicketListItem item={connectedTicket} key={connectedTicket.id} />
 					))
 				) : (
-					<div className="flex items-center">No connected tickets</div>
+					<div className="flex items-center text-sm">No connected by tickets 😴</div>
 				)}
 			</List>
 			<ConnectedTicketsAddModal

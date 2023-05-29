@@ -12,7 +12,7 @@ type TooltipIconButtonProps = {
 export const VARIANT_MAP = {
 	add: {
 		icon: faAdd,
-		colorScheme: "cyan",
+		colorScheme: "blue",
 	},
 	edit: {
 		icon: faEdit,

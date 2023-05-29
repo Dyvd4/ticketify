@@ -1,8 +1,9 @@
-import { Tag } from "@chakra-ui/react";
-import { VARIANT_MAP } from "src/components/BgBox";
-import { ListItem } from "src/components/List";
-import TicketListItemContent from "src/components/Lists/Ticket/ListItemContent";
-import ListItemHeading from "src/components/Lists/Ticket/ListItemHeading";
+import { Heading } from "@chakra-ui/react";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BgBox from "src/components/BgBox";
+import IconLink from "src/components/IconLink";
+import { getTitle } from "src/utils/ticket";
 
 type TicketListItemProps = {
 	item: any;
@@ -10,24 +11,17 @@ type TicketListItemProps = {
 
 function TicketListItem({ item }: TicketListItemProps) {
 	return (
-		<ListItem
-			key={item.id}
-			className="w-full"
-			_light={{
-				bgColor: VARIANT_MAP.child._light.backgroundColor,
-			}}
-			bgColor={VARIANT_MAP.child.backgroundColor}
-			heading={<ListItemHeading item={item} />}
-			content={<TicketListItemContent item={item} />}
-			tags={[
-				<Tag colorScheme={item.status.color} key={1}>
-					Status: {item.status.name}
-				</Tag>,
-				<Tag colorScheme={item.priority.color} key={2}>
-					Priority: {item.priority.name}
-				</Tag>,
-			]}
-		/>
+		<BgBox key={item.id} className="flex w-full items-center justify-between gap-2 p-2">
+			<Heading className="min-w-0">
+				<IconLink href={`/Ticket/Details/${item.id}`} className="text-base">
+					<span className="mr-2 truncate">{getTitle(item)}</span>
+				</IconLink>
+			</Heading>
+			<div className="text-secondary flex items-center gap-1 text-xs">
+				<FontAwesomeIcon icon={faUser} />
+				{item.responsibleUser?.username || "-"}
+			</div>
+		</BgBox>
 	);
 }
 

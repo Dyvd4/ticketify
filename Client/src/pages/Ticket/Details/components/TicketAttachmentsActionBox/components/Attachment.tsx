@@ -1,7 +1,6 @@
-import { Link, Tooltip } from "@chakra-ui/react";
+import { Link } from "@chakra-ui/react";
 import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import BgBox from "src/components/BgBox";
 import { request } from "src/services/request";
 
 type FileProps = {
@@ -19,13 +18,10 @@ function File({ file }: FileProps) {
 	};
 
 	return (
-		<Tooltip label={file.originalFileName} placement="top">
-			<Link className="m-0" onClick={downloadFile}>
-				<BgBox variant="child" className="flex h-12 w-12 items-center justify-center">
-					<FontAwesomeIcon icon={faFileArrowDown} size="3x" />
-				</BgBox>
-			</Link>
-		</Tooltip>
+		<Link className="m-0 flex items-center justify-start gap-2 p-0" onClick={downloadFile}>
+			<FontAwesomeIcon icon={faFileArrowDown} size="lg" />
+			<span className="text-sm">{file.originalFileName}</span>
+		</Link>
 	);
 }
 

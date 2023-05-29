@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import ActionBox, { ActionBoxSkeleton, ActionBoxProps } from "src/components/ActionBox";
+import ActionBox, { ActionBoxProps, ActionBoxSkeleton } from "src/components/ActionBox";
 import TooltipIconButton from "src/components/Buttons/TooltipIconButton";
 import TicketFormModal from "src/components/FormModals/Ticket";
 import useToggle from "src/hooks/useToggle";
@@ -71,7 +71,7 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 			]}
 			{...props}
 		>
-			<Flex gap={4} direction="column" className="text-secondary">
+			<Flex gap={4} direction="column">
 				<Flex justifyContent="space-between">
 					<div>priority</div>
 					<Tag colorScheme={priority.color}>{priority.name}</Tag>

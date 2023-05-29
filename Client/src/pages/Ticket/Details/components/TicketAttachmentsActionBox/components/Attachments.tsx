@@ -1,8 +1,9 @@
-import { Flex, HStack, Image } from "@chakra-ui/react";
+import { Box, Flex, Image } from "@chakra-ui/react";
 import { faFrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import { cn } from "src/utils/component";
 import Attachment from "./Attachment";
 
 type AttachmentsProps = {
@@ -12,7 +13,13 @@ type AttachmentsProps = {
 
 function Attachments({ attachments, variant }: AttachmentsProps) {
 	return attachments.length > 0 ? (
-		<HStack className="flex-wrap py-2" gap={4}>
+		<Box
+			className={cn("py-2", {
+				"flex flex-wrap": variant === "images",
+				"grid grid-cols-2": variant !== "images",
+			})}
+			gap={2}
+		>
 			{attachments.map((attachment) => {
 				return variant === "images" ? (
 					<Zoom key={attachment.id}>
@@ -27,7 +34,7 @@ function Attachments({ attachments, variant }: AttachmentsProps) {
 					<Attachment key={attachment.id} file={attachment} />
 				);
 			})}
-		</HStack>
+		</Box>
 	) : (
 		<Flex gap={2} alignItems={"center"} className="text-secondary text-sm">
 			No {variant === "all" ? "attachments" : variant}

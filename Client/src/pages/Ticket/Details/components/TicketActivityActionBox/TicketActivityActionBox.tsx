@@ -12,22 +12,16 @@ export type TicketActivityActionBox = _TicketActivityActionBox &
 
 function TicketActivityActionBox({ className, ...props }: TicketActivityActionBox) {
 	const { id } = useParams();
-	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(true);
 
 	// queries
 	// -------
-	const activitiesQuery = useInfiniteQuery<any, any>(
-		["ticketActivities", id],
-		{
-			route: "ticketActivities",
-			queryParams: {
-				ticketId: id,
-			},
+	const activitiesQuery = useInfiniteQuery<any, any>(["ticketActivities", id], {
+		route: "ticketActivities",
+		queryParams: {
+			ticketId: id,
 		},
-		{
-			refetchInterval: 60000,
-		}
-	);
+	});
 	const activitiesCount = useInfiniteQueryCount(activitiesQuery);
 
 	if (activitiesQuery.isLoading) return <ActionBoxSkeleton />;

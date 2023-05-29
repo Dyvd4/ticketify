@@ -28,15 +28,14 @@ function TicketAttachmentsActionBoxContent({
 	);
 
 	if (ticketAttachmentsLoading) return null;
-	const { files, images, attachments } = ticketAttachments;
+	const { files, images } = ticketAttachments;
+	const attachments = images.concat(files);
 
 	return (
 		<>
-			<Heading className="text-base">Images ({images.length})</Heading>
+			<Heading className="text-sm">Viewable ({images.length})</Heading>
 			<Attachments attachments={images} variant="images" />
-			<Heading className="text-base">Files ({files.length})</Heading>
-			<Attachments attachments={files} variant="files" />
-			<Heading className="text-base">All ({attachments.length})</Heading>
+			<Heading className="text-sm">Downloadable ({attachments.length})</Heading>
 			<Attachments attachments={attachments} variant="all" />
 		</>
 	);
