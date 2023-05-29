@@ -19,7 +19,7 @@ export type TicketConnectionsActionBox = _TicketConnectionsActionBox &
 
 function TicketConnectionsActionBox({ className, ...props }: TicketConnectionsActionBox) {
 	const { id } = useParams();
-	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(true);
 
 	const {
 		isOpen: connectedTicketsAddModalIsOpen,

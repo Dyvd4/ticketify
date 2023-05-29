@@ -19,7 +19,7 @@ export type TicketAttachmentsActionBoxProps = _TicketAttachmentsActionBoxProps &
 
 function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsActionBoxProps) {
 	const { id } = useParams();
-	const [isCollapsed, , toggleIsCollapsed] = useToggle(false);
+	const [isCollapsed, , toggleIsCollapsed] = useToggle(true);
 
 	// state
 	// -----
@@ -52,6 +52,7 @@ function TicketAttachmentsActionBox({ className, ...props }: TicketAttachmentsAc
 	return (
 		<>
 			<ActionBox
+				useDivider
 				useCollapse
 				isCollapsed={isCollapsed}
 				toggleIsCollapsed={toggleIsCollapsed}

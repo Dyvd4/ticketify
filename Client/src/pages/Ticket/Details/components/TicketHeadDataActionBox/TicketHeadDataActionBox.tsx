@@ -66,29 +66,29 @@ function TicketHeadDataActionBox({ className, ...props }: TicketHeadDataActionBo
 			]}
 			{...props}
 		>
-			<Flex gap={4} direction="column">
-				<Flex justifyContent="space-between">
-					<div>priority</div>
+			<div className="flex flex-col gap-4">
+				<div className="flex items-center justify-between">
+					<div className="text-secondary text-sm">priority</div>
 					<Tag colorScheme={priority.color}>{priority.name}</Tag>
-				</Flex>
-				<Flex justifyContent="space-between">
-					<div>status</div>
+				</div>
+				<div className="flex items-center justify-between">
+					<div className="text-secondary text-sm">status</div>
 					<div className="flex-gap-2">
 						<SetStatusButton />
 					</div>
-				</Flex>
-				<Flex justifyContent="space-between">
-					<div>due date</div>
+				</div>
+				<div className="flex items-center justify-between">
+					<div className="text-secondary text-sm">due date</div>
 					<div>{dueDate ? format(new Date(dueDate), "dd.mm.yyyy hh:mm:ss") : "-"}</div>
-				</Flex>
-				<Flex justifyContent="space-between">
-					<div>responsible user</div>
+				</div>
+				<div className="flex items-center justify-between">
+					<div className="text-secondary text-sm">responsible user</div>
 					<div className="flex items-center justify-center gap-2">
 						{responsibleUser?.username || "-"}
 						<SetResponsibleUserButton />
 					</div>
-				</Flex>
-			</Flex>
+				</div>
+			</div>
 			{ticketFormModalVariant === "edit" && (
 				<>
 					<TicketFormModal

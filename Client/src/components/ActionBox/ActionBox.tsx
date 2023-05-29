@@ -112,7 +112,7 @@ function ActionBox({
 							<Divider className="mt-4" />
 						</>
 					)}
-					<div className="pt-4">{children}</div>
+					<div className="mt-4">{children}</div>
 				</>
 			)}
 		</div>
