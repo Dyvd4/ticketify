@@ -2,7 +2,7 @@ import { Heading, TabsProps } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import Attachments from "./components/Attachments";
+import Attachments from "./Attachments";
 
 type _TicketAttachmentsActionBoxContentProps = {};
 
