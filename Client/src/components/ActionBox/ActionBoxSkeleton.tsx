@@ -18,7 +18,6 @@ function ActionBoxSkeleton({ className, ...props }: ActionBoxSkeletonProps) {
 					If you were able to click this menu, it probably loaded too long :D
 				</MenuItem>,
 			]}
-			{...props}
 		>
 			<Flex gap={4} direction="column">
 				<Skeleton height="20px" className="rounded-md" />
