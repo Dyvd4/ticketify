@@ -28,6 +28,7 @@ model User {
     settings            UserSettings?
     watchingTickets     TicketWatcher[]
     pinnedTickets       PinnedTicket[]
+    roles               UserOnRole[]
 }
 
 model UserSettings {
@@ -42,6 +43,21 @@ model UserSettings {
     updatedAt                      DateTime? @updatedAt
     createUser                     String?   @db.NVarChar(100)
     updateUser                     String?   @db.NVarChar(100)
+}
+
+model UserOnRole {
+    userId String @db.NVarChar(100)
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    roleId String @db.NVarChar(100)
+    role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+    @@id([userId, roleId])
+}
+
+model Role {
+    id    String       @id @default(uuid()) @db.NVarChar(100)
+    name  String       @db.NVarChar(100)
+    users UserOnRole[]
 }
 
 model TicketWatcher {
