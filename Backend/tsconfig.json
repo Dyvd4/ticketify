@@ -27,5 +27,8 @@
 			"@database/*": ["src/global/database/*"],
 			"@auth/*": ["src/global/auth/*"]
 		}
+	},
+	"ts-node": {
+		"require": ["tsconfig-paths/register"]
 	}
 }
