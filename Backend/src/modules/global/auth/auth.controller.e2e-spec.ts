@@ -24,6 +24,7 @@ const dummyUser: User = {
 	updatedAt: new Date("2022-01-01T01:00:00.000Z"),
 	createUser: null,
 	updateUser: "admin",
+	roleId: null,
 };
 
 describe("AuthController", () => {
