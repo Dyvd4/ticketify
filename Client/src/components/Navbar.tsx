@@ -21,7 +21,7 @@ import SearchBar from "./SearchBar";
 type NavbarProps = {};
 
 function Navbar(props: NavbarProps) {
-	const { currentUser, isAuthenticated } = useAuthState();
+	const { currentUser, isLoading } = useAuthState();
 
 	const signOutMutation = useMutation(signOut, {
 		onSuccess: () => {
@@ -29,7 +29,7 @@ function Navbar(props: NavbarProps) {
 		},
 	});
 
-	if (!isAuthenticated) return null;
+	if (!currentUser || isLoading) return null;
 
 	return (
 		<Box
@@ -51,8 +51,8 @@ function Navbar(props: NavbarProps) {
 							<Avatar
 								className="ring-2 ring-sky-500"
 								size={"sm"}
-								name={currentUser?.username}
-								src={currentUser?.avatar?.url}
+								name={currentUser.username}
+								src={currentUser.avatar?.url}
 							/>
 						</Flex>
 					</MenuButton>

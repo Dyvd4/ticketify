@@ -6,24 +6,27 @@ import {
 	AccordionPanel,
 	Box,
 	Button,
+	Container,
 	Divider,
 	Input,
 	useToast,
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
+import useAuthState from "src/auth/hooks/useAuthState";
+import IconLink from "src/components/IconLink";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import FormControl from "src/components/Wrapper/FormControl";
-import { useCurrentUser } from "src/hooks/user";
 import { request } from "src/services/request";
 import {
 	getValidationErrorMap,
 	ValidationErrorMap,
 	ValidationErrorResponse,
 } from "src/utils/error";
-import { hasEmailConfirmation } from "../../auth/auth";
+import { signOut } from "../../auth/auth";
 import MutationErrorAlert from "../../components/ErrorAlert";
 
 interface EmailNotConfirmedIndexProps {}
@@ -33,6 +36,12 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 	const [email, setEmail] = useState<any>("");
 
 	const toast = useToast();
+
+	const signOutMutation = useMutation(signOut, {
+		onSuccess: () => {
+			window.location.href = "/";
+		},
+	});
 
 	const confirmEmailMutation = useMutation(
 		() => {
@@ -71,14 +80,14 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 		}
 	);
 
-	const { currentUser, isLoading, refetch } = useCurrentUser();
+	const { currentUser, isLoading, hasEmailConfirmation, refetch } = useAuthState();
 
 	if (isLoading) return <LoadingRipple centered />;
 
-	if (hasEmailConfirmation(currentUser)) return <Navigate to="/Auth/EmailConfirmed" />;
+	if (hasEmailConfirmation) return <Navigate to="/Auth/EmailConfirmed" />;
 
-	return (
-		<>
+	return createPortal(
+		<Container maxW={"container.lg"}>
 			<Box className="mt-10 flex justify-center gap-4">
 				<h1 className="flex items-center text-6xl">401</h1>
 				<div className="text-black">
@@ -163,7 +172,32 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>
-		</>
+			<h3 className="mt-4 text-2xl">Other</h3>
+			<Accordion className="mt-4" allowMultiple>
+				<AccordionItem>
+					<h2>
+						<AccordionButton className="flex justify-between font-bold">
+							Sign out
+							<AccordionIcon />
+						</AccordionButton>
+					</h2>
+					<AccordionPanel className="leading-relaxed">
+						<div>
+							<span>Click</span>
+							<IconLink
+								className="mx-2 font-bold"
+								onClick={() => signOutMutation.mutate()}
+								href="#"
+							>
+								here
+							</IconLink>
+							<span>to sign out</span>
+						</div>
+					</AccordionPanel>
+				</AccordionItem>
+			</Accordion>
+		</Container>,
+		document.getElementById("portal")!
 	);
 }
 

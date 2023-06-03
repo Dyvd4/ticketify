@@ -12,6 +12,7 @@ import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
+import AuthenticatedArea from "src/auth/AuthenticatedArea";
 import useAuthState from "src/auth/hooks/useAuthState";
 import BgBox, { BgBoxProps } from "src/components/BgBox";
 import useSidebarToggle from "src/context/hooks/useSidebarToggle";
@@ -27,10 +28,9 @@ export type SidebarProps = PropsWithChildren<_SidebarProps> & BgBoxProps;
 function Sidebar({ className, ...props }: SidebarProps) {
 	const path = window.location.pathname;
 
-	const { isAuthenticated } = useAuthState();
+	const { isLoading } = useAuthState();
 	const [sidebarIsCollapsed, toggleSidebarIsCollapsed] = useSidebarToggle();
 	const sidebarListItemVariant = !sidebarIsCollapsed ? "horizontal" : "vertical";
-
 	const { data: ticketCount } = useQuery(["ticketCount"], () =>
 		fetchEntity({
 			route: "tickets/count",
@@ -43,7 +43,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
 		})
 	);
 
-	if (!isAuthenticated) return null;
+	if (isLoading) return null;
 
 	return (
 		<BgBox
@@ -119,12 +119,23 @@ function Sidebar({ className, ...props }: SidebarProps) {
 				count={logCount}
 			/>
 
-			<SidebarListItem
-				title="Test"
-				urlPath={"/Test"}
-				variant={sidebarListItemVariant}
-				icon={faFlask}
-			/>
+			<AuthenticatedArea roleName="super-admin">
+				<SidebarListItem
+					title="Test"
+					urlPath={"/Test"}
+					variant={sidebarListItemVariant}
+					icon={faFlask}
+				/>
+			</AuthenticatedArea>
+
+			<AuthenticatedArea roleName="admin">
+				<SidebarListItem
+					title="Role Management"
+					urlPath={"/RoleManagement"}
+					variant={sidebarListItemVariant}
+					icon={faUsers}
+				/>
+			</AuthenticatedArea>
 
 			<Divider />
 
