@@ -23,7 +23,7 @@ type _TagConfirmMenuProps<T> = {
 	selectedMenuItem: T;
 	menuItems: T[];
 	mutation: UseMutationResult<any, any, any, any>;
-	confirmDialogTextRenderer(selectedItem: T, newSelectedItem: T): React.ReactNode;
+	confirmDialogBodyRenderer(selectedItem: T, newSelectedItem: T): React.ReactNode;
 	modalIsOpen: boolean;
 	onModalOpen(): void;
 	onModalClose(): void;
@@ -35,9 +35,9 @@ export type TagConfirmMenuProps<T> = _TagConfirmMenuProps<T> &
 
 function TagConfirmMenu<T extends EntityWithColor>({
 	className,
-	menuItems: items,
-	selectedMenuItem: selectedItem,
-	confirmDialogTextRenderer,
+	menuItems,
+	selectedMenuItem,
+	confirmDialogBodyRenderer,
 	onModalOpen,
 	onModalClose,
 	modalIsOpen,
@@ -47,7 +47,7 @@ function TagConfirmMenu<T extends EntityWithColor>({
 	const [newSelectedItem, setNewSelectedItem] = useState<any>(null);
 
 	const handleOnChange = (newSelectedItemId: string) => {
-		setNewSelectedItem(items.find((i) => i.id === newSelectedItemId));
+		setNewSelectedItem(menuItems.find((i) => i.id === newSelectedItemId));
 		onModalOpen();
 	};
 
@@ -66,7 +66,7 @@ function TagConfirmMenu<T extends EntityWithColor>({
 					<ModalBody>
 						{modalIsOpen &&
 							newSelectedItem &&
-							confirmDialogTextRenderer(selectedItem, newSelectedItem)}
+							confirmDialogBodyRenderer(selectedMenuItem, newSelectedItem)}
 					</ModalBody>
 					<ModalFooter>
 						<Button
@@ -87,18 +87,18 @@ function TagConfirmMenu<T extends EntityWithColor>({
 					className={cn("cursor-pointer", className)}
 					as={Tag}
 					// @ts-ignore
-					colorScheme={selectedItem.color}
+					colorScheme={selectedMenuItem.color}
 					{...props}
 				>
-					{selectedItem.name}
+					{selectedMenuItem.name}
 				</MenuButton>
 				<MenuList>
 					<MenuOptionGroup
 						onChange={(value) => handleOnChange(value as string)}
-						value={selectedItem.id}
+						value={selectedMenuItem.id}
 						type="radio"
 					>
-						{items.map((item) => (
+						{menuItems.map((item) => (
 							<MenuItemOption key={item.id} value={item.id}>
 								<Tag colorScheme={item.color}>{item.name}</Tag>
 							</MenuItemOption>
