@@ -29,7 +29,7 @@ model User {
     watchingTickets     TicketWatcher[]
     pinnedTickets       PinnedTicket[]
     roleId              String?              @db.NVarChar(100)
-    role                Role?                @relation(fields: [roleId], references: [id])
+    role                UserRole?            @relation(fields: [roleId], references: [id])
 }
 
 model UserSettings {
@@ -46,9 +46,10 @@ model UserSettings {
     updateUser                     String?   @db.NVarChar(100)
 }
 
-model Role {
+model UserRole {
     id    String @id @default(uuid()) @db.NVarChar(100)
-    name  String @db.NVarChar(100)
+    name  String @unique() @db.NVarChar(100)
+    color String @db.NVarChar(50)
     users User[]
 }
 
@@ -118,7 +119,7 @@ model PinnedTicket {
 model TicketPriority {
     id         String    @id @default(uuid()) @db.NVarChar(100)
     color      String    @db.NVarChar(50)
-    name       String    @db.NVarChar(50)
+    name       String    @unique() @db.NVarChar(50)
     tickets    Ticket[]
     createdAt  DateTime? @default(now())
     updatedAt  DateTime? @updatedAt
@@ -129,7 +130,7 @@ model TicketPriority {
 model TicketStatus {
     id         String    @id @default(uuid()) @db.NVarChar(100)
     color      String    @db.NVarChar(50)
-    name       String    @db.NVarChar(50)
+    name       String    @unique() @db.NVarChar(50)
     priority   Int?      @default(0) @db.Int
     tickets    Ticket[]
     createdAt  DateTime? @default(now())
