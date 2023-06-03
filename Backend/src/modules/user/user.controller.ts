@@ -61,6 +61,7 @@ export class UserController {
 						ticket: true,
 					},
 				},
+				role: true,
 			},
 		});
 

@@ -1,37 +1,17 @@
-import { HttpException, Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
-import { BaseAuthParams, BaseAuthService } from "./base-auth.service";
-
-export interface AuthParams extends BaseAuthParams {
-	/**
-	 * @returns
-	 * - true as first tuple item if user should pass the authorization
-	 * - exception as second tuple item. Get's thrown if authorization fails
-	 * */
-	strategy?: (user: User) => User | HttpException;
-}
+import { Injectable } from "@nestjs/common";
+import { BaseAuthService, UserWithRoles } from "./base-auth.service";
+import { RoleName } from "./auth.decorator";
 
 @Injectable()
 export class AuthService extends BaseAuthService {
-	/**
-	 * @returns
-	 * - User if authorization passes
-	 * - HttpException if authentication fails
-	 * */
-	public authorize = async (
-		encodedAuthToken: string,
-		authArgs?: AuthParams
-	): Promise<User | HttpException> => {
-		let userOrException = await this.authenticate(encodedAuthToken, authArgs);
-
-		if (userOrException instanceof HttpException) {
-			return userOrException;
+	public isAuthorizedForRole(user: UserWithRoles, roleName: RoleName): boolean {
+		const userRoleName = user.role?.name as RoleName;
+		if (userRoleName === "super-admin") {
+			return true;
 		}
-
-		if (!!authArgs?.strategy) {
-			userOrException = authArgs.strategy(userOrException);
+		if (userRoleName === "admin" && roleName !== "super-admin") {
+			return true;
 		}
-
-		return userOrException;
-	};
+		return userRoleName === roleName;
+	}
 }

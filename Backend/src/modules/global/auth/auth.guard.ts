@@ -1,10 +1,4 @@
-import {
-	CanActivate,
-	ExecutionContext,
-	HttpException,
-	Injectable,
-	UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { User } from "@prisma/client";
 import { UserService } from "@src/modules/user/user.service";
@@ -32,12 +26,10 @@ export class AuthGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const httpContext = context.switchToHttp();
 		const request = httpContext.getRequest<Request>();
-		const args = this.reflector.getAllAndOverride<AuthDecoratorParams | undefined>(
-			"authParams",
-			[context.getHandler(), context.getClass()]
-		);
-
-		if (args?.disable) return true;
+		const authDecoratorOptions = this.reflector.getAllAndOverride<
+			AuthDecoratorParams | undefined
+		>("authOptions", [context.getHandler(), context.getClass()]);
+		if (authDecoratorOptions?.disable) return true;
 
 		const encodedAuthToken = request.header("Cookie")?.split("auth-token=")[1];
 
@@ -47,14 +39,32 @@ export class AuthGuard implements CanActivate {
 			);
 		}
 
-		const encodedUserIdOrError = await this.authService.authorize(encodedAuthToken, args);
+		const { isAuthenticated, hasEmailConfirmation, currentUser } =
+			await this.authService.getAuthState(encodedAuthToken);
 
-		if (encodedUserIdOrError instanceof HttpException) {
-			throw encodedUserIdOrError;
+		if (!isAuthenticated) {
+			throw new UnauthorizedException("provided auth-token was not valid");
+		}
+		if (!hasEmailConfirmation && !authDecoratorOptions?.ignoreEmailConfirmation) {
+			throw new UnauthorizedException("email has not been confirmed yet");
+		}
+		if (
+			authDecoratorOptions?.roleName &&
+			!this.authService.isAuthorizedForRole(currentUser!, authDecoratorOptions.roleName)
+		) {
+			throw new UnauthorizedException(
+				`user called '${currentUser!.username}' ` +
+					`with id '${currentUser!.id}' ` +
+					`does not have the role '${authDecoratorOptions.roleName}' assigned`
+			);
 		}
 
-		request.User = encodedUserIdOrError;
-		this.userService.setCurrentUser(encodedUserIdOrError);
+		if (!!authDecoratorOptions?.strategy) {
+			return authDecoratorOptions.strategy(currentUser!);
+		}
+
+		request.User = currentUser!;
+		this.userService.setCurrentUser(currentUser!);
 
 		return true;
 	}

@@ -31,6 +31,7 @@ import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
 import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { MailTemplateProvider } from "@src/modules/mail/mail-template.provider";
+import { Auth } from "../global/auth/auth.decorator";
 import { SomeObjDto } from "./dummy.dtos";
 
 @Controller("dummy")
@@ -171,5 +172,13 @@ export class DummyController {
 	@Post("dto")
 	postDto(@Body() dto: SomeObjDto) {
 		return dto;
+	}
+
+	@Auth({
+		roleName: "admin",
+	})
+	@Get("protectedData")
+	getProtectedData() {
+		return "some confidential data";
 	}
 }

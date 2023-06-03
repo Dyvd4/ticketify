@@ -1,8 +1,12 @@
 import { SetMetadata } from "@nestjs/common";
-import { AuthParams } from "./auth.service";
+import { UserWithRoles } from "./base-auth.service";
 
-export interface AuthDecoratorParams extends AuthParams {
+export type RoleName = "super-admin" | "admin" | "customer";
+export interface AuthDecoratorParams {
 	disable?: boolean;
+	strategy?(user: UserWithRoles): boolean;
+	roleName?: RoleName;
+	ignoreEmailConfirmation?: boolean;
 }
 
-export const Auth = (args?: AuthDecoratorParams) => SetMetadata("authParams", args);
+export const Auth = (args?: AuthDecoratorParams) => SetMetadata("authOptions", args);
