@@ -1,12 +1,12 @@
 import { useCurrentUser } from "src/hooks/user";
+import { hasEmailConfirmation } from "../auth";
 
 const useAuthState = () => {
 	const { currentUser, ...query } = useCurrentUser({ includeAllEntities: true });
-	const hasEmailConfirmation = !!currentUser && currentUser.emailConfirmed;
 	return {
 		...query,
 		currentUser,
-		hasEmailConfirmation,
+		hasEmailConfirmation: !!currentUser && hasEmailConfirmation(currentUser),
 		isAuthenticated: !!currentUser,
 	};
 };

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"; // TODO: could be removed I guess
 import { request } from "../services/request";
 import { RoleName } from "./AuthenticatedArea";
 
@@ -31,7 +31,7 @@ export const signOut = async () => {
 export const hasEmailConfirmation = (user) => user.emailConfirmed;
 export const isAuthorizedForRole = (user, roleName: RoleName) => {
 	if (!hasEmailConfirmation(user)) return false;
-	const userRoleName = user.role.name as RoleName;
+	const userRoleName = user.role?.name as RoleName;
 	if (userRoleName === "super-admin") {
 		return true;
 	}

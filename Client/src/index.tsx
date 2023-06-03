@@ -23,6 +23,7 @@ import TicketDetailsIndex from "./pages/Ticket/Details/Index";
 import TicketIndex from "./pages/Ticket/Index";
 import UserIndex from "./pages/User/Index";
 import UserSettingsIndex from "./pages/UserSettings/Index";
+import RoleManagementIndex from "./pages/RoleManagement/Index";
 import "./styles/index.scss";
 import "./styles/tailwind.scss";
 
@@ -43,8 +44,10 @@ root.render(
 			<PortalSlot />
 			<ChakraProvider theme={theme}>
 				<QueryClientProvider client={queryClient}>
-					<Navbar />
-					<Sidebar />
+					<AuthenticatedArea>
+						<Navbar />
+						<Sidebar />
+					</AuthenticatedArea>
 					<Box id="container" className="p-4">
 						<Router>
 							<Routes>
@@ -65,8 +68,19 @@ root.render(
 									<Route path="Log" element={<LogIndex />} />
 								</Route>
 								<Route
+									path="/RoleManagement"
+									element={<AuthenticatedArea type="route" roleName={"admin"} />}
+								>
+									<Route index element={<RoleManagementIndex />} />
+								</Route>
+								<Route
 									path="/Auth/EmailNotConfirmed"
-									element={<AuthenticatedArea type="route" half={true} />}
+									element={
+										<AuthenticatedArea
+											type="route"
+											ignoreEmailConfirmation={true}
+										/>
+									}
 								>
 									<Route index element={<EmailNotConfirmed />} />
 								</Route>

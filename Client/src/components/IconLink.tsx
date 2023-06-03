@@ -25,7 +25,7 @@ function IconLink({ children, className, disabled, variant = "normal", ...props 
 
 	return (
 		<Link
-			className={cn(`group flex  items-center hover:underline ${variantLinkClassNames}
+			className={cn(`group inline-flex items-center hover:underline ${variantLinkClassNames}
 						${disabled ? "pointer-events-none" : ""}
 						${className}`)}
 			{...props}

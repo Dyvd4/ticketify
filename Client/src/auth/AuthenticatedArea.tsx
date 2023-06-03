@@ -34,7 +34,11 @@ function AuthenticatedArea(props: AuthenticatedAreaProps) {
 	else if (isError) returnElement = <ErrorAlert />;
 	else {
 		if (isAuthenticated && !hasEmailConfirmation && !props.ignoreEmailConfirmation) {
-			returnElement = <Navigate to="/Auth/EmailNotConfirmed" />;
+			if (type === "route") {
+				returnElement = <Navigate to="/Auth/EmailNotConfirmed" />;
+			} else {
+				returnElement = null;
+			}
 		} else if (isAuthenticated && type === "route") {
 			if (props.roleName && !userIsAuthorizedForRole) {
 				returnElement = <Navigate to={"/RestrictedAccess"} />;
