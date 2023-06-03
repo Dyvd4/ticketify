@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type ListItemProps = {
 	/** The title to display. Will be placed on top of the content. */
-	heading: React.ReactElement;
+	heading?: React.ReactElement;
 	/** actions as menuItems from chakra */
 	actions?: React.ReactElement;
 	/** content to display */
@@ -46,7 +46,11 @@ function ListItem({
 		>
 			<LinkBox>
 				<Box className="flex justify-between">
-					<Box className="flex-grow">{heading}</Box>
+					{!!heading && (
+						<>
+							<Box className="flex-grow">{heading}</Box>
+						</>
+					)}
 					{!!actions && (
 						<>
 							<Box>
