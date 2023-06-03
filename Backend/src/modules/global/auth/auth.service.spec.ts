@@ -13,6 +13,7 @@ describe("roles authorization", () => {
 		role: {
 			id: "",
 			name: "super-admin",
+			color: "",
 		},
 		roleId: null,
 		id: "12345",
@@ -58,6 +59,7 @@ describe("roles authorization", () => {
 			...superAdminUser,
 			role: {
 				id: "",
+				color: "",
 				name: "admin",
 			},
 		} satisfies UserWithRoles;
@@ -71,6 +73,7 @@ describe("roles authorization", () => {
 			...superAdminUser,
 			role: {
 				id: "",
+				color: "",
 				name: "customer",
 			},
 		} satisfies UserWithRoles;
