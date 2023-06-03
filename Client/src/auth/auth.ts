@@ -28,9 +28,7 @@ export const signOut = async () => {
 	return response;
 };
 
-export const isHalfAuthenticated = (user) => !user.emailConfirmed;
-export const isAuthenticated = (user) => user.emailConfirmed;
-const hasEmailConfirmation = (user) => user.emailConfirmed;
+export const hasEmailConfirmation = (user) => user.emailConfirmed;
 export const isAuthorizedForRole = (user, roleName: RoleName) => {
 	if (!hasEmailConfirmation(user)) return false;
 	const userRoleName = user.role.name as RoleName;

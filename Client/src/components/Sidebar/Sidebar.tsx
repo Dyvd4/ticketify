@@ -5,15 +5,16 @@ import {
 	faBook,
 	faFlask,
 	faTicket,
+	faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
+import useAuthState from "src/auth/hooks/useAuthState";
 import BgBox, { BgBoxProps } from "src/components/BgBox";
 import useSidebarToggle from "src/context/hooks/useSidebarToggle";
-import { useCurrentUserWithAuthentication } from "src/hooks/user";
 import IconButton from "../Wrapper/IconButton";
 import NewTicketSection from "./sections/NewTicketSection";
 import PinnedTicketsSection from "./sections/PinnedTicketsSection";
@@ -26,7 +27,7 @@ export type SidebarProps = PropsWithChildren<_SidebarProps> & BgBoxProps;
 function Sidebar({ className, ...props }: SidebarProps) {
 	const path = window.location.pathname;
 
-	const { isAuthenticated } = useCurrentUserWithAuthentication({ includeAllEntities: true });
+	const { isAuthenticated } = useAuthState();
 	const [sidebarIsCollapsed, toggleSidebarIsCollapsed] = useSidebarToggle();
 	const sidebarListItemVariant = !sidebarIsCollapsed ? "horizontal" : "vertical";
 

@@ -13,7 +13,7 @@ import { faSignOut, faSliders, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "react-query";
 import { signOut } from "src/auth/auth";
-import { useCurrentUserWithAuthentication } from "src/hooks/user";
+import useAuthState from "src/auth/hooks/useAuthState";
 import Breadcrumb from "./Breadcrumb";
 import DarkModeButton from "./Buttons/DarkMode";
 import SearchBar from "./SearchBar";
@@ -21,9 +21,7 @@ import SearchBar from "./SearchBar";
 type NavbarProps = {};
 
 function Navbar(props: NavbarProps) {
-	const { currentUser, isAuthenticated } = useCurrentUserWithAuthentication({
-		includeAllEntities: true,
-	});
+	const { currentUser, isAuthenticated } = useAuthState();
 
 	const signOutMutation = useMutation(signOut, {
 		onSuccess: () => {

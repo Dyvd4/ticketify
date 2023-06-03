@@ -1,7 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { fetchCurrentUser, fetchCurrentUserAll } from "src/api/user";
-import { isAuthenticated, isHalfAuthenticated } from "src/auth/auth";
 
 interface UseCurrentUserParams {
 	/**
@@ -34,28 +33,6 @@ export const useCurrentUserSettings = () => {
 	return {
 		currentUserSettings: data,
 		...queryResult,
-	};
-};
-
-interface UseCurrentUserWithAuthenticationParams extends UseCurrentUserParams {
-	/** If set to true, checks if user is half authenticated instead of full.
-	 * Half authenticated means that the e-mail is not confirmed yet.
-	 */
-	half?: boolean;
-}
-export const useCurrentUserWithAuthentication = (
-	params: UseCurrentUserWithAuthenticationParams = {}
-) => {
-	const { half, ...useCurrentUserParams } = params;
-
-	const { currentUser, ...queryResult } = useCurrentUser(useCurrentUserParams);
-
-	return {
-		currentUser,
-		...queryResult,
-		isAuthenticated: params?.half
-			? isHalfAuthenticated(currentUser)
-			: isAuthenticated(currentUser),
 	};
 };
 

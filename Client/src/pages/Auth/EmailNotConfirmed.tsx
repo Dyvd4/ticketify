@@ -23,7 +23,7 @@ import {
 	ValidationErrorMap,
 	ValidationErrorResponse,
 } from "src/utils/error";
-import { isAuthenticated } from "../../auth/auth";
+import { hasEmailConfirmation } from "../../auth/auth";
 import MutationErrorAlert from "../../components/ErrorAlert";
 
 interface EmailNotConfirmedIndexProps {}
@@ -75,7 +75,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 
 	if (isLoading) return <LoadingRipple centered />;
 
-	if (isAuthenticated(currentUser)) return <Navigate to="/Auth/EmailConfirmed" />;
+	if (hasEmailConfirmation(currentUser)) return <Navigate to="/Auth/EmailConfirmed" />;
 
 	return (
 		<>
