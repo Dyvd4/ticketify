@@ -93,13 +93,13 @@ function TagConfirmMenu<T extends EntityWithColor>({
 					{selectedMenuItem.name}
 				</MenuButton>
 				<MenuList>
-					<MenuOptionGroup
-						onChange={(value) => handleOnChange(value as string)}
-						value={selectedMenuItem.id}
-						type="radio"
-					>
+					<MenuOptionGroup value={selectedMenuItem.id} type="radio">
 						{menuItems.map((item) => (
-							<MenuItemOption key={item.id} value={item.id}>
+							<MenuItemOption
+								onClick={() => handleOnChange(item.id)}
+								key={item.id}
+								value={item.id}
+							>
 								<Tag colorScheme={item.color}>{item.name}</Tag>
 							</MenuItemOption>
 						))}
