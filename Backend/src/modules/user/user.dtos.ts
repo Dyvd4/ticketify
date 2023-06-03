@@ -15,7 +15,11 @@ export class UserCreateDto implements Pick<User, "username" | "password" | "emai
 
 export class UpdateUsernameDto extends PickType(UserCreateDto, ["username"]) {}
 export class UpdateEmailDto extends PickType(UserCreateDto, ["email"]) {}
-
+export class UpdateUserRoleDto implements Pick<User, "roleId"> {
+	@IsString()
+	@IsNotEmpty()
+	roleId!: string;
+}
 export class NewPasswordDto {
 	@IsString()
 	@IsNotEmpty()

@@ -1,21 +1,21 @@
-import { Auth } from "@src/modules/global/auth/auth.decorator";
-import { AuthMailDeliveryService } from "@src/modules/global/auth/auth-mail-delivery.service";
-import { User } from "@src/modules/global/auth/user.decorator";
-import { PrismaService } from "@src/modules/global/database/prisma.service";
-import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import { Controller, Get, NotFoundException, Param, UnauthorizedException } from "@nestjs/common";
 import { Body, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common/decorators";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { User as TUser } from "@prisma/client";
+import { InfiniteLoader } from "@src/lib/list";
+import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
+import ListResult from "@src/lib/list/result/list-result";
 import { UploadFileDto } from "@src/modules/file/file.dtos";
 import { parseImageFilePipe } from "@src/modules/file/file.pipes";
 import { FileService } from "@src/modules/file/file.service";
+import { AuthMailDeliveryService } from "@src/modules/global/auth/auth-mail-delivery.service";
+import { Auth, ROLE_NAME } from "@src/modules/global/auth/auth.decorator";
+import { User } from "@src/modules/global/auth/user.decorator";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { ValidationException } from "@src/modules/global/validation.exception";
 import bcrypt from "bcrypt";
-import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
-import ListResult from "@src/lib/list/result/list-result";
-import { InfiniteLoader } from "@src/lib/list";
-import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
+import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto, UpdateUserRoleDto } from "./user.dtos";
 
 @Controller()
 @ApiCookieAuth()
@@ -253,6 +253,41 @@ export class UserController {
 						},
 					},
 				},
+			},
+		});
+
+		return updatedUser;
+	}
+
+	@ApiParam({
+		name: "id",
+		required: false,
+	})
+	@Auth({ roleName: "admin" })
+	@Put("user/:id?/role")
+	async updateUserRole(
+		@User() requestUser: TUser,
+		@Body() { roleId }: UpdateUserRoleDto,
+		@Param("id") id?: string
+	) {
+		const { prisma } = this;
+
+		const superAdminRole = await prisma.userRole.findUnique({
+			where: {
+				name: ROLE_NAME["super-admin"],
+			},
+		});
+
+		if (roleId === superAdminRole!.id) {
+			throw new UnauthorizedException("You cannot assign yourself the super-admin role");
+		}
+
+		const updatedUser = await prisma.user.update({
+			where: {
+				id: id || requestUser.id,
+			},
+			data: {
+				roleId,
 			},
 		});
 
