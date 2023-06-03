@@ -3,7 +3,7 @@ import { AuthMailDeliveryService } from "@src/modules/global/auth/auth-mail-deli
 import { User } from "@src/modules/global/auth/user.decorator";
 import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
-import { Body, Put, UploadedFile, UseInterceptors } from "@nestjs/common/decorators";
+import { Body, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common/decorators";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiCookieAuth, ApiParam } from "@nestjs/swagger";
 import { User as TUser } from "@prisma/client";
@@ -14,6 +14,8 @@ import { ValidationException } from "@src/modules/global/validation.exception";
 import bcrypt from "bcrypt";
 import { NewPasswordDto, UpdateEmailDto, UpdateUsernameDto } from "./user.dtos";
 import ListResult from "@src/lib/list/result/list-result";
+import { InfiniteLoader } from "@src/lib/list";
+import { InfiniteLoaderQueryDto } from "@src/lib/list/list.dtos";
 
 @Controller()
 @ApiCookieAuth()
@@ -31,6 +33,43 @@ export class UserController {
 		const users = await prisma.user.findMany();
 
 		return new ListResult(users);
+	}
+	@Get("users-with-avatar")
+	async getUsersWithAvatar(@Query() query: InfiniteLoaderQueryDto) {
+		const { prisma } = this;
+
+		const infiniteLoader = new InfiniteLoader(query);
+
+		const users = await prisma.user.findMany({
+			...infiniteLoader.getPrismaArgs(),
+			where: infiniteLoader.getPrismaFilterArgs(),
+			orderBy: infiniteLoader.getPrismaOrderByArgs(),
+			include: {
+				avatar: {
+					include: {
+						file: true,
+					},
+				},
+				role: true,
+			},
+		});
+		const itemsCount = await prisma.user.count({
+			where: infiniteLoader.getPrismaFilterArgs(),
+			orderBy: infiniteLoader.getPrismaOrderByArgs(),
+		});
+		await Promise.all(
+			users.map((user) => {
+				return (async () => {
+					if (user.avatar?.file) {
+						user.avatar.file = await this.fileService.getFileWithSignedUrl(
+							user.avatar.file
+						);
+					}
+				})();
+			})
+		);
+
+		return infiniteLoader.getResult(users, itemsCount);
 	}
 
 	@Auth({

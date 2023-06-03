@@ -4,9 +4,10 @@ import { UserSettingsModule } from "./user-settings/user-settings.module";
 import { UserController } from "./user.controller";
 import { UserPrismaMiddleWareProvider } from "./user-prisma-middleware.provider";
 import { UserService } from "./user.service";
+import { UserRoleModule } from "./user-role/user-role.module";
 
 @Module({
-	imports: [UserSettingsModule, FileModule],
+	imports: [UserSettingsModule, FileModule, UserRoleModule],
 	providers: [UserService, UserPrismaMiddleWareProvider],
 	controllers: [UserController],
 	exports: [UserService, UserPrismaMiddleWareProvider],
