@@ -54,22 +54,21 @@ function RoleTagConfirmMenu({ userId, role }: RoleTagConfirmMenuProps) {
 		);
 	};
 
+	if (isLoading || !rolesResponse?.items) return null;
+
+	const noRole = { id: null, color: "gray", name: "no role" };
+	const selectedMenuItem = role || noRole;
+
 	return (
-		<>
-			{!isLoading && !!rolesResponse?.items && (
-				<>
-					<TagConfirmMenu
-						modalIsOpen={isOpen}
-						onModalOpen={onOpen}
-						onModalClose={onClose}
-						mutation={mutation}
-						confirmDialogBodyRenderer={getConfirmDialogText}
-						selectedMenuItem={role}
-						menuItems={rolesResponse.items}
-					/>
-				</>
-			)}
-		</>
+		<TagConfirmMenu
+			modalIsOpen={isOpen}
+			onModalOpen={onOpen}
+			onModalClose={onClose}
+			mutation={mutation}
+			confirmDialogBodyRenderer={getConfirmDialogText}
+			selectedMenuItem={selectedMenuItem}
+			menuItems={[noRole, ...rolesResponse.items]}
+		/>
 	);
 }
 

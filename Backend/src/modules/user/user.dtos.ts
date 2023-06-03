@@ -1,6 +1,6 @@
 import { PickType } from "@nestjs/swagger";
 import { User } from "@prisma/client";
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class UserCreateDto implements Pick<User, "username" | "password" | "email"> {
 	@IsString()
@@ -17,8 +17,8 @@ export class UpdateUsernameDto extends PickType(UserCreateDto, ["username"]) {}
 export class UpdateEmailDto extends PickType(UserCreateDto, ["email"]) {}
 export class UpdateUserRoleDto implements Pick<User, "roleId"> {
 	@IsString()
-	@IsNotEmpty()
-	roleId!: string;
+	@IsOptional()
+	roleId!: string | null;
 }
 export class NewPasswordDto {
 	@IsString()

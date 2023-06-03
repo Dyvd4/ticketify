@@ -21,8 +21,7 @@ function Component({ className, item, ...props }: ComponentProps) {
 						<Box className="flex flex-col items-end gap-2">
 							<Heading className="m-0 text-xl">{username}</Heading>
 							<Box className="text-secondary">{user.email}</Box>
-							{role && <RoleTagConfirmMenu userId={user.id} role={role} />}
-							{!role && <Tag colorScheme={"gray"}>no role</Tag>}
+							<RoleTagConfirmMenu userId={user.id} role={role} />
 						</Box>
 					</Box>
 				</Box>
