@@ -61,10 +61,10 @@ function SearchBarListItem(props: SearchBarListItemProps) {
 			{...rest}
 		>
 			<FontAwesomeIcon className="text-secondary" icon={faTicket} size={"1x"} />
-			<Box className="flex w-full min-w-0 items-center justify-between">
-				<Box className="flex min-w-0 flex-col truncate">
+			<Box className="flex w-full min-w-0 items-center justify-between gap-4">
+				<Box className="flex min-w-0 flex-col">
 					<Box className="text-secondary text-xs">{description}</Box>
-					<Heading as="h2" className="m-0 text-lg leading-tight">
+					<Heading as="h2" className="m-0 truncate text-lg leading-tight">
 						<Highlight
 							styles={{
 								backgroundColor: "orange.300",

@@ -20,7 +20,7 @@ function TicketListItem({ item, className, ...props }: TicketListItemProps) {
 			{...props}
 		>
 			<Heading className="min-w-0">
-				<IconLink href={`/Ticket/Details/${item.id}`} className="text-base">
+				<IconLink href={`/Ticket/Details/${item.id}`} className="flex text-base">
 					<span className="mr-2 truncate">{getTitle(item)}</span>
 				</IconLink>
 			</Heading>
