@@ -286,7 +286,7 @@ const generateTickets = async (amount: number) => {
 				min: 10000,
 				max: 99999,
 			})}`,
-			description: "Please help me",
+			description: "",
 			statusId: openTicketStatus!.id,
 			priorityId: lowTicketPriority!.id,
 		})),
@@ -294,11 +294,11 @@ const generateTickets = async (amount: number) => {
 };
 
 async function main() {
-	upsertRoles();
-	upsertTicketStatus();
-	upsertTicketPriority();
-	generateUsers();
-	generateTickets(20);
+	await upsertRoles();
+	await upsertTicketStatus();
+	await upsertTicketPriority();
+	await generateUsers();
+	await generateTickets(20);
 }
 
 main()
