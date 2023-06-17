@@ -20,6 +20,7 @@ model User {
     updatedAt           DateTime?            @updatedAt
     createUser          String?              @db.NVarChar(100)
     updateUser          String?              @db.NVarChar(100)
+    companyId           String?              @db.NVarChar(100)
     tickets             Ticket[]
     avatar              FileOnUser?
     comments            Comment[]
@@ -30,6 +31,7 @@ model User {
     pinnedTickets       PinnedTicket[]
     roleId              String?              @db.NVarChar(100)
     role                UserRole?            @relation(fields: [roleId], references: [id])
+    company             Company?             @relation(fields: [companyId], references: [id])
 }
 
 model UserSettings {
@@ -191,16 +193,17 @@ model Test {
 }
 
 model File {
-    id               String         @id @default(uuid()) @db.NVarChar(100)
-    fileName         String         @db.NVarChar(100)
-    originalFileName String         @db.NVarChar(100)
-    mimeType         String         @db.NVarChar(100)
-    createdAt        DateTime?      @default(now())
-    updatedAt        DateTime?      @updatedAt
-    createUser       String?        @db.NVarChar(100)
-    updateUser       String?        @db.NVarChar(100)
+    id               String          @id @default(uuid()) @db.NVarChar(100)
+    fileName         String          @db.NVarChar(100)
+    originalFileName String          @db.NVarChar(100)
+    mimeType         String          @db.NVarChar(100)
+    createdAt        DateTime?       @default(now())
+    updatedAt        DateTime?       @updatedAt
+    createUser       String?         @db.NVarChar(100)
+    updateUser       String?         @db.NVarChar(100)
     tickets          FileOnTicket[]
     avatars          FileOnUser[]
+    FileOnCompany    FileOnCompany[]
 }
 
 model FileOnTicket {
@@ -227,6 +230,19 @@ model FileOnUser {
     updateUser String?   @db.NVarChar(100)
 
     @@id([fileId, userId])
+}
+
+model FileOnCompany {
+    fileId     String    @db.NVarChar(100)
+    file       File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+    companyId  String    @unique @db.NVarChar(100)
+    company    Company   @relation(fields: [companyId], references: [id])
+    createdAt  DateTime? @default(now())
+    updatedAt  DateTime? @updatedAt
+    createUser String?   @db.NVarChar(100)
+    updateUser String?   @db.NVarChar(100)
+
+    @@id([fileId, companyId])
 }
 
 model TicketActivity {
@@ -257,4 +273,15 @@ model Log {
     stack      String?   @db.NVarChar(max)
     color      String?   @db.NVarChar(50)
     icon       String?   @db.NVarChar(50)
+}
+
+model Company {
+    id         String         @id @default(uuid()) @db.NVarChar(100)
+    name       String         @db.NVarChar(100)
+    createdAt  DateTime?      @default(now())
+    updatedAt  DateTime?      @updatedAt
+    createUser String?        @db.NVarChar(100)
+    updateUser String?        @db.NVarChar(100)
+    users      User[]
+    avatar     FileOnCompany?
 }
