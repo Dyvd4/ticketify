@@ -127,6 +127,7 @@ const generateUsers = async () => {
 					allowFilterItemsByLocalStorage: true,
 				},
 			},
+			emailConfirmed: true,
 			roleId: superAdminRole!.id,
 		},
 	});
