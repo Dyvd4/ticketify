@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Heading, useToast } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -74,12 +74,9 @@ function AvatarSection({ user, ...props }: AvatarSectionProps) {
 
 	return (
 		<>
-			<Heading as="h1" className="text-2xl font-bold">
-				Avatar
-			</Heading>
 			<Box ref={avatarContainerRef}>
 				<FormControl
-					className="my-4 flex flex-col items-center justify-center"
+					className="flex flex-col items-start justify-center"
 					errorMessage={errorMap?.message}
 				>
 					<AvatarInput

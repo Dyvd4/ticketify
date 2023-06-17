@@ -1,26 +1,20 @@
-import { Heading, List } from "@chakra-ui/react";
+import { Heading, List, TabPanel } from "@chakra-ui/react";
 import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UseInfiniteQueryResult } from "react-query";
 import { InfiniteLoaderResultItems } from "src/components/List/Result";
 import { ListItem } from "src/components/Lists/Ticket";
-import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
-import { useIsCurrentUser } from "src/hooks/user";
 
-type AssignedTicketsSectionsProps = {
-	user: any;
+type AssignedTicketsPanelProps = {
+	query: UseInfiniteQueryResult<any, any>;
+	queryCount: number;
 };
 
-function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
-	const isOwnSite = useIsCurrentUser(user);
-	const query = useInfiniteQuery<any, any>(["ticket"], {
-		route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user.id}`,
-	});
-	const ticketCount = useInfiniteQueryCount(query);
-
+function AssignedTicketsPanel({ query, queryCount }: AssignedTicketsPanelProps) {
 	return (
-		<>
+		<TabPanel>
 			<Heading as="h1" className="text-2xl font-bold">
-				Assigned tickets ({ticketCount}) &nbsp;
+				Assigned tickets ({queryCount}) &nbsp;
 				<FontAwesomeIcon icon={faTicketSimple} />
 			</Heading>
 			<List id="9151947b-ad33-44cd-bbcc-7e8316ba1439" className="mt-4 flex flex-col gap-4">
@@ -28,8 +22,8 @@ function AssignedTicketsSection({ user }: AssignedTicketsSectionsProps) {
 					{(ticket) => <ListItem item={ticket} />}
 				</InfiniteLoaderResultItems>
 			</List>
-		</>
+		</TabPanel>
 	);
 }
 
-export default AssignedTicketsSection;
+export default AssignedTicketsPanel;

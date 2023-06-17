@@ -1,5 +1,5 @@
-import { Flex, Heading, IconButton, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
-import { faEdit, faUser } from "@fortawesome/free-solid-svg-icons";
+import { Flex, IconButton, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "react-query";
 import { useIsCurrentUser } from "src/hooks/user";
@@ -43,11 +43,7 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
 
 	return (
 		<>
-			<Heading as="h1" className="text-2xl font-bold">
-				Profile data &nbsp;
-				<FontAwesomeIcon icon={faUser} />
-			</Heading>
-			<Flex className="mt-4" justifyContent={"space-between"}>
+			<Flex className="mt-8" justifyContent={"space-between"}>
 				<div>Username</div>
 				<div className="flex items-center gap-2">
 					<div>{user.username}</div>

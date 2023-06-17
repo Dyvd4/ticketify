@@ -105,8 +105,11 @@ function TicketDescriptionActionBox({ className, ...props }: TicketDescriptionAc
 						onMount={(e) => setEditor(e)}
 					/>
 					<div className="flex justify-end gap-4">
-						<Button onClick={toggleEdit}>Cancel</Button>
+						<Button size={"sm"} onClick={toggleEdit}>
+							Cancel
+						</Button>
 						<Button
+							size={"sm"}
 							isLoading={mutation.isLoading}
 							colorScheme={"blue"}
 							onClick={() => mutation.mutate()}
