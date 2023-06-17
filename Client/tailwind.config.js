@@ -25,6 +25,11 @@ const config = {
 		"h4.ce-header",
 		"h5.ce-header",
 		"h6.ce-header",
+		".ce-popover",
+		".ce-inline-toolbar",
+		".ce-toolbar__actions",
+		".ce-toolbar__plus",
+		".ce-toolbar__settings-btn",
 	],
 };
 

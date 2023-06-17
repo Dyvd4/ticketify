@@ -24,7 +24,7 @@
 }
 
 @layer components {
-	input,
+	input:not(.cdx-search-field__input),
 	textarea,
 	.DraftEditor-editorContainer {
 		@apply rounded-md bg-gray-50 
@@ -42,5 +42,18 @@
 	.text-secondary-hover {
 		@apply text-gray-600 hover:text-black 
         dark:text-gray-300 dark:hover:text-white;
+	}
+
+	.ce-inline-toolbar,
+	.ce-popover {
+		@apply text-black;
+	}
+	.ce-toolbar__actions > .ce-toolbar__plus,
+	.ce-toolbar__settings-btn {
+		@apply hover:bg-slate-600;
+	}
+	.ce-toolbar__plus svg,
+	.ce-toolbar__settings-btn svg {
+		@apply dark:text-white;
 	}
 }
