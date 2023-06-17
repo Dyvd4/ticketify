@@ -53,7 +53,11 @@ export class FileController {
 	@Post("files")
 	async createFiles(@UploadedFiles(parseFilePipe) files: Express.Multer.File[]) {
 		const createdOrUpdatedFiles = await this.fileService.createOrUpdateFiles(files);
-		return new ListResult(createdOrUpdatedFiles);
+		return new ListResult(
+			await Promise.all(
+				createdOrUpdatedFiles.map((file) => this.fileService.getFileWithSignedUrl(file))
+			)
+		);
 	}
 
 	@ApiConsumes("multipart/form-data")
@@ -62,7 +66,11 @@ export class FileController {
 	@Post("images")
 	async createImages(@UploadedFiles(parseImageFilePipe) files: Express.Multer.File[]) {
 		const createdOrUpdatedImages = await this.fileService.createOrUpdateFiles(files);
-		return new ListResult(createdOrUpdatedImages);
+		return new ListResult(
+			await Promise.all(
+				createdOrUpdatedImages.map((file) => this.fileService.getFileWithSignedUrl(file))
+			)
+		);
 	}
 
 	@ApiConsumes("multipart/form-data")
