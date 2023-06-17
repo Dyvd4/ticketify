@@ -24,6 +24,8 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 
 	useEffect(() => {
 		setIsMounted(true);
+		console.log("editor mounted");
+
 		return () => {
 			editorRef.current?.destroy();
 			editorRef.current = null;
@@ -79,6 +81,7 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 			},
 			onChange,
 			readOnly: isReadOnly,
+			minHeight: 0,
 		});
 	}, []);
 
