@@ -42,11 +42,11 @@ export class FileService {
 		);
 	}
 
-	private createOrUpdateFileInS3(fileToCreate: Express.Multer.File) {
+	private createOrUpdateFileInS3(id: string, buffer: Buffer) {
 		const command = new PutObjectCommand({
 			Bucket: this.S3_BUCKET_NAME,
-			Key: fileToCreate.originalname,
-			Body: fileToCreate.buffer,
+			Key: id,
+			Body: buffer,
 		});
 		return this.s3Client.send(command);
 	}
@@ -59,28 +59,12 @@ export class FileService {
 		return this.s3Client.send(command);
 	}
 
-	async createOrUpdateFiles(filesToCreate: Express.Multer.File[], id?: string): Promise<File[]> {
-		const { prisma } = this;
-
-		await Promise.all(filesToCreate.map((file) => this.createOrUpdateFileInS3(file)));
-
-		return prisma.$transaction(
-			filesToCreate.map((file) => {
-				return prisma.file.upsert({
-					where: {
-						id: id || "",
-					},
-					create: MulterFileToPrismaFileMap(file),
-					update: MulterFileToPrismaFileMap(file),
-				});
-			})
-		);
+	async createOrUpdateFiles(filesToCreate: Express.Multer.File[]): Promise<File[]> {
+		return Promise.all(filesToCreate.map((file) => this.createOrUpdateFile(file)));
 	}
 
 	async createOrUpdateFile(fileToCreate: Express.Multer.File, id?: string): Promise<File> {
 		const { prisma } = this;
-
-		await this.createOrUpdateFileInS3(fileToCreate);
 
 		const createdOrUpdatedFile = await prisma.file.upsert({
 			where: {
@@ -89,6 +73,8 @@ export class FileService {
 			create: MulterFileToPrismaFileMap(fileToCreate),
 			update: MulterFileToPrismaFileMap(fileToCreate),
 		});
+
+		await this.createOrUpdateFileInS3(createdOrUpdatedFile.id, fileToCreate.buffer);
 
 		return createdOrUpdatedFile;
 	}
