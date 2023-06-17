@@ -7,6 +7,7 @@ import ListTool from "@editorjs/list";
 import { ComponentPropsWithRef, useCallback, useEffect, useId, useRef, useState } from "react";
 import { addEntity } from "src/api/entity";
 import { cn } from "src/utils/component";
+import { getApiUrl } from "src/utils/url";
 
 type _EditorProps = {
 	isReadOnly?: boolean;
@@ -64,7 +65,7 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 								return {
 									success: 1,
 									file: {
-										url: response.data.items[0].url,
+										url: `${getApiUrl()}/rawFile/${response.data.items[0].id}`,
 									},
 								};
 							},
