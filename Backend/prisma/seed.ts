@@ -10,6 +10,8 @@ const prisma = new PrismaClient();
 const generateUsers = async () => {
 	if ((await prisma.user.count()) > 0) return;
 	await upsertRoles();
+	await generateCompanies(10);
+
 	const customerRole = await prisma.userRole.findUnique({
 		where: {
 			name: "customer",
@@ -25,8 +27,12 @@ const generateUsers = async () => {
 			name: "super-admin",
 		},
 	});
+
+	const companies = await prisma.company.findMany({
+		take: 10,
+	});
 	const normalUsers = await Promise.all(
-		new Array(10).fill(null).map(() => {
+		new Array(10).fill(null).map((_, i) => {
 			return (async () => {
 				const firstName = faker.person.firstName();
 				const lastName = faker.person.firstName();
@@ -48,6 +54,7 @@ const generateUsers = async () => {
 								allowFilterItemsByLocalStorage: true,
 							},
 						},
+						companyId: companies[i].id,
 					},
 				});
 			})();
@@ -294,12 +301,22 @@ const generateTickets = async (amount: number) => {
 	});
 };
 
+const generateCompanies = async (amount: number) => {
+	if ((await prisma.company.count()) > 0) return;
+	await prisma.company.createMany({
+		data: new Array(amount).fill(null).map(() => ({
+			name: faker.company.name(),
+		})),
+	});
+};
+
 async function main() {
-	upsertRoles();
-	upsertTicketStatus();
-	upsertTicketPriority();
-	generateUsers();
-	generateTickets(20);
+	await upsertRoles();
+	await upsertTicketStatus();
+	await upsertTicketPriority();
+	await generateUsers();
+	await generateTickets(20);
+	await generateCompanies(20);
 }
 
 main()
