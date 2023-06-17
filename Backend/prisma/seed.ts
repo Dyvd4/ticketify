@@ -294,7 +294,7 @@ const generateTickets = async (amount: number) => {
 				min: 10000,
 				max: 99999,
 			})}`,
-			description: "Please help me",
+			description: "",
 			statusId: openTicketStatus!.id,
 			priorityId: lowTicketPriority!.id,
 		})),

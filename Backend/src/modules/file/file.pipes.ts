@@ -16,6 +16,7 @@ export const parseFilePipe = new ParseFilePipe({
 	exceptionFactory(error) {
 		return new ValidationException(error);
 	},
+	fileIsRequired: false,
 });
 
 export const parseImageFilePipe = new ParseFilePipe({

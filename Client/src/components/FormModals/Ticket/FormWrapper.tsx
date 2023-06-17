@@ -1,13 +1,11 @@
 import { ContainerProps, useToast } from "@chakra-ui/react";
+import type EditorJS from "@editorjs/editorjs";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
-import { ContentState, convertFromHTML, EditorState } from "draft-js";
-import { stateToHTML } from "draft-js-export-html";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchEntity } from "src/api/entity";
 import { mutateTicket } from "src/api/ticket";
-import { getEmptyState } from "src/utils/draftJs";
 import {
 	getValidationErrorMap,
 	ValidationErrorMap,
@@ -36,7 +34,7 @@ function FormWrapper(props: FormWrapperProps) {
 	// -----
 	const [localTicketState, setLocalTicketState] = useState<any>({});
 	const [localInputState, setLocalInputState] = useState<any>({});
-	const [localEditorState, setLocalEditorState] = useState<any>({});
+	const [editor, setEditor] = useState<EditorJS | null>(null);
 	const [success, setSuccess] = useState(false);
 	const [errorMap, setErrorMap] = useState<ValidationErrorMap | null>();
 	const toast = useToast();
@@ -71,15 +69,6 @@ function FormWrapper(props: FormWrapperProps) {
 		responsibleUserId: fetchedTicket?.responsibleUser?.username,
 		priorityId: fetchedTicket?.priority?.name,
 	};
-	const defaultEditorState = {
-		description: !fetchedTicket
-			? EditorState.createEmpty()
-			: EditorState.createWithContent(
-					ContentState.createFromBlockArray(
-						convertFromHTML(fetchedTicket.description || "").contentBlocks
-					)
-			  ),
-	};
 	const ticketState = {
 		...fetchedTicket,
 		dueDate: format(
@@ -96,18 +85,15 @@ function FormWrapper(props: FormWrapperProps) {
 		...defaultInputState,
 		...localInputState,
 	};
-	const editorState = {
-		...defaultEditorState,
-		...localEditorState,
-	};
 	// mutations
 	// ---------
 	const mutation = useMutation(
-		() => {
+		async () => {
+			const editorOutput = await editor!.save();
 			return mutateTicket(
 				{
 					...ticketState,
-					description: stateToHTML(editorState["description"].getCurrentContent()),
+					description: JSON.stringify(editorOutput), // stateToHTML(editorState["description"].getCurrentContent()),
 				},
 				variant
 			);
@@ -126,9 +112,7 @@ function FormWrapper(props: FormWrapperProps) {
 					});
 					setLocalInputState({});
 					setErrorMap(null);
-					setLocalEditorState({
-						description: EditorState.createEmpty(),
-					});
+					editor?.clear();
 					setSuccess(true);
 				} else {
 					handleOnClose();
@@ -163,7 +147,8 @@ function FormWrapper(props: FormWrapperProps) {
 	const handleOnClose = () => {
 		setLocalTicketState({});
 		setLocalInputState({});
-		setLocalEditorState({});
+		editor?.clear?.();
+		setSuccess(false);
 		onClose();
 	};
 
@@ -182,12 +167,9 @@ function FormWrapper(props: FormWrapperProps) {
 			onSubmit={() => mutation.mutate()}
 			onInputChange={handleInputChange}
 			onInputValueChange={handleInputValueChange}
-			onEditorStateChange={(key, newState) => {
-				setLocalEditorState({ ...localEditorState, [key]: newState });
-			}}
 			ticketState={ticketState}
 			inputState={inputState}
-			editorState={editorState}
+			onEditorMount={(editor) => setEditor(editor)}
 			loading={loading}
 			mutationLoading={mutation.isLoading}
 			success={success}

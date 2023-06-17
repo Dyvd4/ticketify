@@ -6,17 +6,18 @@ import {
 	Param,
 	Post,
 	Put,
+	StreamableFile,
 	UploadedFile,
 	UploadedFiles,
 	UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import ListResult from "@src/lib/list/result/list-result";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { UploadFileDto, UploadFilesDto } from "./file.dtos";
 import { parseFilePipe, parseImageFilePipe } from "./file.pipes";
 import { FileService } from "./file.service";
-import { ApiBody, ApiConsumes } from "@nestjs/swagger";
-import { UploadFileDto, UploadFilesDto } from "./file.dtos";
 
 @Controller()
 export class FileController {
@@ -47,13 +48,31 @@ export class FileController {
 		return this.fileService.getFileWithSignedUrl(file);
 	}
 
+	@Get("rawFile/:id")
+	async getRawFile(@Param("id") id: string) {
+		const file = await this.prisma.file.findFirst({
+			where: {
+				id,
+			},
+		});
+		if (!file) {
+			throw new NotFoundException(`File with id ${id} not found`);
+		}
+
+		return new StreamableFile(await this.fileService.getRawFile(file));
+	}
+
 	@ApiConsumes("multipart/form-data")
 	@ApiBody({ type: UploadFilesDto })
 	@UseInterceptors(FilesInterceptor("files"))
 	@Post("files")
 	async createFiles(@UploadedFiles(parseFilePipe) files: Express.Multer.File[]) {
 		const createdOrUpdatedFiles = await this.fileService.createOrUpdateFiles(files);
-		return new ListResult(createdOrUpdatedFiles);
+		return new ListResult(
+			await Promise.all(
+				createdOrUpdatedFiles.map((file) => this.fileService.getFileWithSignedUrl(file))
+			)
+		);
 	}
 
 	@ApiConsumes("multipart/form-data")
@@ -62,7 +81,11 @@ export class FileController {
 	@Post("images")
 	async createImages(@UploadedFiles(parseImageFilePipe) files: Express.Multer.File[]) {
 		const createdOrUpdatedImages = await this.fileService.createOrUpdateFiles(files);
-		return new ListResult(createdOrUpdatedImages);
+		return new ListResult(
+			await Promise.all(
+				createdOrUpdatedImages.map((file) => this.fileService.getFileWithSignedUrl(file))
+			)
+		);
 	}
 
 	@ApiConsumes("multipart/form-data")

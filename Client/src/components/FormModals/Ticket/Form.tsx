@@ -11,10 +11,10 @@ import {
 	ModalOverlay,
 	VStack,
 } from "@chakra-ui/react";
-import { EditorState } from "draft-js";
+import type EditorJS from "@editorjs/editorjs";
 import AutoCompleter from "src/components/AutoCompleter/AutoCompleter";
+import Editor from "src/components/Editor";
 import FileInput from "src/components/FileInput";
-import Editor from "src/components/RichText/Editor";
 import FormControl from "src/components/Wrapper/FormControl";
 import Modal from "src/components/Wrapper/Modal";
 import { mapLookup } from "src/utils/autoCompleter";
@@ -32,16 +32,13 @@ type TicketFormProps = {
 	// three different states 🥵
 	ticketState?: any;
 	inputState?: any;
-	editorState: {
-		[key: string]: EditorState;
-	};
 	// -------------------------
 	errorMap: ValidationErrorMap | null;
 	onInputChange(event): void;
 	onInputValueChange(event): void;
-	onEditorStateChange(key: string, editorState: EditorState): void;
 	onAbort(...args: any[]): void;
 	onSubmit(...args: any[]): void;
+	onEditorMount(editor: EditorJS): void;
 };
 
 function TicketForm(props: TicketFormProps) {
@@ -53,7 +50,6 @@ function TicketForm(props: TicketFormProps) {
 		errorMap,
 		ticketState: ticket,
 		inputState,
-		editorState: editorStates,
 		modalIsOpen,
 	} = props;
 
@@ -115,11 +111,10 @@ function TicketForm(props: TicketFormProps) {
 									<FormControl errorMessage={errorMap?.description}>
 										<FormLabel>description</FormLabel>
 										<Editor
-											editorState={editorStates["description"]}
-											onChange={(newState) =>
-												props.onEditorStateChange("description", newState)
+											data={
+												ticket.description && JSON.parse(ticket.description)
 											}
-											actions={["BOLD", "UNDERLINE", "ITALIC", "CODE"]}
+											onMount={props.onEditorMount}
 										/>
 									</FormControl>
 									<FormControl errorMessage={errorMap?.dueDate}>
