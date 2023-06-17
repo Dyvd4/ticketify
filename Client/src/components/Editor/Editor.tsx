@@ -40,7 +40,7 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 		const myEditor = new EditorJS({
 			holder: editorId,
 			autofocus: true,
-			placeholder: "Let`s write...",
+			placeholder: !isReadOnly ? "Let`s write..." : false,
 			tools: {
 				header: Header,
 				image: {
@@ -84,7 +84,7 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 
 	return (
 		<>
-			<div id={editorId} className={cn("rounded-md border", className)} {...props} />
+			<div id={editorId} className={cn("rounded-md border p-4", className)} {...props} />
 		</>
 	);
 }
