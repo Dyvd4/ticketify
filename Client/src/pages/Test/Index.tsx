@@ -1,24 +1,12 @@
-import { Box, Button, Heading, MenuItem, Tag, Td } from "@chakra-ui/react";
-import {
-	faDownload,
-	faEdit,
-	faEllipsis,
-	faImage,
-	faThumbTack,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
-import { fetchEntity } from "src/api/entity";
+import { Button, MenuItem } from "@chakra-ui/react";
+import EditorJS, { OutputData } from "@editorjs/editorjs";
+import { useRef } from "react";
+import { useMutation } from "react-query";
+import { fetchEntity, updateEntity } from "src/api/entity";
 import ActionBox from "src/components/ActionBox/ActionBox";
-import List, { ListItem, ListItemHeading } from "src/components/List";
-import TestList from "src/components/List/Table/TableList";
-import IconButton from "src/components/Wrapper/IconButton";
+import Editor from "src/components/Editor";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import useToggle from "src/hooks/useToggle";
-import { cn } from "src/utils/component";
-import { twJoin, twMerge } from "tailwind-merge";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import ListItemContent from "./ListItemContent";
 import TestComponent from "./TestComponent";
 
 interface IndexProps {}
@@ -73,6 +61,9 @@ function Index(props: IndexProps) {
 				molestias inventore sed dolor fugit magnam reprehenderit architecto.
 			</ActionBox>
 			<TestComponent useCollapse isCollapsed toggleIsCollapsed={() => {}} />
+			<br />
+			<br />
+			<Editor onChange={(a, e) => console.log(a, e)} />
 			{/* <TestList
                 header={{
                     title: "test",
