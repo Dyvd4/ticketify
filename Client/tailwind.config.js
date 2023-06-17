@@ -18,6 +18,14 @@ const config = {
 	},
 	theme: {},
 	plugins: [],
+	safelist: [
+		"h1.ce-header",
+		"h2.ce-header",
+		"h3.ce-header",
+		"h4.ce-header",
+		"h5.ce-header",
+		"h6.ce-header",
+	],
 };
 
 module.exports = config;
