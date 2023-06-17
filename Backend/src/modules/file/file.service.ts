@@ -5,11 +5,11 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { File, Prisma } from "@prisma/client";
 import { Config } from "@src/config";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
 import { MulterFileToPrismaFileMap } from "./maps/multer-file-to-prisma-file.map";
 import { ClientFile, PrismaFileToClientFileMap } from "./maps/prisma-file-to-client.map";
 
@@ -42,10 +42,14 @@ export class FileService {
 		);
 	}
 
-	private createOrUpdateFileInS3(id: string, buffer: Buffer) {
+	private getFileNameForS3(file: File) {
+		return file.id;
+	}
+
+	private createOrUpdateFileInS3(prismaFile: File, buffer: Buffer) {
 		const command = new PutObjectCommand({
 			Bucket: this.S3_BUCKET_NAME,
-			Key: id,
+			Key: this.getFileNameForS3(prismaFile),
 			Body: buffer,
 		});
 		return this.s3Client.send(command);
@@ -74,7 +78,7 @@ export class FileService {
 			update: MulterFileToPrismaFileMap(fileToCreate),
 		});
 
-		await this.createOrUpdateFileInS3(createdOrUpdatedFile.id, fileToCreate.buffer);
+		await this.createOrUpdateFileInS3(createdOrUpdatedFile, fileToCreate.buffer);
 
 		return createdOrUpdatedFile;
 	}
@@ -136,10 +140,20 @@ export class FileService {
 			this.s3Client,
 			new GetObjectCommand({
 				Bucket: this.S3_BUCKET_NAME,
-				Key: file.originalFileName,
+				Key: this.getFileNameForS3(file),
 			}),
 			{ expiresIn: this.FILE_SIGNED_URL_EXPIRING_IN_SECONDS }
 		);
 		return PrismaFileToClientFileMap(file, signedUrl);
+	}
+
+	async getRawFile(file: File): Promise<Buffer> {
+		const response = await this.s3Client.send(
+			new GetObjectCommand({
+				Bucket: this.S3_BUCKET_NAME,
+				Key: this.getFileNameForS3(file),
+			})
+		);
+		return Buffer.from(await response.Body!.transformToByteArray());
 	}
 }

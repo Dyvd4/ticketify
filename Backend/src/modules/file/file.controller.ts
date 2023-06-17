@@ -6,17 +6,18 @@ import {
 	Param,
 	Post,
 	Put,
+	StreamableFile,
 	UploadedFile,
 	UploadedFiles,
 	UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import ListResult from "@src/lib/list/result/list-result";
+import { PrismaService } from "@src/modules/global/database/prisma.service";
+import { UploadFileDto, UploadFilesDto } from "./file.dtos";
 import { parseFilePipe, parseImageFilePipe } from "./file.pipes";
 import { FileService } from "./file.service";
-import { ApiBody, ApiConsumes } from "@nestjs/swagger";
-import { UploadFileDto, UploadFilesDto } from "./file.dtos";
 
 @Controller()
 export class FileController {
@@ -45,6 +46,20 @@ export class FileController {
 			throw new NotFoundException(`File with id ${id} not found`);
 		}
 		return this.fileService.getFileWithSignedUrl(file);
+	}
+
+	@Get("rawFile/:id")
+	async getRawFile(@Param("id") id: string) {
+		const file = await this.prisma.file.findFirst({
+			where: {
+				id,
+			},
+		});
+		if (!file) {
+			throw new NotFoundException(`File with id ${id} not found`);
+		}
+
+		return new StreamableFile(await this.fileService.getRawFile(file));
 	}
 
 	@ApiConsumes("multipart/form-data")
