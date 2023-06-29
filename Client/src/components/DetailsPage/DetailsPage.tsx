@@ -3,8 +3,8 @@ import { cloneElement, ComponentPropsWithRef, PropsWithChildren } from "react";
 import { cn } from "src/utils/component";
 
 type _DetailsPageProps = {
-	leftSection: React.ReactElement;
-	rightSection: {
+	head: React.ReactElement;
+	body: {
 		tabList: React.ReactElement[];
 		tabPanels: React.ReactElement[];
 	};
@@ -15,15 +15,15 @@ export type DetailsPageProps = _DetailsPageProps &
 
 function DetailsPage({
 	className,
-	leftSection: leftPage,
-	rightSection: { tabList, tabPanels },
+	head,
+	body: { tabList, tabPanels },
 	...props
 }: DetailsPageProps) {
 	return (
-		<div className={cn("grid h-screen w-full grid-cols-3", className)} {...props}>
-			<div className="pl-4 pt-4 pr-4">{leftPage}</div>
-			<div className="col-span-2 pl-4 pt-4">
-				<Tabs isFitted className="" position="relative" variant="line">
+		<div className={cn("mt-8 flex flex-col gap-8", className)} {...props}>
+			<div>{head}</div>
+			<div>
+				<Tabs isFitted position="relative" variant="line">
 					<TabList>
 						{tabList.map((li, idx) => cloneElement(li, { ...li.props, key: idx }))}
 					</TabList>

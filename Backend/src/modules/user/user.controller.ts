@@ -35,14 +35,20 @@ export class UserController {
 		return new ListResult(users);
 	}
 	@Get("users-with-avatar")
-	async getUsersWithAvatar(@Query() query: InfiniteLoaderQueryDto) {
+	async getUsersWithAvatar(
+		@Query() query: InfiniteLoaderQueryDto,
+		@Query("companyId") companyId?: string
+	) {
 		const { prisma } = this;
 
 		const infiniteLoader = new InfiniteLoader(query);
 
 		const users = await prisma.user.findMany({
 			...infiniteLoader.getPrismaArgs(),
-			where: infiniteLoader.getPrismaFilterArgs(),
+			where: {
+				...infiniteLoader.getPrismaFilterArgs(),
+				companyId,
+			},
 			orderBy: infiniteLoader.getPrismaOrderByArgs(),
 			include: {
 				avatar: {
@@ -53,8 +59,11 @@ export class UserController {
 				role: true,
 			},
 		});
-		const itemsCount = await prisma.user.count({
-			where: infiniteLoader.getPrismaFilterArgs(),
+		const usersCount = await prisma.user.count({
+			where: {
+				...infiniteLoader.getPrismaFilterArgs(),
+				companyId,
+			},
 			orderBy: infiniteLoader.getPrismaOrderByArgs(),
 		});
 		await Promise.all(
@@ -69,7 +78,7 @@ export class UserController {
 			})
 		);
 
-		return infiniteLoader.getResult(users, itemsCount);
+		return infiniteLoader.getResult(users, usersCount);
 	}
 
 	@Auth({

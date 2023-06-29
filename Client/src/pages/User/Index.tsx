@@ -58,22 +58,20 @@ function Index(props: IndexProps) {
 
 	return (
 		<DetailsPage
-			leftSection={
+			head={
 				<>
 					<AvatarSection user={user} />
 					<UserDataSection user={user} />
 				</>
 			}
-			rightSection={{
+			body={{
 				tabList: [
 					<Tab>
 						assigned tickets ({ticketQueryCount}) &nbsp;
 						<FontAwesomeIcon icon={faTicketSimple} />
 					</Tab>,
 				],
-				tabPanels: [
-					<AssignedTicketsPanel query={ticketQuery} queryCount={ticketQueryCount} />,
-				],
+				tabPanels: [<AssignedTicketsPanel query={ticketQuery} />],
 			}}
 		/>
 	);
