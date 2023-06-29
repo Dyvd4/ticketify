@@ -1,31 +1,34 @@
-import { Box, ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import "./styles/index.scss";
+import "./styles/tailwind.scss";
 import "draft-js/dist/Draft.css";
+import { Box, ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { Provider as AtomProvider } from "jotai";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Index from "src/pages/Index/Index";
 import AuthenticatedArea from "./auth/AuthenticatedArea";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import PortalSlot from "./components/Slots/PortalSlot";
 import theme from "./config/theme";
 import Init from "./init";
-import EmailConfirmed from "./pages/Auth/EmailConfirmed";
-import EmailNotConfirmed from "./pages/Auth/EmailNotConfirmed";
-import SignIn from "./pages/Auth/SignIn";
-import SignUp from "./pages/Auth/SignUp";
-import LogIndex from "./pages/Log/Index";
-import NotFound from "./pages/NotFound";
-import TestIndex from "./pages/Test/Index";
-import TicketDetailsIndex from "./pages/Ticket/Details/Index";
-import TicketIndex from "./pages/Ticket/Index";
-import UserIndex from "./pages/User/Index";
-import UserSettingsIndex from "./pages/UserSettings/Index";
-import RoleManagementIndex from "./pages/RoleManagement/Index";
-import "./styles/index.scss";
-import "./styles/tailwind.scss";
+import LoadingRipple from "./components/Loading/LoadingRipple";
+const Index = lazy(() => import("src/pages/Index/Index"));
+const EmailConfirmed = lazy(() => import("./pages/Auth/EmailConfirmed"));
+const EmailNotConfirmed = lazy(() => import("./pages/Auth/EmailNotConfirmed"));
+const SignIn = lazy(() => import("./pages/Auth/SignIn"));
+const SignUp = lazy(() => import("./pages/Auth/SignUp"));
+const LogIndex = lazy(() => import("./pages/Log/Index"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const TestIndex = lazy(() => import("./pages/Test/Index"));
+const TicketDetailsIndex = lazy(() => import("./pages/Ticket/Details/Index"));
+const TicketIndex = lazy(() => import("./pages/Ticket/Index"));
+const UserIndex = lazy(() => import("./pages/User/Index"));
+const UserSettingsIndex = lazy(() => import("./pages/UserSettings/Index"));
+const RoleManagementIndex = lazy(() => import("./pages/RoleManagement/Index"));
+const CompanyIndex = lazy(() => import("./pages/Company/Index"));
+const CompanyDetailsIndex = lazy(() => import("./pages/Company/Details/Index"));
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 const queryClient = new QueryClient({
@@ -53,25 +56,103 @@ root.render(
 							<Routes>
 								{/* authenticated or authorized */}
 								<Route path="/" element={<AuthenticatedArea type="route" />}>
-									<Route index element={<Index />} />
-									<Route path="Test" element={<TestIndex />} />
-									<Route path="User" element={<UserIndex />} />
-									<Route path="UserSettings" element={<UserSettingsIndex />} />
-									<Route path="User/:id" element={<UserIndex />} />
+									<Route
+										index
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<Index />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="Test"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<TestIndex />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="User"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<UserIndex />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="UserSettings"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<UserSettingsIndex />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="User/:id"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<UserIndex />
+											</Suspense>
+										}
+									/>
 									<Route path="Ticket">
-										<Route index element={<TicketIndex />} />
+										<Route
+											index
+											element={
+												<Suspense fallback={<LoadingRipple usePortal />}>
+													<TicketIndex />
+												</Suspense>
+											}
+										/>
 										<Route
 											path="Details/:id"
-											element={<TicketDetailsIndex />}
+											element={
+												<Suspense fallback={<LoadingRipple usePortal />}>
+													<TicketDetailsIndex />
+												</Suspense>
+											}
 										/>
 									</Route>
-									<Route path="Log" element={<LogIndex />} />
+									<Route
+										path="Log"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<LogIndex />
+											</Suspense>
+										}
+									/>
+									<Route path="Company">
+										<Route
+											index
+											element={
+												<Suspense fallback={<LoadingRipple usePortal />}>
+													<CompanyIndex />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="Details/:id"
+											element={
+												<Suspense fallback={<LoadingRipple usePortal />}>
+													<CompanyDetailsIndex />
+												</Suspense>
+											}
+										/>
+									</Route>
 								</Route>
 								<Route
 									path="/RoleManagement"
 									element={<AuthenticatedArea type="route" roleName={"admin"} />}
 								>
-									<Route index element={<RoleManagementIndex />} />
+									<Route
+										index
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<RoleManagementIndex />
+											</Suspense>
+										}
+									/>
 								</Route>
 								<Route
 									path="/Auth/EmailNotConfirmed"
@@ -85,11 +166,39 @@ root.render(
 									<Route index element={<EmailNotConfirmed />} />
 								</Route>
 								{/* Not authenticated or authorized */}
-								<Route path="*" element={<NotFound />} />
+								<Route
+									path="*"
+									element={
+										<Suspense fallback={<LoadingRipple usePortal />}>
+											<NotFound />
+										</Suspense>
+									}
+								/>
 								<Route path="/Auth">
-									<Route path="SignIn" element={<SignIn />} />
-									<Route path="SignUp" element={<SignUp />} />
-									<Route path="EmailConfirmed" element={<EmailConfirmed />} />
+									<Route
+										path="SignIn"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<SignIn />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="SignUp"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<SignUp />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="EmailConfirmed"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<EmailConfirmed />
+											</Suspense>
+										}
+									/>
 								</Route>
 							</Routes>
 						</Router>

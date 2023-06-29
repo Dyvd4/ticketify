@@ -1,5 +1,6 @@
-import { Avatar, Box, Heading, Tag } from "@chakra-ui/react";
+import { Avatar, Box, Heading } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
+import AuthenticatedArea from "src/auth/AuthenticatedArea";
 import { ListItem } from "src/components/List";
 import RoleTagConfirmMenu from "./RoleTagConfirmMenu";
 
@@ -15,14 +16,14 @@ function Component({ className, item, ...props }: ComponentProps) {
 	return (
 		<ListItem
 			content={
-				<Box>
-					<Box className="flex justify-between">
-						<Avatar size={"lg"} name={username} src={user.avatar?.file?.url} />
-						<Box className="flex flex-col items-end gap-2">
-							<Heading className="m-0 text-xl">{username}</Heading>
-							<Box className="text-secondary">{user.email}</Box>
+				<Box className="flex justify-between">
+					<Avatar size={"lg"} name={username} src={user.avatar?.file?.url} />
+					<Box className="flex flex-col items-end gap-2">
+						<Heading className="m-0 text-xl">{username}</Heading>
+						<Box className="text-secondary">{user.email}</Box>
+						<AuthenticatedArea roleName="admin">
 							<RoleTagConfirmMenu userId={user.id} role={role} />
-						</Box>
+						</AuthenticatedArea>
 					</Box>
 				</Box>
 			}

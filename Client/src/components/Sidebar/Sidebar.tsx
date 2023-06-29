@@ -1,4 +1,5 @@
 import { Box, Divider, Heading, Link, Tooltip } from "@chakra-ui/react";
+import { faContactBook } from "@fortawesome/free-regular-svg-icons";
 import {
 	faArrowLeft,
 	faArrowRight,
@@ -110,6 +111,14 @@ function Sidebar({ className, ...props }: SidebarProps) {
 				icon={faTicket}
 				count={ticketCount}
 			/>
+
+			<SidebarListItem title="Contacts" variant={sidebarListItemVariant} icon={faContactBook}>
+				<SidebarListItem
+					variant={sidebarListItemVariant}
+					title="Companies"
+					urlPath={"/Company"}
+				/>
+			</SidebarListItem>
 
 			<SidebarListItem
 				title="Logs"

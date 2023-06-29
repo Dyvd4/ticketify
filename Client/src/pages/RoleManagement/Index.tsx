@@ -1,7 +1,7 @@
 import { Container } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
+import UserList from "src/components/Lists/User";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
-import UserList from "./components/UserList";
 
 type _UserManagementIndexProps = {};
 
