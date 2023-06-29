@@ -147,7 +147,7 @@ export class TicketController {
 			},
 			take: 10,
 			orderBy: {
-				title: "desc",
+				id: "asc",
 			},
 		});
 		return new ListResult(tickets);
