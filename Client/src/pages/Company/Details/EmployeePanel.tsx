@@ -17,7 +17,7 @@ function EmployeePanel({ className, query, ...props }: EmployeePanelProps) {
 		<TabPanel className={cn("", className)} {...props}>
 			<List className="flex flex-col gap-4">
 				<InfiniteLoaderResultItems variant={"intersection-observer"} query={query}>
-					{(user) => <UserListItem item={user} key={user.id} />}
+					{(user) => <UserListItem item={user} />}
 				</InfiniteLoaderResultItems>
 			</List>
 		</TabPanel>

@@ -14,7 +14,7 @@ export type TicketsPanelProps = _TicketsPanelProps &
 function TicketsPanel({ className, query, ...props }: TicketsPanelProps) {
 	return (
 		<TabPanel>
-			<List id="9151947b-ad33-44cd-bbcc-7e8316ba1439" className="mt-4 flex flex-col gap-4">
+			<List id="9151947b-ad33-44cd-bbcc-7e8316ba1439" className="flex flex-col gap-4">
 				<InfiniteLoaderResultItems variant="intersection-observer" query={query}>
 					{(ticket) => <ListItem item={ticket} />}
 				</InfiniteLoaderResultItems>
