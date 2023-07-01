@@ -38,5 +38,5 @@ export const useCurrentUserSettings = () => {
 
 export const useIsCurrentUser = (user) => {
 	const { currentUser } = useCurrentUser();
-	return currentUser?.id === user.id;
+	return !!currentUser && currentUser?.id === user.id;
 };

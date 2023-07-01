@@ -138,15 +138,6 @@ function Sidebar({ className, ...props }: SidebarProps) {
 				/>
 			</AuthenticatedArea>
 
-			<AuthenticatedArea roleName="admin">
-				<SidebarListItem
-					title="Role Management"
-					urlPath={"/RoleManagement"}
-					variant={sidebarListItemVariant}
-					icon={faUsers}
-				/>
-			</AuthenticatedArea>
-
 			<Divider />
 
 			<PinnedTicketsSection sidebarListItemVariant={sidebarListItemVariant} />

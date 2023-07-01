@@ -1,5 +1,7 @@
+import { Container } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
-import { cn } from "src/utils/component";
+import UserList from "src/components/Lists/User";
+import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 
 type _UserIndexProps = {};
 
@@ -7,10 +9,22 @@ export type UserIndexProps = _UserIndexProps &
 	Omit<PropsWithChildren<ComponentPropsWithRef<"div">>, keyof _UserIndexProps>;
 
 function UserIndex({ className, ...props }: UserIndexProps) {
+	useBreadcrumb([
+		{
+			name: "Home",
+			href: "/",
+		},
+		{
+			name: "Role management",
+			href: "#",
+			isCurrentPage: true,
+		},
+	]);
 	return (
-		<div className={cn("", className)} {...props}>
-			My component
-		</div>
+		<Container>
+			<UserList />
+			<br />
+		</Container>
 	);
 }
 

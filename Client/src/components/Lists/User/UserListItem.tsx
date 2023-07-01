@@ -1,4 +1,4 @@
-import { Avatar, Box, Heading } from "@chakra-ui/react";
+import { Avatar, Box, Heading, Link } from "@chakra-ui/react";
 import { ComponentPropsWithRef, PropsWithChildren } from "react";
 import AuthenticatedArea from "src/auth/AuthenticatedArea";
 import { ListItem } from "src/components/List";
@@ -19,7 +19,9 @@ function Component({ className, item, ...props }: ComponentProps) {
 				<Box className="flex justify-between">
 					<Avatar size={"lg"} name={username} src={user.avatar?.file?.url} />
 					<Box className="flex flex-col items-end gap-2">
-						<Heading className="m-0 text-xl">{username}</Heading>
+						<Heading className="m-0 text-xl">
+							<Link href={`/User/${user.id}`}>{username}</Link>
+						</Heading>
 						<Box className="text-secondary">{user.email}</Box>
 						<AuthenticatedArea roleName="admin">
 							<RoleTagConfirmMenu userId={user.id} role={role} />

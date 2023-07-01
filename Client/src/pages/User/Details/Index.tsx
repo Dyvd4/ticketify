@@ -34,10 +34,10 @@ function Index(props: IndexProps) {
 		isLoading,
 		isError,
 	} = useQuery(["user/all", id], () => {
-		return fetchEntity({ route: `user/all`, queryParams: { id } });
+		return fetchEntity({ route: id ? `user/${id}/all` : "user/all" });
 	});
 	const isOwnSite = useIsCurrentUser(user ? user : {});
-	const ticketQuery = useInfiniteQuery<any, any>(["ticket"], {
+	const ticketQuery = useInfiniteQuery<any, any>(["tickets/assigned"], {
 		route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user?.id}`,
 	});
 	const ticketQueryCount = useInfiniteQueryCount(ticketQuery);
