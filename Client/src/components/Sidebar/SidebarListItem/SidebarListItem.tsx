@@ -83,7 +83,7 @@ function SidebarListItem({
 
 								<Box
 									as="h3"
-									className={classNames(`ml-6 mr-auto`, {
+									className={classNames(`ml-4 mr-auto`, {
 										"font-bold": isActive,
 									})}
 								>
@@ -106,7 +106,7 @@ function SidebarListItem({
 				)}
 			</BaseSidebarListItem>
 			<Collapse in={allowExpand}>
-				<ul className="flex flex-col gap-4 pl-4">{children}</ul>
+				<ul className="flex flex-col gap-4 pl-6">{children}</ul>
 			</Collapse>
 		</>
 	);
