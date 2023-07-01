@@ -118,6 +118,7 @@ function Sidebar({ className, ...props }: SidebarProps) {
 					title="Companies"
 					urlPath={"/Company"}
 				/>
+				<SidebarListItem variant={sidebarListItemVariant} title="Users" urlPath={"/User"} />
 			</SidebarListItem>
 
 			<SidebarListItem

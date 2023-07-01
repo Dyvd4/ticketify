@@ -24,7 +24,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const TestIndex = lazy(() => import("./pages/Test/Index"));
 const TicketDetailsIndex = lazy(() => import("./pages/Ticket/Details/Index"));
 const TicketIndex = lazy(() => import("./pages/Ticket/Index"));
-const UserIndex = lazy(() => import("./pages/User/Index"));
+const UserDetailsIndex = lazy(() => import("./pages/User/Details/Index"));
 const UserSettingsIndex = lazy(() => import("./pages/UserSettings/Index"));
 const RoleManagementIndex = lazy(() => import("./pages/RoleManagement/Index"));
 const CompanyIndex = lazy(() => import("./pages/Company/Index"));
@@ -76,7 +76,15 @@ root.render(
 										path="User"
 										element={
 											<Suspense fallback={<LoadingRipple usePortal />}>
-												<UserIndex />
+												<UserDetailsIndex />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="User/:id"
+										element={
+											<Suspense fallback={<LoadingRipple usePortal />}>
+												<UserDetailsIndex />
 											</Suspense>
 										}
 									/>
@@ -85,14 +93,6 @@ root.render(
 										element={
 											<Suspense fallback={<LoadingRipple usePortal />}>
 												<UserSettingsIndex />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="User/:id"
-										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
-												<UserIndex />
 											</Suspense>
 										}
 									/>

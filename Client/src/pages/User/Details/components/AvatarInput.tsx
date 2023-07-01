@@ -1,6 +1,6 @@
 import { Avatar, Box, VisuallyHidden } from "@chakra-ui/react";
 import { ComponentPropsWithRef, useRef, useState } from "react";
-import FileInput from "../../../components/FileInput";
+import FileInput from "src/components/FileInput";
 
 type AvatarInputProps = {
 	username: string;
