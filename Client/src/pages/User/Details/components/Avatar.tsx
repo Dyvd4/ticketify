@@ -11,7 +11,7 @@ import {
 	ValidationErrorResponse,
 } from "src/utils/error";
 import { createDataUrl } from "src/utils/image";
-import AvatarInput from "../components/AvatarInput";
+import AvatarInput from "./AvatarInput";
 
 type AvatarSectionProps = {
 	user: any;

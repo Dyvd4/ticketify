@@ -10,8 +10,8 @@ import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
 import { useIsCurrentUser } from "src/hooks/user";
 import AssignedTicketsPanel from "./sections/AssignedTicketsPanel";
-import AvatarSection from "./sections/AvatarSection";
-import UserDataSection from "./sections/UserDataSection";
+import HeadSection from "./sections/HeadSection";
+import UserDataPanel from "./sections/UserDataPanel";
 
 type IndexProps = {};
 
@@ -59,8 +59,7 @@ function Index(props: IndexProps) {
 		<DetailsPage
 			head={
 				<>
-					<AvatarSection user={user} />
-					<UserDataSection user={user} />
+					<HeadSection user={user} />
 				</>
 			}
 			body={{
@@ -69,8 +68,12 @@ function Index(props: IndexProps) {
 						assigned tickets ({ticketQueryCount}) &nbsp;
 						<FontAwesomeIcon icon={faTicketSimple} />
 					</Tab>,
+					<Tab>user data</Tab>,
 				],
-				tabPanels: [<AssignedTicketsPanel query={ticketQuery} />],
+				tabPanels: [
+					<AssignedTicketsPanel query={ticketQuery} />,
+					<UserDataPanel user={user} />,
+				],
 			}}
 		/>
 	);

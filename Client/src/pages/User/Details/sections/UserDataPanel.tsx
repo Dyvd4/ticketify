@@ -1,4 +1,4 @@
-import { Flex, IconButton, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { Flex, IconButton, TabPanel, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "react-query";
@@ -8,11 +8,11 @@ import EmailEditModal from "../modals/EmailEditModal";
 import PasswordEditModal from "../modals/PasswordEditModal";
 import UsernameEditModal from "../modals/UsernameEditModal";
 
-type UserDataSectionProps = {
+type UserDataPanelProps = {
 	user: any;
 };
 
-function UserDataSection({ user, ...props }: UserDataSectionProps) {
+function UserDataPanel({ user, ...props }: UserDataPanelProps) {
 	const {
 		isOpen: usernameEditModalOpen,
 		onOpen: onUsernameEditModalOpen,
@@ -42,7 +42,7 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
 	};
 
 	return (
-		<>
+		<TabPanel>
 			<Flex className="mt-8" justifyContent={"space-between"}>
 				<div>Username</div>
 				<div className="flex items-center gap-2">
@@ -120,8 +120,8 @@ function UserDataSection({ user, ...props }: UserDataSectionProps) {
 				onClose={onPasswordEditModalClose}
 				onSuccess={() => handleEditSuccess("password")}
 			/>
-		</>
+		</TabPanel>
 	);
 }
 
-export default UserDataSection;
+export default UserDataPanel;

@@ -7,7 +7,7 @@ import DetailsPage from "src/components/DetailsPage";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
-import CompanyDetailsHeadSection from "./CompanyDetailsHeadSection";
+import HeadSection from "./HeadSection";
 import EmployeePanel from "./EmployeePanel";
 import TicketsPanel from "./TicketsPanel";
 
@@ -60,7 +60,7 @@ function Index(props: IndexProps) {
 
 	return (
 		<DetailsPage
-			head={<CompanyDetailsHeadSection company={company} />}
+			head={<HeadSection company={company} />}
 			body={{
 				tabList: [
 					<Tab>
