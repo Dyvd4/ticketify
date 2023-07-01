@@ -1,14 +1,15 @@
-import { Alert, AlertIcon, Tab, Text } from "@chakra-ui/react";
+import { Tab } from "@chakra-ui/react";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import DetailsPage from "src/components/DetailsPage";
+import ErrorAlert from "src/components/ErrorAlert";
 import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
-import HeadSection from "./HeadSection";
 import EmployeePanel from "./EmployeePanel";
+import HeadSection from "./HeadSection";
 import TicketsPanel from "./TicketsPanel";
 
 type IndexProps = {};
@@ -50,12 +51,7 @@ function Index(props: IndexProps) {
 	}
 
 	if (companyQuery.isError || ticketQuery.isError || employeeQuery.isError) {
-		return (
-			<Alert className="rounded-md" status="error" variant="top-accent">
-				<AlertIcon />
-				<Text>There was an error processing your request</Text>
-			</Alert>
-		);
+		return <ErrorAlert />;
 	}
 
 	return (

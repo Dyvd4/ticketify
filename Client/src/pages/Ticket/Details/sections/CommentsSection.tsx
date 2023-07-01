@@ -19,6 +19,7 @@ import { fetchEntity } from "src/api/entity";
 import useCommentMutations from "src/api/mutations/hooks/useCommentMutations";
 import CommentSkeleton from "src/components/Comment/CommentSkeleton";
 import Input from "src/components/Comment/Input";
+import ErrorAlert from "src/components/ErrorAlert";
 import MenuButton from "src/components/Wrapper/MenuButton";
 import { commentSortParamAtom } from "src/context/atoms";
 import { useCurrentUser } from "src/hooks/user";
@@ -221,14 +222,7 @@ function CommentsSection(props: CommentsSectionProps) {
 					onSubmit={handleAddSubmit}
 				/>
 				<Flex className="flex-col gap-4">
-					{(countError || isError) && (
-						<>
-							<Alert className="rounded-md" status="error" variant="top-accent">
-								<AlertIcon />
-								<Text>There was an error processing your request</Text>
-							</Alert>
-						</>
-					)}
+					{(countError || isError) && <ErrorAlert />}
 					{isLoading &&
 						Array(5)
 							.fill("")

@@ -26,7 +26,7 @@ function Modal({ isLoading, isError, children, ...props }: ModalProps) {
 
 	if (isLoading) return <LoadingRipple />;
 
-	if (isError)
+	if (isError) {
 		return (
 			<ChakraModal isOpen={isOpen} onClose={setIsOpen.off}>
 				<ModalOverlay />
@@ -58,7 +58,7 @@ function Modal({ isLoading, isError, children, ...props }: ModalProps) {
 				</ModalContent>
 			</ChakraModal>
 		);
-
+	}
 	return <ChakraModal {...props}>{children}</ChakraModal>;
 }
 

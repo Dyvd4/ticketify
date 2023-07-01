@@ -1,4 +1,5 @@
-import { Alert, AlertIcon, Heading, Text } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
+import ErrorAlert from "src/components/ErrorAlert";
 import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useCurrentUserSettings } from "src/hooks/user";
@@ -21,13 +22,7 @@ function UserSettingsIndex() {
 
 	if (isLoading) return <LoadingRipple />;
 
-	if (isError)
-		return (
-			<Alert className="rounded-md" status="error" variant="top-accent">
-				<AlertIcon />
-				<Text>There was an error processing your request</Text>
-			</Alert>
-		);
+	if (isError) return <ErrorAlert />;
 
 	return (
 		<>

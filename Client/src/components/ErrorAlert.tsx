@@ -6,7 +6,7 @@ type ErrorAlertProps = {};
 
 function ErrorAlert(props: ErrorAlertProps) {
 	return (
-		<Alert status="error" className="flex-col items-start rounded-md">
+		<Alert variant={"top-accent"} status="error" className="flex-col items-start rounded-md">
 			<div>We're sorry but it seems that an error occurred during your request.</div>
 			<div>
 				Please write an e-mail to our support <b>({SUPPORT_EMAIL})</b>.

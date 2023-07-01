@@ -12,7 +12,7 @@ import { useIsCurrentUser } from "src/hooks/user";
 import AssignedTicketsPanel from "./sections/AssignedTicketsPanel";
 import HeadSection from "./sections/HeadSection";
 import UserDataPanel from "./sections/UserDataPanel";
-
+import ErrorAlert from "src/components/ErrorAlert";
 type IndexProps = {};
 
 function Index(props: IndexProps) {
@@ -47,12 +47,7 @@ function Index(props: IndexProps) {
 	}
 
 	if (isError) {
-		return (
-			<Alert className="rounded-md" status="error" variant="top-accent">
-				<AlertIcon />
-				<Text>There was an error processing your request</Text>
-			</Alert>
-		);
+		return <ErrorAlert />;
 	}
 
 	return (
