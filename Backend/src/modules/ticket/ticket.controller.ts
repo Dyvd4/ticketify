@@ -89,7 +89,11 @@ export class TicketController {
 				responsibleUserId: userId || requestUser.id,
 			},
 		});
-		const ticketsCount = await prisma.ticket.count();
+		const ticketsCount = await prisma.ticket.count({
+			where: {
+				responsibleUserId: userId || requestUser.id,
+			},
+		});
 
 		return infiniteLoader.getResult(tickets, ticketsCount);
 	}
