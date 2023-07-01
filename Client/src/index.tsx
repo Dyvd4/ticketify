@@ -14,6 +14,7 @@ import PortalSlot from "./components/Slots/PortalSlot";
 import theme from "./config/theme";
 import Init from "./init";
 import LoadingRipple from "./components/Loading/LoadingRipple";
+const UserIndex = lazy(() => import("./pages/User/Index"));
 const Index = lazy(() => import("src/pages/Index/Index"));
 const EmailConfirmed = lazy(() => import("./pages/Auth/EmailConfirmed"));
 const EmailNotConfirmed = lazy(() => import("./pages/Auth/EmailNotConfirmed"));
@@ -76,7 +77,7 @@ root.render(
 										path="User"
 										element={
 											<Suspense fallback={<LoadingRipple usePortal />}>
-												<UserDetailsIndex />
+												<UserIndex />
 											</Suspense>
 										}
 									/>

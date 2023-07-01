@@ -57,7 +57,7 @@ function Navbar(props: NavbarProps) {
 						</Flex>
 					</MenuButton>
 					<MenuList>
-						<Link href="/User">
+						<Link href={`/User/${currentUser.id}`}>
 							<MenuItem icon={<FontAwesomeIcon icon={faUser} />}>
 								Profile data
 							</MenuItem>

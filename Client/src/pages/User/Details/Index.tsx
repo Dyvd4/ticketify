@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
-import { fetchCurrentUserAll } from "src/api/user";
 import DetailsPage from "src/components/DetailsPage";
 import LoadingRipple from "src/components/Loading/LoadingRipple";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
@@ -34,12 +33,12 @@ function Index(props: IndexProps) {
 		data: user,
 		isLoading,
 		isError,
-	} = useQuery(id ? ["user/all", id] : ["user/all"], () => {
-		return id ? fetchEntity({ route: `user/all`, queryParams: { id } }) : fetchCurrentUserAll();
+	} = useQuery(["user/all", id], () => {
+		return fetchEntity({ route: `user/all`, queryParams: { id } });
 	});
-	const isOwnSite = useIsCurrentUser(user);
+	const isOwnSite = useIsCurrentUser(user ? user : {});
 	const ticketQuery = useInfiniteQuery<any, any>(["ticket"], {
-		route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user.id}`,
+		route: isOwnSite ? `tickets/assigned` : `tickets/assigned/${user?.id}`,
 	});
 	const ticketQueryCount = useInfiniteQueryCount(ticketQuery);
 
