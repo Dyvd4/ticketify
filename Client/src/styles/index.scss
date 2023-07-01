@@ -26,6 +26,7 @@ body {
 	left: var(--sidebar-width);
 	right: 0;
 	width: calc(100% - var(--sidebar-width));
+	min-height: calc(100% - var(--navbar-height));
 }
 
 #navbar {
@@ -178,8 +179,7 @@ body {
 			border-color: rgb(74 222 128);
 			border-radius: 50%;
 			filter: blur(0.5px);
-			animation: heart-button-circles
-				calc(var(--heart-button-circles-animation-durationMs) * 1ms) forwards;
+			animation: heart-button-circles calc(var(--heart-button-circles-animation-durationMs) * 1ms) forwards;
 		}
 		&::after {
 			content: "";
@@ -193,9 +193,8 @@ body {
 			border-color: rgb(74 222 128);
 			border-radius: 50%;
 			filter: blur(0.5px);
-			animation: heart-button-circles /* duration */
-				calc(var(--heart-button-circles-animation-durationMs) * 1ms) /* delay */
-				calc(calc(var(--heart-button-circles-animation-durationMs) * 0.2) * 1ms) forwards;
+			animation: heart-button-circles /* duration */ calc(var(--heart-button-circles-animation-durationMs) * 1ms)
+				/* delay */ calc(calc(var(--heart-button-circles-animation-durationMs) * 0.2) * 1ms) forwards;
 		}
 	}
 }
