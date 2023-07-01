@@ -7,6 +7,7 @@ import {
 	UseQueryOptions,
 	UseQueryResult,
 } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { fetchEntity, FetchEntityArgs } from "src/api/entity";
 
 export const useInfiniteQuery = <
@@ -59,11 +60,18 @@ export const useQuery = <
 	fetchEntityArgs: FetchEntityArgs,
 	options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, "queryKey" | "queryFn">
 ): UseQueryResult<TData, TError> => {
+	const navigate = useNavigate();
+
 	return reactQueryUseQuery(
 		queryKey,
 		() => {
 			return fetchEntity(fetchEntityArgs);
 		},
-		options
+		{
+			onError() {
+				navigate("/Error");
+			},
+			...options,
+		}
 	);
 };

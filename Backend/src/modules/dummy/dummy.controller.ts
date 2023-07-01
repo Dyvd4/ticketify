@@ -181,4 +181,9 @@ export class DummyController {
 	getProtectedData() {
 		return "some confidential data";
 	}
+
+	@Get("dumbError")
+	getDumbError() {
+		throw new BadRequestException("this is dumb");
+	}
 }

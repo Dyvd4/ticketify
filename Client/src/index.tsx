@@ -23,6 +23,7 @@ const SignIn = lazy(() => import("./pages/Auth/SignIn"));
 const SignUp = lazy(() => import("./pages/Auth/SignUp"));
 const LogIndex = lazy(() => import("./pages/Log/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Error = lazy(() => import("./pages/Error"));
 const TestIndex = lazy(() => import("./pages/Test/Index"));
 const TicketDetailsIndex = lazy(() => import("./pages/Ticket/Details/Index"));
 const TicketIndex = lazy(() => import("./pages/Ticket/Index"));
@@ -174,6 +175,14 @@ root.render(
 									element={
 										<Suspense fallback={<LoadingRipple />}>
 											<NotFound />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="/Error"
+									element={
+										<Suspense fallback={<LoadingRipple />}>
+											<Error />
 										</Suspense>
 									}
 								/>
