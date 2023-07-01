@@ -18,7 +18,7 @@ import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
 import useAuthState from "src/auth/hooks/useAuthState";
 import IconLink from "src/components/IconLink";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
+import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import FormControl from "src/components/Wrapper/FormControl";
 import { request } from "src/services/request";
 import {
@@ -82,7 +82,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 
 	const { currentUser, isLoading, hasEmailConfirmation, refetch } = useAuthState();
 
-	if (isLoading) return <LoadingRipple centered />;
+	if (isLoading) return <LoadingRipple isAbsolute />;
 
 	if (hasEmailConfirmation) return <Navigate to="/Auth/EmailConfirmed" />;
 

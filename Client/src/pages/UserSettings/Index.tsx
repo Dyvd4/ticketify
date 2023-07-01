@@ -1,5 +1,5 @@
 import { Alert, AlertIcon, Heading, Text } from "@chakra-ui/react";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
+import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useCurrentUserSettings } from "src/hooks/user";
 import FilterAndSortPersistenceSection from "./sections/FilterAndSortPersistenceSection";
@@ -19,7 +19,7 @@ function UserSettingsIndex() {
 
 	const { isLoading, isError } = useCurrentUserSettings();
 
-	if (isLoading) return <LoadingRipple centered />;
+	if (isLoading) return <LoadingRipple />;
 
 	if (isError)
 		return (

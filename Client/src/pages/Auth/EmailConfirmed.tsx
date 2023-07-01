@@ -1,13 +1,13 @@
 import { Box, Button, Link } from "@chakra-ui/react";
 import useAuthState from "src/auth/hooks/useAuthState";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
+import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 
 interface EmailConfirmedProps {}
 
 function EmailConfirmed(props: EmailConfirmedProps) {
 	const { isLoading, isAuthenticated } = useAuthState();
 
-	if (isLoading) return <LoadingRipple centered />;
+	if (isLoading) return <LoadingRipple />;
 
 	return (
 		<>

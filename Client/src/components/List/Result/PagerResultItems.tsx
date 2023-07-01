@@ -1,4 +1,4 @@
-import LoadingRipple from "components/Loading/LoadingRipple";
+import LoadingRipple from "components/Loading/LoadingRippleWithPositioning";
 import { PagerSection } from "components/Pager";
 import { useEffect } from "react";
 import { UseQueryResult } from "react-query";
@@ -30,7 +30,7 @@ type PageQueryItemsProps = {
 function PagerResultItems({ query, isLoading, ...props }: PageQueryItemsProps) {
 	const { isError, isLoading: queryIsLoading, data } = query;
 
-	if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple centered />;
+	if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple />;
 
 	if (isError) return props.errorDisplay || <ListResultErrorDisplay />;
 

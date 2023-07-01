@@ -1,6 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
 import ErrorAlert from "src/components/ErrorAlert";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
 import { isAuthorizedForRole } from "./auth";
 import useAuthState from "./hooks/useAuthState";
 
@@ -30,7 +29,7 @@ function AuthenticatedArea(props: AuthenticatedAreaProps) {
 		props.roleName && currentUser && isAuthorizedForRole(currentUser, props.roleName);
 	let returnElement;
 
-	if (isLoading) returnElement = <LoadingRipple usePortal />;
+	if (isLoading) returnElement = null;
 	else if (isError) returnElement = <ErrorAlert />;
 	else {
 		if (isAuthenticated && !hasEmailConfirmation && !props.ignoreEmailConfirmation) {

@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchEntity } from "src/api/entity";
 import DetailsPage from "src/components/DetailsPage";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
+import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery, useInfiniteQueryCount } from "src/hooks/query";
 import { useIsCurrentUser } from "src/hooks/user";
@@ -43,7 +43,7 @@ function Index(props: IndexProps) {
 	const ticketQueryCount = useInfiniteQueryCount(ticketQuery);
 
 	if (isLoading) {
-		return <LoadingRipple centered />;
+		return <LoadingRipple />;
 	}
 
 	if (isError) {

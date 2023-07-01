@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoadingRipple from "../Loading/LoadingRipple";
+import LoadingRipple from "../Loading/LoadingRippleWithPositioning";
 
 type ModalProps = {
 	isLoading?: boolean;
@@ -24,7 +24,7 @@ type ModalProps = {
 function Modal({ isLoading, isError, children, ...props }: ModalProps) {
 	const [isOpen, setIsOpen] = useBoolean(true);
 
-	if (isLoading) return <LoadingRipple usePortal />;
+	if (isLoading) return <LoadingRipple />;
 
 	if (isError)
 		return (

@@ -4,7 +4,7 @@ import { faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import DetailsPage from "src/components/DetailsPage";
-import LoadingRipple from "src/components/Loading/LoadingRipple";
+import LoadingRipple from "src/components/Loading/LoadingRippleWithPositioning";
 import useBreadcrumb from "src/context/hooks/useBreadcrumbs";
 import { useInfiniteQuery, useInfiniteQueryCount, useQuery } from "src/hooks/query";
 import HeadSection from "./HeadSection";
@@ -46,7 +46,7 @@ function Index(props: IndexProps) {
 	const employeeQueryCount = useInfiniteQueryCount(employeeQuery);
 
 	if (companyQuery.isLoading || ticketQuery.isLoading || employeeQuery.isLoading) {
-		return <LoadingRipple usePortal />;
+		return <LoadingRipple />;
 	}
 
 	if (companyQuery.isError || ticketQuery.isError || employeeQuery.isError) {

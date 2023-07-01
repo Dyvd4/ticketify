@@ -19,7 +19,6 @@ import { fetchEntity } from "src/api/entity";
 import NavigatableList from "src/components/NavigatableList";
 import useDebounce from "src/hooks/useDebounce";
 import { ListResultEmptyDisplay } from "../List/Result";
-import LoadingRipple from "../Loading/LoadingRipple";
 import SearchBarListItem from "./SearchBarListItem";
 
 type _SearchBarProps = {};
@@ -91,11 +90,6 @@ function SearchBar({ className, ...props }: SearchBarProps) {
 						</Box>
 						<Divider />
 					</Box>
-					{isLoading && (
-						<>
-							<LoadingRipple className="mx-auto" />
-						</>
-					)}
 					{!isLoading && data.items.length === 0 && (
 						<>
 							<ListResultEmptyDisplay className="mx-auto list-none pt-2 pb-4" />

@@ -167,7 +167,7 @@ function Kanbanboard<T extends { id: any }>({
 						{recentDraggedOverGroupName === group.name &&
 							recentDroppedGroupIsLoading && (
 								<Box className="absolute inset-0 z-10 rounded-b-md bg-black opacity-60">
-									<LoadingRipple centered />
+									<LoadingRipple />
 								</Box>
 							)}
 						<ul

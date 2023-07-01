@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { UseInfiniteQueryResult } from "react-query";
 import useIntersectionObserver from "src/hooks/useIntersectionObserver";
-import LoadingRipple from "../../Loading/LoadingRipple";
+import LoadingRipple from "../../Loading/LoadingRippleWithPositioning";
 import ListResultErrorDisplay from "./ListResultErrorDisplay";
 import ListResultItems, { ListResult } from "./ListResultItems";
 
@@ -61,7 +61,7 @@ function InfiniteLoaderResultItems({
 		},
 	});
 
-	if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple centered />;
+	if (queryIsLoading || isLoading) return props.loadingDisplay || <LoadingRipple />;
 
 	if (isError) return props.errorDisplay || <ListResultErrorDisplay />;
 

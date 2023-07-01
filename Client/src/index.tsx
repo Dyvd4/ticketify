@@ -14,6 +14,7 @@ import PortalSlot from "./components/Slots/PortalSlot";
 import theme from "./config/theme";
 import Init from "./init";
 import LoadingRipple from "./components/Loading/LoadingRipple";
+import PagePortalSlot from "./components/Slots/PagePortalSlot";
 const UserIndex = lazy(() => import("./pages/User/Index"));
 const Index = lazy(() => import("src/pages/Index/Index"));
 const EmailConfirmed = lazy(() => import("./pages/Auth/EmailConfirmed"));
@@ -53,6 +54,7 @@ root.render(
 						<Sidebar />
 					</AuthenticatedArea>
 					<Box id="container" className="p-4">
+						<PagePortalSlot />
 						<Router>
 							<Routes>
 								{/* authenticated or authorized */}
@@ -60,7 +62,7 @@ root.render(
 									<Route
 										index
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<Index />
 											</Suspense>
 										}
@@ -68,7 +70,7 @@ root.render(
 									<Route
 										path="Test"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<TestIndex />
 											</Suspense>
 										}
@@ -76,7 +78,7 @@ root.render(
 									<Route
 										path="User"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<UserIndex />
 											</Suspense>
 										}
@@ -84,7 +86,7 @@ root.render(
 									<Route
 										path="User/:id"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<UserDetailsIndex />
 											</Suspense>
 										}
@@ -92,7 +94,7 @@ root.render(
 									<Route
 										path="UserSettings"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<UserSettingsIndex />
 											</Suspense>
 										}
@@ -101,7 +103,7 @@ root.render(
 										<Route
 											index
 											element={
-												<Suspense fallback={<LoadingRipple usePortal />}>
+												<Suspense fallback={<LoadingRipple />}>
 													<TicketIndex />
 												</Suspense>
 											}
@@ -109,7 +111,7 @@ root.render(
 										<Route
 											path="Details/:id"
 											element={
-												<Suspense fallback={<LoadingRipple usePortal />}>
+												<Suspense fallback={<LoadingRipple />}>
 													<TicketDetailsIndex />
 												</Suspense>
 											}
@@ -118,7 +120,7 @@ root.render(
 									<Route
 										path="Log"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<LogIndex />
 											</Suspense>
 										}
@@ -127,7 +129,7 @@ root.render(
 										<Route
 											index
 											element={
-												<Suspense fallback={<LoadingRipple usePortal />}>
+												<Suspense fallback={<LoadingRipple />}>
 													<CompanyIndex />
 												</Suspense>
 											}
@@ -135,7 +137,7 @@ root.render(
 										<Route
 											path="Details/:id"
 											element={
-												<Suspense fallback={<LoadingRipple usePortal />}>
+												<Suspense fallback={<LoadingRipple />}>
 													<CompanyDetailsIndex />
 												</Suspense>
 											}
@@ -149,7 +151,7 @@ root.render(
 									<Route
 										index
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<RoleManagementIndex />
 											</Suspense>
 										}
@@ -170,7 +172,7 @@ root.render(
 								<Route
 									path="*"
 									element={
-										<Suspense fallback={<LoadingRipple usePortal />}>
+										<Suspense fallback={<LoadingRipple />}>
 											<NotFound />
 										</Suspense>
 									}
@@ -179,7 +181,7 @@ root.render(
 									<Route
 										path="SignIn"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<SignIn />
 											</Suspense>
 										}
@@ -187,7 +189,7 @@ root.render(
 									<Route
 										path="SignUp"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<SignUp />
 											</Suspense>
 										}
@@ -195,7 +197,7 @@ root.render(
 									<Route
 										path="EmailConfirmed"
 										element={
-											<Suspense fallback={<LoadingRipple usePortal />}>
+											<Suspense fallback={<LoadingRipple />}>
 												<EmailConfirmed />
 											</Suspense>
 										}
