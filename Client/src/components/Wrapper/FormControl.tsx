@@ -12,7 +12,14 @@ function FormControl({ errorMessage, children, ...props }: FormControlProps) {
 	return (
 		<ChakraFormControl isInvalid={!!errorMessage} {...props}>
 			{children}
-			<FormErrorMessage>{errorMessage}</FormErrorMessage>
+			{errorMessage instanceof String && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
+			{errorMessage instanceof Array && (
+				<FormErrorMessage className="flex flex-col items-start gap-1">
+					{errorMessage.map((message, i) => (
+						<div key={i}>{message}</div>
+					))}
+				</FormErrorMessage>
+			)}
 		</ChakraFormControl>
 	);
 }
