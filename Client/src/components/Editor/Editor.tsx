@@ -62,10 +62,12 @@ function Editor({ className, data, isReadOnly, onChange, onMount, ...props }: Ed
 										},
 									},
 								});
+								const fileId = response.data.items[0].id;
 								return {
 									success: 1,
 									file: {
-										url: `${getApiUrl()}/rawFile/${response.data.items[0].id}`,
+										url: `${getApiUrl()}/rawFile/${fileId}`,
+										id: fileId,
 									},
 								};
 							},

@@ -290,6 +290,25 @@ export class TicketController {
 	async updateTicket(@Param("id") id: number, @Body() updateTicketDto: UpdateTicketDto) {
 		const { prisma } = this;
 
+		const ticketBeforeUpdate = await prisma.ticket.findFirst({
+			where: {
+				id,
+			},
+		});
+
+		if (!!ticketBeforeUpdate?.description && !!updateTicketDto.description) {
+			const imageIdsBeforeUpdate: string[] = JSON.parse(ticketBeforeUpdate.description)
+				.blocks.filter((block) => block.type === "image")
+				.map((imageBlock) => imageBlock.data.file.id);
+			const currentImageIds: string[] = JSON.parse(updateTicketDto.description)
+				.blocks.filter((block) => block.type === "image")
+				.map((imageBlock) => imageBlock.data.file.id);
+			const imageIdsToDelete = imageIdsBeforeUpdate.filter(
+				(id) => !currentImageIds.includes(id)
+			);
+			await this.fileService.deleteMany(imageIdsToDelete);
+		}
+
 		const updatedTicket = await prisma.ticket.update({
 			where: {
 				id,
