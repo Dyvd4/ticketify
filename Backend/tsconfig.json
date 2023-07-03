@@ -23,9 +23,11 @@
 		"paths": {
 			"@src/*": ["src/*"],
 			"@config": ["src/config"],
-			"@mail/*": ["src/mail/*"],
-			"@database/*": ["src/global/database/*"],
-			"@auth/*": ["src/global/auth/*"]
+			"@mail/*": ["src/modules/mail/*"],
+			"@database/*": ["src/modules/global/database/*"],
+			"@auth/*": ["src/modules/global/auth/*"],
+			"@log/*": ["src/modules/log/*"],
+			"@global/*": ["src/modules/global/*"]
 		}
 	},
 	"ts-node": {
