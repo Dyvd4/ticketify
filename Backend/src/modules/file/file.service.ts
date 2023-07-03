@@ -55,10 +55,10 @@ export class FileService {
 		return this.s3Client.send(command);
 	}
 
-	private deleteFileInS3(fileToDelete: File) {
+	private deleteFileInS3(prismaFile: File) {
 		const command = new DeleteObjectCommand({
 			Bucket: this.S3_BUCKET_NAME,
-			Key: fileToDelete.originalFileName,
+			Key: this.getFileNameForS3(prismaFile),
 		});
 		return this.s3Client.send(command);
 	}
@@ -105,6 +105,10 @@ export class FileService {
 		});
 
 		return deletedFile;
+	}
+
+	async deleteMany(fileIds: string[]): Promise<File[]> {
+		return Promise.all(fileIds.map((fileId) => this.deleteOne(fileId)));
 	}
 
 	async findFirst(args?: Prisma.FileFindFirstArgs) {
