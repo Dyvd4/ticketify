@@ -29,13 +29,6 @@ body {
 	min-height: calc(100% - var(--navbar-height));
 }
 
-#portal {
-	position: absolute;
-	width: 100vw;
-	height: 100vh;
-	z-index: 50;
-}
-
 #navbar {
 	position: fixed;
 	top: 0;
