@@ -29,4 +29,8 @@ export default defineConfig({
 		},
 	},
 	plugins: [react(), svgrPlugin(), tsconfigPaths()],
+	server: {
+		host: "0.0.0.0",
+		port: 3000,
+	},
 });
