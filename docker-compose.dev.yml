@@ -1,48 +1,50 @@
 version: "1"
 services:
     db:
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        image: ticketify-db
+        build:
+            context: .\Backend
+            dockerfile: Dockerfile.db
         restart: always
         env_file:
-            - .db.env
+            - \Backend\.env
         ports:
             - 1433:1433
         volumes:
-            - db-data:/var/opt/mssql/data
+            - ticketify-db-data:/var/opt/mssql/data
         networks:
           - backend
         user:
           root
     # todo: make detecting file change working
     api:
-      image: ticketify_api
+      image: ticketify-api
       build:
-        context: ./Backend
+        context: .\Backend
         dockerfile: Dockerfile.dev
       ports:
         - 8080:8080
       env_file:
-        - ./Backend/.env
+        - .\Backend\.env
       volumes:
         - type: bind
           source: .\Backend\src
           target: /app/src
         - /app/node_modules
-      environment:
-        CHOKIDAR_USEPOLLING: true
       depends_on:
-        - db
+          db:
+            condition: service_healthy
       networks:
         - backend
     client:
-      image: ticketify_client
+      image: ticketify-client
       build:
-        context: ./Client
+        context: .\Client
         dockerfile: Dockerfile.dev
       ports:
         - 3000:3000
       env_file:
-        - ./Client/.env
+        - .\Client\.env
       depends_on:
         - api
       volumes:
@@ -53,7 +55,8 @@ services:
       environment:
         CHOKIDAR_USEPOLLING: true
 volumes:
-    db-data:
+    ticketify-db-data:
+        external: true
 networks:
   backend:
     driver: bridge
