@@ -1,0 +1,36 @@
+version: "1"
+services:
+    db:
+        image: ticketify_db
+        build:
+            context: .
+            dockerfile: Dockerfile.db
+        restart: always
+        env_file:
+            - .env
+        ports:
+            - 1433
+        volumes:
+            - db-data:/var/opt/mssql/data
+        user: root
+        networks:
+            - backend
+    db-init:
+        image: db-init
+        build:
+            context: .
+            dockerfile: Dockerfile.db-init
+        ports:
+            - 8080
+        env_file:
+            - .env
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - backend
+volumes:
+    db-data:
+networks:
+    backend:
+        driver: bridge

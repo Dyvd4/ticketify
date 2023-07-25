@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/mssql/server:2022-latest
+USER root
+
+WORKDIR /app
+
+RUN apt-get clean && apt-get update && apt-get install -y curl gnupg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y mssql-tools
+
+ENV PATH=/opt/mssql-tools/bin:${PATH}
+
+HEALTHCHECK --start-period=5s --interval=5s --retries=10 \
+  CMD sqlcmd -S localhost -U sa -P ${MSSQL_SA_PASSWORD} -Q "SELECT 1" || exit 1
