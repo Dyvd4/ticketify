@@ -12,6 +12,7 @@
 					"dtoFileNameSuffix": [".dto.ts", ".dtos.ts"]
 				}
 			}
-		]
+		],
+		"builder": "swc"
 	}
 }
