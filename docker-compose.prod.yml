@@ -1,0 +1,14 @@
+version: "1"
+services:
+    api:
+      build:
+        dockerfile: Dockerfile.prod
+      env_file:
+        - .\Backend\.env.production
+    client:
+      build:
+        dockerfile: Dockerfile.prod
+      env_file:
+        - .\Client\.env.production
+      ports: 
+        - 3000:80

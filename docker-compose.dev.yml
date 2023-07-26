@@ -12,3 +12,5 @@ services:
           source: .\Client\src
           target: /app/src
         - /app/node_modules
+      ports: 
+        - 3000:3000
