@@ -6,9 +6,13 @@ services:
       env_file:
         - .\Backend\.env.production
     client:
+      image: ticketify-client
       build:
+        context: .\Client
         dockerfile: Dockerfile.prod
       env_file:
         - .\Client\.env.production
       ports: 
         - 3000:80
+      depends_on:
+        - api

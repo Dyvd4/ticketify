@@ -6,11 +6,3 @@ services:
           source: .\Backend\src
           target: /app/src
         - /app/node_modules
-    client:
-      volumes:
-        - type: bind
-          source: .\Client\src
-          target: /app/src
-        - /app/node_modules
-      ports: 
-        - 3000:3000
