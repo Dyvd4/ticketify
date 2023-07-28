@@ -9,5 +9,5 @@ services:
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
       build:
-        context: .\Client
+        context: ./Client
         dockerfile: Dockerfile.prod

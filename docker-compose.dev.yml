@@ -1,6 +1,8 @@
 version: "1"
 services:
     api:
+      build:
+        dockerfile: Dockerfile.dev
       volumes:
         - type: bind
           source: .\Backend\src
@@ -9,4 +11,4 @@ services:
         - .\Backend\.env
     db:
       env_file:
-        - \Backend\.env
+        - .\Backend\.env

@@ -3,7 +3,7 @@ services:
     db:
         image: ticketify-db
         build:
-            context: .\Backend
+            context: ./Backend
             dockerfile: Dockerfile.db
         restart: always
         ports:
@@ -17,8 +17,7 @@ services:
     api:
       image: ticketify-api
       build:
-        context: .\Backend
-        dockerfile: Dockerfile.dev
+        context: ./Backend
       ports:
         - 8080:8080
       depends_on:
