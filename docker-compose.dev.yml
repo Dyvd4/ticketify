@@ -5,3 +5,8 @@ services:
         - type: bind
           source: .\Backend\src
           target: /app/src
+      env_file:
+        - .\Backend\.env
+    db:
+      env_file:
+        - \Backend\.env
