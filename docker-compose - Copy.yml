@@ -1,7 +1,10 @@
 version: "1"
 services:
     db:
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
+        image: ticketify-db
+        build:
+            context: ./Backend
+            dockerfile: Dockerfile.db
         restart: always
         ports:
             - 1433:1433
@@ -13,6 +16,8 @@ services:
           root
     api:
       image: ticketify-api
+      build:
+        context: ./Backend
       ports:
         - 8080:8080
       depends_on:
@@ -20,8 +25,6 @@ services:
             condition: service_healthy
       networks:
         - backend
-    client:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
 volumes:
     ticketify-db-data:
         external: true
