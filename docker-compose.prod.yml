@@ -6,16 +6,8 @@ services:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
       build:
         dockerfile: Dockerfile.prod
-      env_file:
-        - .\Backend\.env.production
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
       build:
         context: .\Client
         dockerfile: Dockerfile.prod
-      env_file:
-        - .\Client\.env.production
-      ports: 
-        - 3000:80
-      depends_on:
-        - api
