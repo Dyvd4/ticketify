@@ -1,0 +1,58 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "ticketify-db-data",
+      "dockerVolumeConfiguration": {
+        "scope": "shared",
+        "autoprovision": true,
+        "driver": "local",
+        "labels": {
+          "database": "mssql"
+        }
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "db",
+      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 1433,
+          "containerPort": 1433
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "ticketify-db-data",
+          "containerPath": "/var/opt/mssql/data"
+        }
+      ]
+    },
+    {
+      "name": "api",
+      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 8080
+        }
+      ],
+      "links": ["db"]
+    },
+    {
+      "name": "client",
+      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 3000,
+          "containerPort": 80
+        }
+      ]
+    }
+  ]
+}

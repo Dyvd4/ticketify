@@ -1,15 +1,12 @@
 version: "1"
 services:
-    db:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
     api:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
       build:
         dockerfile: Dockerfile.prod
       env_file:
         - .\Backend\.env.production
     client:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
+      image: ticketify-client
       build:
         context: .\Client
         dockerfile: Dockerfile.prod
