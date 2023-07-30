@@ -16,4 +16,6 @@ phases:
       - docker-compose --file docker-compose.base.yml --file=docker-compose.yml push
 artifacts:
   files:
+    - "Backend/docker-compose.init.yml"
     - "docker-compose.yml"
+    - ".ebextensions/*"
