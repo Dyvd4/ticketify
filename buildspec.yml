@@ -8,12 +8,12 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker-compose --file docker-compose.base.yml --file=docker-compose.yml build
+      - docker-compose --file docker-compose.base.yml --file=docker-compose-build.yml build
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker-compose --file docker-compose.base.yml --file=docker-compose.yml push
+      - docker-compose --file docker-compose.base.yml --file=docker-compose-build.yml push
 artifacts:
   files:
     - "docker-compose.yml"

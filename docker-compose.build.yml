@@ -1,0 +1,39 @@
+version: "2.2"
+services:
+    db:
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
+        restart: always
+        ports:
+            - 1433:1433
+        volumes:
+            - ticketify-db-data:/var/opt/mssql/data
+        networks:
+          - backend
+        user:
+          root
+    api:
+      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
+      build:
+        dockerfile: Dockerfile.prod
+      ports:
+        - 8080:8080
+      depends_on:
+          db:
+            condition: service_healthy
+      networks:
+        - backend
+    client:
+      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
+      build:
+        context: ./Client
+        dockerfile: Dockerfile.prod
+      ports:
+        - 3000:80
+      depends_on:
+        - api
+volumes:
+    ticketify-db-data:
+        external: true
+networks:
+  backend:
+    driver: bridge
