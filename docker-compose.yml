@@ -24,9 +24,13 @@ services:
         - backend
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
+      ports:
+        - 3000:80
       build:
         context: ./Client
         dockerfile: Dockerfile.prod
+      depends_on:
+        - api
 volumes:
     ticketify-db-data:
         external: true
