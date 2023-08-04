@@ -1,5 +1,8 @@
 version: "1"
 services:
+    db:
+      env_file:
+        - .\Backend\.env.production
     api:
       build:
         dockerfile: Dockerfile.prod
