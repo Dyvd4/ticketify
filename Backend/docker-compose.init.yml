@@ -1,37 +1,6 @@
 version: "1"
 services:
     db:
-        image: ticketify-db
-        build:
-            context: .
-            dockerfile: Dockerfile.db
-        restart: always
-        env_file:
-            - .env
-        ports:
-            - 1433
-        volumes:
-            - ticketify-db-data:/var/opt/mssql/data
-        user: root
-        networks:
-            - backend
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
     db-init:
-        image: ticketify-db-init
-        build:
-            context: .
-            dockerfile: Dockerfile.db-init
-        ports:
-            - 8080
-        env_file:
-            - .env
-        depends_on:
-            db:
-                condition: service_healthy
-        networks:
-            - backend
-volumes:
-    ticketify-db-data:
-        external: true
-networks:
-    backend:
-        driver: bridge
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db-init
