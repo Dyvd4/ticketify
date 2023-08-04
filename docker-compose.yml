@@ -14,7 +14,6 @@ services:
         environment:
           - ACCEPT_EULA=${ACCEPT_EULA}
           - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-          - DATABASE_URL=${DATABASE_URL}
     api:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
       ports:
@@ -40,6 +39,7 @@ services:
         - SMTP_PASSWORD=${SMTP_PASSWORD}
         - SUPPORT_EMAIL=${SUPPORT_EMAIL}
         - VALID_IMAGETYPES_REGEX=${VALID_IMAGETYPES_REGEX}
+        - DATABASE_URL=${DATABASE_URL}
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
       ports:
