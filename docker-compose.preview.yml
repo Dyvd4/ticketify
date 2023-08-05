@@ -2,12 +2,12 @@ version: "1"
 services:
     db:
       env_file:
-        - .\Backend\.env.production
+        - .\Backend\.env
     api:
       build:
         dockerfile: Dockerfile.prod
       env_file:
-        - .\Backend\.env.production
+        - .\Backend\.env
     client:
       image: ticketify-client
       build:

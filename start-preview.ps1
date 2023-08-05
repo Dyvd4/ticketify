@@ -1,0 +1,1 @@
+docker compose --env-file .\Client\.env  -f .\docker-compose.base.yml -f .\docker-compose.preview.yml up -d --build
