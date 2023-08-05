@@ -89,7 +89,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 
 	if (hasEmailConfirmation) return <Navigate to="/Auth/EmailConfirmed" />;
 
-	return createPortal(
+	return (
 		<Container maxW={"container.lg"}>
 			<Box className="mt-10 flex justify-center gap-4">
 				<h1 className="flex items-center text-6xl">401</h1>
@@ -199,8 +199,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>
-		</Container>,
-		document.getElementById("portal")!
+		</Container>
 	);
 }
 

@@ -40,8 +40,7 @@ function SignUp() {
 		}
 	);
 
-	return portalIsRendered
-		? ReactDOM.createPortal(
+	return (
 				<Card className="w-3/4 sm:w-auto" centered>
 					<Heading as="h1" className="mb-2">
 						Sign up
@@ -76,10 +75,9 @@ function SignUp() {
 						</Button>
 						<Link href="/Auth/SignIn">Sign in</Link>
 					</VStack>
-				</Card>,
-				document.getElementById("portal")!
+				</Card>
 		  )
-		: null;
+		
 }
 
 export default SignUp;

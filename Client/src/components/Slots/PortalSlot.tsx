@@ -7,7 +7,6 @@ function PortalSlot() {
 
 	useEffect(() => {
 		setPortalIsRendered(true);
-		document.getElementById("container")?.remove(); // TODO: remove this dirty fix
 	}, []);
 
 	return <div id="portal"></div>;

@@ -35,43 +35,35 @@ function SignIn() {
 			},
 		}
 	);
-
-	return portalIsRendered
-		? ReactDOM.createPortal(
-				<Card className="w-3/4 sm:w-auto" centered>
-					<Heading as="h1" className="mb-2">
-						Sign in
-					</Heading>
-					<VStack>
-						<FormControl errorMessage={errorMap?.message}>
-							<FormControl errorMessage={errorMap?.username}>
-								<FormLabel>Username</FormLabel>
-								<Input size="sm" ref={usernameRef} name="username" />
-							</FormControl>
-							<FormControl errorMessage={errorMap?.password}>
-								<FormLabel>Password</FormLabel>
-								<Input
-									type="password"
-									size="sm"
-									ref={passwordRef}
-									name="password"
-								/>
-							</FormControl>
-						</FormControl>
-						<Button
-							size="sm"
-							className="mt-4"
-							onClick={() => mutation.mutate()}
-							colorScheme="blue"
-						>
-							Submit
-						</Button>
-						<Link href="/Auth/SignUp">Sign up</Link>
-					</VStack>
-				</Card>,
-				document.getElementById("portal")!
-		  )
-		: null;
+	// TODO: make absolute without using portal
+	return (
+		<Card className="w-3/4 sm:w-auto" centered>
+			<Heading as="h1" className="mb-2">
+				Sign in
+			</Heading>
+			<VStack>
+				<FormControl errorMessage={errorMap?.message}>
+					<FormControl errorMessage={errorMap?.username}>
+						<FormLabel>Username</FormLabel>
+						<Input size="sm" ref={usernameRef} name="username" />
+					</FormControl>
+					<FormControl errorMessage={errorMap?.password}>
+						<FormLabel>Password</FormLabel>
+						<Input type="password" size="sm" ref={passwordRef} name="password" />
+					</FormControl>
+				</FormControl>
+				<Button
+					size="sm"
+					className="mt-4"
+					onClick={() => mutation.mutate()}
+					colorScheme="blue"
+				>
+					Submit
+				</Button>
+				<Link href="/Auth/SignUp">Sign up</Link>
+			</VStack>
+		</Card>
+	);
 }
 
 export default SignIn;
