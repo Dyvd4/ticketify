@@ -46,11 +46,6 @@ services:
         - 3000:80
       depends_on:
         - api
-      build:
-        args:
-          VITE_API_URL: ${VITE_API_URL}
-          VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
-          VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
 volumes:
     ticketify-db-data:
         external: true
