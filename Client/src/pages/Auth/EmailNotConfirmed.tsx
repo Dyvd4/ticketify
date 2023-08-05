@@ -87,7 +87,7 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 	if (hasEmailConfirmation) return <Navigate to="/Auth/EmailConfirmed" />;
 
 	return createPortal(
-		<Container className="z-50" maxW={"container.lg"}>
+		<Container maxW={"container.lg"}>
 			<Box className="mt-10 flex justify-center gap-4">
 				<h1 className="flex items-center text-6xl">401</h1>
 				<div className="text-black">

@@ -42,7 +42,7 @@ function SignUp() {
 
 	return portalIsRendered
 		? ReactDOM.createPortal(
-				<Card className="z-50 w-3/4 sm:w-auto" centered>
+				<Card className="w-3/4 sm:w-auto" centered>
 					<Heading as="h1" className="mb-2">
 						Sign up
 					</Heading>
