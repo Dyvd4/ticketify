@@ -11,6 +11,8 @@ interface RequestOptions extends AxiosRequestConfig {
 const ignoreErrorCodes = ["ERR_NETWORK"];
 
 export const request = (options?: RequestOptions) => {
+	console.log(API_URL);
+
 	options = {
 		baseURL: API_URL,
 		withCredentials: true,

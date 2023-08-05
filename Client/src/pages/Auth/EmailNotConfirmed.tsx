@@ -12,7 +12,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useMutation } from "react-query";
 import { Navigate } from "react-router-dom";
@@ -28,7 +28,7 @@ import {
 } from "src/utils/error";
 import { signOut } from "../../auth/auth";
 import MutationErrorAlert from "../../components/ErrorAlert";
-
+const API_URL = import.meta.env.VITE_API_URL;
 interface EmailNotConfirmedIndexProps {}
 
 function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
@@ -79,7 +79,10 @@ function EmailNotConfirmedIndex(props: EmailNotConfirmedIndexProps) {
 			},
 		}
 	);
-
+	useEffect(() => {
+		const API_URL = import.meta.env.VITE_API_URL;
+		console.log(API_URL);
+	}, []);
 	const { currentUser, isLoading, hasEmailConfirmation, refetch } = useAuthState();
 
 	if (isLoading) return <LoadingRipple isAbsolute />;
