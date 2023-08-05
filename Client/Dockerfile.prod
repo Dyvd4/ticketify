@@ -3,9 +3,14 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
+
+ARG VITE_API_URL
+ARG VITE_SUPPORT_EMAIL
+ARG VITE_VALID_IMAGETYPES_REGEX
 RUN echo "VITE_API_URL=$VITE_API_URL" >> .env.production
 RUN echo "VITE_SUPPORT_EMAIL=$VITE_SUPPORT_EMAIL" >> .env.production
 RUN echo "VITE_VALID_IMAGETYPES_REGEX=$VITE_VALID_IMAGETYPES_REGEX" >> .env.production
+
 RUN npm run build
 
 FROM nginx

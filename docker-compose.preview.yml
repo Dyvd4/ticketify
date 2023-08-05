@@ -13,8 +13,10 @@ services:
       build:
         context: .\Client
         dockerfile: Dockerfile.prod
-      env_file:
-        - .\Client\.env.production
+        args:
+          VITE_API_URL: ${VITE_API_URL}
+          VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
+          VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
       ports: 
         - 3000:80
       depends_on:
