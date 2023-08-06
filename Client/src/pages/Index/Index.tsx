@@ -22,7 +22,7 @@ function Index(props: IndexProps) {
 	return (
 		<>
 			<Heading className="my-4 text-2xl" as="h1">
-				Tickets by status
+				Tickets by status test
 			</Heading>
 			<TicketKanbanboard />
 			<Heading className="mt-8 mb-4 text-2xl" as="h1">
