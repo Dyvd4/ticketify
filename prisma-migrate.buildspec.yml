@@ -1,9 +1,0 @@
-version: 0.2
-phases:
-  pre_build:
-    commands:
-      - cd Backend
-      - echo "hello world"
-  build:
-    commands:
-      - npx prisma migrate deploy
