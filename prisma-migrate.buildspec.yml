@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - cd Backend
+      - echo "DATABASE_URL=$DATABASE_URL" >> .env
+      - cat .env
+      - export NODE_ENV=development
+      - echo $NODE_ENV
+      - npm i
+  build:
+    commands:
+      - npx prisma migrate deploy
