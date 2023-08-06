@@ -3,8 +3,7 @@ phases:
   pre_build:
     commands:
       - cd Backend
-      - echo "DATABASE_URL=$DATABASE_URL" >> .env
-      - cat .env
+      - echo "hello world"
   build:
     commands:
       - npx prisma migrate deploy
