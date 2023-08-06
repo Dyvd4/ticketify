@@ -1,7 +1,7 @@
 version: "2.2"
 services:
     db:
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db-${ENV}
         restart: always
         ports:
             - 1433:1433
@@ -15,7 +15,7 @@ services:
           - ACCEPT_EULA=${ACCEPT_EULA}
           - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
     api:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
+      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api-${ENV}
       ports:
         - 8080:8080
       depends_on:
@@ -41,7 +41,7 @@ services:
         - VALID_IMAGETYPES_REGEX=${VALID_IMAGETYPES_REGEX}
         - DATABASE_URL=${DATABASE_URL}
     client:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
+      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client-${ENV}
       ports:
         - 3000:80
       depends_on:
