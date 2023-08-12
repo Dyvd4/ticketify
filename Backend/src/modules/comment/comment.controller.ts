@@ -262,8 +262,6 @@ export class CommentController {
 	async create(@User() requestUser: TUser, @Body() createCommentDto: CreateCommentDto) {
 		const { prisma } = this;
 
-		createCommentDto.authorId = requestUser.id!;
-
 		if (createCommentDto.parentId) {
 			const parentComment = await prisma.comment.findFirst({
 				where: {
@@ -274,9 +272,11 @@ export class CommentController {
 				throw new ValidationException("Parent is not allowed to have a parent");
 			}
 		}
-
 		const newComment = await prisma.comment.create({
-			data: createCommentDto,
+			data: {
+				...createCommentDto,
+				authorId: requestUser.id!,
+			},
 		});
 
 		return newComment;

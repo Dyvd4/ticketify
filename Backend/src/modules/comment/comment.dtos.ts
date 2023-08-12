@@ -1,8 +1,11 @@
 import { PickType } from "@nestjs/swagger";
 import { Comment } from "@prisma/client";
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator";
+import { IsNumber, IsOptional, IsString, Length } from "class-validator";
 
-type CreateComment = Omit<Comment, "createdAt" | "updatedAt" | "createUser" | "updateUser" | "id">;
+type CreateComment = Omit<
+	Comment,
+	"createdAt" | "updatedAt" | "createUser" | "updateUser" | "id" | "authorId"
+>;
 
 export class CreateCommentDto implements CreateComment {
 	@IsNumber()
@@ -10,9 +13,6 @@ export class CreateCommentDto implements CreateComment {
 	@IsString()
 	@Length(1, 1000)
 	content!: string;
-	@IsString()
-	@IsNotEmpty()
-	authorId!: string;
 	@IsString()
 	@IsOptional()
 	parentId!: string | null;
