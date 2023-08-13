@@ -8,6 +8,8 @@ jobs:
   build:
     name: Build and push images
     runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
