@@ -6,9 +6,8 @@ on:
 
 jobs:
   build:
-    name: Build Image
+    name: Build and push images
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -26,9 +25,11 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: docker_nodejs_demo
-          IMAGE_TAG: nodejs_demo_image
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          VITE_API_URL: ${{ env.VITE_API_URL }}
+          VITE_SUPPORT_EMAIL: ${{ env.VITE_SUPPORT_EMAIL }}
+          VITE_VALID_IMAGETYPES_REGEX: ${{ env.VITE_VALID_IMAGETYPES_REGEX }}
         run: |
           docker-compose --file docker-compose.base.yml --file=docker-compose.build.yml build
           docker-compose --file docker-compose.base.yml --file=docker-compose.build.yml push
