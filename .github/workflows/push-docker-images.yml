@@ -8,8 +8,6 @@ jobs:
   build:
     name: Build and push images
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -28,6 +26,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
           VITE_API_URL: ${{ env.VITE_API_URL }}
           VITE_SUPPORT_EMAIL: ${{ env.VITE_SUPPORT_EMAIL }}
           VITE_VALID_IMAGETYPES_REGEX: ${{ env.VITE_VALID_IMAGETYPES_REGEX }}
