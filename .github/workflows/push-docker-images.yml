@@ -17,7 +17,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: eu-central-1
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -26,7 +26,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          AWS_DEFAULT_REGION: eu-central-1
           VITE_API_URL: ${{ env.VITE_API_URL }}
           VITE_SUPPORT_EMAIL: ${{ env.VITE_SUPPORT_EMAIL }}
           VITE_VALID_IMAGETYPES_REGEX: ${{ env.VITE_VALID_IMAGETYPES_REGEX }}
