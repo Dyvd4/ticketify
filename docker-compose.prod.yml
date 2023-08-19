@@ -3,14 +3,14 @@ services:
     db:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
       env_file:
-        - .\Backend\.env.db
+        - ./Backend/.env.db
     api:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
       env_file:
-        - .\Backend\.env
+        - ./Backend/.env
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
       ports: 
-        - 3000:80
+        - 80:80
       depends_on:
         - api
