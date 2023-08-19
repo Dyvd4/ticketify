@@ -27,9 +27,9 @@ jobs:
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           AWS_DEFAULT_REGION: eu-central-1
-          VITE_API_URL: ${{ env.VITE_API_URL }}
-          VITE_SUPPORT_EMAIL: ${{ env.VITE_SUPPORT_EMAIL }}
-          VITE_VALID_IMAGETYPES_REGEX: ${{ env.VITE_VALID_IMAGETYPES_REGEX }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SUPPORT_EMAIL: ${{ secrets.VITE_SUPPORT_EMAIL }}
+          VITE_VALID_IMAGETYPES_REGEX: ${{ secrets.VITE_VALID_IMAGETYPES_REGEX }}
         run: |
           docker-compose --file docker-compose.yml --file=docker-compose.build.yml build
           docker-compose --file docker-compose.yml --file=docker-compose.build.yml push
