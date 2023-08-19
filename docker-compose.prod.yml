@@ -11,6 +11,6 @@ services:
     client:
       image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
       ports: 
-        - 80:80
+        - 3000:80
       depends_on:
         - api
