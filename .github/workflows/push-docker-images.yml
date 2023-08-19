@@ -31,5 +31,5 @@ jobs:
           VITE_SUPPORT_EMAIL: ${{ env.VITE_SUPPORT_EMAIL }}
           VITE_VALID_IMAGETYPES_REGEX: ${{ env.VITE_VALID_IMAGETYPES_REGEX }}
         run: |
-          docker-compose --file docker-compose.base.yml --file=docker-compose.build.yml build
-          docker-compose --file docker-compose.base.yml --file=docker-compose.build.yml push
+          docker-compose --file docker-compose.yml --file=docker-compose.build.yml build
+          docker-compose --file docker-compose.yml --file=docker-compose.build.yml push

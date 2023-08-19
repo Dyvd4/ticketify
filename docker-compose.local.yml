@@ -11,4 +11,4 @@ services:
         - .\Backend\.env
     db:
       env_file:
-        - .\Backend\.env
+        - .\Backend\.env.db
