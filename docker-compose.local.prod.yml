@@ -1,23 +1,23 @@
 version: "1"
 services:
-    db:
-      env_file:
-        - .\Backend\.env.db
-    api:
-      build:
-        dockerfile: Dockerfile.prod
-      env_file:
-        - .\Backend\.env
-    client:
-      image: ticketify-client
-      build:
-        context: .\Client
-        dockerfile: Dockerfile.prod
-        args:
-          VITE_API_URL: ${VITE_API_URL}
-          VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
-          VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
-      ports: 
-        - 3000:80
-      depends_on:
-        - api
+  db:
+    env_file:
+      - .\Backend\.env.db
+  ticketify-api:
+    build:
+      dockerfile: Dockerfile.prod
+    env_file:
+      - .\Backend\.env
+  ticketify-client:
+    image: ticketify-client
+    build:
+      context: .\Client
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
+        VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
+    ports:
+      - 3000:80
+    depends_on:
+      - api

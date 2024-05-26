@@ -1,14 +1,14 @@
 version: "1"
 services:
-    api:
-      build:
-        dockerfile: Dockerfile.dev
-      volumes:
-        - type: bind
-          source: .\Backend\src
-          target: /app/src
-      env_file:
-        - .\Backend\.env
-    db:
-      env_file:
-        - .\Backend\.env.db
+  ticketify-api:
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: .\Backend\src
+        target: /app/src
+    env_file:
+      - .\Backend\.env
+  db:
+    env_file:
+      - .\Backend\.env.db

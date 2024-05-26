@@ -1,17 +1,17 @@
 version: "2.2"
 services:
-    db:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
-    api:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
-      build:
-        dockerfile: Dockerfile.prod
-    client:
-      image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
-      build:
-        context: ./Client
-        dockerfile: Dockerfile.prod
-        args:
-          VITE_API_URL: ${VITE_API_URL}
-          VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
-          VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
+  db:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-db
+  ticketify-api:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-api
+    build:
+      dockerfile: Dockerfile.prod
+  ticketify-client:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ticketify-client
+    build:
+      context: ./Client
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_SUPPORT_EMAIL: ${VITE_SUPPORT_EMAIL}
+        VITE_VALID_IMAGETYPES_REGEX: ${VITE_VALID_IMAGETYPES_REGEX}
