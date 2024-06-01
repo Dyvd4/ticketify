@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile.prod
     env_file:
       - .\Backend\.env
+    ports:
+      - 8080:8080
   ticketify-client:
     image: ticketify-client
     build:
@@ -20,4 +22,4 @@ services:
     ports:
       - 3000:80
     depends_on:
-      - api
+      - ticketify-api
